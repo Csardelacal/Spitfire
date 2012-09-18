@@ -1,0 +1,14 @@
+
+
+#LoadModule rewrite_module modules/mod_rewrite.so
+#AddModule mod_rewrite.c
+
+php_flag magic_quotes_gpc Off
+
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+	
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule .* index.php/$0 [L]
+	
+</IfModule>
