@@ -51,7 +51,7 @@ ini_set('memory_limit', '64M');/**/
 /* Call the selected controller with the selected method. */
 if (getPath() === true) {
 	#Import and instance the controller
-	$_controller = 'controller_'.controller;
+	$_controller = controller.'Controller';
 	$controller = new $_controller();
 	#Check if the action is available
 	$method = Array($controller, action);
