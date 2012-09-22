@@ -62,25 +62,3 @@ class _SF_Invoke
 		
 	}
 }
-
-function _autoload($class) {
-	@list($m, $n) = explode('_', $class, 2); //Yes, this can produce errors but that's none of our business
-	switch ($m) {
-		//Imports controllers
-		case 'controller':
-			if ( file_exists($f = 'bin/controllers/'. $n . '.php') ) include $f;
-			else throw new publicException('Controller '. $n . ' not found.', 404);
-			break;
-		//Imports HTML node inherited classes
-		case 'html':
-			if ( file_exists($f = 'bin/html/'. $n . '.php') ) include $f;
-			else throw new fileNotFoundException('HTML class '. $class . ' not found.', 0);
-			break;
-		//Imports all the rest
-		default:
-			if ( file_exists($f = 'bin/classes/'. $class . '.php') ) include $f;
-			else throw new fileNotFoundException('Function class '. $class . ' not found.', 0);
-			break;
-	}
-}
-spl_autoload_register('_autoload');

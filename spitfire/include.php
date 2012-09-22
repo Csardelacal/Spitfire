@@ -1,5 +1,6 @@
 <?php
 
+include $file = dirname(__FILE__).'/autoload.php';
 include $file = dirname(__FILE__).'/storage.php';
 include $file = dirname(__FILE__).'/plugins.php';
 include $file = dirname(__FILE__).'/security.php';
