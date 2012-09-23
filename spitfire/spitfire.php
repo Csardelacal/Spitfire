@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Dispatcher class of Spitfire. Calls all the required classes for Spitfire to run.
+ * @author César de la Cal <cesar@magic3w.com>
+ * @package Spitfire
+ */
+
 class SpitFire 
 {
 	
@@ -29,9 +35,12 @@ class SpitFire
 		_SF_AutoLoad::registerClass('_SF_Memcached', dirname(__FILE__).'/storage.php');
 		_SF_AutoLoad::registerClass('_SF_InputSanitizer', dirname(__FILE__).'/security_io_sanitization.php');
 
+		//TODO: Include user definitions for routers and custom classes...
+
 		#Get the current path...
 		self::getPath();
 
+		self::$started = true;
 		return true;
 	}
 
