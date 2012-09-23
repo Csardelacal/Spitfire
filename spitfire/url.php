@@ -3,65 +3,6 @@
 define('E_PAGE_NOT_FOUND', 'Page not found', true);
 define('E_PAGE_NOT_FOUND_CODE', 404, true);
 
-/**
- * getPath()
- * Reads the current path the user has selected and tries to detect
- * Controllers, actions and objects from it.
- * 
- * [NOTICE] getPath does not guarantee safe input, you will have to
- * manually check whether the input it received is valid.
- * 
- * [NOTICE] getPath will prevent users from accessing any controllers
- * when in maintenance mode. But will also throw an error when the
- * user tries to enter maintenance mode when in normal operation.
- * This means you need to use a separate controller for generating
- * WiP sites, or manually edit it everytime you enter service mode.
- */
-function getPath() {
-	if (maintenance_enabled) {
-		define ('controller', maintenance_controller, true);
-		define ('action', false, true);
-		define ('object', false, true);
-		return true;
-	} else {
-		if (pretty_urls){
-			$path_info = substr($_SERVER['PATH_INFO'], 1);
-			$path = explode('/', $path_info);
-			@list($controller, $action, $object) = $path;
-			
-			//Assign the object as array (with multiple elements) to a Global
-			array_shift($path); array_shift($path);
-			$GLOBALS['object_array'] = $path;
-			
-			//If the controller, action or object was left empty fill it with defaults 
-			if (empty ($controller)) $controller = default_controller;
-			if (empty ($action)) $action = default_action;
-			if (empty ($object)) $object = default_object;
-			
-			//Check if invalid url's are being requested
-			if ($controller == maintenance_controller) throw new publicException('User tried to access maintenance mode', 401);
-			if (substr($action, 0,1) == '_') throw new publicException(E_PAGE_NOT_FOUND, E_PAGE_NOT_FOUND_CODE);
-			
-			define ('controller', $controller, false);
-			define ('action', $action, true);
-			define ('object', $object, true);
-			return true;
-		} else {//pretty_urls
-			$controller = $_GET['controller'];
-			$action = $_GET['action'];
-			$object = $_GET['object'];
-			
-			if (!$controller) $controller = default_controller;
-			if (!$action) $action = default_action;
-			if (!$object) $object = default_object;
-			
-			define ('controller', $controller, true);
-			define ('action', $action, true);
-			define ('object', $$object, true);
-			return true;
-		}
-	}
-}
 
 /**
  * Get the Server's domains from highest to lowest

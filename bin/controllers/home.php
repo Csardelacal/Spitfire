@@ -3,8 +3,9 @@
 class homeController extends controller
 {
 
-	public function index ($object, $params) {
+	public function index ($object = '', $params = '') {
 		set('FW_NAME', 'Spitfire');
+		set('controller', __CLASS__ . '&gt' . $object . '&gt' . $params);
 	}
 
 	public function detail($object, $params) {

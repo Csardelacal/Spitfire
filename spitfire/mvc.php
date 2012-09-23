@@ -3,8 +3,8 @@
 abstract class controller
 {
 	
-	abstract public function index ($object, $params);
-	abstract public function detail ($object, $params);
+	//abstract public function index ($object, $params);
+	//abstract public function detail ($object, $params);
 	
 	public function __construct() {
 		$this->memcached = new _SF_Memcached();
@@ -14,8 +14,8 @@ abstract class controller
 	}
 	
 	public function __call($method, $args) {
-		if ( count($args) == 2 ) return $this->detail($method, $args[1]);
-		else throw new BadMethodCallException('Invalid argument count. Requires two args.', 0);
+		return $this->detail($method, $args);
+		//else throw new BadMethodCallException('Invalid argument count. Requires two args.', 0);
 	}
 	
 }

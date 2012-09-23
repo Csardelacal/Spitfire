@@ -96,5 +96,3 @@ class _SF_AutoLoad
 	}
 
 }
-
-$GLOBALS['_SF_Autoload'] = _SF_Autoload::getInstance();

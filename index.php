@@ -25,7 +25,7 @@ ini_set("display_errors" , "0");
 
 /* Include settings and Spitfire core.
  */
-include 'spitfire/include.php';
+include 'spitfire/spitfire.php';
 include 'bin/settings.php';
 
 /* PACKAGE FUNCTIONS AND DATA_______________________________________
@@ -49,19 +49,6 @@ session_start();
 ini_set('memory_limit', '64M');/**/
 
 /* Call the selected controller with the selected method. */
-if (getPath() === true) {
-	#Import and instance the controller
-	$_controller = controller.'Controller';
-	$controller = new $_controller();
-	#Check if the action is available
-	$method = Array($controller, action);
-	#Create a view-controller model
-	$GLOBALS['_SF_ViewData'] = array();
-	#Fire!
-	if (is_callable($method)) call_user_func_array($method, Array(object, $_GET));
-	else throw new publicException(E_PAGE_NOT_FOUND, 404);
 
-	$v = new view(controller, action);
-	$v->render();
-
-} else throw new privateException('getPath failed.', 0);
+SpitFire::init();
+SpitFire::fire();
