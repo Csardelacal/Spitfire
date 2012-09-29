@@ -23,14 +23,16 @@ ini_set("log_errors" , "1");
 ini_set("error_log" , "logs/error_log.log");
 ini_set("display_errors" , "0");
 
-/* Include settings and Spitfire core.
+/* Include Spitfire core.
  */
 include 'spitfire/spitfire.php';
-include 'bin/settings.php';
 
-/* PACKAGE FUNCTIONS AND DATA_______________________________________
- * Include package specific functions and data.
+/* Define bootstrap settings. Environments are a better way to handle
+ * config but we need to create them first.
  */
+define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
+define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
+define ('VIEWS_DIRECTORY',       'bin/views/',       true);
 
 /* SESSION DEFAULTS AND START_______________________________________
  * This sets basic settings about user sessions and their duration,
