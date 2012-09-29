@@ -22,14 +22,17 @@ class SpitFire
 	public static function init() {
 
 		if (self::$started) return false;
+		$cur_dir = dirname(__FILE__);
 
 		#Try to start autoload
 		if (! class_exists('_SF_AutoLoad')) include dirname(__FILE__).'/autoload.php';
 		self::$autoload = new _SF_AutoLoad();
 
 		#Include file to define the location of core components
-		$cur_dir = dirname(__FILE__);
 		self::includeIfPossible("$cur_dir/autoload_core_files.php");
+		#Try to include the user's evironment & routes
+		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
+		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 
 		//TODO: Include user definitions for routers and custom classes...
 
