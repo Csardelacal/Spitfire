@@ -121,6 +121,10 @@ class _SF_ExceptionHandler {
 	public function msg ($msg) {
 		$this->msgs[] = $msg;
 	}
+
+	public function getMessages () {
+		return $this->msgs;
+	}
 }
 
 /**

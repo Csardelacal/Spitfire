@@ -25,6 +25,8 @@ class _SF_AutoLoad
 
 	public function retrieveClass($className) {
 
+		if (SpitFire::$debug) SpitFire::$debug->msg("Imported class $className");
+
 		#Case insensitive please!
 		$className = strtolower($className);
 

@@ -33,7 +33,18 @@
 			Please try visiting another site or try again in five minutes. </p>
 			<?php if(environment::get('debugging_mode')): ?>
 				<p>Following details were provided to solve the the error:</p> 
+				<h2>Scope</h2>
 				<pre><?=$moreInfo?></pre>
+				<?php
+					$messages = SpitFire::$debug->getMessages();
+					if ($messages){
+						echo '<h2>Debugging messages</h2><ul>';
+						foreach ($messages as $msg) {
+							echo "<li>$msg</li>";
+						}
+						echo '</ul>';
+					}
+				?>
 			<?php endif; ?>
 		</div>
 	</body>
