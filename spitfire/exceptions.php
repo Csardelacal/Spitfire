@@ -54,7 +54,7 @@ class filePermissionsException  extends privateException {}
  * @param mixed $code
  * @param string $message
  */
-function get_error_page($code, $message) {
+function get_error_page($code, $message, $moreInfo) {
 	$error_page = 'bin/error_pages/'.$code.'.php';
 	if (file_exists($error_page)) {
 		include $error_page;
@@ -84,25 +84,44 @@ function get_error_page($code, $message) {
  * 
  * @param Exception $e
  */
-function exception_handler(Exception $e) {
-	try {
-		ob_get_clean(); //The content generated till now is not valid. DESTROY. DESTROY!
-		if ( is_a($e, 'publicException') ) {
-			get_error_page($e->getCode(), $e->getMessage());
-		} elseif ( is_a($e, 'privateException') ) {
-			error_log($e->getMessage());
-			get_error_page(500, 'Server error');
-		} else {
-			error_log($e->getMessage());
-			get_error_page(500, 'Server error');
+
+class _SF_ExceptionHandler {
+
+	private $msgs = Array();
+
+	public function __construct() {
+		set_exception_handler( Array($this, 'exceptionHandle'));
+		set_error_handler    ( Array($this, 'errorHandle'), error_reporting() );
+	}
+
+	public function exceptionHandle (Exception $e) {
+		try {
+			ob_get_clean(); //The content generated till now is not valid. DESTROY. DESTROY!
+
+			if ( is_a($e, 'publicException') ) {
+				get_error_page($e->getCode(), $e->getMessage());
+			} else {
+				error_log($e->getMessage());
+				if (environment::get('debugging_mode')) get_error_page( 500, $e->getMessage() );
+				else                                    get_error_page(500, 'Server error');
+			}
+
+		} catch (Exception $e) { //Whatever happens, it won't leave this function
+			echo '<!--'.$e->getMessage().'-->';
+			die();
 		}
-	} catch (Exception $e) { //Whatever happens, it won't leave this function
-		echo '<!--'.$e->getMessage().'-->';
-		die();
+	}
+
+	public function errorHandle ($errno, $errstr, $errfile, $errline, $scope) {
+		ob_get_clean();
+		get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r($scope, 1) );
+		return false;
+	}
+
+	public function msg ($msg) {
+		$this->msgs[] = $msg;
 	}
 }
-
-set_exception_handler('exception_handler');
 
 /**
  * Electric Fence.

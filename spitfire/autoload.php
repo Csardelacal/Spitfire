@@ -14,6 +14,7 @@ class _SF_AutoLoad
 	private $registered_classes = Array();
 
 	public function __construct() {
+		self::$instance = $this;
 		spl_autoload_register(Array($this, 'retrieveClass'));
 	}
 
@@ -85,14 +86,9 @@ class _SF_AutoLoad
 	}
 
 	#######STATIC METHODS#####################
-	public static function getInstance() {
-		if (self::$instance) return self::$instance;
-		else return self::$instance = new self();
-	}
 
 	public static function registerClass($class, $location) {
-		$instance = self::getInstance();
-		$instance->register($class, $location);
+		self::$instance->register($class, $location);
 	}
 
 }

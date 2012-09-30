@@ -19,6 +19,8 @@ class SpitFire
 	static $action          = false;
 	static $object          = false;
 
+	static $debug           = false;
+
 	public static function init() {
 
 		if (self::$started) return false;
@@ -30,6 +32,10 @@ class SpitFire
 
 		#Include file to define the location of core components
 		self::includeIfPossible("$cur_dir/autoload_core_files.php");
+
+		#Initialize the exception handler
+		self::$debug = new _SF_ExceptionHandler();
+
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
@@ -76,8 +82,8 @@ class SpitFire
 	 * This means you need to use a separate controller for generating
 	 * WiP sites, or manually edit it everytime you enter service mode.
 	 */
-	protected function getPath() {
-		if (maintenance_enabled) {
+	protected static function getPath() {
+		if ( environment::get('maintenance_enabled') ) {
 			define ('controller', maintenance_controller, true);
 			define ('action', false, true);
 			define ('object', false, true);
@@ -95,9 +101,9 @@ class SpitFire
 			$object = $path;
 			
 			//If the controller, action or object was left empty fill it with defaults 
-			if (empty ($controller)) $controller = default_controller;
-			if (empty ($action)) $action = default_action;
-			if (empty ($object)) $object = default_object;
+			if (empty ($controller)) $controller = environment::get('default_controller');
+			if (empty ($action)) $action = environment::get('default_action');
+			if (empty ($object)) $object = environment::get('default_object');
 			
 			//Check if invalid url's are being requested
 			if ($controller == maintenance_controller) throw new publicException('User tried to access maintenance mode', 401);

@@ -1,13 +1,40 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Xobs - Server error</title>
+		<title>Spitfire - Server error</title>
+		<style type="text/css">
+			.wrapper {
+				display: block;
+				width:   800px;
+				padding:  10px 20px;
+				border:  solid 1px #999;
+				border-radius: 5px;
+				background: #FFF;
+				box-shadow: 3px 3px 3px #777;
+				color: #555;
+				margin: 50px auto 0;
+				font-size: 13px;
+			}
+
+			.wrapper h1 {
+				color: #911;
+				margin: 5px;
+				font-size: 17px;
+			}
+			body{ 
+				background: #CCC;
+			}
+		</style>
 	</head>
 	<body>
-		<div>
-			Sorry, but the page you requested is generating an error that prevents it from
-			loading.<br/>
-			Please try visiting another site or try again in five minutes.
+		<div class="wrapper">
+			<h1><?=$message?></h1>
+			<p>Sorry, but the page you requested is generating an error that prevents it from loading.	
+			Please try visiting another site or try again in five minutes. </p>
+			<?php if(environment::get('debugging_mode')): ?>
+				<p>Following details were provided to solve the the error:</p> 
+				<pre><?=$moreInfo?></pre>
+			<?php endif; ?>
 		</div>
 	</body>
 </html>

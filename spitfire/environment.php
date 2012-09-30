@@ -20,6 +20,7 @@ class environment
 		#Maintenance related settings.
 		'maintenance_enabled'      => false,
 		'maintenance_controller'   => 'maintenance',
+		'debugging_mode'           => true, //TODO: Change for stable
 		
 		#Database settings
 		'db_server'                => 'localhost',
@@ -69,7 +70,7 @@ class environment
 	 * Defines which environment should be used to read data from it.
 	 * @param string|environment $env The environment to be used.
 	 */
-	static function set_active_environment ($env) {
+	public static function set_active_environment ($env) {
 		if (is_a($env, __class__) )        self::$active_environment = $env;
 		else if (isset (self::$envs[$env])) self::$active_environment = self::$envs[$env];
 	}
@@ -89,18 +90,11 @@ class environment
 	 * active environment.
 	 * @param string $key The key to be returned.
 	 */
-	static function get($key) {
+	public static function get($key) {
 		if (self::$active_environment) return self::$active_environment->read($key);
+		#Implicit else
+		new environment('default');
+		return self::get($key); //Repeat
 	}
 	
 }
-
-$production = new environment('production');
-$testing    = new environment('testing');
-
-$testing->set('memcached_enabled', true);
-environment::set_active_environment($production);
-
-echo (environment::get('memcached_enAbled'))? 'memcached_enabled':'memcached_disabled';
-
-print_r(environment::get('memcached_servers'));
