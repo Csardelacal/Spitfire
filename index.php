@@ -47,7 +47,7 @@ define ('VIEWS_DIRECTORY',       'bin/views/',       true);
 $month = 3600*24*30;
 ini_set('session.gc_maxlifetime',$month);
 ini_set('session.save_path', "bin/usr/sessions");
-session_start();
+//session_start();
 ini_set('memory_limit', '64M');/**/
 
 /* Call the selected controller with the selected method. */

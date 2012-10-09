@@ -45,6 +45,9 @@ class SpitFire
 		#Get the current path...
 		self::getPath();
 
+		#Start the session
+		self::init_session();
+
 		self::$started = true;
 		return true;
 	}
@@ -121,6 +124,16 @@ class SpitFire
 	public static function includeIfPossible($file) {
 		if (file_exists($file)) return include $file;
 		else return false;
+	}
+
+	public static function init_session() {
+		if ( is_writable(session_save_path()) ) 
+			return session_start();
+		elseif (!is_dir(session_save_path())) 
+			if (mkdir(session_save_path(), 0777, true))
+				return session_start();
+			else throw new fileNotFoundException("Session path couldn't be created");
+		else throw new filePermissionsException("Session path is not writable");
 	}
 
 }

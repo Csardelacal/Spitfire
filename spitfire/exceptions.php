@@ -113,7 +113,7 @@ class _SF_ExceptionHandler {
 	}
 
 	public function errorHandle ($errno, $errstr, $errfile, $errline, $scope) {
-		ob_get_clean();
+		while(ob_get_clean());
 		get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r($scope, 1) );
 		return false;
 	}

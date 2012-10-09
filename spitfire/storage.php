@@ -24,7 +24,7 @@ class _SF_Memcached
 	 * @return memcache 
 	 */
 	public function connect () {
-		global $memcached_servers;
+		$memcached_servers = environment::get('memcached_servers');
 		
 		
 		if (! MEMCACHED_ENABLED) return;
