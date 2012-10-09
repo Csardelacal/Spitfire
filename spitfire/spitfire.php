@@ -67,7 +67,7 @@ class SpitFire
 		else throw new publicException(E_PAGE_NOT_FOUND, 404);
 
 		self::$view = new view(self::$controller_name, self::$action);
-		self::$view->render();//test
+		self::$view->render();
 	}
 
 
