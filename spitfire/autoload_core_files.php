@@ -19,3 +19,4 @@ _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sani
 
 
 _SF_AutoLoad::registerClass('url',                   $cur_dir.'/url.php');
+_SF_AutoLoad::registerClass('session',               $cur_dir.'/session.php');
