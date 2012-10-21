@@ -54,6 +54,8 @@ class SpitFire
 		#Import and instance the controller
 		$_controller = self::$controller_name.'Controller';
 		self::$controller = $controller = new $_controller();
+		#Create the view
+		self::$view = new view(self::$controller_name, self::$action);
 		#Check if the action is available
 		$method = Array($controller, self::$action);
 		#Create a view-controller model
@@ -63,7 +65,6 @@ class SpitFire
 		if (is_callable($method)) call_user_func_array($method, self::$object);
 		else throw new publicException(E_PAGE_NOT_FOUND, 404);
 
-		self::$view = new view(self::$controller_name, self::$action);
 		self::$view->render();
 	}
 
