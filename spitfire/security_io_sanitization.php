@@ -12,10 +12,14 @@ class _SF_InputSanitizer
 	private $data = false;
 	
 	public function __construct($data) {
-		if (is_array($data))
+
+		if (is_array($data)) {
+			$this->data = Array();
 			foreach ($data as $field=>$value)
-				$this->$field = new _SF_InputSanitizer($value);
+				$this->data[$field] = $this->$field = new _SF_InputSanitizer($value);
+		}
 		else $this->data = trim($data);
+
 	}
 	
 	public function value() {
@@ -39,6 +43,11 @@ class _SF_InputSanitizer
 		$pass   = $str;
 		
 		return md5("$pepper$pass$salt");
+	}
+
+	public function toArray () {
+		if ( is_array($this->data) ) return $this->data;
+		else return false;
 	}
 	
 	public function __get($value) {
