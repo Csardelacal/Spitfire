@@ -68,8 +68,8 @@ class URL
 	 * url.
 	 */
 	public function __toString() {
-		if (pretty_urls) {
-			$str =  base_url.
+		if (environment::get('pretty_urls')) {
+			$str =  environment::get('base_url').
 					'/'. $this->controller.
 					'/'. $this->action.
 					'/'. $this->object;
@@ -79,7 +79,7 @@ class URL
 				$first = false; 
 			}
 		} else {//pretty_urls
-			$str =  base_url.
+			$str =  environment::get('base_url').
 					'/?controller='.$this->controller.
 					'&action='.$this->action.
 					'&object='.$this->object;
