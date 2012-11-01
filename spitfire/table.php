@@ -11,15 +11,15 @@ class table
 		$this->db = $database;
 
 		if ($tablename)
-			$this->tablename = $tablename;
+			$this->tablename = environment::get('db_prefix') . $tablename;
 	}
 
 	public function get($field, $value) {
 
 		if (is_array($this->fields))
-			$statement = "SELECT " . implode(array_keys($this->fields), ', ') . " WHERE  $field = :value";
+			$statement = "SELECT " . implode(array_keys($this->fields), ', ') . " FROM $this->tablename WHERE  $field = :value";
 		else
-			$statement = "SELECT * FROM  WHERE  $field = :value";
+			$statement = "SELECT * FROM $this->tablename WHERE  $field = :value";
 
 		$con = $this->db->getConnection();
 		$stt = $con->prepare($statement);
@@ -35,6 +35,28 @@ class table
 		}
 
 		return $result;
+	}
+
+	public function set ($data) {
+
+		if ($this->fields) {
+			$newdata = Array();
+			foreach ($fields as $field)  $newdata[$field] = $data[$field];
+			$data = $newdata;
+		}
+
+		if (empty($data['id'])) unset $data['id'];
+
+		$fields = array_keys($data);
+		$famt   = count($fields);
+
+		$statement = "INSERT INTO $this->tablename (".implode(', ', $fields.") VALUES :" . implode(', :', $fields . "ON DUPLICATE KEY UPDATE ";
+		for ($i = 0; $i < $famt; $i++) $statement.= $fields[$i] . " = :" . $fields[$i] . " ";
+
+		$con = $this->db->getConnection();
+		$stt = $con->prepare($statement);
+		$stt->execute($data);
+
 	}
 
 }

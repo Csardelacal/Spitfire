@@ -14,6 +14,7 @@ class SpitFire
 	static $autoload        = false;
 	static $controller      = false;
 	static $view            = false;
+	static $model           = false;
 
 	static $controller_name = false;
 	static $action          = false;
@@ -56,6 +57,8 @@ class SpitFire
 		self::$controller = $controller = new $_controller();
 		#Create the view
 		self::$view = new view(self::$controller_name, self::$action);
+		#Create the model
+		self::$model = new DBInterface();
 		#Check if the action is available
 		$method = Array($controller, self::$action);
 		#Create a view-controller model

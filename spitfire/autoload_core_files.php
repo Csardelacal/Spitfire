@@ -15,6 +15,8 @@ _SF_AutoLoad::registerClass('controller',            $cur_dir.'/mvc.php');
 _SF_AutoLoad::registerClass('view',                  $cur_dir.'/mvc.php');
 
 _SF_AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
+_SF_AutoLoad::registerClass('DBInterface',           $cur_dir.'/db.php');
+_SF_AutoLoad::registerClass('table',                 $cur_dir.'/table.php');
 _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
 
 

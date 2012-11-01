@@ -14,7 +14,9 @@ class DBInterface
 		try {
 			$this->connection = new PDO($dsn, $user, $pass);
 			return true;
-		} catch (Exception $e) return false;
+		} catch (Exception $e) {
+			return false;
+		}
 
 	}
 
@@ -24,7 +26,10 @@ class DBInterface
 	}
 
 	public function __get($table) {
-		if (class_exists($table.'Model')) return new {$table.'Model'}($this);
+		
+		$tableClass = $table.'Model';
+
+		if (class_exists($tableClass)) return new $tableClass ($this);
 		else return new table($this, $table);
 	}
 

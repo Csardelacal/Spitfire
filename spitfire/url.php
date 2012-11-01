@@ -37,10 +37,16 @@ class URL
 	private $object;
 	private $params;
 	
-	public function __construct($c = default_controller, $a= default_action, $o = default_object, $p = Array()) {
-		$this->controller = $c;
-		$this->action = $a;
-		$this->object = $o;
+	public function __construct($c = false, $a= false, $o = false, $p = Array()) {
+		if($c) $this->controller = $c;
+		else $this->controller = environment::get('default_controller');
+
+		if($a) $this->action = $a;
+		else $this->action = environment::get('default_action');
+
+		if($o) $this->object = $o;
+		else $this->object = environment::get('default_object');
+
 		$this->params = $p;
 	}
 	
