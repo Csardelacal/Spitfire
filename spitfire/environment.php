@@ -33,7 +33,7 @@ class environment
 		'pretty_urls'              => true,
 		'default_controller'       => 'home',
 		'default_action'           => 'index',
-		'default_object'           => '',
+		'default_object'           => Array(),
 		
 		#Memcached settings
 		'memcached_enabled'        => false,

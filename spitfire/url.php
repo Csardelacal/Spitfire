@@ -6,7 +6,7 @@ define('E_PAGE_NOT_FOUND_CODE', 404, true);
 
 /**
  * Get the Server's domains from highest to lowest
- * @author César
+ * @author CÃ©sar
  * @package nLive.mvc
  * @return mixed Domains sorted from highest to lowest
  */
@@ -26,7 +26,7 @@ function getDomain($pos = false) {
  * this allows us to validate URLs if needed
  * or generate different types of them depending
  * on if pretty links is enabled
- * @author César
+ * @author Cï¿½sar
  *
  */
 class URL
@@ -44,8 +44,11 @@ class URL
 		if($a) $this->action = $a;
 		else $this->action = environment::get('default_action');
 
-		if($o) $this->object = $o;
-		else $this->object = environment::get('default_object');
+		if($o) {
+			if (is_array($o)) $this->object = implode('/', $object);
+			else              $this->object = $o;
+		}
+		else $this->object = implode('/', environment::get('default_object'));
 
 		$this->params = $p;
 	}
@@ -75,7 +78,7 @@ class URL
 	 */
 	public function __toString() {
 		if (environment::get('pretty_urls')) {
-			$str =  environment::get('base_url').
+			$str =  SpitFire::baseUrl().
 					'/'. $this->controller.
 					'/'. $this->action.
 					'/'. $this->object;
@@ -85,7 +88,7 @@ class URL
 				$first = false; 
 			}
 		} else {//pretty_urls
-			$str =  environment::get('base_url').
+			$str = SpitFire::baseUrl().
 					'/?controller='.$this->controller.
 					'&action='.$this->action.
 					'&object='.$this->object;

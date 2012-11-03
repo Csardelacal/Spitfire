@@ -4,8 +4,8 @@ class homeController extends controller
 {
 
 	public function index ($object = '', $params = '') {
-		set('FW_NAME', 'Spitfire');
-		set('controller', __CLASS__ . '&gt' . $object . '&gt' . $params);
+		$this->view->set('FW_NAME', 'SpitfirePHP');
+		$this->view->set('controller', __CLASS__ . '&gt' . $object . '&gt' . $params);
 	}
 
 	public function detail($object, $params) {
@@ -13,11 +13,10 @@ class homeController extends controller
 	}
 
 	public function save ($object, $params) {
-		set('FW_NAME', 'Spitfire');
-		set('name', $this->post->name->value());
-		set('age',  $this->post->age->toInt());
-		set('pass', $this->post->pass->toPassword());
+		$this->view->set('FW_NAME', 'Spitfire');
+		$this->view->set('name', $this->post->name->value());
+		$this->view->set('age',  $this->post->age->toInt());
+		$this->view->set('pass', $this->post->pass->toPassword());
 	}
-
 	
 }

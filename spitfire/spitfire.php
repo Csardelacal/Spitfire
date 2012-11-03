@@ -57,18 +57,23 @@ class SpitFire
 		self::$controller = $controller = new $_controller();
 		#Create the view
 		self::$view = new view(self::$controller_name, self::$action);
+		self::$controller->view = self::$view;
 		#Create the model
 		self::$model = new DBInterface();
+		self::$controller->model = self::$model;
 		#Check if the action is available
 		$method = Array($controller, self::$action);
-		#Create a view-controller model
-		$GLOBALS['_SF_ViewData'] = array();
 
 		#Fire!
 		if (is_callable($method)) call_user_func_array($method, self::$object);
 		else throw new publicException(E_PAGE_NOT_FOUND, 404);
 
 		self::$view->render();
+	}
+	
+	public static function baseUrl(){
+		list($base_url) = explode('/index.php', $_SERVER['PHP_SELF'], 2);
+		return $base_url;
 	}
 
 

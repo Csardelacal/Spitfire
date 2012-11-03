@@ -11,7 +11,7 @@ class table
 		$this->db = $database;
 
 		if ($tablename)
-			$this->tablename = environment::get('db_prefix') . $tablename;
+			$this->tablename = environment::get('db_table_prefix') . $tablename;
 	}
 
 	public function get($field, $value) {
@@ -27,10 +27,10 @@ class table
 		$stt->execute(Array(':value' => $value));
 
 		$result = Array();
-		while ($row = $stt->fetch()) {
+		while ($row = $stt->fetch(PDO::FETCH_ASSOC)) {
 			foreach($row as $field=>$value)
-				if (is_callable(Array($this, 'parse_'.$field)))
-					$row['field'] = call_user_func_array(Array($this, 'parse_'.$field), Array($value));
+				if ( is_callable(Array($this, 'parse_'.$field)) )
+					$row[$field] = call_user_func_array(Array($this, 'parse_'.$field), Array($value));
 				$result[$row['id']] = $row; //Check
 		}
 
@@ -41,7 +41,7 @@ class table
 
 		if ($this->fields) {
 			$newdata = Array();
-			foreach ($fields as $field)  $newdata[$field] = $data[$field];
+			foreach ($this->fields as $field)  $newdata[$field] = $data[$field];
 			$data = $newdata;
 		}
 
@@ -50,12 +50,19 @@ class table
 		$fields = array_keys($data);
 		$famt   = count($fields);
 
-		$statement = "INSERT INTO $this->tablename (".implode(', ', $fields) .") VALUES :" . implode(', :', $fields) . "ON DUPLICATE KEY UPDATE ";
-		for ($i = 0; $i < $famt; $i++) $statement.= $fields[$i] . " = :" . $fields[$i] . " ";
+		$statement = "INSERT INTO $this->tablename (".implode(', ', $fields) .") VALUES (:" . implode(', :', $fields) . ") ON DUPLICATE KEY UPDATE ";
+		for ($i = 0; $i < $famt; $i++) {
+			$statement.= $fields[$i] . " = :" . $fields[$i];
+			if ($i < $famt-1) $statement.= ',';
+			$statement.= ' ';
+		}
 
 		$con = $this->db->getConnection();
 		$stt = $con->prepare($statement);
 		$stt->execute($data);
+		
+		if ($stt->rowCount() == 1) return $con->lastInsertId();
+		else return $data['id'];
 
 	}
 

@@ -11,6 +11,6 @@
 			<li> <b>Name: </b> <?= $name ?></li>
 			<li> <b>Age:  </b> <?= $age  ?></li>
 			<li> <b>Pass: </b> <?= $pass ?></li>
-		</form>
+		</ul>
 	</body>
 </html>

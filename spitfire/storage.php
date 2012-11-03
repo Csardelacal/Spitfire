@@ -4,7 +4,7 @@
  * Storage related components of nLive
  * 
  * @package nLive.storage
- * @author César de la Cal <cesar@magic3w.com>
+ * @author Cï¿½sar de la Cal <cesar@magic3w.com>
  */
 
 /**
@@ -27,7 +27,7 @@ class _SF_Memcached
 		$memcached_servers = environment::get('memcached_servers');
 		
 		
-		if (! MEMCACHED_ENABLED) return;
+		if (!environment::get('memcached_enabled')) return;
 		if (!class_exists('memcache') ) throw new privateException('Memcached is enabled but not installed');
 		
 		$this->connection = new memcache();

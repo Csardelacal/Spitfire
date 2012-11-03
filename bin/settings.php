@@ -53,8 +53,6 @@ $memcached_servers = Array('localhost');
  * to the administrator to manually setup a value or use the
  * provided tool.
  */
-list($base_url) = explode('/index.php', $_SERVER['PHP_SELF'], 2);
-define('base_url', $base_url, true);
 
 
 /*

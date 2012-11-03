@@ -9,7 +9,7 @@ class DBInterface
 
 		$dsn  = 'mysql:dbname=' . environment::get('db_database') . ';host=' . environment::get('db_server');
 		$user = environment::get('db_user');
-		$pass = environment::get('db_password');
+		$pass = environment::get('db_pass');
 
 		try {
 			$this->connection = new PDO($dsn, $user, $pass);
