@@ -45,12 +45,12 @@ class table
 			$data = $newdata;
 		}
 
-		if (empty($data['id'])) unset $data['id'];
+		if (empty($data['id'])) unset ($data['id']);
 
 		$fields = array_keys($data);
 		$famt   = count($fields);
 
-		$statement = "INSERT INTO $this->tablename (".implode(', ', $fields.") VALUES :" . implode(', :', $fields . "ON DUPLICATE KEY UPDATE ";
+		$statement = "INSERT INTO $this->tablename (".implode(', ', $fields) .") VALUES :" . implode(', :', $fields) . "ON DUPLICATE KEY UPDATE ";
 		for ($i = 0; $i < $famt; $i++) $statement.= $fields[$i] . " = :" . $fields[$i] . " ";
 
 		$con = $this->db->getConnection();

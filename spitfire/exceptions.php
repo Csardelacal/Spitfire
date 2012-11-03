@@ -100,9 +100,10 @@ class _SF_ExceptionHandler {
 
 			if ( is_a($e, 'publicException') ) {
 				get_error_page($e->getCode(), $e->getMessage());
-			} else {
+			} else { 
 				error_log($e->getMessage());
-				if (environment::get('debugging_mode')) get_error_page( 500, $e->getMessage() );
+				$trace = 'Trace: ' . print_r( $e->getTrace(), true);
+				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
 
@@ -113,9 +114,22 @@ class _SF_ExceptionHandler {
 	}
 
 	public function errorHandle ($errno, $errstr, $errfile, $errline, $scope) {
-		while(ob_get_clean());
-		get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r($scope, 1) );
-		return false;
+		if (!error_reporting()) return false;
+		
+		switch ($errno) {
+			case E_USER_ERROR:
+				while(ob_get_clean());
+				get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r($scope, 1) );
+				return false;
+				break;
+			case E_DEPRECATED:
+				echo "Deprecated function is being used.";
+				return false;
+				break;
+			default:
+				return false;
+				break;
+		}
 	}
 
 	public function msg ($msg) {

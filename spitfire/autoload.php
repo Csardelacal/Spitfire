@@ -83,7 +83,7 @@ class _SF_AutoLoad
 			else include 'spitfire/appcontroller.php';
 		}
 
-		throw new fileNotFoundException("Class $className not found.", 0);
+		error_log("Class $className not found.");
 
 	}
 
