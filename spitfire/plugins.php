@@ -5,8 +5,8 @@
  * improving nLive or the software based on it 
  * without altering the framework itself.
  * 
- * @author César de la Cal <cesar@magic3w.com>
- * @package nLive
+ * @author CÃ©sar de la Cal <cesar@magic3w.com>
+ * @package Spitfire
  *
  */
 
@@ -70,7 +70,7 @@ abstract class plugin
  * This is especially useful when using if for static elements
  * like CSS, breadcrumbs and scripts.
  * 
- * @author César
+ * @author Cï¿½sar
  *
  */
 class registry
@@ -128,7 +128,7 @@ class registry
  * preceeded by a # it will detect it as comment. The data looks like a phpdoc
  * piece of information.
  * 
- * @author César <cesar@magic3w.com>
+ * @author Cï¿½sar <cesar@magic3w.com>
  *
  */
 class m3w_parser

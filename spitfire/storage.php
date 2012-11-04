@@ -3,8 +3,8 @@
 /**
  * Storage related components of nLive
  * 
- * @package nLive.storage
- * @author C�sar de la Cal <cesar@magic3w.com>
+ * @package Spitfire.storage
+ * @author César de la Cal <cesar@magic3w.com>
  */
 
 /**
@@ -79,46 +79,6 @@ class _SF_Memcached
 	public function __set($var, $val) {
 		return $this->setKey($var, $val);
 	}
-}
-
-/**
- * @package nLive.storage
- */
-
-class DBO
-{
-	const VALIDATION_PREFIX = 'validate_';
-	
-	function __get($key) {
-		$t = $this->data[$key];
-		
-		//Standard checks
-		$t = htmlentities(strip_tags($t));
-		$t = nl2br($t);
-		
-		//Check if we need to parse the data in any other way.
-		$method = self::PARSING_PREFIX . strtolower($key);
-		$callable = is_callable( Array($this, $method) );
-		if ( $callable ) $t = call_user_func_array(Array($this, $method), Array($t) );
-		
-		return $t;
-	}
-	
-}
-
-
-
-/**
- * Singleton for PDO database. Instead of reconnecting everytime we need it we just call
- * PDO().
- * @return PDO Database Object;
- * @package nLive.storage
- */
-
-function PDO() { //TODO: We could also add a "DBid" which would allow to use the application to communicate with several DBs
-	static $pdo;
-	if (!$pdo) $pdo = new PDO( 'mysql:host='.DB_SERVER.';dbname='. DB_DATABASE, DB_USER, DB_PASSWORD);
-	return $pdo;
 }
 
 
