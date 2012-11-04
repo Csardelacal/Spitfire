@@ -37,8 +37,6 @@ class _SF_DBQuery
 		
 		$offset = ($this->page - 1) * $this->rpp;
 		$rpp    = $this->rpp;
-		
-		//if (!is_array($this->fields)) $this->table->fetchFields();
 
 		$statement = "SELECT " . 
 				implode($this->table->getFields(), ', ') . 
@@ -54,8 +52,6 @@ class _SF_DBQuery
 		$stt->execute($values);
 		
 		$this->result = $stt;
-		
-		//print_r($stt->errorInfo());
 
 	}
 }
