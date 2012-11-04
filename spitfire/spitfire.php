@@ -42,6 +42,11 @@ class SpitFire
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 
 		//TODO: Include components
+		$env = new environment('test');
+		$env->set('db_user', 'mysidia');
+		$env->set('db_pass', 'mysidia');
+		$env->set('db_database', 'mysidia');
+		$env->set('db_table_prefix', 'adopts_');
 
 		#Get the current path...
 		self::getPath();

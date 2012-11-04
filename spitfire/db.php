@@ -15,6 +15,7 @@ class DBInterface
 			$this->connection = new PDO($dsn, $user, $pass);
 			return true;
 		} catch (Exception $e) {
+			SpitFire::$debug->msg($e->getMessage());
 			return false;
 		}
 

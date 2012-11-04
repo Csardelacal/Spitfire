@@ -12,5 +12,9 @@
 			<li> <b>Age:  </b> <?= $age  ?></li>
 			<li> <b>Pass: </b> <?= $pass ?></li>
 		</ul>
+		<pre>
+		<?php print_r($test); ?>
+		<?php echo floor(memory_get_peak_usage() / 1024), 'KB' ?>
+		</pre>
 	</body>
 </html>
