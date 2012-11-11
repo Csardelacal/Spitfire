@@ -62,10 +62,8 @@ class SpitFire
 		self::$controller = $controller = new $_controller();
 		#Create the view
 		self::$view = new view(self::$controller_name, self::$action);
-		self::$controller->view = self::$view;
 		#Create the model
 		self::$model = new DBInterface();
-		self::$controller->model = self::$model;
 		#Check if the action is available
 		$method = Array($controller, self::$action);
 

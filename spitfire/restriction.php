@@ -4,11 +4,15 @@ class _SF_Restriction
 {
 	private $field;
 	private $value;
-	private $operator = '=';
+	private $operator;
 	
-	public function __construct($field, $value) {
-		$this->field = $field;
-		$this->value = $value;
+	const LIKE_OPERATOR  = 'LIKE';
+	const EQUAL_OPERATOR = '=';
+	
+	public function __construct($field, $value, $operator = '=') {
+		$this->field    = $field;
+		$this->value    = $value;
+		$this->operator = $operator;
 	}
 	
 	public function getField() {

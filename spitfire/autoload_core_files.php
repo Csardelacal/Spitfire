@@ -11,6 +11,7 @@ _SF_AutoLoad::registerClass('_SF_ExceptionHandler',  $cur_dir.'/exceptions.php')
 _SF_AutoLoad::registerClass('router',                $cur_dir.'/router.php');
 _SF_AutoLoad::registerClass('environment',           $cur_dir.'/environment.php');
 
+_SF_AutoLoad::registerClass('_SF_MVC',               $cur_dir.'/spitfire/mvc.php');
 _SF_AutoLoad::registerClass('controller',            $cur_dir.'/mvc.php');
 _SF_AutoLoad::registerClass('view',                  $cur_dir.'/mvc.php');
 

@@ -1,6 +1,6 @@
 <?php
 
-class DBInterface
+class DBInterface extends _SF_MVC
 {
 
 	private $connection = false;
@@ -27,6 +27,9 @@ class DBInterface
 	}
 
 	public function __get($table) {
+		
+		//In case we request a model, view or controller
+		if (parent::__get($table)) return parent::__get($table);
 		
 		$tableClass = $table.'Model';
 

@@ -1,22 +1,16 @@
 <?php
 
-abstract class controller
+abstract class controller extends _SF_MVC
 {
 	
 	//abstract public function index ($object, $params);
 	//abstract public function detail ($object, $params);
-	
-	public $view;
-	public $model;
 	
 	public function __construct() {
 		$this->memcached = new _SF_Memcached();
 		$this->call      = new _SF_Invoke();
 		$this->post      = new _SF_InputSanitizer($_POST);
 		$this->get       = new _SF_InputSanitizer($_GET);
-		
-		$this->view      = SpitFire::$view;
-		$this->model     = SpitFire::$model;
 	}
 	
 	public function __call($method, $args) {
@@ -26,7 +20,7 @@ abstract class controller
 	
 }
 
-class view
+class view extends _SF_MVC
 {
 	private $file = '';
 	private $data = Array();
