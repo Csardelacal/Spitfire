@@ -1,6 +1,6 @@
 <?php
 
-class table
+class _SF_DBTable
 {
 
 	protected $tablename = false;

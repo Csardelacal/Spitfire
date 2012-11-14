@@ -25,6 +25,8 @@ class _SF_DBQuery
 	}
 	
 	public function setPage ($page) {
+		#The page can't be lower than 1
+		if ($page < 1) return false;
 		$this->page = $page;
 	}
 	
@@ -47,7 +49,7 @@ class _SF_DBQuery
 		$con = $this->table->getDb()->getConnection();
 		$stt = $con->prepare($statement);
 		
-		$values = Array();
+		$values = Array(); //Prepare the statement to be executed
 		foreach($this->restrictions as $r) $values[$r->getField()] = $r->getValue();
 		$stt->execute($values);
 		

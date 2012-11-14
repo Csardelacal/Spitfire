@@ -23,6 +23,12 @@ class View extends _SF_MVC
 		//echo $key;
 		$this->data[$key] = $value;
 	}
+	
+	public function element($file) {
+		$filename = 'bin/views/elements/' . $file . '.php';
+		if (!file_exists($filename)) return false;
+		return new _SF_ViewElement($filename, $this->data);
+	}
 
 	public function render () {
 		ob_start();
