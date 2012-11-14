@@ -1,6 +1,6 @@
 <?php
 
-class homeController extends controller
+class homeController extends Controller
 {
 
 	public function index ($object = '', $params = '') {

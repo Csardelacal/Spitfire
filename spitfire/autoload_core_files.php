@@ -11,9 +11,9 @@ _SF_AutoLoad::registerClass('_SF_ExceptionHandler',  $cur_dir.'/exceptions.php')
 _SF_AutoLoad::registerClass('router',                $cur_dir.'/router.php');
 _SF_AutoLoad::registerClass('environment',           $cur_dir.'/environment.php');
 
-_SF_AutoLoad::registerClass('_SF_MVC',               $cur_dir.'/spitfire/mvc.php');
-_SF_AutoLoad::registerClass('Controller',            $cur_dir.'/spitfire/controller.php');
-_SF_AutoLoad::registerClass('View',                  $cur_dir.'/spitfire/view.php');
+_SF_AutoLoad::registerClass('_SF_MVC',               $cur_dir.'/mvc/mvc.php');
+_SF_AutoLoad::registerClass('Controller',            $cur_dir.'/mvc/controller.php');
+_SF_AutoLoad::registerClass('View',                  $cur_dir.'/mvc/view.php');
 
 _SF_AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
 
@@ -23,6 +23,7 @@ _SF_AutoLoad::registerClass('_SF_DBQuery',           $cur_dir.'/dbquery.php');
 _SF_AutoLoad::registerClass('_SF_Restriction',       $cur_dir.'/restriction.php');
 
 _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
+_SF_AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 
 
 _SF_AutoLoad::registerClass('url',                   $cur_dir.'/url.php');
