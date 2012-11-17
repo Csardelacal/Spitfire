@@ -18,10 +18,18 @@ class homeController extends Controller
 		$this->view->set('age',  $this->post->age->toInt());
 		$this->view->set('pass', $this->post->pass->toPassword());
 		
-		$this->view->set('test', 
+		$t = new Email();
+		$t->setFrom("cesar@magic3w.com");
+		$t->setTo("flunsidelacal@msn.com");
+		//$t->setTo("cesarbretschneider@gmail.com");
+		$t->setSubject("Test");
+		$t->setHTML("test.php");
+		$t->bind('test', date('d/M/Y h:i:s'));
+		$this->view->set('test', $t->send());
+		/*$this->view->set('test', 
 			$this->model->content->get('page', 'index')
 			->addRestriction(new _SF_Restriction('content', 'This is a sample article.  All of this text you can change in the script admin control panel.Hello world'))
-			->fetch());
+			->fetch());*/
 	}
 	
 }

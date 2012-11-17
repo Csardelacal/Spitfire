@@ -29,3 +29,5 @@ _SF_AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php')
 
 _SF_AutoLoad::registerClass('url',                   $cur_dir.'/url.php');
 _SF_AutoLoad::registerClass('session',               $cur_dir.'/session.php');
+
+_SF_AutoLoad::registerClass('email',                 $cur_dir.'/mail.php');
