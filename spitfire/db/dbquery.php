@@ -34,6 +34,11 @@ class _SF_DBQuery
 		if (!$this->result) $this->query();
 		return $this->result->fetch(PDO::FETCH_ASSOC);
 	}
+	
+	public function fetchAll() {
+		if (!$this->result) $this->query();
+		return $this->result->fetchAll(PDO::FETCH_ASSOC);
+	}
 
 	protected function query() {
 		
@@ -42,7 +47,7 @@ class _SF_DBQuery
 
 		$statement = "SELECT " . 
 				implode($this->table->getFields(), ', ') . 
-				" FROM {$this->table->getTablename()} WHERE  " . 
+				" FROM `{$this->table->getTablename()}` WHERE  " . 
 				implode(' AND ', $this->restrictions) . 
 				" LIMIT $offset, $rpp";
 

@@ -36,7 +36,7 @@ class _SF_DBTable
 	}
 	
 	public function fetchFields() {
-		$statement = "DESCRIBE $this->tablename ";
+		$statement = "DESCRIBE `$this->tablename` ";
 		
 		$con = $this->db->getConnection();
 		$stt = $con->prepare($statement);
@@ -78,7 +78,7 @@ class _SF_DBTable
 		$fields = array_keys($data);
 		$famt   = count($fields);
 
-		$statement = "INSERT INTO $this->tablename (".implode(', ', $fields) .") VALUES (:" . implode(', :', $fields) . ") ON DUPLICATE KEY UPDATE ";
+		$statement = "INSERT INTO `$this->tablename` (".implode(', ', $fields) .") VALUES (:" . implode(', :', $fields) . ") ON DUPLICATE KEY UPDATE ";
 		for ($i = 0; $i < $famt; $i++) {
 			$statement.= $fields[$i] . " = :" . $fields[$i];
 			if ($i < $famt-1) $statement.= ',';
