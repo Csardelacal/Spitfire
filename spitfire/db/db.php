@@ -16,6 +16,7 @@ class DBInterface extends _SF_MVC
 			return true;
 		} catch (Exception $e) {
 			SpitFire::$debug->msg($e->getMessage());
+			throw new privateException('DB Error');
 			return false;
 		}
 

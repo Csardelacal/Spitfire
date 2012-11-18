@@ -98,4 +98,8 @@ class URL
 		//BUG: $str = plugins::$action($str);
 		return $str;
 	}
+	
+	public static function asset($asset_name) {
+		return SpitFire::baseUrl() . '/assets/' . $asset_name;
+	}
 }

@@ -3,19 +3,18 @@
 class session
 {
 
-	private $started = false;
 	private $secure  = false;
 
 	public function set($key, $value) {
 
-		if (!$this->started) $this->start();
+		if (!session_id()) $this->start();
 		$_SESSION[$key] = $value;
 
 	}
 
 	public function get($key) {
 
-		if (!$this->started) $this->start();
+		if (!session_id()) $this->start();
 		return $_SESSION[$key];
 
 	}
@@ -55,7 +54,6 @@ class session
 		if ( is_writable(session_save_path()) ) {
 			$started = session_start();
 			$this->isSafe();
-			if ($started) $this->started = true;
 			return $started;
 		}
 
@@ -63,12 +61,17 @@ class session
 
 			if (mkdir(session_save_path(), 0777, true)) {
 				$started = session_start();
-				if ($started) $this->started = true;
+				$this->isSafe();
 				return $started;
 			}
 			else throw new fileNotFoundException("Session path couldn't be created");
 
 		else throw new filePermissionsException("Session path is not writable");
+	}
+	
+	public function destroy() {
+		if (!session_id()) $this->start();
+		return session_destroy();
 	}
 
 }
