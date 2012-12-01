@@ -26,6 +26,14 @@ class _SF_DBTable
 		return $query;
 	}
 
+	public function getAll() {
+		
+		if (!is_array($this->fields)) $this->fetchFields();
+		
+		$query = new _SF_DBQuery($this);
+		return $query;
+	}
+
 	public function like($field, $value) {
 		
 		if (!is_array($this->fields)) $this->fetchFields();
@@ -42,10 +50,13 @@ class _SF_DBTable
 		$stt = $con->prepare($statement);
 		$stt->execute();
 		
+		$error = $stt->errorInfo();
+		if ($error[1]) throw new privateException($error[1], $error[0]);
+		
 		$this->fields = Array();
 		while($row = $stt->fetch()) {
 			$this->fields[] = $row['Field'];
-			if ($row['KEY'] == 'PRIMARY') 
+			if ( isset($row['Key']) && $row['Key'] == 'PRIMARY') 
 				$this->primaryK = $row['Field'];
 		}
 		

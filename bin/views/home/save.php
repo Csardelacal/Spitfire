@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title><?= $FW_NAME ?> - test</title>
+		<link rel="stylesheet" type="text/css" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" />
 	</head>
 	<body>
 		<h1>It works!</h1>
@@ -18,5 +19,6 @@
 		<?php print_r($test); ?>
 		<?php echo floor(memory_get_peak_usage() / 1024), 'KB' ?>
 		</pre>
+		<div class="pagination"><?= $pagination ?></div>
 	</body>
 </html>

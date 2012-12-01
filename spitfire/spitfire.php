@@ -19,6 +19,8 @@ class SpitFire
 	static $controller_name = false;
 	static $action          = false;
 	static $object          = false;
+	
+	static $current_url     = false;
 
 	static $debug           = false;
 
@@ -125,6 +127,7 @@ class SpitFire
 			self::$controller_name = $controller;
 			self::$action          = $action;
 			self::$object          = $object;
+			self::$current_url     = new URL($controller, $action, $object);
 			return true;
 
 		}

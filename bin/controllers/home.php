@@ -26,10 +26,14 @@ class homeController extends Controller
 		$t->setHTML("test.php");
 		$t->bind('test', date('d/M/Y h:i:s'));
 		$this->view->set('test', $t->send());
-		/*$this->view->set('test', 
-			$this->model->content->get('page', 'index')
-			->addRestriction(new _SF_Restriction('content', 'This is a sample article.  All of this text you can change in the script admin control panel.Hello world'))
-			->fetch());*/
+		
+		$query = $this->model->content->get('page', 'index')
+			->addRestriction(new _SF_Restriction('content', 'This is a sample article.  All of this text you can change in the script admin control panel.Hello world'));
+		
+		$pagination = new Pagination($query);
+		
+		$this->view->set('pagination', $pagination);
+		$this->view->set('test', print_r($query, true));/**/
 	}
 	
 }

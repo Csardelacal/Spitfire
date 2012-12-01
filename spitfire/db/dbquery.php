@@ -8,6 +8,7 @@ class _SF_DBQuery
 	protected $restrictions;
 	protected $page = 1;
 	protected $rpp = 20;
+	protected $order;
 	
 	public function __construct($table) {
 		$this->table = $table;
@@ -20,14 +21,40 @@ class _SF_DBQuery
 		return $this;
 	}
 	
-	public function setResultsPerPage ($amt) {
+	/**
+	 * Sets the ammount of results returned by the query.
+	 * @param int $amt
+	 */
+	public function setResultsPerPage($amt) {
 		$this->rpp = $amt;
 	}
 	
+	/**
+	 * @return int The amount of results the query returns when executed.
+	 */
+	public function getResultsPerPage() {
+		return $this->rpp;
+	}
+	
+	/**
+	 * @param int $page The page of results currently displayed.
+	 * @return boolean Returns if the page se is valid.
+	 */
 	public function setPage ($page) {
 		#The page can't be lower than 1
 		if ($page < 1) return false;
 		$this->page = $page;
+		return true;
+	}
+	
+	public function getPage() {
+		return $this->page;
+	}
+	
+	public function setOrder ($field, $mode) {
+		$this->order['field'] = $field;
+		$this->order['mode'] = $mode;
+		return $this;
 	}
 	
 	public function fetch() {
@@ -40,16 +67,27 @@ class _SF_DBQuery
 		return $this->result->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	protected function query() {
+	protected function query($fields = false, $returnresult = false) {
 		
 		$offset = ($this->page - 1) * $this->rpp;
 		$rpp    = $this->rpp;
+		
+		if (!$fields) $fields = $this->table->getFields();
+		
+		$restrictions = implode(' AND ', $this->restrictions);
+		if (empty($restrictions)) $restrictions = '1';//If no restrictions are set fetch everything
 
 		$statement = "SELECT " . 
-				implode($this->table->getFields(), ', ') . 
+				implode($fields, ', ') . 
 				" FROM `{$this->table->getTablename()}` WHERE  " . 
-				implode(' AND ', $this->restrictions) . 
-				" LIMIT $offset, $rpp";
+				$restrictions;
+				
+		if (!empty($this->order)) {
+			$statement.= " ORDER BY ";
+			$statement.= $this->order['field'] . ' ' . $this->order['mode'];
+		}
+		
+		$statement.= " LIMIT $offset, $rpp";
 
 		$con = $this->table->getDb()->getConnection();
 		$stt = $con->prepare($statement);
@@ -58,7 +96,14 @@ class _SF_DBQuery
 		foreach($this->restrictions as $r) $values[$r->getField()] = $r->getValue();
 		$stt->execute($values);
 		
-		$this->result = $stt;
+		if ($returnresult) return $stt;
+		else $this->result = $stt;
 
+	}
+	
+	public function count() {
+		$query = $this->query(Array('count(*)'), true)->fetch();
+		$count = end($query);
+		return $count;
 	}
 }
