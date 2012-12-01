@@ -34,8 +34,8 @@ class DBInterface extends _SF_MVC
 		
 		$tableClass = $table.'Model';
 
-		if (class_exists($tableClass)) return new $tableClass ($this);
-		else return new _SF_DBTable($this, $table);
+		if (class_exists($tableClass)) return $this->{$table} = new $tableClass ($this);
+		else return $this->{$table} = new _SF_DBTable($this, $table);
 	}
 
 }

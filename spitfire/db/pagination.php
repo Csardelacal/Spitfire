@@ -90,6 +90,7 @@ class Pagination
 				$pages_html[] = $this->makePage(1, '...', true);
 			}
 			$pages_html[] = $this->makePage($page, $page);
+			$previous = $page;
 		}
 		//Next
 		$pages_html[] = $this->makePage($this->getCurrentPage() + 1, '&raquo;');

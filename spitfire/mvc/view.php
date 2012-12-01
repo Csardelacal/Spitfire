@@ -26,7 +26,7 @@ class View extends _SF_MVC
 	
 	public function element($file) {
 		$filename = 'bin/views/elements/' . $file . '.php';
-		if (!file_exists($filename)) return false;
+		if (!file_exists($filename)) throw new privateException('Element ' . $file . ' missing');
 		return new _SF_ViewElement($filename, $this->data);
 	}
 

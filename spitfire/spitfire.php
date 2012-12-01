@@ -43,13 +43,6 @@ class SpitFire
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 
-		//TODO: Include components
-		$env = new environment('test');
-		$env->set('db_user', 'mysidia');
-		$env->set('db_pass', 'mysidia');
-		$env->set('db_database', 'mysidia');
-		$env->set('db_table_prefix', 'adopts_');
-
 		#Get the current path...
 		self::getPath();
 
@@ -61,6 +54,7 @@ class SpitFire
 
 		#Import and instance the controller
 		$_controller = self::$controller_name.'Controller';
+		if (!class_exists($_controller)) throw new publicException("Page not found", 404);
 		self::$controller = $controller = new $_controller();
 		#Create the view
 		self::$view = new View(self::$controller_name, self::$action);
@@ -68,7 +62,10 @@ class SpitFire
 		self::$model = new DBInterface();
 		#Check if the action is available
 		$method = Array($controller, self::$action);
-
+		
+		#Onload
+		if (method_exists($controller, 'onload') ) 
+			call_user_func_array(Array($controller, 'onload'), Array());
 		#Fire!
 		if (is_callable($method)) call_user_func_array($method, self::$object);
 		else throw new publicException(E_PAGE_NOT_FOUND, 404);
@@ -77,6 +74,7 @@ class SpitFire
 	}
 	
 	public static function baseUrl(){
+		if (environment::get('base_url')) return environment::get('base_url');
 		list($base_url) = explode('/index.php', $_SERVER['PHP_SELF'], 2);
 		return $base_url;
 	}

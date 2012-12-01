@@ -93,7 +93,7 @@ class _SF_DBQuery
 		$stt = $con->prepare($statement);
 		
 		$values = Array(); //Prepare the statement to be executed
-		foreach($this->restrictions as $r) $values[$r->getField()] = $r->getValue();
+		foreach($this->restrictions as $r) $values[$r->getRID()] = $r->getValue();
 		$stt->execute($values);
 		
 		if ($returnresult) return $stt;

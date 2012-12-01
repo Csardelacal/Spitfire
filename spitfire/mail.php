@@ -7,13 +7,14 @@
 class Email
 {
 	private $from;
+	private $name;
 	private $to;
 	private $subject;
 	private $HTML;
 	private $plain = ".";
 	private $data = Array();
 	private $boundary = "==Spitfire==";
-	private $carriage = "\r\n";
+	private $carriage = "\n";
 	
 	public function __construct() {
 		$this->boundary.=  uniqid('np');
@@ -21,6 +22,10 @@ class Email
 	
 	public function setHTML($file) {
 		$this->HTML = "bin/email/" . $file;
+	}
+	
+	public function setName ($name) {
+		$this->name = $name;
 	}
 	
 	public function setFrom ($email) {
@@ -41,18 +46,18 @@ class Email
 	
 	protected function makeHeaders() {
 		$headers = "MIME-Version: 1.0$this->carriage";
-		$headers.= "From: $this->from <$this->from>$this->carriage";
-		$headers.= "Subject: $this->subject$this->carriage";
-		$headers.= "Content-Type: multipart/alternative;boundary=" . $this->boundary . $this->carriage;
+		$headers.= "From: " . $this->getSRC() . "$this->carriage";
+		//$headers.= "Subject: $this->subject$this->carriage";
+		$headers.= "Content-Type: multipart/alternative;boundary=" . $this->boundary . $this->carriage . $this->carriage;
 		
 		return $headers;
 	}
 	
 	protected function makeMessage() {
 		
-		$msg .= "$this->carriage$this->carriage--" . $this->boundary . "$this->carriage";
-		$msg .= "Content-type: text/plain;charset=utf-8$this->carriage$this->carriage";
-		$msg .= $this->plain;
+		//$msg .= "$this->carriage$this->carriage--" . $this->boundary . "$this->carriage";
+		//$msg .= "Content-type: text/plain;charset=utf-8$this->carriage$this->carriage";
+		//$msg .= $this->plain;
 
 		$msg .= "$this->carriage$this->carriage--" . $this->boundary . "$this->carriage";
 		$msg .= "Content-type: text/html;charset=utf-8$this->carriage$this->carriage";
@@ -70,7 +75,12 @@ class Email
 		return $msg;
 	}
 	
+	public function getSRC() {
+		if (isset($this->name)) return "$this->name<$this->from>";
+		else return"$this->from<$this->from>";
+	}
+	
 	public function send() {
-		return mail($this->to, '', $this->makeMessage(), $this->makeHeaders());
+		return mail($this->to, $this->subject, $this->makeMessage(), $this->makeHeaders());
 	}
 }

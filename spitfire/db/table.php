@@ -42,6 +42,15 @@ class _SF_DBTable
 		$query->addRestriction(new _SF_Restriction($field, $value, _SF_Restriction::LIKE_OPERATOR));
 		return $query;
 	}
+
+	public function isNull($field) {
+		
+		if (!is_array($this->fields)) $this->fetchFields();
+		
+		$query = new _SF_DBQuery($this);
+		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
+		return $query;
+	}
 	
 	public function fetchFields() {
 		$statement = "DESCRIBE `$this->tablename` ";

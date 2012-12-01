@@ -45,7 +45,7 @@ class URL
 		else $this->action = environment::get('default_action');
 
 		if($o) {
-			if (is_array($o)) $this->object = implode('/', $object);
+			if (is_array($o)) $this->object = implode('/', $o);
 			else              $this->object = $o;
 		}
 		else $this->object = implode('/', environment::get('default_object'));

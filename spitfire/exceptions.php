@@ -54,7 +54,7 @@ class filePermissionsException  extends privateException {}
  * @param mixed $code
  * @param string $message
  */
-function get_error_page($code, $message, $moreInfo) {
+function get_error_page($code, $message, $moreInfo = '') {
 	$error_page = 'bin/error_pages/'.$code.'.php';
 	if (file_exists($error_page)) {
 		include $error_page;
