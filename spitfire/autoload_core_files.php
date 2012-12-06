@@ -17,6 +17,7 @@ _SF_AutoLoad::registerClass('View',                  $cur_dir.'/mvc/view.php');
 _SF_AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php');
 
 _SF_AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
+_SF_AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 
 _SF_AutoLoad::registerClass('DBInterface',           $cur_dir.'/db/db.php');
 _SF_AutoLoad::registerClass('_SF_DBTable',           $cur_dir.'/db/table.php');
