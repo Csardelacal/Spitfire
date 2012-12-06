@@ -49,7 +49,7 @@ class _SF_AutoLoad
 		#Check if the class requested is a component
 		if (strpos($className, 'component')) {
 			$filename = str_replace('component', '', $className);
-			$filename = self::COMPONENT_DIRECTORY . $filename . '.php';
+			$filename = self::COMPONENT_DIRECTORY . $filename . '/main.php';
 			if (file_exists($filename)) {
 				include $filename;
 				return true;

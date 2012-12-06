@@ -7,6 +7,7 @@
 		<h1>It works!</h1>
 		<p>Spitfire is working as it should.</p>
 		<p>This task was completed by <?=$controller?></p>
+		<script src ="<?= $helloworld ?>"></script>
 		<p>To test GETing we want you to enter some info about you:</p>
 		<form action="<?php echo new URL('home', 'save'); ?>" method="POST">
 

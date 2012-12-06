@@ -43,6 +43,7 @@ class SpitFire
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
+		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
 
 		#Get the current path...
 		self::getPath();

@@ -4,7 +4,11 @@ class homeController extends Controller
 {
 
 	public function index ($object = '', $params = '') {
+		
+		$test = ComponentManager::get('M3W', 'testing');
+		
 		$this->view->set('FW_NAME', 'SpitfirePHP');
+		$this->view->set('helloworld', $test->helloWorld());
 		$this->view->set('controller', __CLASS__ . '&gt' . $object . '&gt' . $params);
 	}
 
