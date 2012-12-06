@@ -19,6 +19,7 @@ class SpitFire
 	static $controller_name = false;
 	static $action          = false;
 	static $object          = false;
+	static $extension       = false;
 	
 	static $current_url     = false;
 
@@ -57,7 +58,7 @@ class SpitFire
 		if (!class_exists($_controller)) throw new publicException("Page not found", 404);
 		self::$controller = $controller = new $_controller();
 		#Create the view
-		self::$view = new View(self::$controller_name, self::$action);
+		self::$view = new View(self::$controller_name, self::$action, self::$extension);
 		#Create the model
 		self::$model = new DBInterface();
 		#Check if the action is available
@@ -106,6 +107,16 @@ class SpitFire
 			$path_info = router::rewrite($path_info);
 			$path_info = substr($path_info, 1);
 			$path = explode('/', $path_info);
+			
+			//Try to fetch the extension
+			$last      = explode('.', end($path));
+			$extension = ($last[1])? $last[1] : false;
+			
+			if ($extension) {
+				array_pop($path);
+				array_push($path, $last[0]);
+			}
+			
 			@list($controller, $action) = $path;
 			
 			//Assign the object as array (with multiple elements) to a Global
@@ -125,6 +136,7 @@ class SpitFire
 			self::$controller_name = $controller;
 			self::$action          = $action;
 			self::$object          = $object;
+			self::$extension       = $extension;
 			self::$current_url     = new URL($controller, $action, $object);
 			return true;
 

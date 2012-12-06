@@ -24,8 +24,6 @@ class _SF_Route
 		$target  = explode('/', $this->new_route);             //Array(this, is, a, route)
 		$pattern = explode('/', $this->old_route);             //So we can analyze the components.
 		
-		#If the route matches this variable will be left untouched. If not it will contain false.
-		$match = true;
 		
 		#Store the size of the route.
 		$length = count($pattern);
@@ -36,25 +34,22 @@ class _SF_Route
 			if ($pattern[$pos] == '*')                          //If it's a wildcard asimilate it
 				$pattern[$pos] = $route[$pos];
 			else if ($pattern[$pos] != $route[$pos])            //Otherwise check if it matches.
-				$match = false; 
+				return false;				    //By returning false we avoid further checking
 		}
 		
-		if ($match) {
-			//STEP 3: REPLACE $ VARIABLES
-			#Store the size of the route.
-			$length = count($target);
+		
+		//STEP 3: REPLACE $ VARIABLES
+		#Store the size of the route.
+		$length = count($target);
 
-			//Loop through the new route to start rewriting.
-			for($pos = 1; $pos < $length; $pos++) {
-				if ($target[$pos] && $target[$pos][0] == '$') {  //Maybe it's a $XX to be replaced
-					$new_pos = (int)substr($target[$pos], 1);    //Find it's new position
-					$target[$pos] = $pattern[$new_pos];          //Write the value from the route into the new one.
-				}
+		//Loop through the new route to start rewriting.
+		for($pos = 1; $pos < $length; $pos++) {
+			if ($target[$pos] && $target[$pos][0] == '$') {  //Maybe it's a $XX to be replaced
+				$new_pos = (int)substr($target[$pos], 1);    //Find it's new position
+				$target[$pos] = $pattern[$new_pos];          //Write the value from the route into the new one.
 			}
-			return implode($target, '/');                        //Return the route adding the slashes
-		} else {
-			return false;                                        //The route didn't match
 		}
+		return implode($target, '/');                        //Return the route adding the slashes
 	}
 }
 
