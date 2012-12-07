@@ -1,6 +1,8 @@
 <?php
 
-class testingComponent extends Component
+namespace M3W;
+
+class testingComponent extends \Component
 {
 	
 	public function helloWorld() {
@@ -9,7 +11,7 @@ class testingComponent extends Component
 
 	public static function info() {
 		
-		ComponentManager::requires('M3W', 'test');
+		\ComponentManager::requires('M3W', 'test');
 		
 		return Array(
 		    'vendor' => 'M3W',

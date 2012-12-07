@@ -9,8 +9,8 @@ class ComponentManager
 	const ASSET_DIR           = 'components/';
 
 
-	public static function register($component) {
-		self::$components[$component] = call_user_func_array(Array($component, 'info'), Array());
+	public static function register($vendor, $component) {
+		self::$components[$vendor . '\\' . $component] = call_user_func_array(Array($vendor.'\\'.$component, 'info'), Array());
 	}
 	
 	public static function get($p1, $p2 = false, $min_version = 0, $max_version = 0) {

@@ -1,4 +1,4 @@
 <?php
 
-ComponentManager::register('testComponent');
-ComponentManager::register('testingComponent');
+ComponentManager::register('M3W', 'testComponent');
+ComponentManager::register('M3W', 'testingComponent');

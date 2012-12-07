@@ -8,7 +8,6 @@ class assetsController extends Controller
 			'/bin/components/' . 
 			implode('/', func_get_args()) . 
 			'.' . SpitFire::$extension;
-		
 		die (header('location: ' . $file));
 	}
 	

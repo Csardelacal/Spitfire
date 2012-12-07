@@ -8,6 +8,7 @@ class _SF_AutoLoad
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   UI_COMPONENT_DIRECTORY = 'bin/ui/';
 	const   STD_CLASS_DIRECTORY    = 'bin/classes/';
+	const   CLASS_EXTENSION        = '.php';
 
 	static $instance = false;
 
@@ -19,71 +20,53 @@ class _SF_AutoLoad
 	}
 
 	public function register($className, $location) {
-		$className = strtolower($className);
+		$className = $className;
 		$this->registered_classes[$className] = $location;
 	}
 
 	public function retrieveClass($className) {
 
 		if (SpitFire::$debug) SpitFire::$debug->msg("Imported class $className");
-
-		#Case insensitive please!
-		$className = strtolower($className);
-
-		#Check if the class has been registered
-		if ( isset($this->registered_classes[$className]) ) {
-			include $this->registered_classes[$className];
-			return true;
+		
+		if (isset($this->registered_classes[$className]))
+			return include $this->registered_classes[$className];
+		
+		$class = new _SF_Class($className);
+		
+		switch($class->getType()) {
+			case _SF_Class::TYPE_CONTROLLER:
+				$filename = self::CONTROLLER_DIRECTORY .
+						$class->getClassName() . 
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::CONTROLLER_DIRECTORY .
+						strtolower($class->getClassName()) . 
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+			case _SF_Class::TYPE_COMPONENT:
+				$filename = self::COMPONENT_DIRECTORY .
+						implode(DIRECTORY_SEPARATOR, $class->getNameSpace()) .
+						DIRECTORY_SEPARATOR .
+						$class->getClassName() .
+						DIRECTORY_SEPARATOR .
+						'main' .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::COMPONENT_DIRECTORY .
+						implode(DIRECTORY_SEPARATOR, $class->getNameSpace()) .
+						DIRECTORY_SEPARATOR .
+						strtolower($class->getClassName()) . 
+						DIRECTORY_SEPARATOR .
+						'main' .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
 		}
-
-		#Check if the class requested is a controller
-		if (strpos($className, 'controller')) {
-			$filename = str_replace('controller', '', $className);
-			$filename = self::CONTROLLER_DIRECTORY . $filename . '.php';
-			if (file_exists($filename)) {
-				include $filename;
-				return true;
-			}
-		}
-
-		#Check if the class requested is a component
-		if (strpos($className, 'component')) {
-			$filename = str_replace('component', '', $className);
-			$filename = self::COMPONENT_DIRECTORY . $filename . '/main.php';
-			if (file_exists($filename)) {
-				include $filename;
-				return true;
-			}
-		}
-
-		#Check if the class requested is a component
-		if (strpos($className, 'component')) {
-			$filename = str_replace('component', '', $className);
-			$filename = self::UI_COMPONENT_DIRECTORY . $filename . '.php';
-			if (file_exists($filename)) {
-				include $filename;
-				return true;
-			}
-		}
-
-		#Check if the class requested is a normal class
-		$filename = $className;
-		$filename = self::STD_CLASS_DIRECTORY . $filename . '.php';
-		if (file_exists($filename)) {
-			include $filename;
-			return true;
-		}
-
-		#Check if the class to be registered is AppController
-		if ($className == 'appcontroller') {
-			if (file_exists(self::APPCONTROLLER_LOCATION)) {
-				include self::APPCONTROLLER_LOCATION;
-				return true;
-			}
-			else include 'spitfire/appcontroller.php';
-		}
-
-		error_log("Class $className not found.");
+		
+		error_log('Class ' . $className . ' not found');
 
 	}
 

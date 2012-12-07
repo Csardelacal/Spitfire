@@ -111,7 +111,7 @@ class SpitFire
 			
 			//Try to fetch the extension
 			$last      = explode('.', end($path));
-			$extension = ($last[1])? $last[1] : false;
+			$extension = (isset($last[1]))? $last[1] : false;
 			
 			if ($extension) {
 				array_pop($path);

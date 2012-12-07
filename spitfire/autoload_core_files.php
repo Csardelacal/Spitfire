@@ -27,12 +27,13 @@ _SF_AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.ph
 
 _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
 _SF_AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
+_SF_AutoLoad::registerClass('_SF_Class',             $cur_dir.'/class.php');
 
 _SF_AutoLoad::registerClass('ComponentManager',      $cur_dir.'/components/componentManager.php');
 _SF_AutoLoad::registerClass('Component',             $cur_dir.'/components/component.php');
-_SF_AutoLoad::registerClass('AssetsController',      $cur_dir.'/components/assets.php');
+_SF_AutoLoad::registerClass('assetsController',      $cur_dir.'/components/assets.php');
 
-_SF_AutoLoad::registerClass('url',                   $cur_dir.'/url.php');
+_SF_AutoLoad::registerClass('URL',                   $cur_dir.'/url.php');
 _SF_AutoLoad::registerClass('session',               $cur_dir.'/session.php');
 
 _SF_AutoLoad::registerClass('email',                 $cur_dir.'/mail.php');
