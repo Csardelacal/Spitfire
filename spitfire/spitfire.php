@@ -118,10 +118,16 @@ class SpitFire
 				array_push($path, $last[0]);
 			}
 			
-			@list($controller, $action) = $path;
-			
 			//Assign the object as array (with multiple elements) to a Global
-			array_shift($path); array_shift($path);
+			$controller = Array();
+			do {
+				$controller[] = array_shift($path); 
+			}while (class_exists(implode('\\', $controller) . 'Controller'));
+			
+			array_unshift($path, array_pop($controller));
+			
+			$controller = implode('\\', $controller);
+			$action     = array_shift($path);
 			$object = $path;
 			
 			//If the controller, action or object was left empty fill it with defaults 

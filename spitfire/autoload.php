@@ -36,11 +36,16 @@ class _SF_AutoLoad
 		switch($class->getType()) {
 			case _SF_Class::TYPE_CONTROLLER:
 				$filename = self::CONTROLLER_DIRECTORY .
+						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
 						$class->getClassName() . 
 						self::CLASS_EXTENSION;
+				error_log($filename);
 				if (file_exists($filename)) return include $filename;
 				
 				$filename = self::CONTROLLER_DIRECTORY .
+						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
 						strtolower($class->getClassName()) . 
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
