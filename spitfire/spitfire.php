@@ -104,9 +104,8 @@ class SpitFire
 			return true;
 		} else {
 
-			$path_info = $_SERVER['PATH_INFO'];
-			$path_info = router::rewrite($path_info);
-			$path_info = substr($path_info, 1);
+			/** @var $path_info string */
+			$path_info = substr(router::rewrite($_SERVER['PATH_INFO']), 1);
 			$path = explode('/', $path_info);
 			
 			//Try to fetch the extension
@@ -119,14 +118,14 @@ class SpitFire
 			}
 			
 			//Assign the object as array (with multiple elements) to a Global
-			$controller = Array();
+			$controller_data = Array();
 			do {
-				$controller[] = array_shift($path); 
-			}while (class_exists(implode('\\', $controller) . 'Controller'));
+				$controller_data[] = array_shift($path); 
+			}while (class_exists(implode('\\', $controller_data) . 'Controller'));
 			
-			array_unshift($path, array_pop($controller));
+			array_unshift($path, array_pop($controller_data));
 			
-			$controller = implode('\\', $controller);
+			$controller = implode('\\', $controller_data);
 			$action     = array_shift($path);
 			$object = $path;
 			
