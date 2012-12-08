@@ -119,11 +119,14 @@ class SpitFire
 			
 			//Assign the object as array (with multiple elements) to a Global
 			$controller_data = Array();
-			do {
-				$controller_data[] = array_shift($path); 
-			}while (class_exists(implode('\\', $controller_data) . 'Controller'));
+			if (isset($path[0]) && $path[0]) {
+				do {
+					$controller_data[] = array_shift($path); 
+				}while (class_exists(implode('\\', $controller_data) . 'Controller'));
+			}
 			
-			array_unshift($path, array_pop($controller_data));
+			if (isset($controller_data[0]) )
+				array_unshift($path, array_pop($controller_data));
 			
 			$controller = implode('\\', $controller_data);
 			$action     = array_shift($path);

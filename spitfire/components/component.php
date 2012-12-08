@@ -6,7 +6,7 @@ abstract class Component
 	private $name;
 	
 	public function __construct() {
-		$this->name = strtolower(str_replace('Component', '', get_class($this)));
+		$this->name = str_replace('Component', '', get_class($this));
 	}
 	
 	public function getDir() {

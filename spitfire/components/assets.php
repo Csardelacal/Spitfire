@@ -4,11 +4,8 @@ class assetsController extends Controller
 {
 	
 	public function components () {
-		$file = SpitFire::baseUrl() . 
-			'/bin/components/' . 
-			implode('/', func_get_args()) . 
-			'.' . SpitFire::$extension;
-		die (header('location: ' . $file));
+		$file = SpitFire::baseUrl() . str_replace('/assets/components', '/bin/components', $_SERVER['PATH_INFO']);
+		die(header('location: ' . $file));
 	}
 	
 }
