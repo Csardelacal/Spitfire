@@ -20,7 +20,7 @@ class _SF_Class
 	public function __construct($className) {
 		$this->fullName  = $className;
 		
-		$this->namespace = explode ('\\', $className);
+		$this->namespace = explode ('_', $className);
 		$this->className = array_pop($this->namespace);
 		
 		foreach($this->types as $type) {

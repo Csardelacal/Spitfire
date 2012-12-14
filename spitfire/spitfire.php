@@ -122,13 +122,13 @@ class SpitFire
 			if (isset($path[0]) && $path[0]) {
 				do {
 					$controller_data[] = array_shift($path); 
-				}while (class_exists(implode('\\', $controller_data) . 'Controller'));
+				}while (class_exists(implode('_', $controller_data) . 'Controller'));
 			}
 			
 			if (isset($controller_data[0]) )
 				array_unshift($path, array_pop($controller_data));
 			
-			$controller = implode('\\', $controller_data);
+			$controller = implode('_', $controller_data);
 			$action     = array_shift($path);
 			$object = $path;
 			

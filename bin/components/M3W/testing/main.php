@@ -1,8 +1,6 @@
 <?php
 
-namespace M3W;
-
-class testingComponent extends \Component
+class M3W_testingComponent extends Component
 {
 	
 	public function helloWorld() {

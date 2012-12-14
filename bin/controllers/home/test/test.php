@@ -1,8 +1,7 @@
 <?php
 
-namespace home\test;
 
-class testController extends \Controller
+class home_test_testController extends Controller
 {
 	
 	public function index() {

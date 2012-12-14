@@ -10,8 +10,11 @@
 class _SF_InputSanitizer
 {
 	private $data = false;
+	private $isset;
 	
-	public function __construct($data) {
+	public function __construct($data, $isset = true) {
+		
+		$this->isset = $isset;
 
 		if (is_array($data)) {
 			$this->data = Array();
@@ -44,6 +47,10 @@ class _SF_InputSanitizer
 		
 		return md5("$pepper$pass$salt");
 	}
+	
+	public function is_set() {
+		return $this->isset;
+	}
 
 	public function toArray () {
 		if ( is_array($this->data) ) return $this->data;
@@ -51,9 +58,14 @@ class _SF_InputSanitizer
 	}
 	
 	public function __get($value) {
-		return $this->$value = new _SF_InputSanitizer(false);
+		return $this->$value = new _SF_InputSanitizer(false, false);
 	}
 	
+	public function __isset($name) {
+		return $this->{$name}->is_set();
+	}
+
+
 	public function __toString() {
 		return $this->value();
 	}

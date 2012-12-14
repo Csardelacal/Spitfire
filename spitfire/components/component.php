@@ -10,11 +10,11 @@ abstract class Component
 	}
 	
 	public function getDir() {
-		return ComponentManager::COMPONENT_DIRECTORY . str_replace('\\', '/', $this->name) . '/';
+		return ComponentManager::COMPONENT_DIRECTORY . str_replace('_', '/', $this->name) . '/';
 	}
 	
 	public function getAsset($asset) {
-		return URL::asset(ComponentManager::ASSET_DIR . str_replace('\\', '/', $this->name) . '/' . $asset);
+		return URL::asset(ComponentManager::ASSET_DIR . str_replace('_', '/', $this->name) . '/' . $asset);
 	}
 	
 	public static function info() {
