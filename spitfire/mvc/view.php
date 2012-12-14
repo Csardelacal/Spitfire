@@ -10,9 +10,16 @@ class View extends _SF_MVC
 	
 	const default_view = 'bin/views/default.php';
 	
-	public function __construct($controller, $action, $extension = 'php') {
+	/**
+	 * 
+	 * @param URL $url
+	 */
+	public function __construct() {
 		
-		if (!$extension) $extension = 'php';
+		$url        = $this->current_url;
+		$controller = implode(DIRECTORY_SEPARATOR, $url->getController());
+		$action     = $url->getAction();
+		$extension  = $url->getExtension();
 		
 		if     ( file_exists("bin/views/$controller/$action.$extension"))
 			$this->file = "bin/views/$controller/$action.$extension";

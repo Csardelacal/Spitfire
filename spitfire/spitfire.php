@@ -21,6 +21,7 @@ class SpitFire
 	static $object          = false;
 	static $extension       = false;
 	
+	/** var URL Depicts the current system url*/
 	static $current_url     = false;
 
 	static $debug           = false;
@@ -46,7 +47,7 @@ class SpitFire
 		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
 
 		#Get the current path...
-		self::getPath();
+		self::$current_url = _SF_Path::getPath();
 
 		self::$started = true;
 		return true;
@@ -55,22 +56,22 @@ class SpitFire
 	public static function fire() {
 
 		#Import and instance the controller
-		$_controller = self::$controller_name.'Controller';
+		$_controller = implode('_', self::$current_url->getController()).'Controller';
 		if (!class_exists($_controller)) throw new publicException("Page not found", 404);
 		self::$controller = $controller = new $_controller();
 		#Create the view
-		self::$view = new View(self::$controller_name, self::$action, self::$extension);
+		self::$view = new View();
 		#Create the model
 		self::$model = new DBInterface();
 		#Check if the action is available
-		$method = Array($controller, self::$action);
+		$method = Array($controller, self::$current_url->getAction());
 		
 		#Onload
 		if (method_exists($controller, 'onload') ) 
-			call_user_func_array(Array($controller, 'onload'), Array(self::$action));
+			call_user_func_array(Array($controller, 'onload'), Array(self::$current_url->getAction()));
 		#Fire!
-		if (is_callable($method)) call_user_func_array($method, self::$object);
-		else throw new publicException(E_PAGE_NOT_FOUND, 404);
+		if (is_callable($method)) call_user_func_array($method, self::$current_url->getObject());
+		else throw new publicException('E_PAGE_NOT_FOUND', 404);
 
 		self::$view->render();
 	}
@@ -79,77 +80,6 @@ class SpitFire
 		if (environment::get('base_url')) return environment::get('base_url');
 		list($base_url) = explode('/index.php', $_SERVER['PHP_SELF'], 2);
 		return $base_url;
-	}
-
-
-	/**
-	 * getPath()
-	 * Reads the current path the user has selected and tries to detect
-	 * Controllers, actions and objects from it.
-	 * 
-	 * [NOTICE] getPath does not guarantee safe input, you will have to
-	 * manually check whether the input it received is valid.
-	 * 
-	 * [NOTICE] getPath will prevent users from accessing any controllers
-	 * when in maintenance mode. But will also throw an error when the
-	 * user tries to enter maintenance mode when in normal operation.
-	 * This means you need to use a separate controller for generating
-	 * WiP sites, or manually edit it everytime you enter service mode.
-	 */
-	protected static function getPath() {
-		if ( environment::get('maintenance_enabled') ) {
-			define ('controller', maintenance_controller, true);
-			define ('action', false, true);
-			define ('object', false, true);
-			return true;
-		} else {
-
-			/** @var $path_info string */
-			$path_info = substr(router::rewrite($_SERVER['PATH_INFO']), 1);
-			$path = explode('/', $path_info);
-			
-			//Try to fetch the extension
-			$last      = explode('.', end($path));
-			$extension = (isset($last[1]))? $last[1] : false;
-			
-			if ($extension) {
-				array_pop($path);
-				array_push($path, $last[0]);
-			}
-			
-			//Assign the object as array (with multiple elements) to a Global
-			$controller_data = Array();
-			if (isset($path[0]) && $path[0]) {
-				do {
-					$controller_data[] = array_shift($path); 
-				}while (class_exists(implode('_', $controller_data) . 'Controller'));
-			}
-			
-			if (isset($controller_data[0]) )
-				array_unshift($path, array_pop($controller_data));
-			
-			$controller = implode('_', $controller_data);
-			$action     = array_shift($path);
-			$object = $path;
-			
-			//If the controller, action or object was left empty fill it with defaults 
-			if (empty ($controller)) $controller = environment::get('default_controller');
-			if (empty ($action)) $action = environment::get('default_action');
-			if (empty ($object)) $object = environment::get('default_object');
-			
-			//Check if invalid url's are being requested
-			if ($controller == maintenance_controller) throw new publicException('User tried to access maintenance mode', 401);
-			if (substr($action, 0,1) == '_') throw new publicException(E_PAGE_NOT_FOUND, E_PAGE_NOT_FOUND_CODE);
-			
-			//Define controllers
-			self::$controller_name = $controller;
-			self::$action          = $action;
-			self::$object          = $object;
-			self::$extension       = $extension;
-			self::$current_url     = new URL($controller, $action, $object);
-			return true;
-
-		}
 	}
 
 	public static function includeIfPossible($file) {

@@ -40,7 +40,6 @@ class _SF_AutoLoad
 						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
 						$class->getClassName() . 
 						self::CLASS_EXTENSION;
-				error_log($filename);
 				if (file_exists($filename)) return include $filename;
 				
 				$filename = self::CONTROLLER_DIRECTORY .

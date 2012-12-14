@@ -7,6 +7,7 @@ $cur_dir = dirname(__FILE__);
 _SF_AutoLoad::registerClass('fileNotFoundException', $cur_dir.'/exceptions.php');
 _SF_AutoLoad::registerClass('publicException',       $cur_dir.'/exceptions.php');
 _SF_AutoLoad::registerClass('_SF_ExceptionHandler',  $cur_dir.'/exceptions.php');
+_SF_AutoLoad::registerClass('_SF_Path',              $cur_dir.'/core/path.php');
 
 _SF_AutoLoad::registerClass('router',                $cur_dir.'/router.php');
 _SF_AutoLoad::registerClass('environment',           $cur_dir.'/environment.php');

@@ -1,25 +1,5 @@
 <?php
 
-define('E_PAGE_NOT_FOUND', 'Page not found', true);
-define('E_PAGE_NOT_FOUND_CODE', 404, true);
-
-
-/**
- * Get the Server's domains from highest to lowest
- * @author César
- * @package nLive.mvc
- * @return mixed Domains sorted from highest to lowest
- */
-function getDomain($pos = false) {
-	$domains = explode('.', $_SERVER['HTTP_HOST']);
-	$domains = array_reverse($domains);
-	if ((int)$domains[0]) return false;
-	if (!isset($domains[2])) $domains[2] = ''; //If we're not using a subdomain
-	
-	if ($pos !==false) return $domains[$pos];
-	else return $domains;
-}
-
 /**
  * 
  * This dinamically generates system urls
@@ -36,21 +16,52 @@ class URL
 	private $action;
 	private $object;
 	private $params;
+	private $extension = 'php';
 	
 	public function __construct($c = false, $a= false, $o = false, $p = Array()) {
-		if($c) $this->controller = $c;
-		else $this->controller = environment::get('default_controller');
+		if($c) $this->controller = (is_array($c)) ? $c : Array($c);
+		else $this->controller = ( is_array(environment::get('default_controller')) )? environment::get('default_controller'):Array(environment::get('default_controller'));
 
 		if($a) $this->action = $a;
 		else $this->action = environment::get('default_action');
 
-		if($o) {
-			if (is_array($o)) $this->object = implode('/', $o);
-			else              $this->object = $o;
-		}
-		else $this->object = implode('/', environment::get('default_object'));
+		if($o) $this->object = (is_array($o)) ? $o : Array($o);
+		else $this->object = environment::get('default_object');
 
 		$this->params = $p;
+	}
+	
+	public function setController ($controller) {
+		$this->controller = $controller;
+	}
+	
+	public function getController() {
+		return $this->controller;
+	}
+	
+	public function setAction ($action) {
+		$this->action = $action;
+	}
+	
+	public function getAction() {
+		return $this->action;
+	}
+	
+	public function setObject ($object) {
+		$this->object = $object;
+	}
+	
+	public function getObject() {
+		return $this->object;
+	}
+	
+	public function setExtension($extension) {
+		if (! empty($extension) )
+		$this->extension = $extension;
+	}
+	
+	public function getExtension() {
+		return $this->extension;
 	}
 	
 	/**
@@ -77,25 +88,26 @@ class URL
 	 * url.
 	 */
 	public function __toString() {
-		if (environment::get('pretty_urls')) {
-			$str =  SpitFire::baseUrl().
-					'/'. $this->controller.
-					'/'. $this->action.
-					'/'. $this->object;
-			$first = true;
-			foreach ($this->params as $k => $v) {
-				$str.= (($first)?'?':'&').urlencode($k).'='.urlencode($v);
-				$first = false; 
-			}
-		} else {//pretty_urls
-			$str = SpitFire::baseUrl().
-					'/?controller='.$this->controller.
-					'&action='.$this->action.
-					'&object='.$this->object;
-			foreach ($this->params as $k => $v) $str.= '&'.$k.'='.$v;
+		
+		if ( is_array($this->object) ) $object = implode('/', $this->object);
+		else $object = $this->object;
+		
+		if ( is_array($this->controller) ) $controller = implode('/', $this->controller);
+		else $controller = $this->controller;
+		
+		$str =  SpitFire::baseUrl().
+				'/'. $controller.
+				'/'. $this->action.
+				'/'. $object;
+		
+		if ($this->extension != 'php') $str.= ".$this->extension";
+		
+		$first = true;
+		foreach ($this->params as $k => $v) {
+			$str.= (($first)?'?':'&').urlencode($k).'='.urlencode($v);
+			$first = false; 
 		}
-		//$action = plugins::PRESET_URLTOSTRING;
-		//BUG: $str = plugins::$action($str);
+		
 		return $str;
 	}
 	

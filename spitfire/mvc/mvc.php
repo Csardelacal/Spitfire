@@ -11,10 +11,11 @@
 
 class _SF_MVC
 {
+	
 	/**
 	 * 
 	 * @param String $variable
-	 * @return controller|view|DBInterface|boolean
+	 * @return controller|view|DBInterface|URL|boolean
 	 */
 	function __get($variable) {
 		
@@ -28,9 +29,28 @@ class _SF_MVC
 			case 'model':
 				return $this->model = SpitFire::$model;
 				break;
+			case 'current_url':
+				return $this->current_url = SpitFire::$current_url;
 			default:
 				return false;
 				break;
 		}
 	}
+	
+	/**
+	 * 
+	 * @param String $name
+	 * @return boolean
+	 */
+	function __isset($name) {
+		switch ($name) {
+			case 'controller':
+			case 'view':
+			case 'model':
+			case 'current_url':
+				return true;
+		}
+		return false;
+	}
+	
 }
