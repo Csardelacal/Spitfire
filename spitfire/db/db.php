@@ -27,6 +27,11 @@ class DBInterface extends _SF_MVC
 		return $this->connection;
 	}
 
+	/**
+	 * Get the name of the table
+	 * @param String $table
+	 * @return _SF_DBTable
+	 */
 	public function __get($table) {
 		
 		//In case we request a model, view or controller

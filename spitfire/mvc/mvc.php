@@ -14,6 +14,14 @@ class _SF_MVC
 	
 	/**
 	 * 
+	 * @return DBInterface
+	 */
+	function _getModel() {
+		return $this->model;
+	}
+	
+	/**
+	 * 
 	 * @param String $variable
 	 * @return controller|view|DBInterface|URL|boolean
 	 */

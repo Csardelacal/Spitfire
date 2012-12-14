@@ -94,17 +94,20 @@ class _SF_DBTable
 
 	public function set ($data) {
 		$this->errors = Array();
-		if ($this->fields) {
+		if ($this->getFields()) {
 			$newdata = Array();
-			foreach ($this->fields as $field) 
+			foreach ($this->fields as $field) {
 				if (method_exists ($this, 'validate_' . $field)) {
 					if ($error = call_user_func_array(Array($this, 'validate_' . $field), Array($data[$field]))) {
 						$this->errors[] = $error;
 					}
 				}
-				else $newdata[$field] = $data[$field];
+				$newdata[$field] = $data[$field];
+			}
 			$data = $newdata;
 		}
+		
+		if (!empty($this->errors)) return false;
 
 		if (empty($data['id'])) unset ($data['id']);
 

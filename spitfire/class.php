@@ -4,6 +4,7 @@ class _SF_Class
 {
 	const TYPE_CONTROLLER = 'Controller';
 	const TYPE_COMPONENT  = 'Component';
+	const TYPE_MODEL      = 'Model';
 	const TYPE_STDCLASS   = '';
 	
 	private $type      = '';
@@ -14,6 +15,7 @@ class _SF_Class
 	private $types = Array(
 	    self::TYPE_CONTROLLER,
 	    self::TYPE_COMPONENT,
+	    self::TYPE_MODEL,
 	    self::TYPE_STDCLASS
 	);
 	

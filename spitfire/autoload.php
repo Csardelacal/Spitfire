@@ -6,6 +6,7 @@ class _SF_AutoLoad
 	const   APPCONTROLLER_LOCATION = 'bin/controllers/appController.php';
 	const   CONTROLLER_DIRECTORY   = 'bin/controllers/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
+	const   MODEL_DIRECTORY        = 'bin/models/';
 	const   UI_COMPONENT_DIRECTORY = 'bin/ui/';
 	const   STD_CLASS_DIRECTORY    = 'bin/classes/';
 	const   CLASS_EXTENSION        = '.php';
@@ -65,6 +66,28 @@ class _SF_AutoLoad
 						strtolower($class->getClassName()) . 
 						DIRECTORY_SEPARATOR .
 						'main' .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+			case _SF_Class::TYPE_MODEL:
+				$filename = self::MODEL_DIRECTORY .
+						$class->getClassName() .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::MODEL_DIRECTORY .
+						strtolower($class->getClassName()) .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+			case _SF_Class::TYPE_STDCLASS:
+				$filename = self::STD_CLASS_DIRECTORY .
+						$class->getClassName() .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::STD_CLASS_DIRECTORY .
+						strtolower($class->getClassName()) .
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
 				
