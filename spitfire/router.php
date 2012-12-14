@@ -71,6 +71,11 @@ class router
 		#Implicit else.
 		return $route;
 	}
+	
+	static function redirect($location) {
+		header("location: $location");
+		throw new publicException("Sent to $location", 301);
+	}
 }
 
 /*USE EXAMPLE

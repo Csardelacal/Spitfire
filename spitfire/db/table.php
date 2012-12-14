@@ -8,6 +8,8 @@ class _SF_DBTable
 	protected $db        = false;
 	protected $fields    = false;
 	
+	protected $errors    = Array();
+	
 	protected $rpp    = 20;
 
 	public function __construct ($database, $tablename = false) {
@@ -84,12 +86,23 @@ class _SF_DBTable
 	public function getDb() {
 		return $this->db;
 	}
+	
+	public function getErrors() {
+		if (empty ($this->errors)) return false;
+		return $this->errors;
+	}
 
 	public function set ($data) {
-
+		$this->errors = Array();
 		if ($this->fields) {
 			$newdata = Array();
-			foreach ($this->fields as $field)  $newdata[$field] = $data[$field];
+			foreach ($this->fields as $field) 
+				if (method_exists ($this, 'validate_' . $field)) {
+					if ($error = call_user_func_array(Array($this, 'validate_' . $field), Array($data[$field]))) {
+						$this->errors[] = $error;
+					}
+				}
+				else $newdata[$field] = $data[$field];
 			$data = $newdata;
 		}
 

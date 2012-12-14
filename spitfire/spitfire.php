@@ -67,7 +67,7 @@ class SpitFire
 		
 		#Onload
 		if (method_exists($controller, 'onload') ) 
-			call_user_func_array(Array($controller, 'onload'), Array());
+			call_user_func_array(Array($controller, 'onload'), Array(self::$action));
 		#Fire!
 		if (is_callable($method)) call_user_func_array($method, self::$object);
 		else throw new publicException(E_PAGE_NOT_FOUND, 404);

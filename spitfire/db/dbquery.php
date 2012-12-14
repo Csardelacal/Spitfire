@@ -51,6 +51,10 @@ class _SF_DBQuery
 		return $this->page;
 	}
 	
+	public function getErrors() {
+		return $this->table->getErrors();
+	}
+	
 	public function setOrder ($field, $mode) {
 		$this->order['field'] = $field;
 		$this->order['mode'] = $mode;
