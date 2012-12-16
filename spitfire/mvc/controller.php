@@ -13,9 +13,4 @@ abstract class Controller extends _SF_MVC
 		$this->get       = new _SF_InputSanitizer($_GET);
 	}
 	
-	public function __call($method, $args) {
-		return $this->detail($method, $args);
-		//else throw new BadMethodCallException('Invalid argument count. Requires two args.', 0);
-	}
-	
 }

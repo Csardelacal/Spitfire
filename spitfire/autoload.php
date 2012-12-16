@@ -50,6 +50,8 @@ class _SF_AutoLoad
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
 				
+				break;
+				
 			case _SF_Class::TYPE_COMPONENT:
 				$filename = self::COMPONENT_DIRECTORY .
 						implode(DIRECTORY_SEPARATOR, $class->getNameSpace()) .
@@ -69,6 +71,8 @@ class _SF_AutoLoad
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
 				
+				break;
+				
 			case _SF_Class::TYPE_MODEL:
 				$filename = self::MODEL_DIRECTORY .
 						$class->getClassName() .
@@ -80,6 +84,8 @@ class _SF_AutoLoad
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
 				
+				break;
+				
 			case _SF_Class::TYPE_STDCLASS:
 				$filename = self::STD_CLASS_DIRECTORY .
 						$class->getClassName() .
@@ -90,6 +96,8 @@ class _SF_AutoLoad
 						strtolower($class->getClassName()) .
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
+				
+				break;
 				
 		}
 		

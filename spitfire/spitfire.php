@@ -15,11 +15,6 @@ class SpitFire
 	static $controller      = false;
 	static $view            = false;
 	static $model           = false;
-
-	static $controller_name = false;
-	static $action          = false;
-	static $object          = false;
-	static $extension       = false;
 	
 	/** var URL Depicts the current system url*/
 	static $current_url     = false;
