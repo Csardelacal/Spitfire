@@ -37,4 +37,4 @@ _SF_AutoLoad::registerClass('assetsController',      $cur_dir.'/components/asset
 _SF_AutoLoad::registerClass('URL',                   $cur_dir.'/url.php');
 _SF_AutoLoad::registerClass('session',               $cur_dir.'/session.php');
 
-_SF_AutoLoad::registerClass('email',                 $cur_dir.'/mail.php');
+_SF_AutoLoad::registerClass('Email',                 $cur_dir.'/mail.php');

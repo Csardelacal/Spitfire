@@ -100,6 +100,9 @@ class _SF_DBQuery
 		foreach($this->restrictions as $r) $values[$r->getRID()] = $r->getValue();
 		$stt->execute($values);
 		
+		$err = $stt->errorInfo();
+		if ($err[1]) throw new privateException(print_r($err, true), $err[0]);
+		
 		if ($returnresult) return $stt;
 		else $this->result = $stt;
 

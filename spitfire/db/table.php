@@ -125,6 +125,9 @@ class _SF_DBTable
 		$stt = $con->prepare($statement);
 		$stt->execute($data);
 		
+		$err = $stt->errorInfo();
+		if ($err[1]) throw new privateException(print_r($err, true), $err[0]);
+		
 		if ($stt->rowCount() == 1) return $con->lastInsertId();
 		else return $data['id'];
 
