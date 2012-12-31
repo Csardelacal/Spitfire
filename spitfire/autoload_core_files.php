@@ -30,6 +30,8 @@ _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sani
 _SF_AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 _SF_AutoLoad::registerClass('_SF_Class',             $cur_dir.'/class.php');
 
+_SF_AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
+
 _SF_AutoLoad::registerClass('ComponentManager',      $cur_dir.'/components/componentManager.php');
 _SF_AutoLoad::registerClass('Component',             $cur_dir.'/components/component.php');
 _SF_AutoLoad::registerClass('assetsController',      $cur_dir.'/components/assets.php');

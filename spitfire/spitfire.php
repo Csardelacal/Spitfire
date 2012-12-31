@@ -10,6 +10,7 @@ class SpitFire
 {
 	
 	static $started         = false;
+	static $cwd             = false;
 
 	static $autoload        = false;
 	static $controller      = false;
@@ -25,6 +26,7 @@ class SpitFire
 
 		if (self::$started) return false;
 		$cur_dir = dirname(__FILE__);
+		self::$cwd = dirname($cur_dir);
 
 		#Try to start autoload
 		if (! class_exists('_SF_AutoLoad')) include dirname(__FILE__).'/autoload.php';

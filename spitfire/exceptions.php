@@ -55,16 +55,16 @@ class filePermissionsException  extends privateException {}
  * @param string $message
  */
 function get_error_page($code, $message, $moreInfo = '') {
-	$error_page = 'bin/error_pages/'.$code.'.php';
+	$error_page = Spitfire::$cwd . '/bin/error_pages/'.$code.'.php';
 	if (file_exists($error_page)) {
 		include $error_page;
 		die();
-	} elseif (file_exists($error_page = 'bin/error_pages/default.php')) {
+	} elseif (file_exists($error_page = Spitfire::$cwd . '/bin/error_pages/default.php')) {
 		include $error_page;
 		die();
 	} else {
 		echo 'Error page not found. 
-			  To avoid this message please go to bin/error_pages and create '.$code.'.php with the data about the error you want.';
+			  To avoid this message please go to bin/error_pages and create '.$error_page .' with the data about the error you want.';
 		throw new fileNotFoundException('File not found: '.$error_page, 500);
 	}
 }
@@ -92,6 +92,7 @@ class _SF_ExceptionHandler {
 	public function __construct() {
 		set_exception_handler( Array($this, 'exceptionHandle'));
 		set_error_handler    ( Array($this, 'errorHandle'), error_reporting() );
+		register_shutdown_function( Array($this, 'shutdownHook'));
 	}
 
 	public function exceptionHandle (Exception $e) {
@@ -117,8 +118,12 @@ class _SF_ExceptionHandler {
 		if (!error_reporting()) return false;
 		
 		switch ($errno) {
+			case E_ERROR:
+			case E_CORE_ERROR:
+			case E_COMPILE_ERROR:
 			case E_USER_ERROR:
 				while(ob_get_clean());
+				echo getcwd();
 				get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r($scope, 1) );
 				return false;
 				break;
@@ -129,6 +134,18 @@ class _SF_ExceptionHandler {
 			default:
 				return false;
 				break;
+		}
+	}
+	
+	public function shutdownHook () {
+		$last_error = error_get_last();
+		
+		switch($last_error['type']){
+			case E_ERROR:
+			case E_CORE_ERROR:
+			case E_COMPILE_ERROR:
+			case E_USER_ERROR:
+				get_error_page(500, $last_error['message']);
 		}
 	}
 
