@@ -22,22 +22,15 @@ class homeController extends Controller
 		$this->view->set('age',  $this->post->age->toInt());
 		$this->view->set('pass', $this->post->pass->toPassword());
 		
-		$t = new Email();
-		$t->setFrom("cesar@magic3w.com");
-		$t->setTo("flunsidelacal@msn.com");
-		//$t->setTo("cesarbretschneider@gmail.com");
-		$t->setSubject("Test");
-		$t->setHTML("test.php");
-		$t->bind('test', date('d/M/Y h:i:s'));
-		$this->view->set('test', $t->send());
-		
-		$query = $this->model->content->get('page', 'index')
-			->addRestriction(new _SF_Restriction('content', 'This is a sample article.  All of this text you can change in the script admin control panel.Hello world'));
+		$query = $this->model->test->get('unique', 'test' );
+		//$query = $this->model->test->like('content', 'some%' );
+		$query->setPage($this->get->page->toInt());
+		$query->setResultsPerPage(1);
 		
 		$pagination = new Pagination($query);
 		
 		$this->view->set('pagination', $pagination);
-		$this->view->set('test', print_r($query, true));/**/
+		$this->view->set('test', print_r($query->fetch(), true));/**/
 	}
 	
 }

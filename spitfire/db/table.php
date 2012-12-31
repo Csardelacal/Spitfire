@@ -5,6 +5,7 @@ class _SF_DBTable
 
 	protected $tablename = false;
 	protected $primaryK  = false;
+	/** @var _SF_DBInterface  */
 	protected $db        = false;
 	protected $fields    = false;
 	
@@ -25,6 +26,7 @@ class _SF_DBTable
 		
 		$query = new _SF_DBQuery($this);
 		$query->addRestriction(new _SF_Restriction($field, $value));
+		
 		return $query;
 	}
 
@@ -62,7 +64,7 @@ class _SF_DBTable
 		$stt->execute();
 		
 		$error = $stt->errorInfo();
-		if ($error[1]) throw new privateException($error[1], $error[0]);
+		if ($error[1]) throw new privateException($error[2], $error[1]);
 		
 		$this->fields = Array();
 		while($row = $stt->fetch()) {
@@ -74,15 +76,23 @@ class _SF_DBTable
 		
 	}
 	
+	public function escapeFieldName($name) {
+		return "`$name`";
+	}
+	
 	public function getFields() {
 		if (!is_array($this->fields)) $this->fetchFields();
-		return $this->fields;
+		return array_map(Array($this, 'escapeFieldName'), $this->fields);
 	}
 	
 	public function getTablename() {
 		return $this->tablename;
 	}
 	
+	/**
+	 * Returns the database the table belongs to.
+	 * @return _SF_DBInterface
+	 */
 	public function getDb() {
 		return $this->db;
 	}
@@ -91,22 +101,32 @@ class _SF_DBTable
 		if (empty ($this->errors)) return false;
 		return $this->errors;
 	}
+	
+	/**
+	 * Converts data from the encoding the database has TO the encoding the
+	 * system uses.
+	 * @param String $str
+	 * @return Strng
+	 */
+	public function convertIn($str) {
+		return iconv(environment::get('database_encoding'), environment::get('system_encoding'), $str);
+	}
+	
+	
+	/**
+	 * Converts data from the encoding the system has TO the encoding the
+	 * database uses.
+	 * @param String $str
+	 * @return Strng
+	 */
+	public function convertOut($str) {
+		return iconv(environment::get('system_encoding'), environment::get('database_encoding'), $str);
+	}
 
 	public function set ($data) {
-		$this->errors = Array();
-		if ($this->getFields()) {
-			$newdata = Array();
-			foreach ($this->fields as $field) {
-				if (method_exists ($this, 'validate_' . $field)) {
-					if ($error = call_user_func_array(Array($this, 'validate_' . $field), Array($data[$field]))) {
-						$this->errors[] = $error;
-					}
-				}
-				$newdata[$field] = $data[$field];
-			}
-			$data = $newdata;
-		}
+		if (!$this->getFields()) throw new privateException('No database fields for table ' . $this->tablename);
 		
+		$data = $this->validate($data);
 		if (!empty($this->errors)) return false;
 
 		if (empty($data['id'])) unset ($data['id']);
@@ -123,7 +143,7 @@ class _SF_DBTable
 
 		$con = $this->db->getConnection();
 		$stt = $con->prepare($statement);
-		$stt->execute($data);
+		$stt->execute( array_map(Array($this, 'convertOut'), $data) );
 		
 		$err = $stt->errorInfo();
 		if ($err[1]) throw new privateException(print_r($err, true), $err[0]);
@@ -131,6 +151,24 @@ class _SF_DBTable
 		if ($stt->rowCount() == 1) return $con->lastInsertId();
 		else return $data['id'];
 
+	}
+	
+	public function validate($data) {
+		
+		$this->errors = Array();
+		$newdata = Array();
+		foreach ($this->fields as $field) {
+			if (method_exists ($this, 'validate_' . $field)) {
+				$function = Array($this, 'validate_' . $field);
+				$error = call_user_func_array($function, Array($data[$field]));
+				if ($error) {
+					$this->errors[] = $error;
+				}
+			}
+			$newdata[$field] = $data[$field];
+		}
+		
+		return $newdata;
 	}
 
 }

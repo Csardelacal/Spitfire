@@ -28,7 +28,11 @@ class environment
 		'db_pass'                  => '',
 		'db_database'              => 'database',
 		'db_table_prefix'          => '',
-		
+	
+		#Character encoding settings
+		'system_encoding'          => 'utf-8',
+		'database_encoding'        => 'latin1',
+	    
 		#MVC Related settings
 		'pretty_urls'              => true,
 		'default_controller'       => 'home',

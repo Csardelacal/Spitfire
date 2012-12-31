@@ -3,6 +3,7 @@
 class _SF_DBQuery
 {
 	protected $result;
+	/** @var _SF_DBTable  */
 	protected $table;
 	
 	protected $restrictions;
@@ -63,7 +64,8 @@ class _SF_DBQuery
 	
 	public function fetch() {
 		if (!$this->result) $this->query();
-		return $this->result->fetch(PDO::FETCH_ASSOC);
+		$data = $this->result->fetch(PDO::FETCH_ASSOC);
+		return  array_map(Array($this->table, 'convertIn'), $data) ;
 	}
 	
 	public function fetchAll() {
@@ -91,17 +93,17 @@ class _SF_DBQuery
 			$statement.= $this->order['field'] . ' ' . $this->order['mode'];
 		}
 		
-		$statement.= " LIMIT $offset, $rpp";
+		if ($this->rpp > 0) $statement.= " LIMIT $offset, $rpp";
 
 		$con = $this->table->getDb()->getConnection();
 		$stt = $con->prepare($statement);
 		
 		$values = Array(); //Prepare the statement to be executed
 		foreach($this->restrictions as $r) $values[$r->getRID()] = $r->getValue();
-		$stt->execute($values);
+		$stt->execute( array_map(Array($this->table, 'convertOut'), $values) );
 		
 		$err = $stt->errorInfo();
-		if ($err[1]) throw new privateException(print_r($err, true), $err[0]);
+		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);
 		
 		if ($returnresult) return $stt;
 		else $this->result = $stt;

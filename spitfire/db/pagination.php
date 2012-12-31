@@ -21,9 +21,12 @@ class Pagination
 	}
 	
 	public function getPageCount() {
-		$results = $this->query->count();
 		$rpp     = $this->query->getResultsPerPage();
-		return (int)($results/$rpp) + 1;
+		
+		$this->query->setResultsPerPage(-1);
+		$results = $this->query->count();
+		$this->query->setResultsPerPage($rpp);
+		return ceil($results/$rpp);
 	}
 	
 	public function getPageNumbers() {

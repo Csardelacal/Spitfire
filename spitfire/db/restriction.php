@@ -35,6 +35,6 @@ class _SF_Restriction
 	}
 	
 	public function __toString() {
-		return "$this->field $this->operator :$this->rid";
+		return "`$this->field` $this->operator :$this->rid";
 	}
 }

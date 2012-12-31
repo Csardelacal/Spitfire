@@ -21,6 +21,7 @@ class SpitFire
 	static $current_url     = false;
 
 	static $debug           = false;
+	static $headers         = false;
 
 	public static function init() {
 
@@ -36,7 +37,8 @@ class SpitFire
 		self::includeIfPossible("$cur_dir/autoload_core_files.php");
 
 		#Initialize the exception handler
-		self::$debug = new _SF_ExceptionHandler();
+		self::$debug   = new _SF_ExceptionHandler();
+		self::$headers = new Headers();
 
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
@@ -70,7 +72,10 @@ class SpitFire
 		if (is_callable($method)) call_user_func_array($method, self::$current_url->getObject());
 		else throw new publicException('E_PAGE_NOT_FOUND', 404);
 
+		ob_start();
 		self::$view->render();
+		self::$headers->send();
+		ob_flush();
 	}
 	
 	public static function baseUrl(){
