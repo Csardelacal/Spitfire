@@ -24,7 +24,12 @@ _SF_AutoLoad::registerClass('DBInterface',           $cur_dir.'/db/db.php');
 _SF_AutoLoad::registerClass('_SF_DBTable',           $cur_dir.'/db/table.php');
 _SF_AutoLoad::registerClass('_SF_DBQuery',           $cur_dir.'/db/dbquery.php');
 _SF_AutoLoad::registerClass('_SF_Restriction',       $cur_dir.'/db/restriction.php');
+_SF_AutoLoad::registerClass('_SF_DBDriver',          $cur_dir.'/db/driver.php');
+_SF_AutoLoad::registerClass('resultSetInterface',    $cur_dir.'/db/resultset.php');
 _SF_AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
+
+_SF_AutoLoad::registerClass('_SF_mysqlPDODriver',    $cur_dir.'/db/drivers/mysqlPDO.php');
+_SF_AutoLoad::registerClass('_SF_mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
 _SF_AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');

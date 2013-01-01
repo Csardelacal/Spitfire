@@ -64,55 +64,32 @@ class _SF_DBQuery
 	
 	public function fetch() {
 		if (!$this->result) $this->query();
-		$data = $this->result->fetch(PDO::FETCH_ASSOC);
+		$data = $this->result->fetch();
 		return  array_map(Array($this->table, 'convertIn'), $data) ;
 	}
 	
 	public function fetchAll() {
 		if (!$this->result) $this->query();
-		return $this->result->fetchAll(PDO::FETCH_ASSOC);
+		return $this->result->fetchAll();
 	}
 
 	protected function query($fields = false, $returnresult = false) {
-		
-		$offset = ($this->page - 1) * $this->rpp;
-		$rpp    = $this->rpp;
-		
-		if (!$fields) $fields = $this->table->getFields();
-		
-		$restrictions = implode(' AND ', $this->restrictions);
-		if (empty($restrictions)) $restrictions = '1';//If no restrictions are set fetch everything
-
-		$statement = "SELECT " . 
-				implode($fields, ', ') . 
-				" FROM `{$this->table->getTablename()}` WHERE  " . 
-				$restrictions;
-				
-		if (!empty($this->order)) {
-			$statement.= " ORDER BY ";
-			$statement.= $this->order['field'] . ' ' . $this->order['mode'];
-		}
-		
-		if ($this->rpp > 0) $statement.= " LIMIT $offset, $rpp";
-
-		$con = $this->table->getDb()->getConnection();
-		$stt = $con->prepare($statement);
-		
-		$values = Array(); //Prepare the statement to be executed
-		foreach($this->restrictions as $r) $values[$r->getRID()] = $r->getValue();
-		$stt->execute( array_map(Array($this->table, 'convertOut'), $values) );
-		
-		$err = $stt->errorInfo();
-		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);
-		
-		if ($returnresult) return $stt;
-		else $this->result = $stt;
-
+		$result = $this->table->getDB()->query($this->table, $this, $fields);
+		if ($returnresult) return $result;
+		else $this->result = $result;
 	}
 	
 	public function count() {
 		$query = $this->query(Array('count(*)'), true)->fetch();
 		$count = end($query);
 		return $count;
+	}
+	
+	public function getRestrictions() {
+		return $this->restrictions;
+	}
+	
+	public function getOrder() {
+		return $this->order;
 	}
 }

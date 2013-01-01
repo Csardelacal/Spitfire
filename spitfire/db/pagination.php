@@ -65,7 +65,7 @@ class Pagination
 	protected function makePage($number, $caption, $disabled = false) {
 		$this->url->setParam($this->param, $number);
 		
-		if ($number < 1 || $number > $this->max || $diabled ) {
+		if ($number < 1 || $number > $this->max || $disabled ) {
 			$this->url->setParam($this->param, 1);
 			return '<li class="disabled"><a href="' . $this->url . '">' . $caption . '</a>';
 		}

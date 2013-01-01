@@ -2,29 +2,19 @@
 
 class DBInterface extends _SF_MVC
 {
-
-	private $connection = false;
-
-	protected function connect() {
-
-		$dsn  = 'mysql:dbname=' . environment::get('db_database') . ';host=' . environment::get('db_server');
-		$user = environment::get('db_user');
-		$pass = environment::get('db_pass');
-
-		try {
-			$this->connection = new PDO($dsn, $user, $pass);
-			return true;
-		} catch (Exception $e) {
-			SpitFire::$debug->msg($e->getMessage());
-			throw new privateException('DB Error');
-			return false;
-		}
-
+	/**
+	 *
+	 * @var _SF_DBDriver 
+	 */
+	private $driver;
+	
+	public function __construct() {
+		$driver = '_SF_' . environment::get('db_driver') . 'Driver';
+		$this->driver = new $driver();
 	}
 
 	public function getConnection() {
-		if (!$this->connection) $this->connect();
-		return $this->connection;
+		return $this->driver->getConnection();
 	}
 
 	/**
@@ -41,6 +31,10 @@ class DBInterface extends _SF_MVC
 
 		if (class_exists($tableClass)) return $this->{$table} = new $tableClass ($this);
 		else return $this->{$table} = new _SF_DBTable($this, $table);
+	}
+	
+	public function __call($name, $arguments) {
+		return call_user_func_array(Array($this->driver, $name), $arguments);
 	}
 
 }

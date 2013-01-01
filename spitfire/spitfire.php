@@ -26,8 +26,8 @@ class SpitFire
 	public static function init() {
 
 		if (self::$started) return false;
-		$cur_dir = dirname(__FILE__);
-		self::$cwd = dirname($cur_dir);
+		self::$cwd = getcwd();
+		$cur_dir = self::$cwd . DIRECTORY_SEPARATOR . 'spitfire';
 
 		#Try to start autoload
 		if (! class_exists('_SF_AutoLoad')) include dirname(__FILE__).'/autoload.php';

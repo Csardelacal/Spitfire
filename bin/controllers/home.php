@@ -17,7 +17,8 @@ class homeController extends Controller
 	}
 
 	public function save ($object, $params) {
-		$this->view->set('FW_NAME', 'Spitfire - ' . memory_get_peak_usage()/1024);
+		//$this->view->set('FW_NAME', 'Spitfire - ' . memory_get_peak_usage()/1024);
+		$this->view->set('FW_NAME', 'Spitfire - ' . $_SERVER['DOCUMENT_ROOT']);
 		$this->view->set('name', $this->post->name->value());
 		$this->view->set('age',  $this->post->age->toInt());
 		$this->view->set('pass', $this->post->pass->toPassword());
@@ -27,10 +28,14 @@ class homeController extends Controller
 		$query->setPage($this->get->page->toInt());
 		$query->setResultsPerPage(1);
 		
+		$data = $query->fetch(); print_r($data);
+		$data['content'] = 'áéë ' . date('d/m/Y H:i:s', time());
+		$this->model->test->set($data);
+		
 		$pagination = new Pagination($query);
 		
 		$this->view->set('pagination', $pagination);
-		$this->view->set('test', print_r($query->fetch(), true));/**/
+		$this->view->set('test', print_r($data, true));/**/
 	}
 	
 }

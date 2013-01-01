@@ -23,6 +23,7 @@ class environment
 		'debugging_mode'           => true, //TODO: Change for stable
 		
 		#Database settings
+		'db_driver'                => 'mysqlPDO',
 		'db_server'                => 'localhost',
 		'db_user'                  => 'root',
 		'db_pass'                  => '',

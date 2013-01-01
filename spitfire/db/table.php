@@ -57,32 +57,19 @@ class _SF_DBTable
 	}
 	
 	public function fetchFields() {
-		$statement = "DESCRIBE `$this->tablename` ";
 		
-		$con = $this->db->getConnection();
-		$stt = $con->prepare($statement);
-		$stt->execute();
-		
-		$error = $stt->errorInfo();
-		if ($error[1]) throw new privateException($error[2], $error[1]);
-		
-		$this->fields = Array();
-		while($row = $stt->fetch()) {
-			$this->fields[] = $row['Field'];
-			if ( isset($row['Key']) && $row['Key'] == 'PRIMARY') 
-				$this->primaryK = $row['Field'];
-		}
-		
+		$this->fields = $this->db->fetchFields($this);
 		
 	}
 	
 	public function escapeFieldName($name) {
+		echo '@Deprecated';
 		return "`$name`";
 	}
 	
 	public function getFields() {
 		if (!is_array($this->fields)) $this->fetchFields();
-		return array_map(Array($this, 'escapeFieldName'), $this->fields);
+		return array_map(Array($this->db, 'escapeFieldName'), $this->fields);
 	}
 	
 	public function getTablename() {
@@ -106,7 +93,7 @@ class _SF_DBTable
 	 * Converts data from the encoding the database has TO the encoding the
 	 * system uses.
 	 * @param String $str
-	 * @return Strng
+	 * @return String
 	 */
 	public function convertIn($str) {
 		return iconv(environment::get('database_encoding'), environment::get('system_encoding'), $str);
@@ -124,33 +111,7 @@ class _SF_DBTable
 	}
 
 	public function set ($data) {
-		if (!$this->getFields()) throw new privateException('No database fields for table ' . $this->tablename);
-		
-		$data = $this->validate($data);
-		if (!empty($this->errors)) return false;
-
-		if (empty($data['id'])) unset ($data['id']);
-
-		$fields = array_keys($data);
-		$famt   = count($fields);
-
-		$statement = "INSERT INTO `$this->tablename` (".implode(', ', $fields) .") VALUES (:" . implode(', :', $fields) . ") ON DUPLICATE KEY UPDATE ";
-		for ($i = 0; $i < $famt; $i++) {
-			$statement.= $fields[$i] . " = :" . $fields[$i];
-			if ($i < $famt-1) $statement.= ',';
-			$statement.= ' ';
-		}
-
-		$con = $this->db->getConnection();
-		$stt = $con->prepare($statement);
-		$stt->execute( array_map(Array($this, 'convertOut'), $data) );
-		
-		$err = $stt->errorInfo();
-		if ($err[1]) throw new privateException(print_r($err, true), $err[0]);
-		
-		if ($stt->rowCount() == 1) return $con->lastInsertId();
-		else return $data['id'];
-
+		return $this->db->set($this, $data);
 	}
 	
 	public function validate($data) {
