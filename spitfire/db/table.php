@@ -62,11 +62,6 @@ class _SF_DBTable
 		
 	}
 	
-	public function escapeFieldName($name) {
-		echo '@Deprecated';
-		return "`$name`";
-	}
-	
 	public function getFields() {
 		if (!is_array($this->fields)) $this->fetchFields();
 		return array_map(Array($this->db, 'escapeFieldName'), $this->fields);

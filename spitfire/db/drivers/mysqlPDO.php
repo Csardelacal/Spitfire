@@ -4,6 +4,7 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 {
 
 	private $connection = false;
+	private $fields     = Array();
 
 	protected function connect() {
 
@@ -29,6 +30,9 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 
 	public function fetchFields(_SF_DBTable $table) {
 		
+		//If it's cached return the data
+		if ($this->fields[$table->getTablename()]) return $this->fields[$table->getTablename()];
+		
 		$statement = "DESCRIBE `{$table->getTablename()}` ";
 		
 		$con = $this->getConnection();
@@ -43,7 +47,7 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 			$fields[] = $row['Field'];
 		}
 		
-		return $fields;
+		return $this->fields[$table->getTablename()] = $fields;
 	}
 	
 	public function escapeFieldName($name) {
