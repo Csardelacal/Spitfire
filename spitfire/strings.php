@@ -13,4 +13,9 @@ class Strings
 		return strtolower($str);
 	}
 	
+	public static function ellipsis ($str, $targetlength, $char = '...') {
+		$newlen = $targetlength - strlen($char);
+		return (strlen($str) > $newlen)? substr($str, 0, $newlen) . '...' : $str;
+	}
+	
 }
