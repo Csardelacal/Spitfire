@@ -26,6 +26,7 @@ _SF_AutoLoad::registerClass('_SF_DBQuery',           $cur_dir.'/db/dbquery.php')
 _SF_AutoLoad::registerClass('_SF_Restriction',       $cur_dir.'/db/restriction.php');
 _SF_AutoLoad::registerClass('_SF_DBDriver',          $cur_dir.'/db/driver.php');
 _SF_AutoLoad::registerClass('resultSetInterface',    $cur_dir.'/db/resultset.php');
+_SF_AutoLoad::registerClass('databaseRecord',        $cur_dir.'/db/databaseRecord.php');
 _SF_AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
 _SF_AutoLoad::registerClass('_SF_mysqlPDODriver',    $cur_dir.'/db/drivers/mysqlPDO.php');

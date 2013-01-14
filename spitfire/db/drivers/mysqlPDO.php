@@ -51,7 +51,14 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 	}
 	
 	public function escapeFieldName($name) {
-		return "`$name`";
+		switch($name) {
+			case 'unique':
+			case 'groups':
+			case 'group':
+				return "`$name`";
+			default:
+				return $name;
+		}
 	}
 
 	public function query(_SF_DBTable $table, _SF_DBQuery $query, $fields = false) {
@@ -59,7 +66,7 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 		$offset = ($query->getPage() - 1) * $query->getResultsPerPage();
 		$rpp    = $query->getResultsPerPage();
 		
-		if (!$fields) $fields = $table->getFields();
+		if (!$fields) $fields = array_map (Array($this, 'escapeFieldName'), $table->getFields());
 		
 		$restrictions = implode(' AND ', $query->getRestrictions() );
 		if (empty($restrictions)) $restrictions = '1';//If no restrictions are set fetch everything
@@ -81,20 +88,21 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 		$stt = $con->prepare($statement);
 		
 		$values = Array(); //Prepare the statement to be executed
-		$restrictions = $query->getRestrictions();
-		foreach($restrictions as $r) $values[$r->getRID()] = $r->getValue();
-		$stt->execute( array_map(Array($table, 'convertOut'), $values) );
+		$_restrictions = $query->getRestrictions();
+		foreach($_restrictions as $r) $values[$r->getRID()] = $r->getValue();
+		$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $values) );
 		
 		$err = $stt->errorInfo();
 		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);
 		
-		return new _SF_mysqlPDOResultSet($stt);
+		return new _SF_mysqlPDOResultSet($table, $stt);
 		
 	}
 
 	public function set(_SF_DBTable $table, $data) {
 		
-		if (!$table->getFields()) throw new privateException('No database fields for table ' . $this->tablename);
+		$fields = $table->getFields();
+		if (empty($fields)) throw new privateException('No database fields for table ' . $this->tablename);
 		
 		$data   = $table->validate($data);
 		$errors = $table->getErrors();
@@ -120,7 +128,7 @@ class _SF_mysqlPDODriver implements _SF_DBDriver
 		#Run query
 		$con = $this->getConnection();
 		$stt = $con->prepare($statement);
-		$stt->execute( array_map(Array($table, 'convertOut'), $data) );
+		$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $data) );
 		
 		$err = $stt->errorInfo();
 		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);

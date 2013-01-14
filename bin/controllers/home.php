@@ -28,14 +28,21 @@ class homeController extends Controller
 		$query->setPage($this->get->page->toInt());
 		$query->setResultsPerPage(1);
 		
-		$data = $query->fetch(); print_r($data);
-		$data['content'] = 'áéë ' . date('d/m/Y H:i:s', time());
-		$this->model->test->set($data);
+		$data = $query->fetch();
+		//$data['content'] = 'áéë ' . date('d/m/Y H:i:s', time());
+		//$this->model->test->set($data);
 		
 		$pagination = new Pagination($query);
 		
 		$this->view->set('pagination', $pagination);
 		$this->view->set('test', print_r($data, true));/**/
+	}
+	
+	public function test2 () {
+		print_r($this->model);
+		print_r($this->model->test);
+		print_r($this->model->test->get('unique', 'test'));
+		print_r($this->model->test->get('unique', 'test')->fetch());
 	}
 	
 }

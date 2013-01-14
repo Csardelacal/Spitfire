@@ -65,7 +65,7 @@ class _SF_DBQuery
 	public function fetch() {
 		if (!$this->result) $this->query();
 		$data = $this->result->fetch();
-		return  array_map(Array($this->table, 'convertIn'), $data) ;
+		return  $data;//array_map(Array($this->table->getDB(), 'convertIn'), $data) ;
 	}
 	
 	public function fetchAll() {
@@ -77,11 +77,12 @@ class _SF_DBQuery
 		$result = $this->table->getDB()->query($this->table, $this, $fields);
 		if ($returnresult) return $result;
 		else $this->result = $result;
+		return $this;
 	}
 	
 	public function count() {
 		$query = $this->query(Array('count(*)'), true)->fetch();
-		$count = end($query);
+		$count = $query->{'count(*)'};//end($query);
 		return $count;
 	}
 	

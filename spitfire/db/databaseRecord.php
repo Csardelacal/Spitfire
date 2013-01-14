@@ -21,18 +21,18 @@ class databaseRecord
 		$this->data = $newdata;
 	}
 	
-	public function getData($newdata) {
+	public function getData() {
 		return $this->data;
 	}
 	
-	public function getSrcData($newdata) {
+	public function getSrcData() {
 		return $this->src;
 	}
 	
 	public function getDiff() {
 		$changed = Array();
 		
-		foreach($data as $key => $value) {
+		foreach($this->data as $key => $value) {
 			if ($value != $this->src[$key]) $changed[$key] = $value;
 		}
 		

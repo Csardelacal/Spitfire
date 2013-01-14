@@ -22,8 +22,6 @@ class _SF_DBTable
 
 	public function get($field, $value) {
 		
-		if (!is_array($this->fields)) $this->fetchFields();
-		
 		$query = new _SF_DBQuery($this);
 		$query->addRestriction(new _SF_Restriction($field, $value));
 		
@@ -32,15 +30,11 @@ class _SF_DBTable
 
 	public function getAll() {
 		
-		if (!is_array($this->fields)) $this->fetchFields();
-		
 		$query = new _SF_DBQuery($this);
 		return $query;
 	}
 
 	public function like($field, $value) {
-		
-		if (!is_array($this->fields)) $this->fetchFields();
 		
 		$query = new _SF_DBQuery($this);
 		$query->addRestriction(new _SF_Restriction($field, $value, _SF_Restriction::LIKE_OPERATOR));
@@ -49,22 +43,14 @@ class _SF_DBTable
 
 	public function isNull($field) {
 		
-		if (!is_array($this->fields)) $this->fetchFields();
-		
 		$query = new _SF_DBQuery($this);
 		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
 		return $query;
 	}
 	
-	public function fetchFields() {
-		
-		$this->fields = $this->db->fetchFields($this);
-		
-	}
-	
 	public function getFields() {
-		if (!is_array($this->fields)) $this->fetchFields();
-		return array_map(Array($this->db, 'escapeFieldName'), $this->fields);
+		if ($this->fields) return $this->fields;
+		return $this->db->fetchFields($this);
 	}
 	
 	public function getTablename() {
@@ -83,27 +69,6 @@ class _SF_DBTable
 		if (empty ($this->errors)) return false;
 		return $this->errors;
 	}
-	
-	/**
-	 * Converts data from the encoding the database has TO the encoding the
-	 * system uses.
-	 * @param String $str
-	 * @return String
-	 */
-	public function convertIn($str) {
-		return iconv(environment::get('database_encoding'), environment::get('system_encoding'), $str);
-	}
-	
-	
-	/**
-	 * Converts data from the encoding the system has TO the encoding the
-	 * database uses.
-	 * @param String $str
-	 * @return Strng
-	 */
-	public function convertOut($str) {
-		return iconv(environment::get('system_encoding'), environment::get('database_encoding'), $str);
-	}
 
 	public function set ($data) {
 		return $this->db->set($this, $data);
@@ -113,7 +78,7 @@ class _SF_DBTable
 		
 		$this->errors = Array();
 		$newdata = Array();
-		foreach ($this->fields as $field) {
+		foreach ($this->getFields() as $field) {
 			if (method_exists ($this, 'validate_' . $field)) {
 				$function = Array($this, 'validate_' . $field);
 				$error = call_user_func_array($function, Array($data[$field]));
