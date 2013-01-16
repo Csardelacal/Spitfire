@@ -42,7 +42,7 @@ class homeController extends Controller
 		print_r($this->model);
 		print_r($this->model->test);
 		print_r($this->model->test->get('unique', 'test'));
-		print_r($this->model->test->get('unique', 'test')->fetch());
+		print_r($this->model->test->get('unique', '')->fetch());
 	}
 	
 }

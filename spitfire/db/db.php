@@ -4,11 +4,14 @@
  * This class creates a "bridge" beetwen the classes that use it and the actual
  * driver.
  * 
- * @package Spitfire.storage
+ * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
 class DBInterface extends _SF_MVC
 {
+	
+	const MYSQL_PDO_DRIVER = 'mysqlPDO';
+	
 	/**
 	 * Reference to the actual DB driver.
 	 * @var _SF_DBDriver 
@@ -16,17 +19,18 @@ class DBInterface extends _SF_MVC
 	private $driver;
 	
 	/**
-	 * 
-	 * @param String $driver
+	 * Creates an instance of DBInterface
+	 * @param String $driver Name of the database driver to be used. You can
+	 *                       choose one of the DBInterface::DRIVER_? consts.
 	 */
-	public function __construct($driver = null) {
+	public function __construct($driver = null, $options = null) {
 		
 		#If the driver is not selected we get the one we want from env.
 		if (is_null($driver)) $driver = environment::get('db_driver');
 		
 		#Instantiate the driver
 		$driver = '_SF_' . $driver . 'Driver';
-		$this->driver = new $driver();
+		$this->driver = new $driver($options);
 	}
 
 	/**
@@ -34,7 +38,9 @@ class DBInterface extends _SF_MVC
 	 * Depending on the driver this can be any type of content. It should
 	 * only be used by applications with special needs.
 	 * 
-	 * @return mixed Connector
+	 * @return mixed The connector used by the system to communicate with
+	 * the database server. The data-type of the return value depends on
+	 * the driver used by the system.
 	 */
 	public function getConnection() {
 		return $this->driver->getConnection();
@@ -43,8 +49,8 @@ class DBInterface extends _SF_MVC
 	/**
 	 * Converts data from the encoding the database has TO the encoding the
 	 * system uses.
-	 * @param String $str
-	 * @return String
+	 * @param String $str The string encoded with the database's encoding
+	 * @return String The string encoded with Spitfire's encoding
 	 */
 	public function convertIn($str) {
 		return iconv(environment::get('database_encoding'), environment::get('system_encoding'), $str);
@@ -54,28 +60,38 @@ class DBInterface extends _SF_MVC
 	/**
 	 * Converts data from the encoding the system has TO the encoding the
 	 * database uses.
-	 * @param String $str
-	 * @return Strng
+	 * @param String $str The string encoded with Spitfire's encoding
+	 * @return String The string encoded with the database's encoding
 	 */
 	public function convertOut($str) {
 		return iconv(environment::get('system_encoding'), environment::get('database_encoding'), $str);
 	}
+	
+	/**
+	 * Returns a table adapter for the database table with said name to allow
+	 * querying and data-manipulation..
+	 * 
+	 * @param String $tablename Name of the table that should be used.
+	 * @return _SF_DBTable The database table adapter
+	 */
+	public function getTable($tablename) {
+		$tableClass = $tablename.'Model';
+
+		if (class_exists($tableClass)) return $this->{$tablename} = new $tableClass ($this);
+		else return $this->{$tablename} = new _SF_DBTable($this, $tablename);
+	}
 
 	/**
-	 * Returns a database table to allow querying and data-manipulation.
+	 * Allows short-hand access to tables by using: $db->tablename
 	 * 
 	 * @param String $table Name of the table
-	 * @return _SF_DBTable
+	 * @return _SF_DBTable|_SF_MVC
 	 */
 	public function __get($table) {
-		
 		#In case we request a model, view or controller
 		if (parent::__get($table)) return parent::__get($table);
-		
-		$tableClass = $table.'Model';
-
-		if (class_exists($tableClass)) return $this->{$table} = new $tableClass ($this);
-		else return $this->{$table} = new _SF_DBTable($this, $table);
+		#Otherwise we try to get the table with this name
+		return $this->getTable($table);
 	}
 	
 	/**

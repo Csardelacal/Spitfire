@@ -20,15 +20,19 @@ _SF_AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element
 _SF_AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
 _SF_AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 
+#Database related imports
 _SF_AutoLoad::registerClass('DBInterface',           $cur_dir.'/db/db.php');
+_SF_AutoLoad::registerClass('_SF_Queriable',         $cur_dir.'/db/queriable.php');
 _SF_AutoLoad::registerClass('_SF_DBTable',           $cur_dir.'/db/table.php');
 _SF_AutoLoad::registerClass('_SF_DBQuery',           $cur_dir.'/db/dbquery.php');
 _SF_AutoLoad::registerClass('_SF_Restriction',       $cur_dir.'/db/restriction.php');
 _SF_AutoLoad::registerClass('_SF_DBDriver',          $cur_dir.'/db/driver.php');
-_SF_AutoLoad::registerClass('resultSetInterface',    $cur_dir.'/db/resultset.php');
-_SF_AutoLoad::registerClass('databaseRecord',        $cur_dir.'/db/databaseRecord.php');
 _SF_AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
+_SF_AutoLoad::registerClass('resultSetInterface',    $cur_dir.'/db/resultset.php');
+_SF_AutoLoad::registerClass('databaseRecord',        $cur_dir.'/db/databaseRecord.php');
+
+_SF_AutoLoad::registerClass('_SF_stdSQLDriver',      $cur_dir.'/db/drivers/stdSQL.php');
 _SF_AutoLoad::registerClass('_SF_mysqlPDODriver',    $cur_dir.'/db/drivers/mysqlPDO.php');
 _SF_AutoLoad::registerClass('_SF_mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
 

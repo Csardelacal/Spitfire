@@ -29,12 +29,19 @@ class _SF_Restriction
 		return $this->rid;
 	}
 
-	
 	public function getValue() {
 		return $this->value;
 	}
 	
+	public function getQueryStr($pattern = ':f :o ?') {
+		
+		$search  = Array(':f', ':o', ':r', ':v');
+		$replace = Array(&$this->field, &$this->operator, &$this->rid, &$this->value);
+		
+		return str_replace($search, $replace, $pattern);
+	}
+	
 	public function __toString() {
-		return "`$this->field` $this->operator :$this->rid";
+		return "`$this->field` $this->operator ?";
 	}
 }

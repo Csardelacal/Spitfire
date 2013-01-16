@@ -12,6 +12,7 @@ class _SF_mysqlPDOResultSet implements resultSetInterface
 
 	public function fetch() {
 		$data = $this->result->fetch(PDO::FETCH_ASSOC);
+		$data = array_map( Array($this->table->getDB(), 'convertIn'), $data);
 		return new databaseRecord($this->table, $data);
 	}
 

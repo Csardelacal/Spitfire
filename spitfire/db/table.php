@@ -1,6 +1,6 @@
 <?php
 
-class _SF_DBTable
+class _SF_DBTable extends _SF_Queriable
 {
 
 	protected $tablename = false;
@@ -18,34 +18,6 @@ class _SF_DBTable
 
 		if ($tablename)
 			$this->tablename = environment::get('db_table_prefix') . $tablename;
-	}
-
-	public function get($field, $value) {
-		
-		$query = new _SF_DBQuery($this);
-		$query->addRestriction(new _SF_Restriction($field, $value));
-		
-		return $query;
-	}
-
-	public function getAll() {
-		
-		$query = new _SF_DBQuery($this);
-		return $query;
-	}
-
-	public function like($field, $value) {
-		
-		$query = new _SF_DBQuery($this);
-		$query->addRestriction(new _SF_Restriction($field, $value, _SF_Restriction::LIKE_OPERATOR));
-		return $query;
-	}
-
-	public function isNull($field) {
-		
-		$query = new _SF_DBQuery($this);
-		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
-		return $query;
 	}
 	
 	public function getFields() {
