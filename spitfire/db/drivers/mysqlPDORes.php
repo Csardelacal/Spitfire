@@ -18,7 +18,11 @@ class _SF_mysqlPDOResultSet implements resultSetInterface
 
 	public function fetchAll() {
 		$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
-		foreach($data as &$el) $el = new databaseRecord($this->table, $el);
+		foreach($data as &$el) $el = new databaseRecord($this->table, array_map( Array($this->table->getDB(), 'convertIn'), $el));
 		return $data;
+	}
+	
+	public function __destruct() {
+		$this->result->closeCursor();
 	}
 }

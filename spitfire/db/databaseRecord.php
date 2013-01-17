@@ -39,6 +39,10 @@ class databaseRecord
 		return $changed;
 	}
 	
+	public function delete() {
+		$this->table->delete($this);
+	}
+	
 	public function store() {
 		//TODO!!!
 		//Needs to select wether it should insert

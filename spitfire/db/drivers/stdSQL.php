@@ -53,4 +53,23 @@ abstract class _SF_stdSQLDriver
 		
 	}
 	
+	public function delete(_SF_DBTable $table, $primaries) {
+		
+		//TODO: Handle multti field primary keys
+		//FIX: WIP of todo
+		
+		#Prepare Vars
+		$deletestt  = 'DELETE FROM';
+		$tablename  = "`{$table->getTablename()}`";
+		$wherestt   = 'WHERE';
+		$idcolumn   = $primary;
+		$equals     = '=';
+		$id         = '?'; //it's a prepared stt, therefore id is a ?
+		
+		$stt = array_filter(Array($deletestt, $tablename, $wherestt, $idcolumn,
+					$equals, $id));
+		
+		return implode(' ', $stt);
+	}
+	
 }

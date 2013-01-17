@@ -5,6 +5,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 
 	private $connection = false;
 	private $fields     = Array();
+	private $primaries  = Array();
 
 	protected function connect() {
 
@@ -46,10 +47,24 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$fields = Array();
 		while($row = $stt->fetch()) {
 			$fields[] = $row['Field'];
+			if (strstr($row['Key'], 'PRI')) {
+				if (!isset($this->primaries[$table->getTablename()])) $this->primaries[$table->getTablename()] = Array();
+				$this->primaries[$table->getTablename()][] = $row['Field'];
+			}
 			//TODO: Check for PK
 		}
 		
 		return $this->fields[$table->getTablename()] = $fields;
+	}
+	
+	public function getPrimaryKey($table) {
+		if (isset($this->primaries[$table->getTableName()])){
+			return $this->primaries[$table->getTableName()];
+		}
+		else {
+			$this->fetchFields ($table);
+			return $this->primaries[$table->getTableName()];
+		}
 	}
 	
 	public function escapeFieldName(&$name) {
@@ -60,21 +75,35 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 				$name = "`$name`";
 		}
 	}
-
-	public function query(_SF_DBTable $table, _SF_DBQuery $query, $fields = false) {
-
-		$statement = parent::query($table, $query, $fields);
-
+	
+	public function execute(_SF_DBTable$table, $statement, $values) {
+		
+		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
 		$stt = $con->prepare($statement);
 		
-		$values = Array(); //Prepare the statement to be executed
-		$_restrictions = $query->getRestrictions();
-		foreach($_restrictions as $r) $values[] = $r->getValue();
+		#Execute the query
 		$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $values) );
 		
+		#Check for errors
 		$err = $stt->errorInfo();
 		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);
+		
+		return $stt;
+	}
+
+	public function query(_SF_DBTable $table, _SF_DBQuery $query, $fields = false) {
+
+		#Get the SQL Statement
+		$statement = parent::query($table, $query, $fields);
+		
+		#Prepare the statement to be executed
+		$values = Array(); 
+		$_restrictions = $query->getRestrictions();
+		foreach($_restrictions as $r) $values[] = $r->getValue();
+		
+		#Execute
+		$stt = $this->execute($table, $statement, $values);
 		
 		return new _SF_mysqlPDOResultSet($table, $stt);
 		
@@ -119,8 +148,16 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		
 	}
 
-	public function delete(_SF_DBTable $table, $id) {
-		
+	public function delete(_SF_DBTable $table, databaseRecord $data) {
+		#Get the SQL Statement
+		$primary = $table->getPrimaryKey();
+		$statement = parent::delete($table, $primary);
+		//BOOKMARK 17/01/2013. Working on multicolumn PKs
+		#Prepare values
+		$values  = Array();
+		foreach($primary as $key) $values[] = $data->$key;
+		#Execute
+		$this->execute($table, $statement, Array($data->$primary));
 	}
 
 	public function inc(_SF_DBTable $table, $data, $id) {

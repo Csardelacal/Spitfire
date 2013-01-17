@@ -14,5 +14,5 @@ interface _SF_DBDriver
 	function insert(_SF_DBTable $table, $data );
 	function update(_SF_DBTable $table, $data, $id );
 	function inc   (_SF_DBTable $table, $data, $id ); //Stands for increment
-	function delete(_SF_DBTable $table, $id );
+	function delete(_SF_DBTable $table, databaseRecord $id );
 }

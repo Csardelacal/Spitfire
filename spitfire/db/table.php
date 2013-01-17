@@ -63,5 +63,19 @@ class _SF_DBTable extends _SF_Queriable
 		
 		return $newdata;
 	}
+	
+	/**
+	 * Get's the table's primary key.
+	 * 
+	 * @return String Name of the primary key's column
+	 */
+	public function getPrimaryKey() {
+		if ($this->primaryK) return $this->primaryK;
+		else return $this->db->getPrimaryKey($this);
+	}
+	
+	public function delete(databaseRecord $data) {
+		$this->db->delete($this, $data);
+	}
 
 }
