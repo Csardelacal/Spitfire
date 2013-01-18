@@ -2,7 +2,21 @@
 
 abstract class _SF_stdSQLDriver
 {
-	
+	/**
+	 * This generates a standard WHERE statement for SQL. Remember that this
+	 * assumes prepared statements to be available for your driver and
+	 * therefore will return the fields replaced by a question mark (?) for
+	 * the driver to be replaced.
+	 * 
+	 * To avoid this behaviour you need to change the way restrictions
+	 * generate their output.
+	 * 
+	 * 
+	 * @param _SF_DBTable $table
+	 * @param _SF_DBQuery $query
+	 * @param mixed $fields
+	 * @return String the prepared query statement
+	 */
 	public function query(_SF_DBTable $table, _SF_DBQuery $query, $fields = null) {
 		
 		#Declare vars
@@ -53,21 +67,27 @@ abstract class _SF_stdSQLDriver
 		
 	}
 	
-	public function delete(_SF_DBTable $table, $primaries) {
-		
-		//TODO: Handle multti field primary keys
-		//FIX: WIP of todo
+	/**
+	 * 
+	 * Creates a SQL statement for database entry deletion. It will delete
+	 * 
+	 * 
+	 * @param _SF_DBTable $table
+	 * @param type $primaries
+	 * @return type
+	 */
+	public function delete(_SF_DBTable $table, databaseRecord $record) {
 		
 		#Prepare Vars
-		$deletestt  = 'DELETE FROM';
-		$tablename  = "`{$table->getTablename()}`";
-		$wherestt   = 'WHERE';
-		$idcolumn   = $primary;
-		$equals     = '=';
-		$id         = '?'; //it's a prepared stt, therefore id is a ?
+		$deletestt    = 'DELETE FROM';
+		$tablename    = "`{$table->getTablename()}`";
+		$wherestt     = 'WHERE';
+		$where        = implode(' AND ', $record->getUniqueRestrictions());
 		
-		$stt = array_filter(Array($deletestt, $tablename, $wherestt, $idcolumn,
-					$equals, $id));
+		
+		#Make it one string
+		$stt = array_filter(Array($deletestt, $tablename, $wherestt,
+					$where));
 		
 		return implode(' ', $stt);
 	}

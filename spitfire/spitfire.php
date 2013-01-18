@@ -54,6 +54,8 @@ class SpitFire
 
 	public static function fire() {
 
+		#Start debugging output
+		ob_start();
 		#Import and instance the controller
 		$_controller = implode('_', self::$current_url->getController()).'Controller';
 		if (!class_exists($_controller)) throw new publicException("Page not found", 404);
@@ -71,9 +73,11 @@ class SpitFire
 		#Fire!
 		if (is_callable($method)) call_user_func_array($method, self::$current_url->getObject());
 		else throw new publicException('E_PAGE_NOT_FOUND', 404);
+		#End debugging output
+		self::$view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
 
 		ob_start();
-		self::$view->render();
+		self::$view->render();die(ob_clean());
 		self::$headers->send();
 		ob_flush();
 	}

@@ -97,7 +97,7 @@ class _SF_ExceptionHandler {
 
 	public function exceptionHandle (Exception $e) {
 		try {
-			ob_get_clean(); //The content generated till now is not valid. DESTROY. DESTROY!
+			while(ob_get_clean()); //The content generated till now is not valid. DESTROY. DESTROY!
 
 			if ( is_a($e, 'publicException') ) {
 				get_error_page($e->getCode(), $e->getMessage());
@@ -139,6 +139,7 @@ class _SF_ExceptionHandler {
 	
 	public function shutdownHook () {
 		$last_error = error_get_last();
+		while(ob_get_clean()); 
 		
 		switch($last_error['type']){
 			case E_ERROR:

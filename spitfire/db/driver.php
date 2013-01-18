@@ -15,4 +15,7 @@ interface _SF_DBDriver
 	function update(_SF_DBTable $table, $data, $id );
 	function inc   (_SF_DBTable $table, $data, $id ); //Stands for increment
 	function delete(_SF_DBTable $table, databaseRecord $id );
+	
+	#Data Escaping
+	function escapeFieldName(&$field);
 }

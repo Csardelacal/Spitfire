@@ -19,13 +19,28 @@ class _SF_DBTable extends _SF_Queriable
 	protected $errors    = Array();
 	protected $rpp       = 20;
 
-	public function __construct ($database, $tablename = false) {
+	/**
+	 * Creates a new Database Table instance.
+	 * 
+	 * @param DBInterface $database
+	 * @param String $tablename
+	 */
+	public function __construct (DBInterface $database, $tablename = false) {
 		$this->db = $database;
 
-		if ($tablename)
-			$this->tablename = environment::get('db_table_prefix') . $tablename;
+		if ($tablename) {
+			$prefix = environment::get('db_table_prefix');
+			$this->tablename =  $prefix . $tablename;
+		}
 	}
 	
+	/**
+	 * Fetch the fields of the table the database works with. If the programmer
+	 * has defined a custom set of fields to work with, this function will
+	 * return the overriden fields.
+	 * 
+	 * @return mixed The fields this table handles.
+	 */
 	public function getFields() {
 		if ($this->fields) return $this->fields;
 		return $this->db->fetchFields($this);
@@ -71,13 +86,22 @@ class _SF_DBTable extends _SF_Queriable
 	}
 	
 	/**
-	 * Get's the table's primary key.
+	 * Get's the table's primary key. This will always return an array
+	 * containing the fields the Primary Key contains.
 	 * 
-	 * @return String Name of the primary key's column
+	 * @return Array Name of the primary key's column
 	 */
 	public function getPrimaryKey() {
-		if ($this->primaryK) return $this->primaryK;
-		else return $this->db->getPrimaryKey($this);
+		#If our PK has already been set get it
+		if ($this->primaryK) {
+			$pk = $this->primaryK;
+		}
+		#Fetch the primary key
+		else {
+			$pk = $this->db->getPrimaryKey($this);
+		}
+		if (is_array($pk)) return $pk;
+		else               return Array($pk);
 	}
 	
 	public function delete(databaseRecord $data) {

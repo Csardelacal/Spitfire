@@ -151,13 +151,12 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 	public function delete(_SF_DBTable $table, databaseRecord $data) {
 		#Get the SQL Statement
 		$primary = $table->getPrimaryKey();
-		$statement = parent::delete($table, $primary);
-		//BOOKMARK 17/01/2013. Working on multicolumn PKs
+		$statement = parent::delete($table, $data); echo $statement;
 		#Prepare values
 		$values  = Array();
 		foreach($primary as $key) $values[] = $data->$key;
 		#Execute
-		$this->execute($table, $statement, Array($data->$primary));
+		$this->execute($table, $statement, $values);
 	}
 
 	public function inc(_SF_DBTable $table, $data, $id) {

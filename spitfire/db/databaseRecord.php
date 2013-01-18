@@ -49,6 +49,17 @@ class databaseRecord
 		//Update
 		//Or Increment
 	}
+	
+	public function getUniqueRestrictions() {
+		$primaries    = $this->table->getPrimaryKey();
+		$restrictions = Array();
+		
+		foreach($primaries as $primary) {
+			$restrictions[] = new _SF_Restriction($primary, $this->data[$primary]);
+		}
+		
+		return $restrictions;
+	}
 
 	public function __set($field, $value) {
 		if (in_array($field, $this->table->getFields())) {

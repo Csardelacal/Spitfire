@@ -42,9 +42,11 @@ class homeController extends Controller
 		print_r($this->model);
 		print_r($this->model->test);
 		print_r($this->model->test->get('unique', 'test'));
-		print_r($this->model->test->get('unique', '')->fetch()->content);
+		print_r($this->model->test->get('unique', 'test2')->fetch()->content);
 		print_r($this->model);
-		print_r($t = $this->model->test->get('id', '1')->fetch());
+		echo 'Hola';
+		print_r($t = $this->model->test->get('unique', 'test2')->fetch());
+		throw new BadFunctionCallException();
 		$t->delete();
 	}
 	
