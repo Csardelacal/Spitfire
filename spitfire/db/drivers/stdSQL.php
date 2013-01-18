@@ -81,7 +81,7 @@ abstract class _SF_stdSQLDriver
 		#Prepare Vars
 		$deletestt    = 'DELETE FROM';
 		$tablename    = "`{$table->getTablename()}`";
-		$wherestt     = 'WHERE';test
+		$wherestt     = 'WHERE';
 		$where        = implode(' AND ', $record->getUniqueRestrictions());
 		
 		
