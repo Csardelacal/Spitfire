@@ -77,7 +77,7 @@ class SpitFire
 		self::$view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
 
 		ob_start();
-		self::$view->render();die(ob_clean());
+		self::$view->render();
 		self::$headers->send();
 		ob_flush();
 	}
