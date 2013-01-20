@@ -39,27 +39,41 @@ class homeController extends Controller
 	}
 	
 	public function test2 () {
-		print_r($this->model);
-		print_r($this->model->test);
-		print_r($this->model->test->get('unique', 'test'));
-		print_r($this->model->test->get('unique', 'test2')->fetch()->content);
-		print_r($this->model);
+//		print_r($this->model);
+//		print_r($this->model->test);
+//		print_r($this->model->test->get('unique', 'test'));
+//		print_r($this->model->test->get('unique', 'test2')->fetch()->content);
+//		print_r($this->model);
 		
-		#Delete
-		//print_r($t = $this->model->test->get('unique', 'test2')->fetch());
-		//$t->delete();
+		$field = 'unique';
+		$this->model->escapeFieldName($field);
+		echo $field;
 		
-		#Increment
-		//$t = $this->model->test->get('unique', 'test')->fetch();
-		//$t->increment('id', -1);
+		$t = new databaseRecord($this->model->test);
+		$t->content = 'Hello';
+		$t->unique  = 'Hello World';
+		$t->store();
 		
-		#Insert
-		//$t = new databaseRecord($this->model->test);
-		$t = $this->model->test->get('id', 6)->fetch();
-		$t->content.= 'Hola';
-		print_r($t->store());
+		$p = new databaseRecord($this->model->test);
+		$p->content = 'Hello';
+		$p->unique  = 'Hello World';
+		$p->id      = $t->id;
+		
+		try {
+			$p->store();
+		}
+		catch (Exception $e) {
+			echo 'Error: repeated id';
+		}
+		
+		$t = $this->model->test->get('id', $t->id)->fetch();
+		$t->content.= 't';
+		$t->store();
+		$t->increment('id', -1);
+		
+		$t = $this->model->test->get('id', $t->id)->fetch();
 		print_r($t);
-		
+		$t->delete();
 	}
 	
 }

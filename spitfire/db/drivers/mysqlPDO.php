@@ -9,7 +9,9 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 	private $autoincrement = Array();
 	
 	private $errs = Array(
-	    'HY093' => 'Wrong parameter count'
+	    'HY093' => 'Wrong parameter count',
+	    '42000' => 'Reserved word used as field name',
+	    '43000' => 'Unique restraint violated.'
 	);
 
 	protected function connect() {
@@ -211,8 +213,6 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		#Add the restrictions
 		$restrictions = $data->getUniqueRestrictions();
 		foreach($restrictions as $r) $_values[] = $r->getValue();
-		
-		print_r(Array($statement, $_values));
 		
 		#Query
 		$this->execute($table, $statement, $_values);

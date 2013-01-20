@@ -80,6 +80,10 @@ class DBInterface extends _SF_MVC
 		if (class_exists($tableClass)) return $this->{$tablename} = new $tableClass ($this);
 		else return $this->{$tablename} = new _SF_DBTable($this, $tablename);
 	}
+	
+	public function escapeFieldName(&$name) {
+		return $this->driver->escapeFieldName($name);
+	}
 
 	/**
 	 * Allows short-hand access to tables by using: $db->tablename
