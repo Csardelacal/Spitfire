@@ -92,4 +92,75 @@ abstract class _SF_stdSQLDriver
 		return implode(' ', $stt);
 	}
 	
+	public function inc(_SF_DBTable $table, databaseRecord $record, $field) {
+		
+		#Prepare vars
+		$updatestt = 'UPDATE';
+		$tablename = "`{$table->getTablename()}`";
+		$setstt    = 'SET';
+		$field     = "`$field`";
+		$equalsstt = "= $field + ?";
+		$wherestt  = 'WHERE';
+		$where     = implode(' AND ', $record->getUniqueRestrictions());
+		
+		
+		#Make it one string
+		$stt = array_filter(Array($updatestt, $tablename, $setstt, $field,
+					$equalsstt, $wherestt, $where));
+		
+		return implode(' ', $stt);
+	}
+	
+	public function insert(_SF_DBTable $table, databaseRecord $record) {
+		
+		#Additional vars
+		$escapecb   = Array($table->getDb(), 'escapeFieldName');
+		$_fields    = array_keys($record->getData());
+		array_walk($_fields, $escapecb);
+		print_r($_fields);
+		
+		#Prepare vars
+		$insertstt  = 'INSERT INTO';
+		$tablename  = "`{$table->getTablename()}`";
+		$fields     = implode(', ', $_fields);
+		$fields     = '(' . $fields . ')';
+		$valuesstt  = 'VALUES';
+		$values     = '(' . implode(', ', array_fill(0, count($_fields), '?')) . ')';
+		
+		
+		#Make it one string
+		$stt = array_filter(Array($insertstt, $tablename, $fields, $valuesstt,
+				    $values));
+		
+		return implode(' ', $stt);
+	}
+	
+	private function makeUpdates($fields) {
+		$data = Array();
+		
+		foreach ($fields as $field => $value) {
+			$data[] = "`$field` = ?";
+		}
+		
+		return $data;
+	}
+	
+	public function update(_SF_DBTable$table, databaseRecord$record) {
+		
+		#Prepare vars
+		$updatestt  = 'UPDATE';
+		$tablename  = "`{$table->getTablename()}`";
+		$setstt     = 'SET';
+		$updates    = implode(', ', $this->makeUpdates($record->getData()));
+		$wherestt   = 'WHERE';
+		$restricts  = implode(' AND ', $record->getUniqueRestrictions());
+		
+		
+		#Make it one string
+		$stt = array_filter(Array($updatestt, $tablename, $setstt, $updates,
+					  $wherestt, $restricts));
+		
+		return implode(' ', $stt);
+	}
+	
 }
