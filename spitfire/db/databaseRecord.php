@@ -65,11 +65,11 @@ class databaseRecord
 	 * @throws privateException
 	 */
 	public function increment($key, $diff = 1) {
-		if ($this->isSynced()) throw new privateException('Data is out of sync. Needs to be stored before increment');
+		if (!$this->isSynced()) throw new privateException('Data is out of sync. Needs to be stored before increment');
 		
 		$this->table->getDb()->inc($this->table, $this, $key, $diff);
 		#Should the database update fail it'll throw an exception and break
-		$this->data['key'] = $this->data['key'] + $diff;
+		$this->data[$key] = $this->data[$key] + $diff;
 		
 	}
 	
@@ -79,7 +79,7 @@ class databaseRecord
 			$id = $this->table->insert($this);
 			$ai = $this->table->getAutoIncrement();
 			
-			if ($ai) {
+			if ($ai && empty($this->data[$ai]) ) {
 				$this->data[$ai] = $id;
 			}
 		}

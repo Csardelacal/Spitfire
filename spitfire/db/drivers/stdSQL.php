@@ -110,14 +110,14 @@ abstract class _SF_stdSQLDriver
 		$updatestt = 'UPDATE';
 		$tablename = "`{$table->getTablename()}`";
 		$setstt    = 'SET';
-		$field     = "`$field`";
+		$_field    = "`$field`";
 		$equalsstt = "= $field + ?";
 		$wherestt  = 'WHERE';
 		$where     = implode(' AND ', $record->getUniqueRestrictions());
 		
 		
 		#Make it one string
-		$stt = array_filter(Array($updatestt, $tablename, $setstt, $field,
+		$stt = array_filter(Array($updatestt, $tablename, $setstt, $_field,
 					$equalsstt, $wherestt, $where));
 		
 		return implode(' ', $stt);
