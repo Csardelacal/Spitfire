@@ -10,13 +10,18 @@ class databaseRecord
 	private $src;
 	private $data;
 	private $table;
+	
+	#Status vars
 	private $synced;
+	private $deleted;
 	
 	public function __construct(_SF_DBTable $table, $srcData = Array() ) {
-		$this->src    = $srcData;
-		$this->data   = $srcData;
-		$this->table  = $table;
-		$this->synced = true;
+		$this->src     = $srcData;
+		$this->data    = $srcData;
+		$this->table   = $table;
+		
+		$this->synced  = true;
+		$this->deleted = false;
 	}
 	
 	public function setData($newdata) {
@@ -43,6 +48,11 @@ class databaseRecord
 	
 	public function delete() {
 		$this->table->delete($this);
+		$this->deleted = true;
+	}
+	
+	public function isSynced() {
+		return $this->synced && !$this->deleted;
 	}
 	
 	/**
@@ -55,8 +65,7 @@ class databaseRecord
 	 * @throws privateException
 	 */
 	public function increment($key, $diff = 1) {
-		$is_sync = !$this->getDiff();
-		if (!$is_sync) throw new privateException('Data is out of sync. Needs to be stored before increment');
+		if ($this->isSynced()) throw new privateException('Data is out of sync. Needs to be stored before increment');
 		
 		$this->table->getDb()->inc($this->table, $this, $key, $diff);
 		#Should the database update fail it'll throw an exception and break
@@ -79,6 +88,8 @@ class databaseRecord
 		else {
 			$this->table->update($this);
 		}
+		
+		$this->synced = true;
 	}
 	
 	public function getUniqueRestrictions() {
@@ -93,6 +104,9 @@ class databaseRecord
 	}
 
 	public function __set($field, $value) {
+		
+		if ($value != $this->data[$field]) $this->synced = false;
+		
 		if (in_array($field, $this->table->getFields())) {
 			$this->data[$field] = $value;
 		}
