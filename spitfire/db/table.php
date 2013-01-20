@@ -107,5 +107,19 @@ class _SF_DBTable extends _SF_Queriable
 	public function delete(databaseRecord $data) {
 		$this->db->delete($this, $data);
 	}
+	
+	/**
+	 * If the table cannot handle the request it will pass it on to the db
+	 * and add itself to the arguments list.
+	 * 
+	 * @param string $name
+	 * @param mixed $arguments
+	 */
+	public function __call($name, $arguments) {
+		#Add the table to the arguments for the db
+		array_unshift($arguments, $this);
+		#Pass on
+		return call_user_func_array(Array($this->db, $name), $arguments);
+	}
 
 }

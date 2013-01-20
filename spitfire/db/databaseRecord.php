@@ -10,11 +10,13 @@ class databaseRecord
 	private $src;
 	private $data;
 	private $table;
+	private $synced;
 	
 	public function __construct(_SF_DBTable $table, $srcData = Array() ) {
-		$this->src   = $srcData;
-		$this->data  = $srcData;
-		$this->table = $table;
+		$this->src    = $srcData;
+		$this->data   = $srcData;
+		$this->table  = $table;
+		$this->synced = true;
 	}
 	
 	public function setData($newdata) {
@@ -43,11 +45,40 @@ class databaseRecord
 		$this->table->delete($this);
 	}
 	
+	/**
+	 * Increments a value on high read/write environments. Using update can
+	 * cause data to be corrupted. Increment requires the data to be in sync
+	 * aka. stored to database.
+	 * 
+	 * @param String $key
+	 * @param int|float $diff
+	 * @throws privateException
+	 */
+	public function increment($key, $diff = 1) {
+		$is_sync = !$this->getDiff();
+		if (!$is_sync) throw new privateException('Data is out of sync. Needs to be stored before increment');
+		
+		$this->table->getDb()->inc($this->table, $this, $key, $diff);
+		#Should the database update fail it'll throw an exception and break
+		$this->data['key'] = $this->data['key'] + $diff;
+		
+	}
+	
 	public function store() {
 		//TODO!!!
 		//Needs to select wether it should insert
 		//Update
-		//Or Increment
+		if (empty($this->src)) {
+			$id = $this->table->insert($this);
+			$ai = $this->table->getAutoIncrement();
+			
+			if ($ai) {
+				$this->data[$ai] = $id;
+			}
+		}
+		else {
+			$this->table->update($this);
+		}
 	}
 	
 	public function getUniqueRestrictions() {

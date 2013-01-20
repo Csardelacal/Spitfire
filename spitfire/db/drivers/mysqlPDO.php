@@ -3,9 +3,10 @@
 class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 {
 
-	private $connection = false;
-	private $fields     = Array();
-	private $primaries  = Array();
+	private $connection    = false;
+	private $fields        = Array();
+	private $primaries     = Array();
+	private $autoincrement = Array();
 
 	protected function connect() {
 
@@ -51,6 +52,9 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 				if (!isset($this->primaries[$table->getTablename()])) $this->primaries[$table->getTablename()] = Array();
 				$this->primaries[$table->getTablename()][] = $row['Field'];
 			}
+			if (strstr($row['Extra'], 'auto_increment')) {
+				$this->autoincrement[$table->getTablename()] = $row['Field'];
+			}
 			//TODO: Check for PK
 		}
 		
@@ -64,6 +68,17 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		else {
 			$this->fetchFields ($table);
 			return $this->primaries[$table->getTableName()];
+		}
+	}
+	
+	public function getAutoIncrement($table) {
+		if (isset($this->autoincrement[$table->getTableName()])){
+			return $this->autoincrement[$table->getTableName()];
+		}
+		else {
+			$this->autoincrement[$table->getTableName()] = false;
+			$this->fetchFields ($table);
+			return $this->autoincrement[$table->getTableName()];
 		}
 	}
 	
@@ -151,7 +166,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 	public function delete(_SF_DBTable $table, databaseRecord $data) {
 		#Get the SQL Statement
 		$primary = $table->getPrimaryKey();
-		$statement = parent::delete($table, $data); echo $statement;
+		$statement = parent::delete($table, $data);
 		#Prepare values
 		$values  = Array();
 		foreach($primary as $key) $values[] = $data->$key;
@@ -159,15 +174,45 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$this->execute($table, $statement, $values);
 	}
 
-	public function inc(_SF_DBTable $table, $data, $id) {
+	public function inc(_SF_DBTable $table, databaseRecord $data, $field, $value) {
 		
+		$statement = parent::inc($table, $data, $field);
+		$values    = Array($value);
+		
+		$r         = $data->getUniqueRestrictions();
+		foreach($r as $restriction) $values[] = $restriction->getValue ();
+		
+		$this->execute($table, $statement, $values);
 	}
 
-	public function insert(_SF_DBTable $table, $data) {
+	public function insert(_SF_DBTable $table, databaseRecord $data) {
+		$statement = parent::insert($table, $data);
+		$values    = $data->getData();
 		
+		$_values   = Array();
+		foreach($values as $value) $_values[] = $value;
+		
+		$this->execute($table, $statement, $_values);
+		return $this->connection->lastInsertId();
 	}
 
 	public function update(_SF_DBTable $table, $data, $id) {
+		$statement = parent::update($table, $data);
+		$values = $data->getData();
+		
+		#Convert the values to an array PDO can use
+		$_values   = Array();
+		foreach($values as $value) $_values[] = $value;
+		
+		#Add the restrictions
+		$restrictions = $data->getUniqueRestrictions();
+		foreach($restrictions as $r) $_values[] = $r->getValue();
+		
+		print_r(Array($statement, $_values));
+		
+		#Query
+		$this->execute($table, $statement, $_values);
+		return $this->connection->lastInsertId();
 		
 	}
 }

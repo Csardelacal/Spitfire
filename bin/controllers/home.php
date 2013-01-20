@@ -44,9 +44,22 @@ class homeController extends Controller
 		print_r($this->model->test->get('unique', 'test'));
 		print_r($this->model->test->get('unique', 'test2')->fetch()->content);
 		print_r($this->model);
-		echo 'Hola';
-		print_r($t = $this->model->test->get('unique', 'test2')->fetch());
-		$t->delete();
+		
+		#Delete
+		//print_r($t = $this->model->test->get('unique', 'test2')->fetch());
+		//$t->delete();
+		
+		#Increment
+		//$t = $this->model->test->get('unique', 'test')->fetch();
+		//$t->increment('id', -1);
+		
+		#Insert
+		//$t = new databaseRecord($this->model->test);
+		$t = $this->model->test->get('id', 6)->fetch();
+		$t->content.= 'Hola';
+		print_r($t->store());
+		print_r($t);
+		
 	}
 	
 }
