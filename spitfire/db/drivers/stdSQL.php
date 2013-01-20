@@ -151,7 +151,7 @@ abstract class _SF_stdSQLDriver
 		$updatestt  = 'UPDATE';
 		$tablename  = "`{$table->getTablename()}`";
 		$setstt     = 'SET';
-		$updates    = implode(', ', $this->makeUpdates($record->getData()));
+		$updates    = implode(', ', $this->makeUpdates($record->getDiff()));
 		$wherestt   = 'WHERE';
 		$restricts  = implode(' AND ', $record->getUniqueRestrictions());
 		

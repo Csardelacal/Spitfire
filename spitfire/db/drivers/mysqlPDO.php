@@ -7,6 +7,10 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 	private $fields        = Array();
 	private $primaries     = Array();
 	private $autoincrement = Array();
+	
+	private $errs = Array(
+	    'HY093' => 'Wrong parameter count'
+	);
 
 	protected function connect() {
 
@@ -16,6 +20,8 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 
 		try {
 			$this->connection = new PDO($dsn, $user, $pass);
+			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
 			return true;
 		} catch (Exception $e) {
 			SpitFire::$debug->msg($e->getMessage());
@@ -97,12 +103,16 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$con = $this->getConnection();
 		$stt = $con->prepare($statement);
 		
-		#Execute the query
-		$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $values) );
-		
-		#Check for errors
-		$err = $stt->errorInfo();
-		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);
+		try {
+			#Execute the query
+			$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $values) );
+		}
+		catch(PDOException $e) {
+			#Recover from exception, make error readable. Re-throw
+			$code = $e->getCode();
+			$msg  = $this->errs[$code];
+			throw new privateException("$msg (#$code) in query: $statement");
+		}
 		
 		return $stt;
 	}
@@ -196,9 +206,9 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		return $this->connection->lastInsertId();
 	}
 
-	public function update(_SF_DBTable $table, $data, $id) {
+	public function update(_SF_DBTable $table, databaseRecord$data, $id) {
 		$statement = parent::update($table, $data);
-		$values = $data->getData();
+		$values = $data->getDiff();
 		
 		#Convert the values to an array PDO can use
 		$_values   = Array();
