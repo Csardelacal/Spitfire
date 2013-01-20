@@ -74,9 +74,7 @@ class databaseRecord
 	}
 	
 	public function store() {
-		//TODO!!!
-		//Needs to select wether it should insert
-		//Update
+		
 		if (empty($this->src)) {
 			$id = $this->table->insert($this);
 			$ai = $this->table->getAutoIncrement();

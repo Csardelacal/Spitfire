@@ -92,6 +92,18 @@ abstract class _SF_stdSQLDriver
 		return implode(' ', $stt);
 	}
 	
+	/**
+	 * Creates a 'standard' SQL for incrementing a field. Incrementing is a 
+	 * slightly special operation as it cannot be replaced with a normal
+	 * UPDATE statement. When being used by concurrent threads or processes
+	 * it can happen that data is read twice before being written, therefore
+	 * causing that data to become inconsistent.
+	 * 
+	 * @param _SF_DBTable $table
+	 * @param databaseRecord $record
+	 * @param string $field
+	 * @return string
+	 */
 	public function inc(_SF_DBTable $table, databaseRecord $record, $field) {
 		
 		#Prepare vars
@@ -111,13 +123,20 @@ abstract class _SF_stdSQLDriver
 		return implode(' ', $stt);
 	}
 	
+	/**
+	 * Creates a 'standard' insert statement for a SQL database. It will only
+	 * use the data that is registered in the record.
+	 * 
+	 * @param _SF_DBTable $table
+	 * @param databaseRecord $record
+	 * @return string
+	 */
 	public function insert(_SF_DBTable $table, databaseRecord $record) {
 		
 		#Additional vars
 		$escapecb   = Array($table->getDb(), 'escapeFieldName');
 		$_fields    = array_keys($record->getData());
 		array_walk($_fields, $escapecb);
-		print_r($_fields);
 		
 		#Prepare vars
 		$insertstt  = 'INSERT INTO';
@@ -135,6 +154,14 @@ abstract class _SF_stdSQLDriver
 		return implode(' ', $stt);
 	}
 	
+	/**
+	 * Creates a UPDATE string like *field* = ? for a prepared statement. In 
+	 * order to alter this you need to extend this class and override this
+	 * function.
+	 * 
+	 * @param mixed $fields
+	 * @return mixed
+	 */
 	private function makeUpdates($fields) {
 		$data = Array();
 		
@@ -145,6 +172,14 @@ abstract class _SF_stdSQLDriver
 		return $data;
 	}
 	
+	/**
+	 * Generates a prepared update statement in SQL for the database to
+	 * execute.
+	 * 
+	 * @param _SF_DBTable $table
+	 * @param databaseRecord $record
+	 * @return string
+	 */
 	public function update(_SF_DBTable$table, databaseRecord$record) {
 		
 		#Prepare vars

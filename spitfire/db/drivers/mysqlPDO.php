@@ -43,13 +43,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		
 		#Prepare the statement
 		$statement = "DESCRIBE `{$table->getTablename()}` ";
-		
-		$con = $this->getConnection();
-		$stt = $con->prepare($statement);
-		$stt->execute();
-		
-		$error = $stt->errorInfo();
-		if ($error[1]) throw new privateException($error[2], $error[1]);
+		$stt = $this->execute($table, $statement, Array());
 		
 		$fields = Array();
 		while($row = $stt->fetch()) {
