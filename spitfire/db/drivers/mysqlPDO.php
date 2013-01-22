@@ -123,8 +123,6 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$_restrictions = $query->getRestrictions();
 		foreach($_restrictions as $r) $values = array_merge($values, $r->getValues());
 		
-		print_r(Array($statement, $values));
-		
 		#Execute
 		$stt = $this->execute($table, $statement, $values);
 		
