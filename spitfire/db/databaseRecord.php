@@ -3,6 +3,9 @@
 /**
  * This class allows to track changes on database data along the use of a program
  * and creates interactions with the database in a safe way.
+ * 
+ * @package Spitfire.storage.database
+ * @author César de la Cal <cesar@magic3w.com>
  */
 class databaseRecord
 {
@@ -15,6 +18,16 @@ class databaseRecord
 	private $synced;
 	private $deleted;
 	
+	/**
+	 * Creates a new record.
+	 * 
+	 * @param _SF_DBTable $table DB Table this record belongs to. Easiest way
+	 *                       to get this is by using $this->model->*tablename*
+	 * 
+	 * @param mixed $srcData Attention! This parameter is intended to be 
+	 *                       used by the system. To create a new record, leave
+	 *                       empty and use setData.
+	 */
 	public function __construct(_SF_DBTable $table, $srcData = Array() ) {
 		$this->src     = $srcData;
 		$this->data    = $srcData;
