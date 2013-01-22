@@ -7,6 +7,7 @@ class _SF_DBQuery
 	protected $table;
 	
 	protected $restrictions;
+	protected $restrictionGroups;
 	protected $page = 1;
 	protected $rpp = 20;
 	protected $order;
@@ -20,6 +21,10 @@ class _SF_DBQuery
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
+	}
+	
+	public function group() {
+		return $this->restrictionGroups[] = new _SF_RestrictionGroup($this);
 	}
 	
 	/**
@@ -87,7 +92,13 @@ class _SF_DBQuery
 	}
 	
 	public function getRestrictions() {
-		return $this->restrictions;
+		$values = $this->restrictionGroups;
+		
+		if (!empty($this->restrictions)) {
+			$values[] = new _SF_RestrictionGroup($this, $this->restrictions);
+		}
+		
+		return $values;
 	}
 	
 	public function getOrder() {

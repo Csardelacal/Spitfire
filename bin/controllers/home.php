@@ -52,6 +52,7 @@ class homeController extends Controller
 		$t = new databaseRecord($this->model->test);
 		$t->content = 'Hello';
 		$t->unique  = 'Hello World';
+		$t->id      = 3;
 		$t->store();
 		
 		$p = new databaseRecord($this->model->test);
@@ -71,8 +72,20 @@ class homeController extends Controller
 		$t->store();
 		$t->increment('id', -1);
 		
+		echo '-----';
+		$p = $this->model->test->get('id', $t->id)
+			->group()
+				->addRestriction(new _SF_Restriction('unique', 'test'))
+				->addRestriction(new _SF_Restriction('content', 'test2'))
+			->endGroup()
+			->group()
+				->addRestriction(new _SF_Restriction('unique', 'hello'))
+			->endGroup()
+			->fetch();
+		echo '----';
+		
 		$t = $this->model->test->get('id', $t->id)->fetch();
-		print_r($t);
+		echo $t->content;
 		$t->delete();
 	}
 	

@@ -46,8 +46,12 @@ abstract class _SF_stdSQLDriver
 		if (empty($restrictions)) {
 			$restrictions = '1';
 		}
+		elseif (count($restrictions) == 1) {
+			$restrictions = (string)$restrictions;
+		}
 		else {
-			$restrictions = implode(' AND ', $restrictions);
+			$restrictions = implode(') OR (', $restrictions);
+			$restrictions = "($restrictions)";
 		}
 		
 		if ($rpp < 0) {

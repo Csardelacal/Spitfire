@@ -8,7 +8,8 @@ class _SF_Restriction
 	private $rid;
 	
 	public static $autonumeric = 0;
-	
+	public static $driver;
+
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
@@ -42,6 +43,12 @@ class _SF_Restriction
 	}
 	
 	public function __toString() {
+		
+		if (is_a(self::$driver, '_SF_DBDriver') ) {
+			$param_arr = Array($this->field, $this->operator, $this->value);
+			return call_user_func_array (Array(self::$driver, 'makeRestriction'), $param_arr);
+		}
+		
 		return "`$this->field` $this->operator ?";
 	}
 }
