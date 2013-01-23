@@ -7,6 +7,7 @@ class _SF_AutoLoad
 	const   CONTROLLER_DIRECTORY   = 'bin/controllers/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   MODEL_DIRECTORY        = 'bin/models/';
+	const   BEAN_DIRECTORY         = 'bin/beans/';
 	const   UI_COMPONENT_DIRECTORY = 'bin/ui/';
 	const   STD_CLASS_DIRECTORY    = 'bin/classes/';
 	const   CLASS_EXTENSION        = '.php';
@@ -80,6 +81,19 @@ class _SF_AutoLoad
 				if (file_exists($filename)) return include $filename;
 				
 				$filename = self::MODEL_DIRECTORY .
+						strtolower($class->getClassName()) .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				break;
+				
+			case _SF_Class::TYPE_BEAN:
+				$filename = self::BEAN_DIRECTORY .
+						$class->getClassName() .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::BEAN_DIRECTORY .
 						strtolower($class->getClassName()) .
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;

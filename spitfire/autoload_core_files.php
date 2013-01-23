@@ -38,6 +38,7 @@ _SF_AutoLoad::registerClass('_SF_mysqlPDODriver',    $cur_dir.'/db/drivers/mysql
 _SF_AutoLoad::registerClass('_SF_mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 _SF_AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
+_SF_AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/coffeebean.php');
 _SF_AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 _SF_AutoLoad::registerClass('_SF_Class',             $cur_dir.'/class.php');
 
