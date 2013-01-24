@@ -5,6 +5,7 @@ class _SF_Class
 	const TYPE_CONTROLLER = 'Controller';
 	const TYPE_COMPONENT  = 'Component';
 	const TYPE_MODEL      = 'Model';
+	const TYPE_VIEW       = 'View';
 	const TYPE_BEAN       = 'Bean';
 	const TYPE_STDCLASS   = '';
 	
@@ -17,6 +18,7 @@ class _SF_Class
 	    self::TYPE_CONTROLLER,
 	    self::TYPE_COMPONENT,
 	    self::TYPE_MODEL,
+	    self::TYPE_VIEW,
 	    self::TYPE_BEAN,
 	    self::TYPE_STDCLASS
 	);
