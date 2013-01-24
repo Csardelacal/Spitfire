@@ -11,7 +11,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 	private $errs = Array(
 	    'HY093' => 'Wrong parameter count',
 	    '42000' => 'Reserved word used as field name',
-	    '43000' => 'Unique restraint violated.'
+	    '23000' => 'Unique restraint violated.'
 	);
 
 	protected function connect() {

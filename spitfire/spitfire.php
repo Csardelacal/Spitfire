@@ -57,11 +57,14 @@ class SpitFire
 		#Start debugging output
 		ob_start();
 		#Import and instance the controller
-		$_controller = implode('_', self::$current_url->getController()).'Controller';
+		$classBase   = implode('_', self::$current_url->getController());
+		$_controller = $classBase .'Controller';
 		if (!class_exists($_controller)) throw new publicException("Page not found", 404);
 		self::$controller = $controller = new $_controller();
 		#Create the view
-		self::$view = new View();
+		$_view      = $classBase . 'View';
+		if (class_exists($_view)) self::$view = new $_view;
+		else                      self::$view = new View();
 		#Create the model
 		self::$model = new DBInterface();
 		#Check if the action is available

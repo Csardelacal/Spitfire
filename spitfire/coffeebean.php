@@ -25,7 +25,7 @@ abstract class CoffeeBean
 			if (!isset ($this->$field)) return false;
 	}
 	
-	public function getDBRecord(databaseRecord$record) {
+	public function insertIntoDBRecord(databaseRecord$record) {
 		$fields = array_keys($this->fields);
 		foreach ($fields as $field) $record->{$field} = $this->$field;
 		return $record;

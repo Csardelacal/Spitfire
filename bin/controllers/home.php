@@ -91,7 +91,7 @@ class homeController extends Controller
 	
 	public function beans() {
 		
-		$user = CoffeeBean::getBean('user')->getDBRecord(new databaseRecord($this->model->test));
+		$user = CoffeeBean::getBean('user')->insertIntoDBRecord(new databaseRecord($this->model->test));
 		print_r($user);
 		$user->store();
 	}

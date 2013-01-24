@@ -5,6 +5,7 @@ class _SF_AutoLoad
 
 	const   APPCONTROLLER_LOCATION = 'bin/controllers/appController.php';
 	const   CONTROLLER_DIRECTORY   = 'bin/controllers/';
+	const   VIEW_DIRECTORY         = 'bin/viewControllers/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   MODEL_DIRECTORY        = 'bin/models/';
 	const   BEAN_DIRECTORY         = 'bin/beans/';
@@ -45,6 +46,23 @@ class _SF_AutoLoad
 				if (file_exists($filename)) return include $filename;
 				
 				$filename = self::CONTROLLER_DIRECTORY .
+						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
+						strtolower($class->getClassName()) . 
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				break;
+				
+			case _SF_Class::TYPE_VIEW:
+				$filename = self::VIEW_DIRECTORY .
+						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
+						$class->getClassName() . 
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::VIEW_DIRECTORY .
 						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
 						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
 						strtolower($class->getClassName()) . 
