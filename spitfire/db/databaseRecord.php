@@ -103,15 +103,32 @@ class databaseRecord
 		$this->synced = true;
 	}
 	
+	public function getUniqueFields() {
+		return $this->table->getPrimaryKey();
+	}
+	
 	public function getUniqueRestrictions() {
 		$primaries    = $this->table->getPrimaryKey();
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$restrictions[] = new _SF_Restriction($primary, $this->data[$primary]);
+			$r = new _SF_Restriction($primary, $this->data[$primary]);
+			$r->setTable($this->table);
+			$restrictions[] = $r;
 		}
 		
 		return $restrictions;
+	}
+	
+	public function getChildren($table, $restrictions) {
+		$query = new _SF_DBQuery($table);
+		$query->setJoin($this);
+		foreach($restrictions as $r) $query->addRestriction ($r);
+		return $query->fetchAll();
+	}
+	
+	public function getTable() {
+		return $this->table;
 	}
 
 	public function __set($field, $value) {

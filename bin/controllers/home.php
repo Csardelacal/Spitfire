@@ -89,6 +89,22 @@ class homeController extends Controller
 		$t->delete();
 	}
 	
+	public function dbTest() {
+		/*$rec = new databaseRecord($this->model->dependant);
+		$rec->test_id = 3;
+		$rec->content ="_SF_";
+		$rec->store();/**/
+		$rec = $this->model->test->get('id', 3)->fetch();
+		
+		echo( new Pagination($this->model->test->get('id', 3)) );
+		
+		$r = Array(
+		    new _SF_Restriction('id', 1)
+		);
+		
+		print_r($rec->getChildren($this->model->dependant, $r));
+	}
+	
 	public function beans() {
 		
 		$user = CoffeeBean::getBean('user')->insertIntoDBRecord(new databaseRecord($this->model->test));

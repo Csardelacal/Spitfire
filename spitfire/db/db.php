@@ -81,8 +81,8 @@ class DBInterface extends _SF_MVC
 		else return $this->{$tablename} = new _SF_DBTable($this, $tablename);
 	}
 	
-	public function escapeFieldName(&$name) {
-		return $this->driver->escapeFieldName($name);
+	public function escapeFieldNames(_SF_DBTable$table, $fields) {
+		return $this->driver->escapeFieldNames($table, $fields);
 	}
 
 	/**

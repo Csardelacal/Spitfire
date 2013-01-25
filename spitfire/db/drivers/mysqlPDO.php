@@ -84,13 +84,12 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		}
 	}
 	
-	public function escapeFieldName(&$name) {
-		switch($name) {
-			case 'unique':
-			case 'groups':
-			case 'group':
-				$name = "`$name`";
+	public function escapeFieldNames(_SF_DBTable$table, $names) {
+		
+		foreach ($names as &$name){
+			$name = "`{$table->getTablename()}`.`$name`";
 		}
+		return $names;
 	}
 	
 	public function execute(_SF_DBTable$table, $statement, $values) {
@@ -106,7 +105,8 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		catch(PDOException $e) {
 			#Recover from exception, make error readable. Re-throw
 			$code = $e->getCode();
-			$msg  = $this->errs[$code];
+			$err  = $stt->errorInfo();
+			$msg  = $err[2] or $this->errs[$code];
 			throw new privateException("$msg (#$code) in query: $statement");
 		}
 		
@@ -122,6 +122,10 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$values = Array(); 
 		$_restrictions = $query->getRestrictions();
 		foreach($_restrictions as $r) $values = array_merge($values, $r->getValues());
+		
+		if ($join = $query->getJoin()) {
+			foreach($join->getUniqueRestrictions() as $r) array_unshift ($values, $r->getValue());
+		} print_r(Array( $statement, $values));
 		
 		#Execute
 		$stt = $this->execute($table, $statement, $values);

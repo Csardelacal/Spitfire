@@ -8,6 +8,7 @@ class _SF_DBQuery
 	
 	protected $restrictions;
 	protected $restrictionGroups;
+	protected $join;
 	protected $page = 1;
 	protected $rpp = 20;
 	protected $order;
@@ -18,6 +19,7 @@ class _SF_DBQuery
 	}
 	
 	public function addRestriction($restriction) {
+		$restriction->setTable($this->table);
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
@@ -103,5 +105,13 @@ class _SF_DBQuery
 	
 	public function getOrder() {
 		return $this->order;
+	}
+	
+	public function setJoin(databaseRecord$record) {
+		$this->join = $record;
+	}
+	
+	public function getJoin() {
+		return $this->join;
 	}
 }
