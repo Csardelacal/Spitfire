@@ -8,8 +8,9 @@ class _SF_Restriction
 	private $rid;
 	private $table;
 	
+	private $stringifyCallback;
+	
 	public static $autonumeric = 0;
-	public static $driver;
 
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
@@ -27,12 +28,20 @@ class _SF_Restriction
 		$this->table = $table;
 	}
 	
+	public function getTable(){
+		return $this->table;
+	}
+	
 	public function getField() {
 		return $this->field;
 	}
 	
 	public function getRID() {
 		return $this->rid;
+	}
+	
+	public function getOperator() {
+		return $this->operator;
 	}
 
 	public function getValue() {
@@ -47,11 +56,15 @@ class _SF_Restriction
 		return str_replace($search, $replace, $pattern);
 	}
 	
+	public function setStringify($callback) {
+		$this->stringifyCallback = $callback;
+	}
+	
 	public function __toString() {
 		
-		if (is_a(self::$driver, '_SF_DBDriver') ) {
-			$param_arr = Array($this->field, $this->operator, $this->value);
-			return call_user_func_array (Array(self::$driver, 'makeRestriction'), $param_arr);
+		if ( $this->stringifyCallback ) {
+			$param_arr = Array($this);
+			return call_user_func_array ($this->stringifyCallback, $param_arr);
 		}
 		
 		//TODO: Clean code

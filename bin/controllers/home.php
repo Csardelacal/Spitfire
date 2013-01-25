@@ -96,13 +96,34 @@ class homeController extends Controller
 		$rec->store();/**/
 		$rec = $this->model->test->get('id', 3)->fetch();
 		
-		echo( new Pagination($this->model->test->get('id', 3)) );
+		echo( new Pagination($this->model->test->get('id', 23)) );
 		
-		$r = Array(
-		    new _SF_Restriction('id', 1)
-		);
+		$child = $rec->getChildren($this->model->dependant);
+		echo $child[0]->content;
+		$child[0]->delete();
 		
-		print_r($rec->getChildren($this->model->dependant, $r));
+		try {
+			$child = new databaseRecord($this->model->dependant);
+			$child->test_id = -4;
+			$child->content = '_SF_';
+			$child->store();
+		}
+		catch(Exception $e) {
+			print_r($this->model->dependant->getErrors());
+		}
+		
+		try {
+			$child = new databaseRecord($this->model->dependant);
+			$child->test_id = 23;
+			$child->content = '_SF_';
+			$child->store();
+		
+			$child->content.= time();
+			$child->store();
+		}
+		catch (Exception $e) {
+			echo $e->getMessage();
+		}
 	}
 	
 	public function beans() {
