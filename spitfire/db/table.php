@@ -41,9 +41,12 @@ class _SF_DBTable extends _SF_Queriable
 	 * 
 	 * @return mixed The fields this table handles.
 	 */
-	public function getFields() {
-		if ($this->fields) return $this->fields;
-		return $this->db->fetchFields($this);
+	public function getFields($unescaped = false) {
+		if ($this->fields) $fields = $this->fields;
+		else               $fields = $this->db->fetchFields($this);
+		
+		if ($unescaped) return $fields;
+		else return $this->getDb()->escapeFieldNames($this, $fields);
 	}
 	
 	public function getTablename() {

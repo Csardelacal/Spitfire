@@ -6,6 +6,7 @@ class _SF_Restriction
 	private $value;
 	private $operator;
 	private $rid;
+	private $table;
 	
 	public static $autonumeric = 0;
 	public static $driver;
@@ -20,6 +21,10 @@ class _SF_Restriction
 		//To avoid restriction colliding
 		$this->rid      = $field . self::$autonumeric;
 		self::$autonumeric++;
+	}
+	
+	public function setTable($table) {
+		$this->table = $table;
 	}
 	
 	public function getField() {
@@ -49,6 +54,9 @@ class _SF_Restriction
 			return call_user_func_array (Array(self::$driver, 'makeRestriction'), $param_arr);
 		}
 		
-		return "`$this->field` $this->operator ?";
+		//TODO: Clean code
+		$tablename = ($this->table)? $this->table->getTableName() . '.' : '';
+		
+		return "$tablename`$this->field` $this->operator ?";
 	}
 }

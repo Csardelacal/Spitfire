@@ -17,5 +17,5 @@ interface _SF_DBDriver
 	function delete(_SF_DBTable $table, databaseRecord $id );
 	
 	#Data Escaping
-	function escapeFieldName(&$field);
+	function escapeFieldNames(_SF_DBTable$table, $fields);
 }

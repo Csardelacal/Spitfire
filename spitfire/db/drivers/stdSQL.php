@@ -22,12 +22,16 @@ abstract class _SF_stdSQLDriver
 		#Declare vars
 		$rpp          = $query->getResultsPerPage();
 		$offset       = ($query->getPage() - 1) * $rpp;
+		$_join        = $query->getJoin();
 		
 		$selectstt    = 'SELECT';
 		$fields       = ($fields)? $fields : $table->getFields();
 		$fromstt      = 'FROM';
+		$join         = '';
 		$tablename    = "`{$table->getTablename()}`";
+		$onstt        = '';
 		$wherestt     = 'WHERE';
+		$jrestrictions= '';
 		$restrictions = $query->getRestrictions();
 		$orderstt     = 'ORDER BY';
 		$order        = $query->getOrder();
@@ -39,8 +43,19 @@ abstract class _SF_stdSQLDriver
 			$fields = '*';
 		}
 		else {
-			array_walk ($fields, Array($this, 'escapeFieldName'));
 			$fields = implode(', ', $fields);
+		}
+		
+		if ($_join) {
+			$rem_table = $_join->getTable();
+			$remote    = $_join->getUniqueRestrictions();
+			$remotef   = $_join->getUniqueFields();
+			
+			$remotef   = $this->escapeFieldNames($rem_table, $remotef);
+			
+			$join  =  $rem_table->getTableName() . ' LEFT JOIN ';
+			$onstt = 'ON (' . implode(', ', $remotef) . ')';
+			$jrestrictions = implode(' AND ', $remote) . ' AND';
 		}
 		
 		if (empty($restrictions)) {
@@ -64,8 +79,8 @@ abstract class _SF_stdSQLDriver
 			$order    = '';
 		}
 		
-		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $tablename, 
-		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));
+		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $join, $tablename, $onstt,
+		    $wherestt, $jrestrictions, $restrictions, $orderstt, $order, $limitstt, $limit));
 		
 		return implode(' ', $stt);
 		
