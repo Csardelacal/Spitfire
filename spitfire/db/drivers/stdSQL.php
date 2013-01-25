@@ -3,10 +3,7 @@
 abstract class _SF_stdSQLDriver
 {
 	/**
-	 * This generates a standard WHERE statement for SQL. Remember that this
-	 * assumes prepared statements to be available for your driver and
-	 * therefore will return the fields replaced by a question mark (?) for
-	 * the driver to be replaced.
+	 * This generates a standard WHERE statement for SQL.
 	 * 
 	 * To avoid this behaviour you need to change the way restrictions
 	 * generate their output.
@@ -38,6 +35,9 @@ abstract class _SF_stdSQLDriver
 		$limitstt     = 'LIMIT';
 		$limit        = $offset . ', ' . $rpp;
 		
+		#Inform the restrictions they are used by SQL
+		foreach($restrictions as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
+		
 		#Unset unneeded data & prepare for writing
 		if (empty($fields)) {
 			$fields = '*';
@@ -46,11 +46,13 @@ abstract class _SF_stdSQLDriver
 			$fields = implode(', ', $fields);
 		}
 		
+		#Join specific tasks
 		if ($_join) {
 			$rem_table = $_join->getTable();
 			$remote    = $_join->getUniqueRestrictions();
 			$remotef   = $_join->getUniqueFields();
 			
+			foreach($remote as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
 			$remotef   = $this->escapeFieldNames($rem_table, $remotef);
 			
 			$join  =  $rem_table->getTableName() . ' LEFT JOIN ';
@@ -216,5 +218,21 @@ abstract class _SF_stdSQLDriver
 		
 		return implode(' ', $stt);
 	}
+	
+	public function stringifyRestriction($restriction) {
+		if ( is_a($restriction, '_SF_RestrictionGroup') ) {
+			#Just join the groups with and's
+			return implode(' AND ', $restriction->getRestrictions);
+		}
+		elseif( is_a($restriction, '_SF_Restriction') ) {
+			$table    = $restriction->getTable()->getTableName();
+			$field    = $restriction->getField();
+			$operator = $restriction->getOperator();
+			$value    = $this->quote($restriction->getValue());
+			return "`$table`.`$field` $operator $value";
+		}
+	}
+	
+	public abstract function quote($text);
 	
 }

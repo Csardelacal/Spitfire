@@ -33,7 +33,7 @@ class databaseRecord
 		$this->data    = $srcData;
 		$this->table   = $table;
 		
-		$this->synced  = true;
+		$this->synced  = !empty($srcData);
 		$this->deleted = false;
 	}
 	
@@ -101,6 +101,7 @@ class databaseRecord
 		}
 		
 		$this->synced = true;
+		$this->src    = $this->data;
 	}
 	
 	public function getUniqueFields() {
@@ -135,7 +136,7 @@ class databaseRecord
 		
 		if ($value != $this->data[$field]) $this->synced = false;
 		
-		if (in_array($field, $this->table->getFields())) {
+		if (in_array($field, $this->table->getFields(true))) {
 			$this->data[$field] = $value;
 		}
 		else throw new privateException ('Setting non-existent database field: ' . $field);

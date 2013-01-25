@@ -97,6 +97,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
 		$stt = $con->prepare($statement);
+		echo "Executing: " . $statement . '<br />';
 		
 		try {
 			#Execute the query
@@ -117,15 +118,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 
 		#Get the SQL Statement
 		$statement = parent::query($table, $query, $fields);
-		
-		#Prepare the statement to be executed
-		$values = Array(); 
-		$_restrictions = $query->getRestrictions();
-		foreach($_restrictions as $r) $values = array_merge($values, $r->getValues());
-		
-		if ($join = $query->getJoin()) {
-			foreach($join->getUniqueRestrictions() as $r) array_unshift ($values, $r->getValue());
-		} print_r(Array( $statement, $values));
+		$values    = Array();
 		
 		#Execute
 		$stt = $this->execute($table, $statement, $values);
@@ -222,5 +215,9 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$this->execute($table, $statement, $_values);
 		return $this->connection->lastInsertId();
 		
+	}
+	
+	public function quote($text) {
+		return $this->connection->quote($text);
 	}
 }

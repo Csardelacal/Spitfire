@@ -49,6 +49,12 @@ class _SF_DBTable extends _SF_Queriable
 		else return $this->getDb()->escapeFieldNames($this, $fields);
 	}
 	
+	/**
+	 * Returns the name of the table that is being used. The table name
+	 * includes the database's prefix.
+	 *
+	 * @return String 
+	 */
 	public function getTablename() {
 		return $this->tablename;
 	}
@@ -73,19 +79,23 @@ class _SF_DBTable extends _SF_Queriable
 	public function validate($data) {
 		
 		$this->errors = Array();
-		$newdata = Array();
-		foreach ($this->getFields() as $field) {
-			if (method_exists ($this, 'validate_' . $field)) {
-				$function = Array($this, 'validate_' . $field);
-				$error = call_user_func_array($function, Array($data[$field]));
-				if ($error) {
-					$this->errors[] = $error;
-				}
+		
+		$ok = true;
+		
+		foreach ($this->getFields(true) as $field) {
+			
+			$function = Array($this, 'validate' . ucfirst($field) );
+			
+			if (method_exists( $function[0], $function[1] ) ) {
+				$ok = $ok && call_user_func_array($function, Array($data->$field));
 			}
-			$newdata[$field] = $data[$field];
 		}
 		
-		return $newdata;
+		return $ok;
+	}
+	
+	public function errorMsg($msg) {
+		$this->errors[] = $msg;
 	}
 	
 	/**
@@ -105,6 +115,16 @@ class _SF_DBTable extends _SF_Queriable
 		}
 		if (is_array($pk)) return $pk;
 		else               return Array($pk);
+	}
+	
+	public function update(databaseRecord $data) {
+		if (!$this->validate($data)) throw new privateException('Invalid data');
+		return $this->db->update($this, $data);
+	}
+	
+	public function insert(databaseRecord $data) {
+		if (!$this->validate($data)) throw new privateException('Invalid data');
+		return $this->db->insert($this, $data);
 	}
 	
 	public function delete(databaseRecord $data) {
