@@ -1,6 +1,12 @@
 <?php
 
-abstract class _SF_stdSQLDriver
+namespace spitfire\storage\database\drivers;
+
+use spitfire\storage\database\Table;
+use spitfire\storage\database\Query;
+use databaseRecord;
+
+abstract class stdSQLDriver
 {
 	/**
 	 * This generates a standard WHERE statement for SQL.
@@ -14,7 +20,7 @@ abstract class _SF_stdSQLDriver
 	 * @param mixed $fields
 	 * @return String the prepared query statement
 	 */
-	public function query(_SF_DBTable $table, _SF_DBQuery $query, $fields = null) {
+	public function query(Table $table, Query $query, $fields = null) {
 		
 		#Declare vars
 		$rpp          = $query->getResultsPerPage();
@@ -97,7 +103,7 @@ abstract class _SF_stdSQLDriver
 	 * @param type $primaries
 	 * @return type
 	 */
-	public function delete(_SF_DBTable $table, databaseRecord $record) {
+	public function delete(Table $table, databaseRecord $record) {
 		
 		#Prepare Vars
 		$deletestt    = 'DELETE FROM';
@@ -125,7 +131,7 @@ abstract class _SF_stdSQLDriver
 	 * @param string $field
 	 * @return string
 	 */
-	public function inc(_SF_DBTable $table, databaseRecord $record, $field) {
+	public function inc(Table $table, databaseRecord $record, $field) {
 		
 		#Prepare vars
 		$updatestt = 'UPDATE';
@@ -152,7 +158,7 @@ abstract class _SF_stdSQLDriver
 	 * @param databaseRecord $record
 	 * @return string
 	 */
-	public function insert(_SF_DBTable $table, databaseRecord $record) {
+	public function insert(Table $table, databaseRecord $record) {
 		
 		#Additional vars
 		$escapecb   = Array($table->getDb(), 'escapeFieldName');
@@ -201,7 +207,7 @@ abstract class _SF_stdSQLDriver
 	 * @param databaseRecord $record
 	 * @return string
 	 */
-	public function update(_SF_DBTable$table, databaseRecord$record) {
+	public function update(Table$table, databaseRecord$record) {
 		
 		#Prepare vars
 		$updatestt  = 'UPDATE';

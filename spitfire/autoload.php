@@ -2,7 +2,7 @@
 
 namespace spitfire;
 
-class _SF_AutoLoad
+class AutoLoad
 {
 
 	const   APPCONTROLLER_LOCATION = 'bin/controllers/appController.php';

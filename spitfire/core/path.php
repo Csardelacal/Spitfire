@@ -1,6 +1,11 @@
 <?php
 
-class _SF_Path
+namespace spitfire;
+
+use router;
+use URL;
+
+class Path
 {
 	
 	static $current_url;

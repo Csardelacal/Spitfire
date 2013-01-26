@@ -1,5 +1,7 @@
 <?php
 
+namespace spitfire\storage\database;
+
 /**
  * Convenience class meant to separate tables and the table related actions from
  * their query related tasks. It will only return different query short-hand methods
@@ -9,7 +11,7 @@
  * @author César de la Cal <cesar@magic3w.com>
  * @abstract
  */
-abstract class _SF_Queriable {
+abstract class Queriable {
 	
 	
 	/**

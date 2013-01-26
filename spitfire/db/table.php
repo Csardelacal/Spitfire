@@ -1,5 +1,9 @@
 <?php
 
+namespace spitfire\storage\database;
+
+use spitfire\environment;
+
 /**
  * This class simulates a table belonging to a database. This way we can query
  * and handle tables with 'compiler-friendly' code that will inform about errors
@@ -7,7 +11,7 @@
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-class _SF_DBTable extends _SF_Queriable
+class Table extends Queriable
 {
 
 	/** @var DBInterface  */
@@ -25,7 +29,7 @@ class _SF_DBTable extends _SF_Queriable
 	 * @param DBInterface $database
 	 * @param String $tablename
 	 */
-	public function __construct (DBInterface $database, $tablename = false) {
+	public function __construct (Model$database, $tablename = false) {
 		$this->db = $database;
 
 		if ($tablename) {

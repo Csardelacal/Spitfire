@@ -6,6 +6,7 @@
  * @package Spitfire.storage
  * @author César de la Cal <cesar@magic3w.com>
  */
+use spitfire\environment;
 
 /**
  * Memcached interface

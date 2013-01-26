@@ -1,5 +1,8 @@
 <?php
 
+use spitfire\environment;
+use spitfire\SpitFire;
+
 /**
  * 
  * This dinamically generates system urls

@@ -1,20 +1,26 @@
 <?php
 
-interface _SF_DBDriver
+namespace spitfire\storage\database\drivers;
+
+use spitfire\storage\database\Table;
+use spitfire\storage\database\Query;
+use databaseRecord;
+
+interface Driver
 {
 	#DB Specific functions
 	function getConnection();
 	
 	#Table specific functions
-	function fetchFields(_SF_DBTable $table);
+	function fetchFields(Table $table);
 	
 	#Query Specific functions
-	function query (_SF_DBTable $table, _SF_DBQuery $query, $fields = false);
-	function insert(_SF_DBTable $table, databaseRecord $data );
-	function update(_SF_DBTable $table, databaseRecord $data, $id );
-	function inc   (_SF_DBTable $table, databaseRecord $data, $field, $value ); //Stands for increment
-	function delete(_SF_DBTable $table, databaseRecord $id );
+	function query (Table $table, Query $query, $fields = false);
+	function insert(Table $table, databaseRecord $data );
+	function update(Table $table, databaseRecord $data, $id );
+	function inc   (Table $table, databaseRecord $data, $field, $value ); //Stands for increment
+	function delete(Table $table, databaseRecord $id );
 	
 	#Data Escaping
-	function escapeFieldNames(_SF_DBTable$table, $fields);
+	function escapeFieldNames(Table$table, $fields);
 }
