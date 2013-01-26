@@ -10,7 +10,7 @@
 class _SF_DBTable extends _SF_Queriable
 {
 
-	/** @var _SF_DBInterface  */
+	/** @var DBInterface  */
 	protected $db        = false;
 	protected $tablename = false;
 	protected $primaryK  = false;
@@ -67,37 +67,6 @@ class _SF_DBTable extends _SF_Queriable
 		return $this->db;
 	}
 	
-	public function getErrors() {
-		if (empty ($this->errors)) return false;
-		return $this->errors;
-	}
-
-	public function set ($data) {
-		return $this->db->set($this, $data);
-	}
-	
-	public function validate($data) {
-		
-		$this->errors = Array();
-		
-		$ok = true;
-		
-		foreach ($this->getFields(true) as $field) {
-			
-			$function = Array($this, 'validate' . ucfirst($field) );
-			
-			if (method_exists( $function[0], $function[1] ) ) {
-				$ok = $ok && call_user_func_array($function, Array($data->$field));
-			}
-		}
-		
-		return $ok;
-	}
-	
-	public function errorMsg($msg) {
-		$this->errors[] = $msg;
-	}
-	
 	/**
 	 * Get's the table's primary key. This will always return an array
 	 * containing the fields the Primary Key contains.
@@ -143,6 +112,53 @@ class _SF_DBTable extends _SF_Queriable
 		array_unshift($arguments, $this);
 		#Pass on
 		return call_user_func_array(Array($this->db, $name), $arguments);
+	}
+	
+	
+	########################################################################
+	#VALIDATION
+	########################################################################
+	
+	/**
+	 * Validates a record passed as parameter to make sure the data it
+	 * contains is valid and can be stored to the database. This function
+	 * is automatically called by insert and update.
+	 *
+	 * @param databaseRecord $data Data to be validated
+	 * @return boolean 
+	 */
+	public function validate(databaseRecord$data) {
+		
+		$this->errors = Array();
+		$ok = true;
+		
+		foreach ($this->getFields(true) as $field) {
+			
+			$function = Array($this, 'validate' . ucfirst($field) );
+			$value    = Array(&$data->$field);
+			
+			if (method_exists( $function[0], $function[1] ) ) {
+				$ok = $ok && call_user_func_array($function, $value);
+			}
+		}
+		
+		return $ok;
+	}
+	
+	/**
+	 * Adds an error message to the list of errors, this is used by the 
+	 * validation functions to send errors to the list returned by 
+	 * Table::getErrors()
+	 *
+	 * @param string $msg Error message
+	 */
+	public function errorMsg($msg) {
+		$this->errors[] = $msg;
+	}
+	
+	public function getErrors() {
+		if (empty ($this->errors)) return false;
+		return $this->errors;
 	}
 
 }

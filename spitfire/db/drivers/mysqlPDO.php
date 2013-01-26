@@ -127,45 +127,6 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		
 	}
 
-	public function set(_SF_DBTable $table, $data) {
-		
-		$fields = $table->getFields();
-		if (empty($fields)) throw new privateException('No database fields for table ' . $this->tablename);
-		
-		$data   = $table->validate($data);
-		$errors = $table->getErrors();
-		if (!empty($errors)) return false;
-
-		if (empty($data['id'])) unset ($data['id']);
-
-		$fields = array_keys($data);
-		$escapedFields = array_map(Array($this, 'escapeFieldName'), $fields);
-		$famt   = count($fields);
-
-		#Prepare query
-		$statement = "INSERT INTO `{$table->getTablename()}` (".
-				implode(', ', $escapedFields) .") VALUES (:" . 
-				implode(', :', $fields) . ") ON DUPLICATE KEY UPDATE ";
-		
-		for ($i = 0; $i < $famt; $i++) {
-			$statement.= $escapedFields[$i] . " = :" . $fields[$i];
-			if ($i < $famt-1) $statement.= ',';
-			$statement.= ' ';
-		}
-
-		#Run query
-		$con = $this->getConnection();
-		$stt = $con->prepare($statement);
-		$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $data) );
-		
-		$err = $stt->errorInfo();
-		if ($err[1]) throw new privateException($err[2] . ' in query ' . $statement, $err[1]);
-		
-		if ($stt->rowCount() == 1) return $con->lastInsertId();
-		else return $data['id'];
-		
-	}
-
 	public function delete(_SF_DBTable $table, databaseRecord $data) {
 		#Get the SQL Statement
 		$primary = $table->getPrimaryKey();
