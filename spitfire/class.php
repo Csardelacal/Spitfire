@@ -1,6 +1,8 @@
 <?php
 
-class _SF_Class
+namespace spitfire;
+
+class ClassInfo
 {
 	const TYPE_CONTROLLER = 'Controller';
 	const TYPE_COMPONENT  = 'Component';
@@ -8,6 +10,8 @@ class _SF_Class
 	const TYPE_VIEW       = 'View';
 	const TYPE_BEAN       = 'Bean';
 	const TYPE_STDCLASS   = '';
+	
+	const NAMESPACE_SEPARATOR = '\\';
 	
 	private $type      = '';
 	private $namespace = Array();
@@ -26,7 +30,7 @@ class _SF_Class
 	public function __construct($className) {
 		$this->fullName  = $className;
 		
-		$this->namespace = explode ('_', $className);
+		$this->namespace = explode (self::NAMESPACE_SEPARATOR, $className);
 		$this->className = array_pop($this->namespace);
 		
 		foreach($this->types as $type) {

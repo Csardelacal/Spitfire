@@ -51,6 +51,7 @@ ini_set('session.save_path', "bin/usr/sessions");
 ini_set('memory_limit', '64M');/**/
 
 /* Call the selected controller with the selected method. */
+use spitfire\SpitFire;
 
 SpitFire::init();
 SpitFire::fire();

@@ -1,5 +1,7 @@
 <?php
 
+namespace spitfire;
+
 class _SF_AutoLoad
 {
 
@@ -34,10 +36,10 @@ class _SF_AutoLoad
 		if (isset($this->registered_classes[$className]))
 			return include $this->registered_classes[$className];
 		
-		$class = new _SF_Class($className);
+		$class = new ClassInfo($className);
 		
 		switch($class->getType()) {
-			case _SF_Class::TYPE_CONTROLLER:
+			case ClassInfo::TYPE_CONTROLLER:
 				$filename = self::CONTROLLER_DIRECTORY .
 						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
 						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
@@ -54,7 +56,7 @@ class _SF_AutoLoad
 				
 				break;
 				
-			case _SF_Class::TYPE_VIEW:
+			case ClassInfo::TYPE_VIEW:
 				$filename = self::VIEW_DIRECTORY .
 						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
 						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
@@ -71,7 +73,7 @@ class _SF_AutoLoad
 				
 				break;
 				
-			case _SF_Class::TYPE_COMPONENT:
+			case ClassInfo::TYPE_COMPONENT:
 				$filename = self::COMPONENT_DIRECTORY .
 						implode(DIRECTORY_SEPARATOR, $class->getNameSpace()) .
 						DIRECTORY_SEPARATOR .
@@ -92,7 +94,7 @@ class _SF_AutoLoad
 				
 				break;
 				
-			case _SF_Class::TYPE_MODEL:
+			case ClassInfo::TYPE_MODEL:
 				$filename = self::MODEL_DIRECTORY .
 						$class->getClassName() .
 						self::CLASS_EXTENSION;
@@ -105,7 +107,7 @@ class _SF_AutoLoad
 				
 				break;
 				
-			case _SF_Class::TYPE_BEAN:
+			case ClassInfo::TYPE_BEAN:
 				$filename = self::BEAN_DIRECTORY .
 						$class->getClassName() .
 						self::CLASS_EXTENSION;
@@ -118,7 +120,7 @@ class _SF_AutoLoad
 				
 				break;
 				
-			case _SF_Class::TYPE_STDCLASS:
+			case ClassInfo::TYPE_STDCLASS:
 				$filename = self::STD_CLASS_DIRECTORY .
 						$class->getClassName() .
 						self::CLASS_EXTENSION;

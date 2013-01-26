@@ -32,6 +32,21 @@ class _SF_DBTable extends _SF_Queriable
 			$prefix = environment::get('db_table_prefix');
 			$this->tablename =  $prefix . $tablename;
 		}
+		
+		#If the user has set a list of fields turn them into fields
+		if ($this->fields) {
+			foreach ($this->fields as &$field) {
+				$field = new _SF_DBField($this, $field);
+			}
+		}
+		
+		#If the user has set primaries, turn them into fields.
+		if ($this->primaryK) {
+			$key = (array)  $this->primaryK;
+			foreach($key as $_key) {
+				$_key = new _SF_DBField($this, $_key, true);
+			}
+		}
 	}
 	
 	/**
@@ -41,12 +56,18 @@ class _SF_DBTable extends _SF_Queriable
 	 * 
 	 * @return mixed The fields this table handles.
 	 */
-	public function getFields($unescaped = false) {
+	public function getFields() {
 		if ($this->fields) $fields = $this->fields;
 		else               $fields = $this->db->fetchFields($this);
 		
-		if ($unescaped) return $fields;
-		else return $this->getDb()->escapeFieldNames($this, $fields);
+		return $fields;
+	}
+	
+	public function getField($name) {
+		$fields = $this->getFields();
+		foreach ($fields as $field) {
+			if ($field->getName() == $name) return $field;
+		}
 	}
 	
 	/**
@@ -74,16 +95,10 @@ class _SF_DBTable extends _SF_Queriable
 	 * @return Array Name of the primary key's column
 	 */
 	public function getPrimaryKey() {
-		#If our PK has already been set get it
-		if ($this->primaryK) {
-			$pk = $this->primaryK;
-		}
-		#Fetch the primary key
-		else {
-			$pk = $this->db->getPrimaryKey($this);
-		}
-		if (is_array($pk)) return $pk;
-		else               return Array($pk);
+		if ($this->primaryK) $pk = $this->primaryK;
+		else $pk = $this->primaryK = $this->db->getPrimaryKey($this);
+		
+		return (array)$pk;
 	}
 	
 	public function update(databaseRecord $data) {

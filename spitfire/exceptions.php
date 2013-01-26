@@ -100,10 +100,10 @@ class _SF_ExceptionHandler {
 			while(ob_get_clean()); //The content generated till now is not valid. DESTROY. DESTROY!
 
 			if ( is_a($e, 'publicException') ) {
-				get_error_page($e->getCode(), $e->getMessage());
+				get_error_page($e->getCode(), $e->getMessage() );
 			} else { 
 				error_log($e->getMessage());
-				$trace = 'Trace: ' . print_r( $e->getTrace(), true);
+				$trace = 'Trace: ' . print_r( $e->getTrace(), 1);
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
@@ -146,7 +146,7 @@ class _SF_ExceptionHandler {
 			case E_CORE_ERROR:
 			case E_COMPILE_ERROR:
 			case E_USER_ERROR:
-				get_error_page(500, $last_error['message']);
+				get_error_page(500, $last_error['message'] . "@$last_error[file] [$last_error[line]]");
 		}
 	}
 

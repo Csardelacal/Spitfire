@@ -1,9 +1,11 @@
 <?php
 
+namespace spitfire;
+
 /**
  * Dispatcher class of Spitfire. Calls all the required classes for Spitfire to run.
  * @author César de la Cal <cesar@magic3w.com>
- * @package Spitfire
+ * @package spitfire
  */
 
 class SpitFire 
@@ -98,6 +100,7 @@ class SpitFire
 
 }
 
+//TODO: Move this from here
 /**
  * Returns HTML escaped string and if desired it adds ellipsis.
  * @param String $str

@@ -1,5 +1,7 @@
 <?php
 
+namespace spitfire\storage\database;
+
 /**
  * This class creates a "bridge" beetwen the classes that use it and the actual
  * driver.
@@ -7,7 +9,7 @@
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-class DBInterface extends _SF_MVC
+class Model extends _SF_MVC
 {
 	
 	const MYSQL_PDO_DRIVER = 'mysqlPDO';

@@ -34,7 +34,7 @@ abstract class _SF_Queriable {
 	public function get($field, $value) {
 		#Create the query
 		$query = new _SF_DBQuery($this);
-		$query->addRestriction(new _SF_Restriction($field, $value));
+		$query->addRestriction($field, $value);
 		#Return it
 		return $query;
 	}
