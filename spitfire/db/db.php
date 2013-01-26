@@ -1,6 +1,15 @@
 <?php
 
+/**
+ * Namespace related to all the functions spitfire offers to handle different
+ * relational engines.
+ * 
+ * @package spitfire.storage.database
+ */
 namespace spitfire\storage\database;
+
+use _SF_MVC;
+use spitfire\environment;
 
 /**
  * This class creates a "bridge" beetwen the classes that use it and the actual
@@ -31,7 +40,7 @@ class Model extends _SF_MVC
 		if (is_null($driver)) $driver = environment::get('db_driver');
 		
 		#Instantiate the driver
-		$driver = '_SF_' . $driver . 'Driver';
+		$driver = 'spitfire\storage\database\drivers\\' . $driver . 'Driver';
 		$this->driver = new $driver($options);
 	}
 
@@ -80,7 +89,7 @@ class Model extends _SF_MVC
 		$tableClass = $tablename.'Model';
 
 		if (class_exists($tableClass)) return $this->{$tablename} = new $tableClass ($this);
-		else return $this->{$tablename} = new _SF_DBTable($this, $tablename);
+		else return $this->{$tablename} = new Table($this, $tablename);
 	}
 	
 	public function escapeFieldNames(_SF_DBTable$table, $fields) {

@@ -10,7 +10,7 @@ class ComponentManager
 
 
 	public static function register($vendor, $component) {
-		self::$components[$vendor . '_' . $component] = call_user_func_array(Array($vendor.'_'.$component, 'info'), Array());
+		self::$components[$vendor . '\\' . $component] = call_user_func_array(Array($vendor.'\\'.$component, 'info'), Array());
 	}
 	
 	public static function get($p1, $p2 = false, $min_version = 0, $max_version = 0) {

@@ -132,6 +132,11 @@ class homeController extends Controller
 	}
 	
 	public function fields($table) {
+		echo("Model ------------------- \n");
+		print_r($this->model);
+		echo("Table ------------------- \n");
+		print_r($this->model->{$table});
+		echo("Field ------------------- \n");
 		print_r($this->model->{$table}->getFields());
 	}
 	

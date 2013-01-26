@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\SpitFire;
+
 /**
  * This class handles components common to Views, Controllers and model. Functions
  * and variables declared in this files will be accessible by any of them.

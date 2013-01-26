@@ -1,6 +1,15 @@
 <?php
 
-class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
+namespace spitfire\storage\database\drivers;
+
+use spitfire\storage\database\Table;
+use spitfire\storage\database\Query;
+use spitfire\storage\database\Field;
+use spitfire\environment;
+use PDO;
+use databaseRecord;
+
+class mysqlPDODriver extends stdSQLDriver implements Driver
 {
 
 	private $connection    = false;
@@ -35,7 +44,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		return $this->connection;
 	}
 
-	public function fetchFields(_SF_DBTable $table) {
+	public function fetchFields(Table$table) {
 		
 		#If it's cached return the data
 		if ($this->fields[$table->getTablename()]) 
@@ -52,7 +61,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 			$auto_increment = strstr($row['Extra'], 'auto_increment');
 			$name           = $row['Field'];
 			
-			$fields[] = new _SF_DBField($table, $name, $primary, $auto_increment);
+			$fields[] = new Field($table, $name, $primary, $auto_increment);
 			
 		}
 		
@@ -80,7 +89,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		}
 	}
 	
-	public function escapeFieldNames(_SF_DBTable$table, $names) {
+	public function escapeFieldNames(Table$table, $names) {
 		
 		foreach ($names as &$name){
 			$name = "`{$table->getTablename()}`.`$name`";
@@ -88,7 +97,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		return $names;
 	}
 	
-	public function execute(_SF_DBTable$table, $statement, $values) {
+	public function execute(Table$table, $statement, $values) {
 		
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
@@ -110,7 +119,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		return $stt;
 	}
 
-	public function query(_SF_DBTable $table, _SF_DBQuery $query, $fields = false) {
+	public function query(Table $table, Query $query, $fields = false) {
 
 		#Get the SQL Statement
 		$statement = parent::query($table, $query, $fields);
@@ -123,7 +132,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		
 	}
 
-	public function delete(_SF_DBTable $table, databaseRecord $data) {
+	public function delete(Table $table, databaseRecord $data) {
 		#Get the SQL Statement
 		$primary = $table->getPrimaryKey();
 		$statement = parent::delete($table, $data);
@@ -134,7 +143,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$this->execute($table, $statement, $values);
 	}
 
-	public function inc(_SF_DBTable $table, databaseRecord $data, $field, $value) {
+	public function inc(Table $table, databaseRecord $data, $field, $value) {
 		
 		$statement = parent::inc($table, $data, $field);
 		$values    = Array($value);
@@ -145,7 +154,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		$this->execute($table, $statement, $values);
 	}
 
-	public function insert(_SF_DBTable $table, databaseRecord $data) {
+	public function insert(Table $table, databaseRecord $data) {
 		$statement = parent::insert($table, $data);
 		$values    = $data->getData();
 		
@@ -156,7 +165,7 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		return $this->connection->lastInsertId();
 	}
 
-	public function update(_SF_DBTable $table, databaseRecord$data, $id) {
+	public function update(Table $table, databaseRecord$data, $id) {
 		$statement = parent::update($table, $data);
 		$values = $data->getDiff();
 		

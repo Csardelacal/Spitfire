@@ -2,6 +2,9 @@
 
 namespace spitfire;
 
+use Headers;
+use spitfire\storage\database\Model;
+
 /**
  * Dispatcher class of Spitfire. Calls all the required classes for Spitfire to run.
  * @author César de la Cal <cesar@magic3w.com>
@@ -33,13 +36,13 @@ class SpitFire
 
 		#Try to start autoload
 		if (! class_exists('_SF_AutoLoad')) include dirname(__FILE__).'/autoload.php';
-		self::$autoload = new _SF_AutoLoad();
+		self::$autoload = new AutoLoad();
 
 		#Include file to define the location of core components
 		self::includeIfPossible("$cur_dir/autoload_core_files.php");
 
 		#Initialize the exception handler
-		self::$debug   = new _SF_ExceptionHandler();
+		self::$debug   = new exceptions\ExceptionHandler();
 		self::$headers = new Headers();
 
 		#Try to include the user's evironment & routes
@@ -48,7 +51,7 @@ class SpitFire
 		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
 
 		#Get the current path...
-		self::$current_url = _SF_Path::getPath();
+		self::$current_url = Path::getPath();
 
 		self::$started = true;
 		return true;
@@ -68,7 +71,7 @@ class SpitFire
 		if (class_exists($_view)) self::$view = new $_view;
 		else                      self::$view = new View();
 		#Create the model
-		self::$model = new DBInterface();
+		self::$model = new Model();
 		#Check if the action is available
 		$method = Array($controller, self::$current_url->getAction());
 		
