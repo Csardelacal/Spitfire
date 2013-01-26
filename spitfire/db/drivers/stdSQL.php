@@ -53,7 +53,7 @@ abstract class _SF_stdSQLDriver
 			$remotef   = $_join->getUniqueFields();
 			
 			foreach($remote as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
-			$remotef   = $this->escapeFieldNames($rem_table, $remotef);
+			//$remotef   = $this->escapeFieldNames($rem_table, $remotef);
 			
 			$join  =  $rem_table->getTableName() . ' LEFT JOIN ';
 			$onstt = 'ON (' . implode(', ', $remotef) . ')';
@@ -131,7 +131,7 @@ abstract class _SF_stdSQLDriver
 		$updatestt = 'UPDATE';
 		$tablename = "`{$table->getTablename()}`";
 		$setstt    = 'SET';
-		$_field    = "`$field`";
+		$_field    = "$field";
 		$equalsstt = "= $field + ?";
 		$wherestt  = 'WHERE';
 		$where     = implode(' AND ', $record->getUniqueRestrictions());
@@ -229,7 +229,7 @@ abstract class _SF_stdSQLDriver
 			$field    = $restriction->getField();
 			$operator = $restriction->getOperator();
 			$value    = $this->quote($restriction->getValue());
-			return "`$table`.`$field` $operator $value";
+			return "$field $operator $value";
 		}
 	}
 	

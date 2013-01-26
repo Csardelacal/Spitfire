@@ -5,8 +5,6 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 
 	private $connection    = false;
 	private $fields        = Array();
-	private $primaries     = Array();
-	private $autoincrement = Array();
 	
 	private $errs = Array(
 	    'HY093' => 'Wrong parameter count',
@@ -49,38 +47,36 @@ class _SF_mysqlPDODriver extends _SF_stdSQLDriver implements _SF_DBDriver
 		
 		$fields = Array();
 		while($row = $stt->fetch()) {
-			$fields[] = $row['Field'];
-			if (strstr($row['Key'], 'PRI')) {
-				if (!isset($this->primaries[$table->getTablename()])) $this->primaries[$table->getTablename()] = Array();
-				$this->primaries[$table->getTablename()][] = $row['Field'];
-			}
-			if (strstr($row['Extra'], 'auto_increment')) {
-				$this->autoincrement[$table->getTablename()] = $row['Field'];
-			}
-			//TODO: Check for PK
+			
+			$primary        = strstr($row['Key'], 'PRI');
+			$auto_increment = strstr($row['Extra'], 'auto_increment');
+			$name           = $row['Field'];
+			
+			$fields[] = new _SF_DBField($table, $name, $primary, $auto_increment);
+			
 		}
 		
 		return $this->fields[$table->getTablename()] = $fields;
 	}
 	
 	public function getPrimaryKey($table) {
-		if (isset($this->primaries[$table->getTableName()])){
-			return $this->primaries[$table->getTableName()];
+		
+		$fields    = $this->fetchFields($table);
+		$primaries = Array();
+		
+		foreach ($fields as $field) {
+			if ($field->isPrimary() ) $primaries[] = $field;
 		}
-		else {
-			$this->fetchFields ($table);
-			return $this->primaries[$table->getTableName()];
-		}
+		
+		return $primaries;
 	}
 	
 	public function getAutoIncrement($table) {
-		if (isset($this->autoincrement[$table->getTableName()])){
-			return $this->autoincrement[$table->getTableName()];
-		}
-		else {
-			$this->autoincrement[$table->getTableName()] = false;
-			$this->fetchFields ($table);
-			return $this->autoincrement[$table->getTableName()];
+		
+		$fields = $this->fetchFields($table);
+		
+		foreach ($fields as $field) {
+			if ($field->isAutoIncrement() ) return $field;
 		}
 	}
 	

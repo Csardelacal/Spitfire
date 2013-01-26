@@ -25,6 +25,7 @@ _SF_AutoLoad::registerClass('DBInterface',           $cur_dir.'/db/db.php');
 _SF_AutoLoad::registerClass('_SF_Queriable',         $cur_dir.'/db/queriable.php');
 _SF_AutoLoad::registerClass('_SF_DBTable',           $cur_dir.'/db/table.php');
 _SF_AutoLoad::registerClass('_SF_DBQuery',           $cur_dir.'/db/dbquery.php');
+_SF_AutoLoad::registerClass('_SF_DBField',           $cur_dir.'/db/field.php');
 _SF_AutoLoad::registerClass('_SF_RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
 _SF_AutoLoad::registerClass('_SF_Restriction',       $cur_dir.'/db/restriction.php');
 _SF_AutoLoad::registerClass('_SF_DBDriver',          $cur_dir.'/db/driver.php');

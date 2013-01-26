@@ -18,8 +18,8 @@ class _SF_DBQuery
 		$this->restrictions = Array();
 	}
 	
-	public function addRestriction($restriction) {
-		$restriction->setTable($this->table);
+	public function addRestriction($field, $value, $operator = '=') {
+		$restriction = new _SF_Restriction($this->table->getField($field), $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;

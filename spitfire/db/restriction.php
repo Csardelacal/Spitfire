@@ -15,7 +15,7 @@ class _SF_Restriction
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
-	public function __construct($field, $value, $operator = '=') {
+	public function __construct(_SF_DBField$field, $value, $operator = '=') {
 		$this->field    = $field;
 		$this->value    = $value;
 		$this->operator = $operator;
@@ -24,12 +24,12 @@ class _SF_Restriction
 		self::$autonumeric++;
 	}
 	
-	public function setTable($table) {
-		$this->table = $table;
+	public function getTable(){
+		return $this->field->getTable();
 	}
 	
-	public function getTable(){
-		return $this->table;
+	public function setTable() {
+		throw new privateException('Deprecated');
 	}
 	
 	public function getField() {
@@ -70,6 +70,6 @@ class _SF_Restriction
 		//TODO: Clean code
 		$tablename = ($this->table)? $this->table->getTableName() . '.' : '';
 		
-		return "$tablename`$this->field` $this->operator ?";
+		return "$this->field $this->operator ?";
 	}
 }

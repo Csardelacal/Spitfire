@@ -113,18 +113,16 @@ class databaseRecord
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$r = new _SF_Restriction($primary, $this->data[$primary]);
-			$r->setTable($this->table);
+			$r = new _SF_Restriction($primary, $this->data[$primary->getName()]);
 			$restrictions[] = $r;
 		}
 		
 		return $restrictions;
 	}
 	
-	public function getChildren($table, $restrictions) {
+	public function getChildren($table) {
 		$query = new _SF_DBQuery($table);
 		$query->setJoin($this);
-		foreach($restrictions as $r) $query->addRestriction ($r);
 		return $query->fetchAll();
 	}
 	
@@ -136,7 +134,7 @@ class databaseRecord
 		
 		if ($value != $this->data[$field]) $this->synced = false;
 		
-		if (in_array($field, $this->table->getFields(true))) {
+		if ($this->table->getField($field)) {
 			$this->data[$field] = $value;
 		}
 		else throw new privateException ('Setting non-existent database field: ' . $field);

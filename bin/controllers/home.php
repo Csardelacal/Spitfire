@@ -96,11 +96,9 @@ class homeController extends Controller
 		$rec->store();/**/
 		$rec = $this->model->test->get('id', 3)->fetch();
 		
-		echo( new Pagination($this->model->test->get('id', 23)) );
-		
 		$child = $rec->getChildren($this->model->dependant);
 		echo $child[0]->content;
-		$child[0]->delete();
+		if ($child[0]) $child[0]->delete();
 		
 		try {
 			$child = new databaseRecord($this->model->dependant);
@@ -131,5 +129,13 @@ class homeController extends Controller
 		$user = CoffeeBean::getBean('user')->insertIntoDBRecord(new databaseRecord($this->model->test));
 		print_r($user);
 		$user->store();
+	}
+	
+	public function fields($table) {
+		print_r($this->model->{$table}->getFields());
+	}
+	
+	public function error() {
+		throw new privateException('User caused error');
 	}
 }
