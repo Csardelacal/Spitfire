@@ -9,6 +9,7 @@
 namespace spitfire\storage\database;
 
 use _SF_MVC;
+use privateException;
 use spitfire\environment;
 
 /**
@@ -41,7 +42,7 @@ class Model extends _SF_MVC
 		
 		#Instantiate the driver
 		$driver = 'spitfire\storage\database\drivers\\' . $driver . 'Driver';
-		$this->driver = new $driver($options);
+		$this->driver = new $driver($this, $options);
 	}
 
 	/**
@@ -83,7 +84,7 @@ class Model extends _SF_MVC
 	 * querying and data-manipulation..
 	 * 
 	 * @param String $tablename Name of the table that should be used.
-	 * @return _SF_DBTable The database table adapter
+	 * @return Table The database table adapter
 	 */
 	public function getTable($tablename) {
 		$tableClass = $tablename.'Model';
@@ -91,16 +92,12 @@ class Model extends _SF_MVC
 		if (class_exists($tableClass)) return $this->{$tablename} = new $tableClass ($this);
 		else return $this->{$tablename} = new Table($this, $tablename);
 	}
-	
-	public function escapeFieldNames(_SF_DBTable$table, $fields) {
-		return $this->driver->escapeFieldNames($table, $fields);
-	}
 
 	/**
 	 * Allows short-hand access to tables by using: $db->tablename
 	 * 
 	 * @param String $table Name of the table
-	 * @return _SF_DBTable|_SF_MVC
+	 * @return Table|_SF_MVC
 	 */
 	public function __get($table) {
 		#In case we request a model, view or controller
@@ -118,7 +115,10 @@ class Model extends _SF_MVC
 	 * @return mixed
 	 */
 	public function __call($name, $arguments) {
+		if (method_exists($this->driver, $name))
 		return call_user_func_array(Array($this->driver, $name), $arguments);
+		
+		else throw new privateException('Undefined method: ' . $name);
 	}
 
 }

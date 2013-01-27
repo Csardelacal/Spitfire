@@ -2,6 +2,10 @@
 
 namespace spitfire\exceptions;
 
+use Exception;
+use spitfire\SpitFire;
+use spitfire\environment;
+
 /**
  * Output error page to browser
  * 
@@ -18,7 +22,7 @@ function get_error_page($code, $message, $moreInfo = '') {
 	if (file_exists($error_page)) {
 		include $error_page;
 		die();
-	} elseif (file_exists($error_page = Spitfire::$cwd . '/bin/error_pages/default.php')) {
+	} elseif (file_exists($error_page = SpitFire::$cwd . '/bin/error_pages/default.php')) {
 		include $error_page;
 		die();
 	} else {
@@ -62,7 +66,7 @@ class ExceptionHandler {
 				get_error_page($e->getCode(), $e->getMessage() );
 			} else { 
 				error_log($e->getMessage());
-				$trace = 'Trace: ' . print_r( $e->getTrace(), 1);
+				$trace = $e->getTraceAsString();
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
@@ -109,7 +113,7 @@ class ExceptionHandler {
 		}
 	}
 
-	public function msg ($msg) {
+	public function log ($msg) {
 		$this->msgs[] = $msg;
 	}
 

@@ -1,6 +1,8 @@
 <?php
 
-class dependantModel extends _SF_DBTable
+use spitfire\storage\database\Table;
+
+class dependantModel extends Table
 {
 	
 	protected $tablename = 'dependant';

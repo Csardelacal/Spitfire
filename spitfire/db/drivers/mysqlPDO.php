@@ -5,8 +5,11 @@ namespace spitfire\storage\database\drivers;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Field;
+use spitfire\SpitFire;
 use spitfire\environment;
 use PDO;
+use PDOException;
+use privateException;
 use databaseRecord;
 
 class mysqlPDODriver extends stdSQLDriver implements Driver
@@ -14,6 +17,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 
 	private $connection    = false;
 	private $fields        = Array();
+	private $model;
 	private $schema;
 	
 	private $errs = Array(
@@ -21,6 +25,10 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	    '42000' => 'Reserved word used as field name',
 	    '23000' => 'Unique restraint violated.'
 	);
+	
+	public function __construct($model, $options) {
+		$this->model = $model;
+	}
 
 	protected function connect() {
 		
@@ -36,7 +44,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			
 			return true;
 		} catch (Exception $e) {
-			SpitFire::$debug->msg($e->getMessage());
+			SpitFire::$debug->log($e->getMessage());
 			throw new privateException('DB Error. Connection refused by the server');
 		}
 
@@ -50,7 +58,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	public function fetchFields(Table$table) {
 		
 		#If it's cached return the data
-		if ($this->fields[$table->getTablename()]) 
+		if (isset($this->fields[$table->getTablename()])) 
 			return $this->fields[$table->getTablename()];
 		
 		#Prepare the statement
@@ -71,43 +79,15 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $this->fields[$table->getTablename()] = $fields;
 	}
 	
-	public function getPrimaryKey($table) {
-		
-		$fields    = $this->fetchFields($table);
-		$primaries = Array();
-		
-		foreach ($fields as $field) {
-			if ($field->isPrimary() ) $primaries[] = $field;
-		}
-		
-		return $primaries;
-	}
-	
-	public function getAutoIncrement($table) {
-		
-		$fields = $this->fetchFields($table);
-		
-		foreach ($fields as $field) {
-			if ($field->isAutoIncrement() ) return $field;
-		}
-	}
-	
-	public function escapeFieldNames(Table$table, $names) {
-		
-		foreach ($names as &$name){
-			$name = "`{$table->getTablename()}`.`$name`";
-		}
-		return $names;
-	}
-	
 	public function execute(Table$table, $statement, $values) {
 		
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
-		$stt = $con->prepare($statement);
-		echo "Executing: " . $statement . '<br />';
 		
 		try {
+			error_log($statement);
+			$stt = $con->prepare($statement);
+			SpitFire::$debug->log("DB: " . $statement);
 			#Execute the query
 			$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $values) );
 		}
@@ -131,17 +111,15 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		#Execute
 		$stt = $this->execute($table, $statement, $values);
 		
-		return new _SF_mysqlPDOResultSet($table, $stt);
+		return new mysqlPDOResultSet($table, $stt);
 		
 	}
 
 	public function delete(Table $table, databaseRecord $data) {
 		#Get the SQL Statement
-		$primary = $table->getPrimaryKey();
 		$statement = parent::delete($table, $data);
 		#Prepare values
 		$values  = Array();
-		foreach($primary as $key) $values[] = $data->$key;
 		#Execute
 		$this->execute($table, $statement, $values);
 	}
@@ -168,7 +146,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $this->connection->lastInsertId();
 	}
 
-	public function update(Table $table, databaseRecord$data, $id) {
+	public function update(Table $table, databaseRecord$data) {
 		$statement = parent::update($table, $data);
 		$values = $data->getDiff();
 		

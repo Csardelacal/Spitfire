@@ -35,7 +35,7 @@ abstract class Queriable {
 	 */
 	public function get($field, $value) {
 		#Create the query
-		$query = new _SF_DBQuery($this);
+		$query = new Query($this);
 		$query->addRestriction($field, $value);
 		#Return it
 		return $query;
@@ -50,7 +50,7 @@ abstract class Queriable {
 	 */
 	public function getAll() {
 		
-		$query = new _SF_DBQuery($this);
+		$query = new Query($this);
 		return $query;
 	}
 	
@@ -70,7 +70,7 @@ abstract class Queriable {
 				'%';
 		}
 		
-		$query = new _SF_DBQuery($this);
+		$query = new Query($this);
 		$query->addRestriction(new _SF_Restriction($field, $value, _SF_Restriction::LIKE_OPERATOR));
 		return $query;
 	}
@@ -83,7 +83,7 @@ abstract class Queriable {
 	 */
 	public function isNull($field) {
 		
-		$query = new _SF_DBQuery($this);
+		$query = new Query($this);
 		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
 		return $query;
 	}
@@ -96,7 +96,7 @@ abstract class Queriable {
 	 */
 	public function isNotNull($field) {
 		
-		$query = new _SF_DBQuery($this);
+		$query = new Query($this);
 		$query->addRestriction(new _SF_Restriction($field, NULL, ' IS NOT '));
 		return $query;
 	}

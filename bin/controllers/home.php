@@ -90,37 +90,43 @@ class homeController extends Controller
 	}
 	
 	public function dbTest() {
-		/*$rec = new databaseRecord($this->model->dependant);
-		$rec->test_id = 3;
-		$rec->content ="_SF_";
-		$rec->store();/**/
-		$rec = $this->model->test->get('id', 3)->fetch();
-		
-		$child = $rec->getChildren($this->model->dependant);
-		echo $child[0]->content;
-		if ($child[0]) $child[0]->delete();
 		
 		try {
-			$child = new databaseRecord($this->model->dependant);
-			$child->test_id = -4;
-			$child->content = '_SF_';
-			$child->store();
+
+			$rec = $this->model->test->get('id', 3)->fetch();
+
+			$child = $rec->getChildren($this->model->dependant);
+			echo $child[0]->content;
+			if ($child[0]) $child[0]->delete();
+
+			try {
+				$child = new databaseRecord($this->model->dependant);
+				$child->test_id = -4;
+				$child->content = '_SF_';
+				$child->store();
+			}
+			catch(Exception $e) {
+				print_r($this->model->dependant->getErrors());
+			}
+
+			try {
+				$child = new databaseRecord($this->model->dependant);
+				$child->test_id = 1;
+				$child->content = '_SF_';
+				$child->store();
+
+				$child->content.= time();
+				$child->store();
+			}
+			catch (Exception $e) {
+				echo $e->getMessage();
+				echo $e->getTraceAsString();
+			}
 		}
 		catch(Exception $e) {
-			print_r($this->model->dependant->getErrors());
-		}
-		
-		try {
-			$child = new databaseRecord($this->model->dependant);
-			$child->test_id = 23;
-			$child->content = '_SF_';
-			$child->store();
-		
-			$child->content.= time();
-			$child->store();
-		}
-		catch (Exception $e) {
 			echo $e->getMessage();
+			echo $e->getTraceAsString();
+			echo 'Exception: end...';
 		}
 	}
 	

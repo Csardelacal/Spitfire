@@ -1,6 +1,11 @@
 <?php
 
-class _SF_mysqlPDOResultSet implements resultSetInterface
+namespace spitfire\storage\database\drivers;
+
+use PDO;
+use databaseRecord;
+
+class mysqlPDOResultSet implements resultSetInterface
 {
 	private $result;
 	private $table;

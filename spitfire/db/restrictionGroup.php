@@ -1,6 +1,8 @@
 <?php
 
-class _SF_RestrictionGroup
+namespace spitfire\storage\database;
+
+class RestrictionGroup
 {
 	private $restrictions;
 	private $belongsto;
@@ -12,7 +14,7 @@ class _SF_RestrictionGroup
 		$this->restrictions = $restrictions;
 	}
 	
-	public function addRestriction(_SF_Restriction$restriction) {
+	public function addRestriction(Restriction$restriction) {
 		$this->restrictions[] = $restriction;
 		return $this;
 	}

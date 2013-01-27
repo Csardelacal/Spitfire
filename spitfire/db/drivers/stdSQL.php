@@ -11,10 +11,6 @@ abstract class stdSQLDriver
 	/**
 	 * This generates a standard WHERE statement for SQL.
 	 * 
-	 * To avoid this behaviour you need to change the way restrictions
-	 * generate their output.
-	 * 
-	 * 
 	 * @param _SF_DBTable $table
 	 * @param _SF_DBQuery $query
 	 * @param mixed $fields
@@ -131,7 +127,7 @@ abstract class stdSQLDriver
 	 * @param string $field
 	 * @return string
 	 */
-	public function inc(Table $table, databaseRecord $record, $field) {
+	public function inc(Table $table, databaseRecord $record, $field, $diff) {
 		
 		#Prepare vars
 		$updatestt = 'UPDATE';
@@ -161,9 +157,11 @@ abstract class stdSQLDriver
 	public function insert(Table $table, databaseRecord $record) {
 		
 		#Additional vars
-		$escapecb   = Array($table->getDb(), 'escapeFieldName');
-		$_fields    = array_keys($record->getData());
-		array_walk($_fields, $escapecb);
+		$escapecb   = Array($table, 'getField');
+		$values     = $record->getData();
+		$_fields    = array_keys($values);
+		$_fields    = array_map($escapecb, $_fields);
+		$values     = array_map(Array($this, 'quote'), $values);
 		
 		#Prepare vars
 		$insertstt  = 'INSERT INTO';
@@ -171,7 +169,7 @@ abstract class stdSQLDriver
 		$fields     = implode(', ', $_fields);
 		$fields     = '(' . $fields . ')';
 		$valuesstt  = 'VALUES';
-		$values     = '(' . implode(', ', array_fill(0, count($_fields), '?')) . ')';
+		$values     = '(' . implode(', ', $values) . ')';
 		
 		
 		#Make it one string
@@ -193,7 +191,7 @@ abstract class stdSQLDriver
 		$data = Array();
 		
 		foreach ($fields as $field => $value) {
-			$data[] = "`$field` = ?";
+			$data[] = "`$field` = {$this->quote($value)}";
 		}
 		
 		return $data;
@@ -226,12 +224,11 @@ abstract class stdSQLDriver
 	}
 	
 	public function stringifyRestriction($restriction) {
-		if ( is_a($restriction, '_SF_RestrictionGroup') ) {
+		if ( is_a($restriction, 'spitfire\storage\database\RestrictionGroup') ) {
 			#Just join the groups with and's
-			return implode(' AND ', $restriction->getRestrictions);
+			return implode(' AND ', $restriction->getRestrictions());
 		}
-		elseif( is_a($restriction, '_SF_Restriction') ) {
-			$table    = $restriction->getTable()->getTableName();
+		elseif( is_a($restriction, 'spitfire\storage\database\Restriction') ) {
 			$field    = $restriction->getField();
 			$operator = $restriction->getOperator();
 			$value    = $this->quote($restriction->getValue());

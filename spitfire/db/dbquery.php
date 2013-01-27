@@ -1,6 +1,10 @@
 <?php
 
-class _SF_DBQuery
+namespace spitfire\storage\database;
+
+use databaseRecord;
+
+class Query
 {
 	protected $result;
 	/** @var _SF_DBTable  */
@@ -19,14 +23,14 @@ class _SF_DBQuery
 	}
 	
 	public function addRestriction($field, $value, $operator = '=') {
-		$restriction = new _SF_Restriction($this->table->getField($field), $value, $operator);
+		$restriction = new Restriction($this->table->getField($field), $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
 	}
 	
 	public function group() {
-		return $this->restrictionGroups[] = new _SF_RestrictionGroup($this);
+		return $this->restrictionGroups[] = new RestrictionGroup($this);
 	}
 	
 	/**
@@ -97,7 +101,7 @@ class _SF_DBQuery
 		$values = $this->restrictionGroups;
 		
 		if (!empty($this->restrictions)) {
-			$values[] = new _SF_RestrictionGroup($this, $this->restrictions);
+			$values[] = new RestrictionGroup($this, $this->restrictions);
 		}
 		
 		return $values;
