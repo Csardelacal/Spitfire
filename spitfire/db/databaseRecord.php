@@ -1,5 +1,9 @@
 <?php
 
+use spitfire\storage\database\Table;
+use spitfire\storage\database\Query;
+use spitfire\storage\database\Restriction;
+
 /**
  * This class allows to track changes on database data along the use of a program
  * and creates interactions with the database in a safe way.
@@ -28,7 +32,7 @@ class databaseRecord
 	 *                       used by the system. To create a new record, leave
 	 *                       empty and use setData.
 	 */
-	public function __construct(_SF_DBTable $table, $srcData = Array() ) {
+	public function __construct(Table $table, $srcData = Array() ) {
 		$this->src     = $srcData;
 		$this->data    = $srcData;
 		$this->table   = $table;
@@ -92,8 +96,8 @@ class databaseRecord
 			$id = $this->table->insert($this);
 			$ai = $this->table->getAutoIncrement();
 			
-			if ($ai && empty($this->data[$ai]) ) {
-				$this->data[$ai] = $id;
+			if ($ai && empty($this->data[$ai->getName()]) ) {
+				$this->data[$ai->getName()] = $id;
 			}
 		}
 		else {
@@ -113,7 +117,8 @@ class databaseRecord
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$r = new _SF_Restriction($primary, $this->data[$primary->getName()]);
+			$r = new Restriction($primary, $this->src[$primary->getName()]);
+			$r->setStringify(Array($this->table->getDb(), 'stringifyRestriction'));
 			$restrictions[] = $r;
 		}
 		
@@ -121,7 +126,7 @@ class databaseRecord
 	}
 	
 	public function getChildren($table) {
-		$query = new _SF_DBQuery($table);
+		$query = new Query($table);
 		$query->setJoin($this);
 		return $query->fetchAll();
 	}
@@ -132,7 +137,8 @@ class databaseRecord
 
 	public function __set($field, $value) {
 		
-		if ($value != $this->data[$field]) $this->synced = false;
+		if (!isset($this->data[$field]) || $value != $this->data[$field]) 
+			$this->synced = false;
 		
 		if ($this->table->getField($field)) {
 			$this->data[$field] = $value;

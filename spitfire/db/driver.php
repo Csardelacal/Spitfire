@@ -17,10 +17,7 @@ interface Driver
 	#Query Specific functions
 	function query (Table $table, Query $query, $fields = false);
 	function insert(Table $table, databaseRecord $data );
-	function update(Table $table, databaseRecord $data, $id );
+	function update(Table $table, databaseRecord $data );
 	function inc   (Table $table, databaseRecord $data, $field, $value ); //Stands for increment
 	function delete(Table $table, databaseRecord $id );
-	
-	#Data Escaping
-	function escapeFieldNames(Table$table, $fields);
 }

@@ -1,27 +1,22 @@
 <?php
 
-class _SF_Restriction
+namespace spitfire\storage\database;
+
+class Restriction
 {
 	private $field;
 	private $value;
 	private $operator;
-	private $rid;
-	private $table;
 	
 	private $stringifyCallback;
-	
-	public static $autonumeric = 0;
 
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
-	public function __construct(_SF_DBField$field, $value, $operator = '=') {
+	public function __construct(Field$field, $value, $operator = '=') {
 		$this->field    = $field;
 		$this->value    = $value;
 		$this->operator = $operator;
-		//To avoid restriction colliding
-		$this->rid      = $field . self::$autonumeric;
-		self::$autonumeric++;
 	}
 	
 	public function getTable(){
@@ -64,11 +59,8 @@ class _SF_Restriction
 		
 		if ( $this->stringifyCallback ) {
 			$param_arr = Array($this);
-			return call_user_func_array ($this->stringifyCallback, $param_arr);
+			return (string)call_user_func_array ($this->stringifyCallback, $param_arr);
 		}
-		
-		//TODO: Clean code
-		$tablename = ($this->table)? $this->table->getTableName() . '.' : '';
 		
 		return "$this->field $this->operator ?";
 	}

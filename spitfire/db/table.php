@@ -2,6 +2,7 @@
 
 namespace spitfire\storage\database;
 
+use \databaseRecord;
 use spitfire\environment;
 
 /**
@@ -19,7 +20,9 @@ class Table extends Queriable
 	protected $tablename = false;
 	protected $primaryK  = false;
 	protected $fields    = false;
-	
+	protected $auto_increment;
+
+
 	protected $errors    = Array();
 	protected $rpp       = 20;
 
@@ -40,7 +43,7 @@ class Table extends Queriable
 		#If the user has set a list of fields turn them into fields
 		if ($this->fields) {
 			foreach ($this->fields as &$field) {
-				$field = new _SF_DBField($this, $field);
+				$field = new Field($this, $field);
 			}
 		}
 		
@@ -48,7 +51,7 @@ class Table extends Queriable
 		if ($this->primaryK) {
 			$key = (array)  $this->primaryK;
 			foreach($key as $_key) {
-				$_key = new _SF_DBField($this, $_key, true);
+				$_key = new Field($this, $_key, true);
 			}
 		}
 	}
@@ -62,13 +65,16 @@ class Table extends Queriable
 	 */
 	public function getFields() {
 		if ($this->fields) $fields = $this->fields;
-		else               $fields = $this->db->fetchFields($this);
+		else               $fields = $this->fields = $this->db->fetchFields($this);
 		
 		return $fields;
 	}
 	
 	public function getField($name) {
 		$fields = $this->getFields();
+		
+		if (isset($fields[$name])) return $fields[$name];
+		
 		foreach ($fields as $field) {
 			if ($field->getName() == $name) return $field;
 		}
@@ -99,10 +105,31 @@ class Table extends Queriable
 	 * @return Array Name of the primary key's column
 	 */
 	public function getPrimaryKey() {
-		if ($this->primaryK) $pk = $this->primaryK;
-		else $pk = $this->primaryK = $this->db->getPrimaryKey($this);
+		if ($this->primaryK)  return $this->primaryK;
 		
-		return (array)$pk;
+		//Implicit else
+		$fields  = $this->getFields();
+		$pk      = Array();
+		
+		foreach($fields as $field) {
+			if ($field->isPrimary()) $pk[] = $field;
+		}
+		
+		return $this->primaryK = (array) $pk;
+	}
+	
+	public function getAutoIncrement() {
+		if ($this->auto_increment) return $this->auto_increment;
+		
+		//Implicit else
+		$fields  = $this->getFields();
+		$ai      = null;
+		
+		foreach($fields as $field) {
+			if ($field->isAutoIncrement()) $ai = $field;
+		}
+		
+		return  $this->auto_increment = $ai;
 	}
 	
 	public function update(databaseRecord $data) {
@@ -150,11 +177,12 @@ class Table extends Queriable
 		
 		$this->errors = Array();
 		$ok = true;
+		$fields = $this->getFields();
 		
-		foreach ($this->getFields(true) as $field) {
+		foreach ($fields as $field) {
 			
 			$function = Array($this, 'validate' . ucfirst($field) );
-			$value    = Array(&$data->$field);
+			$value    = Array($data->{$field->getName()});
 			
 			if (method_exists( $function[0], $function[1] ) ) {
 				$ok = $ok && call_user_func_array($function, $value);

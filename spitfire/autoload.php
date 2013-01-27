@@ -31,7 +31,7 @@ class AutoLoad
 
 	public function retrieveClass($className) {
 
-		if (SpitFire::$debug) SpitFire::$debug->msg("Imported class $className");
+		if (SpitFire::$debug) SpitFire::$debug->log("Imported class $className");
 		
 		if (isset($this->registered_classes[$className]))
 			return include $this->registered_classes[$className];
@@ -134,8 +134,6 @@ class AutoLoad
 				break;
 				
 		}
-		
-		error_log('Class ' . $className . ' not found');
 
 	}
 

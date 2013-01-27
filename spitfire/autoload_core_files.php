@@ -8,6 +8,7 @@ $cur_dir = dirname(__FILE__);
 #Define default classes and their locations
 AutoLoad::registerClass('fileNotFoundException', $cur_dir.'/exceptions.php');
 AutoLoad::registerClass('publicException',       $cur_dir.'/exceptions.php');
+AutoLoad::registerClass('privateException',      $cur_dir.'/exceptions.php');
 AutoLoad::registerClass('spitfire\exceptions\ExceptionHandler',  $cur_dir.'/exceptionHandler.php');
 AutoLoad::registerClass('spitfire\Path',         $cur_dir.'/core/path.php');
 
@@ -23,22 +24,22 @@ AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
 AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 
 #Database related imports
-AutoLoad::registerClass('spitfire\storage\database\Model',     $cur_dir.'/db/db.php');
-AutoLoad::registerClass('spitfire\storage\database\Queriable', $cur_dir.'/db/queriable.php');
-AutoLoad::registerClass('spitfire\storage\database\Table',     $cur_dir.'/db/table.php');
-AutoLoad::registerClass('_SF_DBQuery',           $cur_dir.'/db/dbquery.php');
-AutoLoad::registerClass('spitfire\storage\database\Field',     $cur_dir.'/db/field.php');
-AutoLoad::registerClass('_SF_RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
-AutoLoad::registerClass('_SF_Restriction',       $cur_dir.'/db/restriction.php');
-AutoLoad::registerClass('spitfire\storage\database\drivers\Driver', $cur_dir.'/db/driver.php');
+AutoLoad::registerClass('spitfire\storage\database\Model',             $cur_dir.'/db/db.php');
+AutoLoad::registerClass('spitfire\storage\database\Queriable',         $cur_dir.'/db/queriable.php');
+AutoLoad::registerClass('spitfire\storage\database\Table',             $cur_dir.'/db/table.php');
+AutoLoad::registerClass('spitfire\storage\database\Query',             $cur_dir.'/db/dbquery.php');
+AutoLoad::registerClass('spitfire\storage\database\Field',             $cur_dir.'/db/field.php');
+AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
+AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
 AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
-AutoLoad::registerClass('resultSetInterface',    $cur_dir.'/db/resultset.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface',    $cur_dir.'/db/resultset.php');
 AutoLoad::registerClass('databaseRecord',        $cur_dir.'/db/databaseRecord.php');
 
-AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',   $cur_dir.'/db/drivers/stdSQL.php');
-AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver', $cur_dir.'/db/drivers/mysqlPDO.php');
-AutoLoad::registerClass('_SF_mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',     $cur_dir.'/db/drivers/stdSQL.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',   $cur_dir.'/db/drivers/mysqlPDO.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
 AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/coffeebean.php');
