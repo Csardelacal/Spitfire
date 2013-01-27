@@ -137,7 +137,8 @@ class homeController extends Controller
 		echo("Table ------------------- \n");
 		print_r($this->model->{$table});
 		echo("Field ------------------- \n");
-		print_r($this->model->{$table}->getFields());
+		$fields = $this->model->{$table}->getFields();
+		print_r($fields);
 	}
 	
 	public function error() {

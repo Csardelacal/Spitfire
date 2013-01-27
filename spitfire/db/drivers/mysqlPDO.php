@@ -14,6 +14,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 
 	private $connection    = false;
 	private $fields        = Array();
+	private $schema;
 	
 	private $errs = Array(
 	    'HY093' => 'Wrong parameter count',
@@ -22,6 +23,8 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	);
 
 	protected function connect() {
+		
+		$this->schema = environment::get('db_database');
 
 		$dsn  = 'mysql:dbname=' . environment::get('db_database') . ';host=' . environment::get('db_server');
 		$user = environment::get('db_user');
@@ -61,7 +64,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			$auto_increment = strstr($row['Extra'], 'auto_increment');
 			$name           = $row['Field'];
 			
-			$fields[] = new Field($table, $name, $primary, $auto_increment);
+			$fields[$name] = new Field($table, $name, $primary, $auto_increment);
 			
 		}
 		
