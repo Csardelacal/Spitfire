@@ -14,9 +14,10 @@ class Restriction
 	const EQUAL_OPERATOR = '=';
 	
 	public function __construct(Field$field, $value, $operator = '=') {
+		if (is_null($operator)) $operator = self::EQUAL_OPERATOR;
 		$this->field    = $field;
 		$this->value    = $value;
-		$this->operator = $operator;
+		$this->operator = trim($operator);
 	}
 	
 	public function getTable(){
@@ -36,6 +37,7 @@ class Restriction
 	}
 	
 	public function getOperator() {
+		if (is_array($this->value) && $this->operator != 'IN' && $this->operator != 'NOT IN') return 'IN';
 		return $this->operator;
 	}
 

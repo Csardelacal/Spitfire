@@ -30,7 +30,6 @@ abstract class stdSQLDriver
 		$tablename    = "`{$table->getTablename()}`";
 		$onstt        = '';
 		$wherestt     = 'WHERE';
-		$jrestrictions= '';
 		$restrictions = $query->getRestrictions();
 		$orderstt     = 'ORDER BY';
 		$order        = $query->getOrder();
@@ -48,20 +47,6 @@ abstract class stdSQLDriver
 			$fields = implode(', ', $fields);
 		}
 		
-		#Join specific tasks
-		if ($_join) {
-			$rem_table = $_join->getTable();
-			$remote    = $_join->getUniqueRestrictions();
-			$remotef   = $_join->getUniqueFields();
-			
-			foreach($remote as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
-			//$remotef   = $this->escapeFieldNames($rem_table, $remotef);
-			
-			$join  =  $rem_table->getTableName() . ' LEFT JOIN ';
-			$onstt = 'ON (' . implode(', ', $remotef) . ')';
-			$jrestrictions = implode(' AND ', $remote) . ' AND';
-		}
-		
 		if (empty($restrictions)) {
 			$restrictions = '1';
 		}
@@ -71,6 +56,21 @@ abstract class stdSQLDriver
 		else {
 			$restrictions = implode(') OR (', $restrictions);
 			$restrictions = "($restrictions)";
+		}
+		
+		#Join specific tasks
+		if ($_join) {
+			$rem_table = $_join->getTable();
+			$remote    = $_join->getUniqueRestrictions();
+			$remotef   = $_join->getUniqueFields();
+			
+			foreach($remote as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
+			foreach($remotef as &$r) $r = $r->getName();
+			//$remotef   = $this->escapeFieldNames($rem_table, $remotef);
+			
+			$join  =  $rem_table->getTableName() . ' LEFT JOIN ';
+			$onstt = 'USING (' . implode(', ', $remotef) . ')';
+			$restrictions = implode(' AND ', $remote) . " AND ($restrictions)";
 		}
 		
 		if ($rpp < 0) {
@@ -84,7 +84,7 @@ abstract class stdSQLDriver
 		}
 		
 		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $join, $tablename, $onstt,
-		    $wherestt, $jrestrictions, $restrictions, $orderstt, $order, $limitstt, $limit));
+		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));
 		
 		return implode(' ', $stt);
 		
@@ -231,7 +231,16 @@ abstract class stdSQLDriver
 		elseif( is_a($restriction, 'spitfire\storage\database\Restriction') ) {
 			$field    = $restriction->getField();
 			$operator = $restriction->getOperator();
-			$value    = $this->quote($restriction->getValue());
+			$value    = $restriction->getValue();
+			
+			#Special treatment for arrays
+			if (is_array($value)) {
+				$value = array_map(Array($this, 'quote'), $value);
+				$value = '('. implode(', ', $value) . ')';
+			}
+			else {
+				$value    = $this->quote($value);
+			}
 			return "$field $operator $value";
 		}
 	}

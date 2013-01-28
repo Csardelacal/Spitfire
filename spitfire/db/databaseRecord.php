@@ -128,7 +128,7 @@ class databaseRecord
 	public function getChildren($table) {
 		$query = new Query($table);
 		$query->setJoin($this);
-		return $query->fetchAll();
+		return $query;
 	}
 	
 	public function getTable() {

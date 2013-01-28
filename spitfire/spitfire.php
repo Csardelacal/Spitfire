@@ -3,7 +3,8 @@
 namespace spitfire;
 
 use Headers;
-use spitfire\storage\database\Model;
+
+require_once 'spitfire/core/functions.php';
 
 /**
  * Dispatcher class of Spitfire. Calls all the required classes for Spitfire to run.
@@ -71,7 +72,7 @@ class SpitFire
 		if (class_exists($_view)) self::$view = new $_view;
 		else                      self::$view = new View();
 		#Create the model
-		self::$model = new Model();
+		self::$model = model();
 		#Check if the action is available
 		$method = Array($controller, self::$current_url->getAction());
 		
@@ -101,17 +102,4 @@ class SpitFire
 		else return false;
 	}
 
-}
-
-//TODO: Move this from here
-/**
- * Returns HTML escaped string and if desired it adds ellipsis.
- * @param String $str
- * @param int $maxlength
- * @return String
- */
-function __($str, $maxlength = false) {
-	$str = htmlentities($str, ENT_HTML5, environment::get('system_encoding'));
-	if ($maxlength) return Strings::ellipsis ($str, $maxlength);
-	else return $str;
 }

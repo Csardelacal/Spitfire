@@ -19,7 +19,7 @@ use spitfire\environment;
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-class Model extends _SF_MVC
+class DB extends _SF_MVC
 {
 	
 	const MYSQL_PDO_DRIVER = 'mysqlPDO';
@@ -86,7 +86,7 @@ class Model extends _SF_MVC
 	 * @param String $tablename Name of the table that should be used.
 	 * @return Table The database table adapter
 	 */
-	public function getTable($tablename) {
+	public function table($tablename) {
 		$tableClass = $tablename.'Model';
 
 		if (class_exists($tableClass)) return $this->{$tablename} = new $tableClass ($this);
@@ -103,7 +103,7 @@ class Model extends _SF_MVC
 		#In case we request a model, view or controller
 		if (parent::__get($table)) return parent::__get($table);
 		#Otherwise we try to get the table with this name
-		return $this->getTable($table);
+		return $this->table($table);
 	}
 	
 	/**
