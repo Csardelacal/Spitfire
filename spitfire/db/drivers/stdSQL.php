@@ -26,9 +26,8 @@ abstract class stdSQLDriver
 		$selectstt    = 'SELECT';
 		$fields       = ($fields)? $fields : $table->getFields();
 		$fromstt      = 'FROM';
-		$join         = '';
 		$tablename    = "`{$table->getTablename()}`";
-		$onstt        = '';
+		$join         = '';
 		$wherestt     = 'WHERE';
 		$restrictions = $query->getRestrictions();
 		$orderstt     = 'ORDER BY';
@@ -68,8 +67,8 @@ abstract class stdSQLDriver
 			foreach($remotef as &$r) $r = $r->getName();
 			//$remotef   = $this->escapeFieldNames($rem_table, $remotef);
 			
-			$join  =  $rem_table->getTableName() . ' LEFT JOIN ';
-			$onstt = 'USING (' . implode(', ', $remotef) . ')';
+			$join = 'RIGHT JOIN ' . $rem_table->getTableName();
+			$join.= ' USING (' . implode(', ', $remotef) . ')';
 			$restrictions = implode(' AND ', $remote) . " AND ($restrictions)";
 		}
 		
@@ -83,7 +82,7 @@ abstract class stdSQLDriver
 			$order    = '';
 		}
 		
-		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $join, $tablename, $onstt,
+		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $tablename, $join, 
 		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));
 		
 		return implode(' ', $stt);
