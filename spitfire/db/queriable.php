@@ -31,7 +31,7 @@ abstract class Queriable {
 	 * 
 	 * @param String $field
 	 * @param String $value
-	 * @return _SF_DBQuery
+	 * @return Query
 	 */
 	public function get($field, $value) {
 		#Create the query

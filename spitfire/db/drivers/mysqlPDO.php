@@ -85,7 +85,6 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$con = $this->getConnection();
 		
 		try {
-			error_log($statement);
 			$stt = $con->prepare($statement);
 			SpitFire::$debug->log("DB: " . $statement);
 			#Execute the query

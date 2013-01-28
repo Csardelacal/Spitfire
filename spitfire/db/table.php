@@ -32,7 +32,7 @@ class Table extends Queriable
 	 * @param DBInterface $database
 	 * @param String $tablename
 	 */
-	public function __construct (Model$database, $tablename = false) {
+	public function __construct (DB$database, $tablename = false) {
 		$this->db = $database;
 
 		if ($tablename) {
@@ -92,7 +92,7 @@ class Table extends Queriable
 	
 	/**
 	 * Returns the database the table belongs to.
-	 * @return _SF_DBInterface
+	 * @return DB
 	 */
 	public function getDb() {
 		return $this->db;

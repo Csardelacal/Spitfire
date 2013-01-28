@@ -6,8 +6,9 @@ use databaseRecord;
 
 class Query
 {
+	/** @var spitfire\storage\database\drivers\ResultSetInterface */
 	protected $result;
-	/** @var _SF_DBTable  */
+	/** @var \spitfire\storage\database\Table  */
 	protected $table;
 	
 	protected $restrictions;
@@ -22,13 +23,28 @@ class Query
 		$this->restrictions = Array();
 	}
 	
+	/**
+	 * Adds a restriction to the current query. Restraining the data a field
+	 * in it can contain.
+	 * 
+	 * @param string $field
+	 * @param mixed  $value
+	 * @param string $operator
+	 * @return spitfire\storage\database\Query
+	 */
 	public function addRestriction($field, $value, $operator = '=') {
-		$restriction = new Restriction($this->table->getField($field), $value, $operator);
+		$field = $this->table->getField($field);
+		$restriction = new Restriction($field, $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
 	}
 	
+	/**
+	 * Creates a new set of alternative restrictions for the current query.
+	 * 
+	 * @return RestrictionGroup
+	 */
 	public function group() {
 		return $this->restrictionGroups[] = new RestrictionGroup($this);
 	}
@@ -73,6 +89,11 @@ class Query
 		return $this;
 	}
 	
+	/**
+	 * Returns a record from a databse that matches the query we sent.
+	 * 
+	 * @return databaseRecord
+	 */
 	public function fetch() {
 		if (!$this->result) $this->query();
 		$data = $this->result->fetch();
@@ -117,5 +138,9 @@ class Query
 	
 	public function getJoin() {
 		return $this->join;
+	}
+	
+	public function getTable() {
+		return $this->table;
 	}
 }

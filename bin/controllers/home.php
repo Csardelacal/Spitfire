@@ -95,9 +95,9 @@ class homeController extends Controller
 
 			$rec = $this->model->test->get('id', 3)->fetch();
 
-			$child = $rec->getChildren($this->model->dependant);
-			echo $child[0]->content;
-			if ($child[0]) $child[0]->delete();
+			//$child = $rec->getChildren($this->model->dependant);
+			//echo $child[0]->content;
+			//if ($child[0]) $child[0]->delete();
 
 			try {
 				$child = new databaseRecord($this->model->dependant);
@@ -122,6 +122,35 @@ class homeController extends Controller
 				echo $e->getMessage();
 				echo $e->getTraceAsString();
 			}
+			
+			$rec = model()->table('mutlikey')->get('mid1', 1)
+				->addRestriction('mid2', 1)
+				->fetch();
+			
+			$children = $rec->getChildren($this->model->multidep)->fetchAll();
+			
+			foreach ($children as $child) echo $child->content;
+			
+			
+			echo '----------';
+			echo model()->table('mutlikey')
+				->get('mid1', 1)
+				->group()
+					->addRestriction('mid2', 2)
+					->addRestriction('mid1', 1)
+				->endGroup()
+				->fetch()
+				->getChildren(model()->table('multidep'))
+					->addRestriction('id', 1)
+					->group()
+						->addRestriction('id', Array(2, 3, 4) )
+						->addRestriction('content', 'hello')
+					->endGroup()
+					->fetch()
+					->content;
+			echo '----------';
+			
+			print_r(\spitfire\SpitFire::$debug->getMessages());
 		}
 		catch(Exception $e) {
 			echo $e->getMessage();

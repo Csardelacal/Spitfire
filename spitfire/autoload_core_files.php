@@ -24,7 +24,7 @@ AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
 AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 
 #Database related imports
-AutoLoad::registerClass('spitfire\storage\database\Model',             $cur_dir.'/db/db.php');
+AutoLoad::registerClass('spitfire\storage\database\DB',                $cur_dir.'/db/db.php');
 AutoLoad::registerClass('spitfire\storage\database\Queriable',         $cur_dir.'/db/queriable.php');
 AutoLoad::registerClass('spitfire\storage\database\Table',             $cur_dir.'/db/table.php');
 AutoLoad::registerClass('spitfire\storage\database\Query',             $cur_dir.'/db/dbquery.php');

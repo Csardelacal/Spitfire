@@ -9,13 +9,15 @@ class RestrictionGroup
 	
 	private $strigifyCallback;
 	
-	public function __construct($belongsto = null, $restrictions = Array() ) {
+	public function __construct(Query$belongsto = null, $restrictions = Array() ) {
 		$this->belongsto    = $belongsto;
 		$this->restrictions = $restrictions;
 	}
 	
-	public function addRestriction(Restriction$restriction) {
-		$this->restrictions[] = $restriction;
+	public function addRestriction($fieldname, $value, $operator = null) {
+		
+		$field = $this->belongsto->getTable()->getField($fieldname);
+		$this->restrictions[] = new Restriction($field, $value, $operator);
 		return $this;
 	}
 	
