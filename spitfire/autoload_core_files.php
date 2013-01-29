@@ -34,11 +34,18 @@ AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
 AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
+
+AutoLoad::registerClass('Model',                                       $cur_dir.'/db/model.php');
+AutoLoad::registerClass('IntegerField',                                $cur_dir.'/db/fields/integer.php');
+AutoLoad::registerClass('TextField',                                   $cur_dir.'/db/fields/text.php');
+AutoLoad::registerClass('StringField',                                 $cur_dir.'/db/fields/string.php');
+
 AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface',    $cur_dir.'/db/resultset.php');
 AutoLoad::registerClass('databaseRecord',        $cur_dir.'/db/databaseRecord.php');
 
 AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',     $cur_dir.'/db/drivers/stdSQL.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',   $cur_dir.'/db/drivers/mysqlPDO.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOField',    $cur_dir.'/db/drivers/mysqlPDOField.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');

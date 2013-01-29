@@ -87,10 +87,13 @@ class DB extends _SF_MVC
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
-		$tableClass = $tablename.'Model';
+		$modelName = $tablename.'Model';
 
-		if (class_exists($tableClass)) return $this->{$tablename} = new $tableClass ($this);
-		else return $this->{$tablename} = new Table($this, $tablename);
+		if (class_exists($modelName)) {
+			$model = new $modelName;
+			return $this->{$tablename} = new Table ($this, $tablename, $model);
+		}
+		else throw new privateException('Unknown model ' . $modelName);
 	}
 
 	/**

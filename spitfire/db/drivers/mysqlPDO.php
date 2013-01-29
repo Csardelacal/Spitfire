@@ -20,6 +20,9 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	private $model;
 	private $schema;
 	
+	#Caches
+	private $tables = Array();
+	
 	private $errs = Array(
 	    'HY093' => 'Wrong parameter count',
 	    '42000' => 'Reserved word used as field name',
@@ -28,11 +31,10 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	
 	public function __construct($model, $options) {
 		$this->model = $model;
+		$this->schema = environment::get('db_database');
 	}
 
 	protected function connect() {
-		
-		$this->schema = environment::get('db_database');
 
 		$dsn  = 'mysql:dbname=' . environment::get('db_database') . ';host=' . environment::get('db_server');
 		$user = environment::get('db_user');
@@ -79,26 +81,55 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $this->fields[$table->getTablename()] = $fields;
 	}
 	
-	public function execute(Table$table, $statement, $values) {
+	public function execute($statement) {
 		
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
 		
 		try {
-			$stt = $con->prepare($statement);
+			$stt = $con->query($statement);
 			SpitFire::$debug->log("DB: " . $statement);
 			#Execute the query
-			$stt->execute( array_map(Array($table->getDB(), 'convertOut'), $values) );
 		}
 		catch(PDOException $e) {
 			#Recover from exception, make error readable. Re-throw
 			$code = $e->getCode();
-			$err  = $stt->errorInfo();
+			$err  = $this->connection->errorInfo();
 			$msg  = $err[2] or $this->errs[$code];
 			throw new privateException("$msg (#$code) in query: $statement");
 		}
 		
 		return $stt;
+	}
+	
+	public function listTables() {
+		$statement = "SELECT table_name FROM information_schema.tables " .
+			"WHERE table_schema = '{$this->schema}'";
+		$stt = $this->execute($statement);
+		
+		while ($row = $stt->fetch()) $this->tables[] = $row['table_name'];
+	}
+
+	public function exists(Table$table) {
+		
+		if (empty($this->tables)) $this->listTables();
+		return (in_array($table->getTablename(), $this->tables));
+		
+	}
+	
+	public function createTable(Table$table) {
+		$fields = $table->getFields();
+		foreach ($fields as $name => &$f) {
+			$f = new mysqlPDOField($f);
+			$f = $name . ' ' . $f->columnDefinition();
+		}
+		
+		$stt = "CREATE TABLE " . $table->getTablename();
+		$stt.= "(";
+		$stt.= implode(', ', $fields);
+		$stt.= ")";
+		
+		return $this->execute($stt);
 	}
 
 	public function query(Table $table, Query $query, $fields = false) {

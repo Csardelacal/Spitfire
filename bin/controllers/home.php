@@ -93,7 +93,7 @@ class homeController extends Controller
 		
 		try {
 
-			$rec = $this->model->test->get('id', 3)->fetch();
+			$rec = model()->table('test')->get('id', 3)->fetch();
 
 			//$child = $rec->getChildren($this->model->dependant);
 			//echo $child[0]->content;
