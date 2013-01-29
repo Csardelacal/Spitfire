@@ -3,6 +3,7 @@
 namespace spitfire\storage\database;
 
 use \databaseRecord;
+use Model;
 use spitfire\environment;
 
 /**
@@ -15,12 +16,9 @@ use spitfire\environment;
 class Table extends Queriable
 {
 
-	/** @var DBInterface  */
-	protected $db        = false;
-	protected $tablename = false;
-	protected $primaryK  = false;
-	protected $fields    = false;
-	protected $auto_increment;
+	protected $db;
+	protected $model;
+	protected $tablename;
 
 
 	protected $errors    = Array();
@@ -32,28 +30,12 @@ class Table extends Queriable
 	 * @param DBInterface $database
 	 * @param String $tablename
 	 */
-	public function __construct (DB$database, $tablename = false) {
-		$this->db = $database;
-
-		if ($tablename) {
-			$prefix = environment::get('db_table_prefix');
-			$this->tablename =  $prefix . $tablename;
-		}
+	public function __construct (DB$db, $tablename, Model$model) {
+		$this->db    = $db;
+		$this->model = $model;
+		$this->tablename = environment::get('db_table_prefix') . $tablename;
 		
-		#If the user has set a list of fields turn them into fields
-		if ($this->fields) {
-			foreach ($this->fields as &$field) {
-				$field = new Field($this, $field);
-			}
-		}
-		
-		#If the user has set primaries, turn them into fields.
-		if ($this->primaryK) {
-			$key = (array)  $this->primaryK;
-			foreach($key as $_key) {
-				$_key = new Field($this, $_key, true);
-			}
-		}
+		if (!$this->db->exists($this)) $this->db->createTable($this);
 	}
 	
 	/**
@@ -64,20 +46,13 @@ class Table extends Queriable
 	 * @return mixed The fields this table handles.
 	 */
 	public function getFields() {
-		if ($this->fields) $fields = $this->fields;
-		else               $fields = $this->fields = $this->db->fetchFields($this);
-		
-		return $fields;
+		return $this->model->getFields();
 	}
 	
 	public function getField($name) {
 		$fields = $this->getFields();
 		
 		if (isset($fields[$name])) return $fields[$name];
-		
-		foreach ($fields as $field) {
-			if ($field->getName() == $name) return $field;
-		}
 	}
 	
 	/**
@@ -161,6 +136,8 @@ class Table extends Queriable
 	}
 	
 	
+	
+	
 	########################################################################
 	#VALIDATION
 	########################################################################
@@ -179,10 +156,10 @@ class Table extends Queriable
 		$ok = true;
 		$fields = $this->getFields();
 		
-		foreach ($fields as $field) {
+		foreach ($fields as $name => $field) {
 			
-			$function = Array($this, 'validate' . ucfirst($field) );
-			$value    = Array($data->{$field->getName()});
+			$function = Array($this->model, 'validate' . ucfirst($name) );
+			$value    = Array($data->$name);
 			
 			if (method_exists( $function[0], $function[1] ) ) {
 				$ok = $ok && call_user_func_array($function, $value);

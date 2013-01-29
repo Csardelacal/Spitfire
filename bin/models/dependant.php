@@ -1,16 +1,24 @@
 <?php
 
-use spitfire\storage\database\Table;
-
-class dependantModel extends Table
+class dependantModel extends Model
 {
 	
-	protected $tablename = 'dependant';
+	protected $test;
+	protected $title;
+	protected $content;
 	
-	public function validateTest_id($value) {
-		if ($value < 0) $this->errorMsg ('Value is nagative');
-		if ($value < 0) $this->errorMsg ('Value is nagative');
-		return $value > 0;
+	public function __construct() {
+		
+		parent::__construct();
+		
+		$this->test    = new IntegerField();
+		$this->title   = new StringField(100);
+		$this->content = new TextField();
+		
+		$this->title->setUnique(true);
+		
+		$this->reference('test');
+	
 	}
 	
 }

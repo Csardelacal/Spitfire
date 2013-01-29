@@ -2,6 +2,8 @@
 
 namespace spitfire\storage\database;
 
+use Model;
+
 /**
  * Represents a table's field in a database. Contains information about the
  * table the field belongs to, the name of the field and if it is (or not) a
@@ -11,50 +13,17 @@ namespace spitfire\storage\database;
  */
 class Field
 {
-	private $table;
-	private $name;
-	private $primary;
-	private $auto_increment;
+	protected $indexed;
+	protected $unique;
+	protected $primary;
+	protected $auto_increment;
+	protected $datatype;
+	protected $references;
 	
-	/**
-	 * Creates a new database field connector. 
-	 * 
-	 * [NOTICE] This contains no data whether the field contains any index 
-	 * that is not primary as this is irrelevant for Spitfire's work. The 
-	 * system will only use primary keys for relations.
-	 * 
-	 * @param \spitfire\storage\database\Table $table
-	 * @param string  $name
-	 * @param boolean $primary
-	 * @param boolean $auto_increment
-	 */
-	public function __construct(Table$table, $name, $primary = false, $auto_increment = false) {
-		
-		$this->table          = $table;
-		$this->name           = $name;
-		$this->primary        = !!$primary;
-		$this->auto_increment = !!$auto_increment;
-	}
-	
-	/**
-	 * Returns the name of the field. This does not include the name of the
-	 * table nor any escape characters.
-	 * 
-	 * @return string Name of the field, unescaped, without table
-	 */
-	public function getName() {
-		return $this->name;
-	}
-	
-	/**
-	 * Returns a reference to the table this field belongs to. This is not
-	 * just the name but an object
-	 * 
-	 * @return Table
-	 */
-	public function getTable() {
-		return $this->table;
-	}
+	const TYPE_INTEGER = 'int';
+	const TYPE_LONG    = 'long';
+	const TYPE_STRING  = 'string';
+	const TYPE_TEXT    = 'txt';
 	
 	/**
 	 * Returns true if the field is an auto-increment field on the database.
@@ -65,6 +34,11 @@ class Field
 		return $this->auto_increment;
 	}
 	
+	public function setAutoIncrement($ai) {
+		$this->auto_increment = $ai;
+	}
+
+
 	/**
 	 * Returns true if the field belongs to the table's primary key. Keep in
 	 * mind that a primary key can cover several fields.
@@ -75,25 +49,40 @@ class Field
 		return $this->primary;
 	}
 	
-	/**
-	 * Tries to call the Driver's stringifyField method. If this method isn't
-	 * available it will default to \`table\`.\`field\` which is a widespread
-	 * form of referencing fields in DBMS's.
-	 * 
-	 * @return string Name of the field object the database can use to query
-	 *                data.
-	 */
-	public function __toString() {
-		
-		$con       = $this->table->getDb()->getConnection();
-		$stringify = Array($con, 'stringifyField');
-		
-		if (method_exists($stringify[0], $stringify[1])) {
-			$data = Array($this->table, $this->name);
-			return call_user_func_array ($stringify, $data);
-		}
-		else {
-			return "`{$this->table->getTablename()}`.`{$this->name}`";
-		}
+	public function setPrimary($primary) {
+		$this->primary = $primary;
 	}
+	
+	public function isUnique() {
+		return $this->unique;
+	}
+	
+	public function setUnique($unique) {
+		$this->unique = $unique;
+	}
+	
+	public function isIndexed() {
+		return $this->indexed;
+	}
+	
+	public function setIndexed($indexed) {
+		$this->indexed = $indexed;
+	}
+	
+	public function getReference() {
+		return $this->references;
+	}
+	
+	public function setReference(Model$model, $field) {
+		$this->references = Array($model, $field);
+	}
+	
+	public function getDataType() {
+		return $this->datatype;
+	}
+	
+	public function setDataType($type) {
+		$this->datatype = $type;
+	}
+	
 }
