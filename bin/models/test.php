@@ -14,6 +14,7 @@ class testModel extends Model
 		$this->id1 = new IntegerField();
 		$this->id2 = new IntegerField();
 		$this->id1->setPrimary(true);
+		$this->id1->setAutoIncrement(true);
 		
 		$this->content = new StringField(100);
 	

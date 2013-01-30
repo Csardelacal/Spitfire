@@ -2,7 +2,7 @@
 
 namespace spitfire\storage\database;
 
-use spitfire\storage\database\Field;
+use spitfire\storage\database\DBField;
 
 class Restriction
 {
@@ -15,7 +15,7 @@ class Restriction
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
-	public function __construct(Field$field, $value, $operator = '=') {
+	public function __construct(DBField$field, $value, $operator = '=') {
 		if (is_null($operator)) $operator = self::EQUAL_OPERATOR;
 		$this->field    = $field;
 		$this->value    = $value;

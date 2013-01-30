@@ -13,16 +13,18 @@ use spitfire\environment;
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-class Table extends Queriable
+abstract class Table extends Queriable
 {
 
 	protected $db;
 	protected $model;
 	protected $tablename;
+	protected $fields;
+	
+	protected $fieldClass;
 
 
 	protected $errors    = Array();
-	protected $rpp       = 20;
 
 	/**
 	 * Creates a new Database Table instance.
@@ -31,11 +33,17 @@ class Table extends Queriable
 	 * @param String $tablename
 	 */
 	public function __construct (DB$db, $tablename, Model$model) {
-		$this->db    = $db;
-		$this->model = $model;
+		$this->db = $db;
 		$this->tablename = environment::get('db_table_prefix') . $tablename;
 		
-		if (!$this->db->exists($this)) $this->db->createTable($this);
+		$this->model = $model;
+		$fields = $this->model->getFields();
+		$className = $this->fieldClass;
+		foreach ($fields as $name => &$f) {
+			$f = new $className($this, $name, $f);
+		}
+		
+		$this->fields = $fields;
 	}
 	
 	/**
@@ -46,13 +54,11 @@ class Table extends Queriable
 	 * @return mixed The fields this table handles.
 	 */
 	public function getFields() {
-		return $this->model->getFields();
+		return $this->fields;
 	}
 	
 	public function getField($name) {
-		$fields = $this->getFields();
-		
-		if (isset($fields[$name])) return $fields[$name];
+		if (isset($this->fields[$name])) return $this->fields[$name];
 	}
 	
 	/**

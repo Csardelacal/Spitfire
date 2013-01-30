@@ -1,6 +1,6 @@
 <?php
 
-use spitfire\storage\database\Field;
+use spitfire\model\Field;
 
 class TextField extends Field
 {

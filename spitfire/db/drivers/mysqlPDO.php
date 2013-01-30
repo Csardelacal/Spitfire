@@ -139,7 +139,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$values    = Array();
 		
 		#Execute
-		$stt = $this->execute($table, $statement, $values);
+		$stt = $this->execute($statement);
 		
 		return new mysqlPDOResultSet($table, $stt);
 		
@@ -151,7 +151,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		#Prepare values
 		$values  = Array();
 		#Execute
-		$this->execute($table, $statement, $values);
+		$this->execute($statement);
 	}
 
 	public function inc(Table $table, databaseRecord $data, $field, $value) {
@@ -172,7 +172,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$_values   = Array();
 		foreach($values as $value) $_values[] = $value;
 		
-		$this->execute($table, $statement, $_values);
+		$this->execute($statement);
 		return $this->connection->lastInsertId();
 	}
 
@@ -189,12 +189,16 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		foreach($restrictions as $r) $_values[] = $r->getValue();
 		
 		#Query
-		$this->execute($table, $statement, $_values);
+		$this->execute($statement);
 		return $this->connection->lastInsertId();
 		
 	}
 	
+	public function getTableClass() {
+		return 'spitfire\storage\database\drivers\MysqlPDOTable';
+	}
+	
 	public function quote($text) {
-		return $this->connection->quote($text);
+		return $this->getConnection()->quote($text);
 	}
 }

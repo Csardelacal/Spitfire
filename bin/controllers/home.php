@@ -93,15 +93,20 @@ class homeController extends Controller
 		
 		try {
 
-			$rec = model()->table('test')->get('id', 3)->fetch();
-
-			//$child = $rec->getChildren($this->model->dependant);
-			//echo $child[0]->content;
-			//if ($child[0]) $child[0]->delete();
+			$rec = model()->table('test')->get('id1', 1)->fetch();
+			
+			if (!$rec->id1) {
+				$rec = new databaseRecord($this->model->test);
+				$rec->id1 = 1;
+				$rec->id2 = 1;
+				$rec->content = "El1";
+				$rec->store();
+			}
 
 			try {
 				$child = new databaseRecord($this->model->dependant);
-				$child->test_id = -4;
+				$child->test_id1 = -4;
+				$child->title    = time();
 				$child->content = '_SF_';
 				$child->store();
 			}
@@ -111,8 +116,9 @@ class homeController extends Controller
 
 			try {
 				$child = new databaseRecord($this->model->dependant);
-				$child->test_id = 1;
-				$child->content = '_SF_';
+				$child->test_id1 = 1;
+				$child->title    = time() . 'i';
+				$child->content  = '_SF_';
 				$child->store();
 
 				$child->content.= time();
@@ -123,32 +129,10 @@ class homeController extends Controller
 				echo $e->getTraceAsString();
 			}
 			
-			$rec = model()->table('mutlikey')->get('mid1', 1)
-				->addRestriction('mid2', 1)
-				->fetch();
+			$q = $rec->getChildren($this->model->dependant)->fetchAll();
 			
-			$children = $rec->getChildren($this->model->multidep)->fetchAll();
+			foreach ($q as $e) echo $e->content . "\n";
 			
-			foreach ($children as $child) echo $child->content;
-			
-			
-			echo '----------';
-			echo model()->table('mutlikey')
-				->get('mid1', 1)
-				->group()
-					->addRestriction('mid2', 2)
-					->addRestriction('mid1', 1)
-				->endGroup()
-				->fetch()
-				->getChildren(model()->table('multidep'))
-					->addRestriction('id', 1)
-					->group()
-						->addRestriction('id', Array(2, 3, 4) )
-						->addRestriction('content', 'hello')
-					->endGroup()
-					->fetch()
-					->content;
-			echo '----------';
 			
 			print_r(\spitfire\SpitFire::$debug->getMessages());
 		}
