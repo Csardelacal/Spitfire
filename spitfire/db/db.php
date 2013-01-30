@@ -91,7 +91,8 @@ class DB extends _SF_MVC
 
 		if (class_exists($modelName)) {
 			$model = new $modelName;
-			return $this->{$tablename} = new Table ($this, $tablename, $model);
+			$table = $this->driver->getTableClass();
+			return $this->{$tablename} = new $table ($this, $tablename, $model);
 		}
 		else throw new privateException('Unknown model ' . $modelName);
 	}

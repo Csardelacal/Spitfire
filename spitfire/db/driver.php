@@ -12,6 +12,7 @@ interface Driver
 	function getConnection();
 	
 	#Table specific functions
+	function getTableClass();
 	function fetchFields(Table $table);
 	
 	#Query Specific functions

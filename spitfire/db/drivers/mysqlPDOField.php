@@ -2,16 +2,11 @@
 
 namespace spitfire\storage\database\drivers;
 
-use spitfire\storage\database\Field;
+use spitfire\model\Field;
+use spitfire\storage\database\DBField;
 
-class mysqlPDOField
+class mysqlPDOField extends DBField
 {
-	
-	private $field;
-	
-	public function __construct(Field$field) {
-		$this->field = $field;
-	}
 	
 	public function columnType() {
 		switch ($this->field->getDataType()) {
@@ -43,6 +38,10 @@ class mysqlPDOField
 		}
 		
 		return $definition;
+	}
+
+	public function __toString() {
+		return "`{$this->table->getTableName()}`.`$this->name`";
 	}
 	
 }

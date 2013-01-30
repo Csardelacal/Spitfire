@@ -3,6 +3,7 @@
 namespace spitfire\storage\database;
 
 use databaseRecord;
+use privateException;
 
 class Query
 {
@@ -32,8 +33,9 @@ class Query
 	 * @param string $operator
 	 * @return spitfire\storage\database\Query
 	 */
-	public function addRestriction($field, $value, $operator = '=') {
-		$field = $this->table->getField($field);
+	public function addRestriction($fieldname, $value, $operator = '=') {
+		$field = $this->table->getField($fieldname);
+		if ($field == null) throw new privateException("No field '$fieldname'");
 		$restriction = new Restriction($field, $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;

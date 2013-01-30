@@ -2,87 +2,36 @@
 
 namespace spitfire\storage\database;
 
-use Model;
+use spitfire\model\Field;
+use spitfire\storage\database\Table;
 
-/**
- * Represents a table's field in a database. Contains information about the
- * table the field belongs to, the name of the field and if it is (or not) a
- * primary key or auto-increment field.
- * 
- * @author César de la Cal <cesar@magic3w.com>
- */
-class Field
+abstract class DBField
 {
-	protected $indexed;
-	protected $unique;
-	protected $primary;
-	protected $auto_increment;
-	protected $datatype;
-	protected $references;
 	
-	const TYPE_INTEGER = 'int';
-	const TYPE_LONG    = 'long';
-	const TYPE_STRING  = 'string';
-	const TYPE_TEXT    = 'txt';
+	protected $table;
+	protected $name;
+	protected $field;
 	
-	/**
-	 * Returns true if the field is an auto-increment field on the database.
-	 * 
-	 * @return boolean
-	 */
-	public function isAutoIncrement() {
-		return $this->auto_increment;
+	public function __construct(Table$table, $name, Field$field) {
+		$this->table = $table;
+		$this->name  = $name;
+		$this->field = $field;
 	}
 	
-	public function setAutoIncrement($ai) {
-		$this->auto_increment = $ai;
-	}
-
-
-	/**
-	 * Returns true if the field belongs to the table's primary key. Keep in
-	 * mind that a primary key can cover several fields.
-	 * 
-	 * @return boolean
-	 */
-	public function isPrimary() {
-		return $this->primary;
+	public function getTable() {
+		return $this->table;
 	}
 	
-	public function setPrimary($primary) {
-		$this->primary = $primary;
+	public function getName() {
+		return $this->name;
 	}
 	
-	public function isUnique() {
-		return $this->unique;
+	public function __call($fn, $params) {
+		return call_user_func_array(Array($this->field, $fn), $params);
 	}
 	
-	public function setUnique($unique) {
-		$this->unique = $unique;
-	}
-	
-	public function isIndexed() {
-		return $this->indexed;
-	}
-	
-	public function setIndexed($indexed) {
-		$this->indexed = $indexed;
-	}
-	
-	public function getReference() {
-		return $this->references;
-	}
-	
-	public function setReference(Model$model, $field) {
-		$this->references = Array($model, $field);
-	}
-	
-	public function getDataType() {
-		return $this->datatype;
-	}
-	
-	public function setDataType($type) {
-		$this->datatype = $type;
-	}
+	abstract public function columnDefinition();
+	abstract public function columnType();
+	abstract public function __toString();
 	
 }

@@ -27,26 +27,28 @@ AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 AutoLoad::registerClass('spitfire\storage\database\DB',                $cur_dir.'/db/db.php');
 AutoLoad::registerClass('spitfire\storage\database\Queriable',         $cur_dir.'/db/queriable.php');
 AutoLoad::registerClass('spitfire\storage\database\Table',             $cur_dir.'/db/table.php');
+AutoLoad::registerClass('spitfire\storage\database\DBField',           $cur_dir.'/db/field.php');
 AutoLoad::registerClass('spitfire\storage\database\Query',             $cur_dir.'/db/dbquery.php');
-AutoLoad::registerClass('spitfire\storage\database\Field',             $cur_dir.'/db/field.php');
 AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
 AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
+AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface', $cur_dir.'/db/resultset.php');
+AutoLoad::registerClass('databaseRecord',                                       $cur_dir.'/db/databaseRecord.php');
 
-AutoLoad::registerClass('Model',                                       $cur_dir.'/db/model.php');
-AutoLoad::registerClass('IntegerField',                                $cur_dir.'/db/fields/integer.php');
-AutoLoad::registerClass('TextField',                                   $cur_dir.'/db/fields/text.php');
-AutoLoad::registerClass('StringField',                                 $cur_dir.'/db/fields/string.php');
+AutoLoad::registerClass('Model',                                                $cur_dir.'/model/model.php');
+AutoLoad::registerClass('spitfire\model\Field',                                 $cur_dir.'/model/field.php');
+AutoLoad::registerClass('IntegerField',                                         $cur_dir.'/model/fields/integer.php');
+AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
+AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
 
-AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface',    $cur_dir.'/db/resultset.php');
-AutoLoad::registerClass('databaseRecord',        $cur_dir.'/db/databaseRecord.php');
 
-AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',     $cur_dir.'/db/drivers/stdSQL.php');
-AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',   $cur_dir.'/db/drivers/mysqlPDO.php');
-AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOField',    $cur_dir.'/db/drivers/mysqlPDOField.php');
-AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet', $cur_dir.'/db/drivers/mysqlPDORes.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',       $cur_dir.'/db/drivers/stdSQL.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',     $cur_dir.'/db/drivers/mysqlPDO.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOTable',      $cur_dir.'/db/drivers/mysqlPDOTable.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOField',      $cur_dir.'/db/drivers/mysqlPDOField.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet',  $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
 AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/coffeebean.php');
