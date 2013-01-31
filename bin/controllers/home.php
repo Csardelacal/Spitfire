@@ -93,7 +93,7 @@ class homeController extends Controller
 		
 		try {
 
-			$rec = model()->table('test')->get('id1', 1)->fetch();
+			$rec = db()->table('test')->get('id1', 1)->fetch();
 			
 			if (!$rec->id1) {
 				$rec = new databaseRecord($this->model->test);

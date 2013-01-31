@@ -85,4 +85,13 @@ class Field
 		$this->datatype = $type;
 	}
 	
+	public function getRawData() {
+		return get_object_vars($this);
+	}
+	
+	public function importRawData($field) {
+		$data = $field->getRawData();
+		foreach ($data as $f => $v) $this->$f = $v;
+	}
+	
 }

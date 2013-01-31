@@ -2,11 +2,12 @@
 
 namespace spitfire\storage\database\drivers;
 
+use spitfire\storage\database\DB;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 use databaseRecord;
 
-abstract class stdSQLDriver
+abstract class stdSQLDriver extends DB
 {
 	/**
 	 * This generates a standard WHERE statement for SQL.
@@ -62,13 +63,19 @@ abstract class stdSQLDriver
 			$rem_table = $_join->getTable();
 			$remote    = $_join->getUniqueRestrictions();
 			$remotef   = $_join->getUniqueFields();
+			$_remotef  = Array();
+			$localf    = $table->getFields();
+			foreach($localf as $f) {
+				if (in_array($f->getReference(), $remotef) )
+					$_remotef[] = $f . '=' . $f->getReference();
+				else echo $f, ', ', $f->getReference();
+			}
 			
 			foreach($remote as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
 			foreach($remotef as &$r) $r = $r->getName();
-			//$remotef   = $this->escapeFieldNames($rem_table, $remotef);
 			
 			$join = 'RIGHT JOIN ' . $rem_table->getTableName();
-			$join.= ' USING (' . implode(', ', $remotef) . ')';
+			$join.= ' ON (' . implode(', ', $_remotef) . ')';
 			$restrictions = implode(' AND ', $remote) . " AND ($restrictions)";
 		}
 		

@@ -19,43 +19,19 @@ use spitfire\environment;
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-class DB extends _SF_MVC
+abstract class DB extends _SF_MVC
 {
 	
 	const MYSQL_PDO_DRIVER = 'mysqlPDO';
-	
-	/**
-	 * Reference to the actual DB driver.
-	 * @var _SF_DBDriver 
-	 */
-	private $driver;
 	
 	/**
 	 * Creates an instance of DBInterface
 	 * @param String $driver Name of the database driver to be used. You can
 	 *                       choose one of the DBInterface::DRIVER_? consts.
 	 */
-	public function __construct($driver = null, $options = null) {
+	public function __construct($options = null) {
+		//TODO: Create logic
 		
-		#If the driver is not selected we get the one we want from env.
-		if (is_null($driver)) $driver = environment::get('db_driver');
-		
-		#Instantiate the driver
-		$driver = 'spitfire\storage\database\drivers\\' . $driver . 'Driver';
-		$this->driver = new $driver($this, $options);
-	}
-
-	/**
-	 * Returns the handle used by the system to connect to the database.
-	 * Depending on the driver this can be any type of content. It should
-	 * only be used by applications with special needs.
-	 * 
-	 * @return mixed The connector used by the system to communicate with
-	 * the database server. The data-type of the return value depends on
-	 * the driver used by the system.
-	 */
-	public function getConnection() {
-		return $this->driver->getConnection();
 	}
 	
 	/**
@@ -87,11 +63,13 @@ class DB extends _SF_MVC
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
+		if ($this->{$tablename}) return $this->{$tablename};
+		
 		$modelName = $tablename.'Model';
 
 		if (class_exists($modelName)) {
 			$model = new $modelName;
-			$table = $this->driver->getTableClass();
+			$table = $this->getTableClass();
 			return $this->{$tablename} = new $table ($this, $tablename, $model);
 		}
 		else throw new privateException('Unknown model ' . $modelName);
@@ -109,20 +87,17 @@ class DB extends _SF_MVC
 		#Otherwise we try to get the table with this name
 		return $this->table($table);
 	}
-	
+
 	/**
-	 * If a function the system doesn't know is required, the DB will send it
-	 * to the driver to handle.
+	 * Returns the handle used by the system to connect to the database.
+	 * Depending on the driver this can be any type of content. It should
+	 * only be used by applications with special needs.
 	 * 
-	 * @param String $name 
-	 * @param mixed $arguments
-	 * @return mixed
+	 * @return mixed The connector used by the system to communicate with
+	 * the database server. The data-type of the return value depends on
+	 * the driver used by the system.
 	 */
-	public function __call($name, $arguments) {
-		if (method_exists($this->driver, $name))
-		return call_user_func_array(Array($this->driver, $name), $arguments);
-		
-		else throw new privateException('Undefined method: ' . $name);
-	}
+	abstract public function getConnection();
+	abstract public function getTableClass();
 
 }
