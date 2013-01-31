@@ -72,7 +72,7 @@ class SpitFire
 		if (class_exists($_view)) self::$view = new $_view;
 		else                      self::$view = new View();
 		#Create the model
-		self::$model = model();
+		self::$model = db();
 		#Check if the action is available
 		$method = Array($controller, self::$current_url->getAction());
 		

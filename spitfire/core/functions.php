@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\SpitFire;
+use spitfire\environment;
 use spitfire\storage\database\DB;
 
 /**
@@ -9,9 +10,20 @@ use spitfire\storage\database\DB;
  * 
  * @return DB
  */
-function model() {
-	if (!empty(SpitFire::$model)) return SpitFire::$model;
-	else return new DB();
+function db($options = null) {
+	
+	if (is_null($options) && !empty(SpitFire::$model)) return SpitFire::$model;
+	
+	#If the driver is not selected we get the one we want from env.
+	if (!isset($options['db_driver'])) $driver = environment::get('db_driver');
+	else $driver = $options['db_driver'];
+	
+	#Instantiate the driver
+	$driver = 'spitfire\storage\database\drivers\\' . $driver . 'Driver';
+	$driver = new $driver($options);
+	#Store to main model
+	if (is_null($options)) SpitFire::$model = $driver;
+	return $driver;
 }
 
 
