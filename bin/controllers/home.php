@@ -45,20 +45,19 @@ class homeController extends Controller
 //		print_r($this->model->test->get('unique', 'test2')->fetch()->content);
 //		print_r($this->model);
 		
-		$field = 'unique';
-		$this->model->escapeFieldName($field);
-		echo $field;
 		
 		$t = new databaseRecord($this->model->test);
-		$t->content = 'Hello';
-		$t->unique  = 'Hello World';
-		$t->id      = 3;
-		$t->store();
+		//$t->content = 'Hello';
+		//$t->title   = 'Hello World';
+		$t->id1     = 3;
+		$t->id2     = 3;
+		//$t->store();
 		
 		$p = new databaseRecord($this->model->test);
-		$p->content = 'Hello';
-		$p->unique  = 'Hello World';
-		$p->id      = $t->id;
+		//$t->content = 'Hello';
+		//$t->title   = 'Hello World';
+		$t->id1     = 3;
+		$t->id2     = 3;
 		
 		try {
 			$p->store();
@@ -67,26 +66,28 @@ class homeController extends Controller
 			echo 'Error: repeated id';
 		}
 		
-		$t = $this->model->test->get('id', $t->id)->fetch();
+		$t = $this->model->test->get('id1', $t->id)->fetch();
 		$t->content.= 't';
 		$t->store();
-		$t->increment('id', -1);
+		$t->increment('id1', -1);
 		
 		echo '-----';
-		$p = $this->model->test->get('id', $t->id)
+		$p = $this->model->test->get('id1', $t->id)
 			->group()
-				->addRestriction(new _SF_Restriction('unique', 'test'))
-				->addRestriction(new _SF_Restriction('content', 'test2'))
+				->addRestriction('id1', '1')
+				->addRestriction('id2', '2')
 			->endGroup()
 			->group()
-				->addRestriction(new _SF_Restriction('unique', 'hello'))
+				->addRestriction('id1', '3')
 			->endGroup()
 			->fetch();
 		echo '----';
 		
-		$t = $this->model->test->get('id', $t->id)->fetch();
+		$t = $this->model->test->get('id1', $t->id)->fetch();
 		echo $t->content;
 		$t->delete();
+		
+		print_r(\spitfire\SpitFire::$debug->getMessages());
 	}
 	
 	public function dbTest() {
@@ -131,7 +132,7 @@ class homeController extends Controller
 			
 			$q = $rec->getChildren($this->model->dependant)->fetchAll();
 			
-			foreach ($q as $e) echo $e->content . "\n";
+			foreach ($q as $e) echo $e->title . "\n";
 			
 			
 			print_r(\spitfire\SpitFire::$debug->getMessages());

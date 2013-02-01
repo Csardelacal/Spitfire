@@ -2,6 +2,8 @@
 
 namespace spitfire\storage\database\drivers;
 
+use Model;
+use spitfire\storage\database\DB;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Field;
@@ -17,20 +19,14 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 
 	private $connection    = false;
 	private $fields        = Array();
-	private $model;
 	private $schema;
 	
 	#Caches
 	private $tables = Array();
 	
-	private $errs = Array(
-	    'HY093' => 'Wrong parameter count',
-	    '42000' => 'Reserved word used as field name',
-	    '23000' => 'Unique restraint violated.'
-	);
 	
-	public function __construct($model, $options) {
-		$this->model = $model;
+	public function __construct($options = null) {
+		parent::__construct($options);
 		$this->schema = environment::get('db_database');
 	}
 
@@ -156,13 +152,9 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 
 	public function inc(Table $table, databaseRecord $data, $field, $value) {
 		
-		$statement = parent::inc($table, $data, $field);
-		$values    = Array($value);
+		$statement = parent::inc($table, $data, $field, $value);
 		
-		$r         = $data->getUniqueRestrictions();
-		foreach($r as $restriction) $values[] = $restriction->getValue ();
-		
-		$this->execute($table, $statement, $values);
+		$this->execute( $statement );
 	}
 
 	public function insert(Table $table, databaseRecord $data) {
@@ -194,8 +186,8 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		
 	}
 	
-	public function getTableClass() {
-		return 'spitfire\storage\database\drivers\MysqlPDOTable';
+	public function getTableInstance(DB$db, $tablename, Model$model) {
+		return new MysqlPDOTable($db, $tablename, $model);
 	}
 	
 	public function quote($text) {

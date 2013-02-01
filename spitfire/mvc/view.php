@@ -1,5 +1,9 @@
 <?php
 
+namespace spitfire;
+
+use _SF_MVC;
+
 class View extends _SF_MVC
 {
 	private $file = '';

@@ -9,6 +9,7 @@
 namespace spitfire\storage\database;
 
 use _SF_MVC;
+use Model;
 use privateException;
 use spitfire\environment;
 
@@ -63,14 +64,13 @@ abstract class DB extends _SF_MVC
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
-		if ($this->{$tablename}) return $this->{$tablename};
+		if (isset($this->{$tablename})) return $this->{$tablename};
 		
 		$modelName = $tablename.'Model';
 
 		if (class_exists($modelName)) {
 			$model = new $modelName;
-			$table = $this->getTableClass();
-			return $this->{$tablename} = new $table ($this, $tablename, $model);
+			return $this->{$tablename} = $this->getTableInstance($this, $tablename, $model);
 		}
 		else throw new privateException('Unknown model ' . $modelName);
 	}
@@ -98,6 +98,14 @@ abstract class DB extends _SF_MVC
 	 * the driver used by the system.
 	 */
 	abstract public function getConnection();
-	abstract public function getTableClass();
+	
+	/**
+	 * Returns an instance of the class the child tables of this class have
+	 * this is used to create them when requested by the table() method.
+	 * 
+	 * @abstract
+	 * @return string Class of the table
+	 */
+	abstract public function getTableInstance(DB$db, $tablename, Model$model);
 
 }

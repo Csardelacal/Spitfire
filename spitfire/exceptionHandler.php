@@ -21,10 +21,8 @@ function get_error_page($code, $message, $moreInfo = '') {
 	$error_page = Spitfire::$cwd . '/bin/error_pages/'.$code.'.php';
 	if (file_exists($error_page)) {
 		include $error_page;
-		die();
 	} elseif (file_exists($error_page = SpitFire::$cwd . '/bin/error_pages/default.php')) {
 		include $error_page;
-		die();
 	} else {
 		echo 'Error page not found. 
 			  To avoid this message please go to bin/error_pages and create '.$error_page .' with the data about the error you want.';
@@ -70,9 +68,12 @@ class ExceptionHandler {
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
+			ob_flush();
+			die();
 
 		} catch (Exception $e) { //Whatever happens, it won't leave this function
 			echo '<!--'.$e->getMessage().'-->';
+			ob_flush();
 			die();
 		}
 	}

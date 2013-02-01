@@ -140,7 +140,7 @@ abstract class stdSQLDriver extends DB
 		$tablename = "`{$table->getTablename()}`";
 		$setstt    = 'SET';
 		$_field    = "$field";
-		$equalsstt = "= $field + ?";
+		$equalsstt = "= $field + " . $this->quote($diff);
 		$wherestt  = 'WHERE';
 		$where     = implode(' AND ', $record->getUniqueRestrictions());
 		

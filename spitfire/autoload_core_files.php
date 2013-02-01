@@ -17,7 +17,7 @@ AutoLoad::registerClass('spitfire\environment',  $cur_dir.'/environment.php');
 
 AutoLoad::registerClass('_SF_MVC',               $cur_dir.'/mvc/mvc.php');
 AutoLoad::registerClass('Controller',            $cur_dir.'/mvc/controller.php');
-AutoLoad::registerClass('View',                  $cur_dir.'/mvc/view.php');
+AutoLoad::registerClass('spitfire\View',                                        $cur_dir.'/mvc/view.php');
 AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php');
 
 AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');

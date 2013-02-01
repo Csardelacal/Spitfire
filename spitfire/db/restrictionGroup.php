@@ -17,6 +17,7 @@ class RestrictionGroup
 	public function addRestriction($fieldname, $value, $operator = null) {
 		
 		$field = $this->belongsto->getTable()->getField($fieldname);
+		if (!$field) throw new \privateException('Field ' . $fieldname . ' not found');
 		$this->restrictions[] = new Restriction($field, $value, $operator);
 		return $this;
 	}
