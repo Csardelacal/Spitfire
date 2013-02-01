@@ -4,6 +4,7 @@ namespace spitfire\storage\database;
 
 use \databaseRecord;
 use Model;
+use spitfire\model\Field;
 use spitfire\environment;
 
 /**
@@ -20,8 +21,6 @@ abstract class Table extends Queriable
 	protected $model;
 	protected $tablename;
 	protected $fields;
-	
-	protected $fieldClass;
 
 
 	protected $errors    = Array();
@@ -38,9 +37,8 @@ abstract class Table extends Queriable
 		
 		$this->model = $model;
 		$fields = $this->model->getFields();
-		$className = $this->fieldClass;
 		foreach ($fields as $name => &$f) {
-			$f = new $className($this, $name, $f);
+			$f = $this->getFieldInstance($this, $name, $f);
 		}
 		
 		$this->fields = $fields;
@@ -190,5 +188,13 @@ abstract class Table extends Queriable
 		if (empty ($this->errors)) return false;
 		return $this->errors;
 	}
+	
+	/**
+	 * Creates an instance of the Database field compatible with the current
+	 * DBMS
+	 * 
+	 * @return DBField Field
+	 */
+	abstract public function getFieldInstance(Table$t, $fieldname, Field$data);
 
 }

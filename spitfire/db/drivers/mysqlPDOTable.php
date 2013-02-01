@@ -3,6 +3,7 @@
 namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Table;
+use spitfire\model\Field;
 
 class MysqlPDOTable extends Table
 {
@@ -10,5 +11,9 @@ class MysqlPDOTable extends Table
 	
 	public function __toString() {
 		return "`{$this->tablename}`";
+	}
+
+	public function getFieldInstance(Table $t, $fieldname, Field $data) {
+		return new mysqlPDOField($t, $fieldname, $data);
 	}
 }

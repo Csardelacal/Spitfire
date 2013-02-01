@@ -21,7 +21,7 @@ abstract class Queriable {
 	 */
 	public function startQuery() {
 		
-		$query = new _SF_DBQuery($this);
+		$query = $this->getQueryInstance();
 		return $query;
 	}
 	
@@ -35,7 +35,7 @@ abstract class Queriable {
 	 */
 	public function get($field, $value) {
 		#Create the query
-		$query = new Query($this);
+		$query = $this->getQueryInstance();
 		$query->addRestriction($field, $value);
 		#Return it
 		return $query;
@@ -50,7 +50,7 @@ abstract class Queriable {
 	 */
 	public function getAll() {
 		
-		$query = new Query($this);
+		$query = $this->getQueryInstance();
 		return $query;
 	}
 	
@@ -70,7 +70,7 @@ abstract class Queriable {
 				'%';
 		}
 		
-		$query = new Query($this);
+		$query = $this->getQueryInstance();
 		$query->addRestriction(new _SF_Restriction($field, $value, _SF_Restriction::LIKE_OPERATOR));
 		return $query;
 	}
@@ -83,7 +83,7 @@ abstract class Queriable {
 	 */
 	public function isNull($field) {
 		
-		$query = new Query($this);
+		$query = $this->getQueryInstance();
 		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
 		return $query;
 	}
@@ -96,8 +96,18 @@ abstract class Queriable {
 	 */
 	public function isNotNull($field) {
 		
-		$query = new Query($this);
+		$query = $this->getQueryInstance();
 		$query->addRestriction(new _SF_Restriction($field, NULL, ' IS NOT '));
 		return $query;
+	}
+	
+	/**
+	 * Allows the driver to specify a class for the queries it needs to
+	 * generate.
+	 * 
+	 * @return string Classname of the query
+	 */
+	public function getQueryInstance() {
+		return new \spitfire\storage\database\Query($this);
 	}
 }
