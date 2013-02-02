@@ -10,6 +10,7 @@ class dependantModel extends Model
 		$this->field('test', 'IntegerField');
 		$this->field('title', 'StringField', 200);
 		$this->field('content', 'TextField');
+		$this->field('content2', 'TextField');
 		
 		$this->reference('test');
 	

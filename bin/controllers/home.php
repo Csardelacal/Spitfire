@@ -151,7 +151,25 @@ class homeController extends Controller
 		$user->store();
 	}
 	
+	public function writetodb() {
+		$t = new databaseRecord($this->model->dependant);
+		$t->test_id1 = 1;
+		$t->test_id2 = 2;
+		
+		$t->test = 1;
+		$t->content = "Some text " . time();
+		$t->content2 = "Some other text " . time();
+		$t->store();
+		
+		print_r(\spitfire\SpitFire::$debug->getMessages());
+	}
+	
 	public function fields($table) {
+		
+		$this->model = db(Array(
+		    'schema' => 'test'
+		));
+		
 		$model = "{$table}Model";
 		print_r(new $model ());
 		echo("Model ------------------- \n");
