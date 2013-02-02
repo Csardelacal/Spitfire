@@ -8,8 +8,9 @@ class IntegerField extends Field
 	protected $unsigned;
 	
 	
-	public function __construct($unsigned = false) {
+	public function __construct($name, $unsigned = false) {
 		$this->datatype = Field::TYPE_INTEGER;
+		$this->name = $name;
 		$this->unsigned = $unsigned;
 	}
 	

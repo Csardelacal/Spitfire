@@ -13,6 +13,7 @@ use Model;
  */
 class Field
 {
+	protected $name;
 	protected $indexed;
 	protected $unique;
 	protected $primary;
@@ -37,6 +38,14 @@ class Field
 	public function setAutoIncrement($ai) {
 		$this->auto_increment = $ai;
 	}
+	
+	public function getName() {
+		return $this->name;
+	}
+	
+	public function setName($name) {
+		$this->name = $name;
+	}
 
 
 	/**
@@ -51,6 +60,7 @@ class Field
 	
 	public function setPrimary($primary) {
 		$this->primary = $primary;
+		return $this;
 	}
 	
 	public function isUnique() {
@@ -59,6 +69,7 @@ class Field
 	
 	public function setUnique($unique) {
 		$this->unique = $unique;
+		return $this;
 	}
 	
 	public function isIndexed() {
@@ -67,6 +78,7 @@ class Field
 	
 	public function setIndexed($indexed) {
 		$this->indexed = $indexed;
+		return $this;
 	}
 	
 	public function getReference() {
@@ -92,6 +104,10 @@ class Field
 	public function importRawData($field) {
 		$data = $field->getRawData();
 		foreach ($data as $f => $v) $this->$f = $v;
+	}
+	
+	public function __toString() {
+		return $this->name;
 	}
 	
 }

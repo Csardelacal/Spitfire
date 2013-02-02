@@ -14,16 +14,16 @@ class MysqlPDOTable extends Table
 		return "`{$this->tablename}`";
 	}
 
-	public function getFieldInstance(Table $t, $fieldname, Field $data) {
-		return new mysqlPDOField($t, $fieldname, $data);
+	public function getFieldInstance(Table $t, Field $data) {
+		return new mysqlPDOField($t, $data);
 	}
 
-	public function check() {
+	public function repair() {
 		$stt = "DESCRIBE `{$this->tablename}`";
 		$fields = $this->getFields();
 		//Fetch the DB Fields and create on error.
 		try {
-			$query = $this->getDb()->execute($stt);
+			$query = $this->getDb()->execute($stt, false);
 		}
 		catch(Exception $e) {
 			return $this->create();
@@ -35,17 +35,32 @@ class MysqlPDOTable extends Table
 				unset($fields[$field->getName()]);
 			}
 			catch(Exception $e) {/*Ignore*/}
-			
 		}
 		
 		foreach($fields as $field) $field->add();
 	}
 
 	public function create() {
+		echo 'Creating: ' . $this->getTablename();
 		
 		$fields = $this->getFields();
+		$ref = '';
 		foreach ($fields as $name => $f) {
+			if (null != ($r = $f->getReference)) {
+				$r->getTable()->repair();
+			}
 			$fields[$name] = $name . ' ' . $f->columnDefinition();
+		}
+		
+		$refs = $this->model->getReferencedModels();
+		$refstt = '';
+		if (!empty($refs)) {
+			foreach ($refs as $ref) {
+				$this->getDb()->table($ref->getName())->repair();
+				$refstt.= ', FOREIGN KEY(' . implode(', ', $this->model->getReferencedFields()) . ')
+					REFERENCES '. $this->db->table($ref->getName())->getTableName() . '(' . implode(', ', $ref->getPrimary()) . ')';
+
+			}
 		}
 		
 		$pk = array_keys($this->getPrimaryKey());
@@ -57,6 +72,7 @@ class MysqlPDOTable extends Table
 		$stt.= "(";
 		$stt.= implode(', ', $fields);
 		$stt.= $pk;
+		$stt.= $refstt;
 		$stt.= ")";
 		
 		return $this->getDb()->execute($stt);

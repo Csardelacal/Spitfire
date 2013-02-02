@@ -4,21 +4,41 @@ use spitfire\model\Field;
 
 class Model
 {
-	
-	protected $id;
+	private $fields;
+	private $references = Array();
 	
 	public function __construct() {
-		$this->id = new IntegerField(true);
-		$this->id->setPrimary(true);
-		$this->id->setAutoIncrement(true);
+		$this->field('id', 'IntegerField')
+			->setPrimary(true)
+			->setAutoIncrement(true);
 	}
 	
 	public function getFields() {
-		$fields = array_filter(get_object_vars($this));
+		$fields = array_filter(array_merge($this->fields, $this->getReferencedFields()));
 		#If the given type os a field return it.
 		foreach($fields as $name => $field) 
 			if (!$field instanceof Field) unset($fields[$name]);
 		return $fields;
+	}
+	
+	public function getReferencedFields() {
+		$fields = Array();
+		foreach ($this->references as $reference) {
+			$primary = $reference->getPrimary();
+			foreach($primary as $field) {
+				$field = clone $field;
+				$name = $reference->getName() . '_' . $field->getName();
+				$field->setName($name);
+				$field->setPrimary(false);
+				$field->setAutoIncrement(false);
+				$fields[$name] = $field;
+			}
+		}
+		return $fields;
+	}
+	
+	public function getReferencedModels() {
+		return $this->references;
 	}
 	
 	public function getPrimary() {
@@ -39,15 +59,11 @@ class Model
 
 	public function reference($model) {
 		$modelname = $model.'Model';
-		$ref = new $modelname();
-		$fields = $ref->getPrimary();
-		
-		foreach ($fields as $name => $type) {
-			$this->{"{$model}_{$name}"} = clone $type;
-			$this->{"{$model}_{$name}"}->setPrimary(false);
-			$this->{"{$model}_{$name}"}->setAutoIncrement(false);
-			$this->{"{$model}_{$name}"}->setReference($ref, $name);
-		}
+		$this->references[] = new $modelname();
+	}
+	
+	public function field($name, $instanceof, $length = false) {
+		return $this->fields[$name] = new $instanceof($name, $length);
 	}
 	
 }

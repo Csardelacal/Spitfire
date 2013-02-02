@@ -37,12 +37,12 @@ abstract class Table extends Queriable
 		
 		$this->model = $model;
 		$fields = $this->model->getFields();
-		foreach ($fields as $name => $f) {
-			$fields[$name] = $this->getFieldInstance($this, $name, $f);
+		$dbfields = Array();
+		foreach ($fields as $f) {
+			$dbfields[$f->getName()] = $this->getFieldInstance($this, $f);
 		}
 		
-		$this->fields = $fields;
-		$this->check();
+		$this->fields = $dbfields;
 	}
 	
 	/**
@@ -119,7 +119,7 @@ abstract class Table extends Queriable
 	}
 	
 	abstract public function create();
-	abstract public function check();
+	abstract public function repair();
 	abstract public function newRecord();
 	
 	/**
@@ -192,6 +192,6 @@ abstract class Table extends Queriable
 	 * 
 	 * @return DBField Field
 	 */
-	abstract public function getFieldInstance(Table$t, $fieldname, Field$data);
+	abstract public function getFieldInstance(Table$t, Field$data);
 
 }
