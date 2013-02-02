@@ -35,6 +35,7 @@ abstract class DBField extends Field
 
 	abstract public function columnDefinition();
 	abstract public function columnType();
+	abstract public function add();
 	abstract public function __toString();
 	
 }

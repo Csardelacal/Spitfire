@@ -112,21 +112,6 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return (in_array($table->getTablename(), $this->tables));
 		
 	}
-	
-	public function createTable(Table$table) {
-		$fields = $table->getFields();
-		foreach ($fields as $name => &$f) {
-			$f = new mysqlPDOField($f);
-			$f = $name . ' ' . $f->columnDefinition();
-		}
-		
-		$stt = "CREATE TABLE " . $table->getTablename();
-		$stt.= "(";
-		$stt.= implode(', ', $fields);
-		$stt.= ")";
-		
-		return $this->execute($stt);
-	}
 
 	public function query(Table $table, Query $query, $fields = false) {
 

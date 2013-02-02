@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\model\Field;
+
 class Model
 {
 	
@@ -13,6 +15,9 @@ class Model
 	
 	public function getFields() {
 		$fields = array_filter(get_object_vars($this));
+		#If the given type os a field return it.
+		foreach($fields as $name => $field) 
+			if (!$field instanceof Field) unset($fields[$name]);
 		return $fields;
 	}
 	
@@ -40,6 +45,7 @@ class Model
 		foreach ($fields as $name => $type) {
 			$this->{"{$model}_{$name}"} = clone $type;
 			$this->{"{$model}_{$name}"}->setPrimary(false);
+			$this->{"{$model}_{$name}"}->setAutoIncrement(false);
 			$this->{"{$model}_{$name}"}->setReference($ref, $name);
 		}
 	}

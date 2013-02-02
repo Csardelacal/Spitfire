@@ -9,13 +9,13 @@ class mysqlPDOField extends DBField
 {
 	
 	public function columnType() {
-		switch ($this->field->getDataType()) {
+		switch ($this->getDataType()) {
 			case Field::TYPE_INTEGER:
-				return 'INT';
+				return 'INT(11)';
 			case Field::TYPE_LONG:
 				return 'BIGINT';
 			case Field::TYPE_STRING:
-				return "VARCHAR({$this->field->getLength()})";
+				return "VARCHAR({$this->length})";
 			case Field::TYPE_TEXT:
 				return "TEXT";
 		}
@@ -25,16 +25,11 @@ class mysqlPDOField extends DBField
 		$definition = $this->columnType();
 		$definition.= " NOT NULL ";
 		
-		if ($this->field->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
-		if ($this->field->isUnique())        $definition.= "UNIQUE ";
-		if ($this->field->isPrimary())       $definition.= "PRIMARY KEY ";
+		if ($this->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
+		if ($this->isUnique())        $definition.= "UNIQUE ";
 		
-		if ($ref = $this->field->getReference()) {
-			$definition.= 'REFERENCES ';
-			$definition.= "`{$ref[0]->getName()}`";
-			$definition.= '.';
-			$definition.= "`$ref[1]`";
-			$definition.= ' ON DELETE CASCADE ON UPDATE CASCADE';
+		if ($ref = $this->getReference()) {
+			$definition.= 'REFERENCES ' . $ref . ' ON DELETE CASCADE ON UPDATE CASCADE';
 		}
 		
 		return $definition;
@@ -42,6 +37,20 @@ class mysqlPDOField extends DBField
 
 	public function __toString() {
 		return "`{$this->table->getTableName()}`.`$this->name`";
+	}
+
+	public function add() {
+		$stt = "ALTER TABLE `{$this->table->getTableName()}` 
+			ADD ({$this->getName()} {$this->columnDefinition()} )";
+		$this->table->getDb()->execute($stt);
+		
+		if ($this->isPrimary()) {
+			$pk = implode(', ', array_keys($this->table->getPrimaryKey()));
+			$stt = "ALTER TABLE {$this->table->getTableName()} 
+				DROP PRIMARY KEY, 
+				ADD PRIMARY KEY(" . $pk . ")";
+			$this->table->getDb()->execute($stt);
+		}
 	}
 	
 }
