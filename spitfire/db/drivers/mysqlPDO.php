@@ -77,7 +77,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $this->fields[$table->getTablename()] = $fields;
 	}
 	
-	public function execute($statement) {
+	public function execute($statement, $attemptrepair = true) {
 		
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
@@ -92,6 +92,18 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			$code = $e->getCode();
 			$err  = $this->connection->errorInfo();
 			$msg  = $err[2] or $this->errs[$code];
+			
+			#Try to solve the error by checking integrity and repeat
+			if ($err[1] == 1051 || $err[1] == 1054 || $err[1] == 1146) 
+			if ($attemptrepair)
+			try{
+				$this->repair();
+				$stt = $con->query($statement);
+				SpitFire::$debug->log("DB: " . $statement);
+				return $stt;
+			}
+			catch (Exception $e) {/*Ignore*/}
+			
 			throw new privateException("$msg (#$code) in query: $statement");
 		}
 		

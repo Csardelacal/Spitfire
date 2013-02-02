@@ -152,6 +152,8 @@ class homeController extends Controller
 	}
 	
 	public function fields($table) {
+		$model = "{$table}Model";
+		print_r(new $model ());
 		echo("Model ------------------- \n");
 		print_r($this->model);
 		echo("Table ------------------- \n");
@@ -159,6 +161,15 @@ class homeController extends Controller
 		echo("Field ------------------- \n");
 		$fields = $this->model->{$table}->getFields();
 		foreach($fields as $field) echo "{$field->getName()}\n";
+		echo("Row   ------------------- \n");
+		$row = $this->model->{$table}->get('id', 1)->fetch();
+		echo $row->id;
+		echo("Field ------------------- \n");
+		$fields = $this->model->{$table}->getFields();
+		foreach($fields as $field) echo "{$field->getName()}\n";
+		
+		
+		print_r(\spitfire\SpitFire::$debug->getMessages());
 	}
 	
 	public function error() {

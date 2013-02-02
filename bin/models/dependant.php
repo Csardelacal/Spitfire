@@ -3,19 +3,13 @@
 class dependantModel extends Model
 {
 	
-	protected $test;
-	protected $title;
-	protected $content;
-	
 	public function __construct() {
 		
 		parent::__construct();
 		
-		$this->test    = new IntegerField();
-		$this->title   = new StringField(200);
-		$this->content = new TextField();
-		
-		$this->title->setUnique(true);
+		$this->field('test', 'IntegerField');
+		$this->field('title', 'StringField', 200);
+		$this->field('content', 'TextField');
 		
 		$this->reference('test');
 	

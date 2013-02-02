@@ -11,9 +11,8 @@ abstract class DBField extends Field
 	protected $table;
 	protected $name;
 	
-	public function __construct(Table$table, $name, Field$field) {
+	public function __construct(Table$table, Field$field) {
 		$this->table = $table;
-		$this->name  = $name;
 		$this->importRawData($field);
 	}
 	
@@ -36,6 +35,5 @@ abstract class DBField extends Field
 	abstract public function columnDefinition();
 	abstract public function columnType();
 	abstract public function add();
-	abstract public function __toString();
 	
 }

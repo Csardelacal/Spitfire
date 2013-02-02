@@ -56,6 +56,21 @@ abstract class DB extends _SF_MVC
 		return iconv(environment::get('system_encoding'), environment::get('database_encoding'), $str);
 	}
 	
+	public function repair() {
+		$tables = $this->getTables();
+		foreach ($tables as $table) {
+			$table->repair();
+		}
+	}
+	
+	public function getTables() {
+		$tables = get_object_vars($this);
+		foreach ($tables as $name => $value) {
+			if (! $value instanceof Table) unset($tables[$name]);
+		}
+		return $tables;
+	}
+	
 	/**
 	 * Returns a table adapter for the database table with said name to allow
 	 * querying and data-manipulation..
