@@ -37,11 +37,12 @@ abstract class Table extends Queriable
 		
 		$this->model = $model;
 		$fields = $this->model->getFields();
-		foreach ($fields as $name => &$f) {
-			$f = $this->getFieldInstance($this, $name, $f);
+		foreach ($fields as $name => $f) {
+			$fields[$name] = $this->getFieldInstance($this, $name, $f);
 		}
 		
 		$this->fields = $fields;
+		$this->check();
 	}
 	
 	/**
@@ -57,6 +58,12 @@ abstract class Table extends Queriable
 	
 	public function getField($name) {
 		if (isset($this->fields[$name])) return $this->fields[$name];
+		#Check if the name was prefixed
+		$prefix = environment::get('db_table_prefix');
+		$unprefixed = substr($name, strlen($prefix));
+		if (isset($this->fields[$unprefixed])) return $this->fields[$unprefixed];
+		#Else the table couldn't be found
+		throw new \privateException('Field ' . $name . ' does not exist');
 	}
 	
 	/**
@@ -90,8 +97,8 @@ abstract class Table extends Queriable
 		$fields  = $this->getFields();
 		$pk      = Array();
 		
-		foreach($fields as $field) {
-			if ($field->isPrimary()) $pk[] = $field;
+		foreach($fields as $name => $field) {
+			if ($field->isPrimary()) $pk[$name] = $field;
 		}
 		
 		return $this->primaryK = (array) $pk;
@@ -111,19 +118,9 @@ abstract class Table extends Queriable
 		return  $this->auto_increment = $ai;
 	}
 	
-	public function update(databaseRecord $data) {
-		if (!$this->validate($data)) throw new privateException('Invalid data');
-		return $this->db->update($this, $data);
-	}
-	
-	public function insert(databaseRecord $data) {
-		if (!$this->validate($data)) throw new privateException('Invalid data');
-		return $this->db->insert($this, $data);
-	}
-	
-	public function delete(databaseRecord $data) {
-		$this->db->delete($this, $data);
-	}
+	abstract public function create();
+	abstract public function check();
+	abstract public function newRecord();
 	
 	/**
 	 * If the table cannot handle the request it will pass it on to the db

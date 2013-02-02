@@ -155,10 +155,10 @@ class homeController extends Controller
 		echo("Model ------------------- \n");
 		print_r($this->model);
 		echo("Table ------------------- \n");
-		print_r($this->model->{$table});
+		echo "{$this->model->$table->getTableName()} \n";
 		echo("Field ------------------- \n");
 		$fields = $this->model->{$table}->getFields();
-		print_r($fields);
+		foreach($fields as $field) echo "{$field->getName()}\n";
 	}
 	
 	public function error() {
