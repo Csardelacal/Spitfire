@@ -8,7 +8,6 @@ use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Field;
 use spitfire\SpitFire;
-use spitfire\environment;
 use PDO;
 use PDOException;
 use privateException;
@@ -19,22 +18,24 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 
 	private $connection    = false;
 	private $fields        = Array();
-	private $schema;
 	
-	#Caches
-	private $tables = Array();
+	/**@var mixed List of errors the repair() method can fix*/
+	private $reparable_errors = Array(1051, 1054, 1146);
 	
 	
-	public function __construct($options = null) {
-		parent::__construct($options);
-		$this->schema = environment::get('db_database');
-	}
-
+	/**
+	 * Establishes the connection with the database server. This function
+	 * requires no parameters as they're stored by the class already.
+	 * 
+	 * @return boolean
+	 * @throws privateException If the database was unable to establish a 
+	 *                          connection because the Server rejected the connection.
+	 */
 	protected function connect() {
 
-		$dsn  = 'mysql:dbname=' . environment::get('db_database') . ';host=' . environment::get('db_server');
-		$user = environment::get('db_user');
-		$pass = environment::get('db_pass');
+		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server;
+		$user = $this->user;
+		$pass = $this->password;
 
 		try {
 			$this->connection = new PDO($dsn, $user, $pass);
@@ -48,11 +49,24 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 
 	}
 
+	/**
+	 * Checks if a connection to the DB exists and creates it in case it
+	 * does not exist already.
+	 * 
+	 * @return PDO
+	 */
 	public function getConnection() {
 		if (!$this->connection) $this->connect();
 		return $this->connection;
 	}
 
+	/**
+	 * List the fields of a table
+	 * 
+	 * @deprecated since version 0.1Dev
+	 * @param \spitfire\storage\database\Table $table
+	 * @return mixed
+	 */
 	public function fetchFields(Table$table) {
 		
 		#If it's cached return the data
@@ -77,6 +91,18 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $this->fields[$table->getTablename()] = $fields;
 	}
 	
+	/**
+	 * Sends a query to the database server and returns the handle for the
+	 * resultset the server / native driver returned.
+	 * 
+	 * @param string $statement SQL to be executed by the server.
+	 * @param boolean $attemptrepair Defines whether the server should try
+	 *                    to repair any model inconsistencies the server 
+	 *                    encounters.
+	 * @return PDOStatement
+	 * @throws privateException In case the query fails for another reason
+	 *                     than the ones the system manages to fix.
+	 */
 	public function execute($statement, $attemptrepair = true) {
 		
 		#Connect to the database and prepare the statement
@@ -94,7 +120,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			$msg  = $err[2] or $this->errs[$code];
 			
 			#Try to solve the error by checking integrity and repeat
-			if ($err[1] == 1051 || $err[1] == 1054 || $err[1] == 1146) 
+			if (in_array($err[1], $this->reparable_errors)) 
 			if ($attemptrepair)
 			try{
 				$this->repair();
@@ -108,21 +134,6 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		}
 		
 		return $stt;
-	}
-	
-	public function listTables() {
-		$statement = "SELECT table_name FROM information_schema.tables " .
-			"WHERE table_schema = '{$this->schema}'";
-		$stt = $this->execute($statement);
-		
-		while ($row = $stt->fetch()) $this->tables[] = $row['table_name'];
-	}
-
-	public function exists(Table$table) {
-		
-		if (empty($this->tables)) $this->listTables();
-		return (in_array($table->getTablename(), $this->tables));
-		
 	}
 
 	public function query(Table $table, Query $query, $fields = false) {

@@ -25,14 +25,27 @@ abstract class DB extends _SF_MVC
 	
 	const MYSQL_PDO_DRIVER = 'mysqlPDO';
 	
+	protected $server;
+	protected $user;
+	protected $password;
+	protected $schema;
+	protected $prefix;
+	
+	protected $tables = Array();
+	
 	/**
-	 * Creates an instance of DBInterface
+	 * Creates an instance of DBInterface. If options are set it will import
+	 * them. Otherwise it will try to read them from the current environment.
+	 * 
 	 * @param String $driver Name of the database driver to be used. You can
 	 *                       choose one of the DBInterface::DRIVER_? consts.
 	 */
 	public function __construct($options = null) {
-		//TODO: Create logic
-		
+		$this->server   = (isset($options['server']))?   $options['server']   : environment::get('db_server');
+		$this->user     = (isset($options['user']))?     $options['user']     : environment::get('db_user');
+		$this->password = (isset($options['password']))? $options['password'] : environment::get('db_password');
+		$this->schema   = (isset($options['schema']))?   $options['schema']   : environment::get('db_database');
+		$this->prefix   = (isset($options['prefix']))?   $options['prefix']   : environment::get('db_table_prefix');
 	}
 	
 	/**
@@ -56,6 +69,15 @@ abstract class DB extends _SF_MVC
 		return iconv(environment::get('system_encoding'), environment::get('database_encoding'), $str);
 	}
 	
+	/**
+	 * Attempts to repair schema inconsistencies. These method is not meant 
+	 * to be called by the user but aims to provide an endpoint the driver 
+	 * can use when running into trouble.
+	 * 
+	 * This method does not actually repair broken databases but broken schemas,
+	 * if your database is broken or data on it corrupt you need to use the 
+	 * DBMS specific tools to repair it.
+	 */
 	public function repair() {
 		$tables = $this->getTables();
 		foreach ($tables as $table) {
@@ -63,12 +85,18 @@ abstract class DB extends _SF_MVC
 		}
 	}
 	
+	/**
+	 * Returns the list of tables/models <b>currently</b> loaded into the db.
+	 * If a model hasn't been accessed during execution it won't be listed
+	 * here.
+	 * Please note, that this function is used only for maintenance and repair
+	 * works on tables. Meaning that it is not relevant if <b>all</b> tables
+	 * were imported.
+	 * 
+	 * @return mixed Array of tables imported.
+	 */
 	public function getTables() {
-		$tables = get_object_vars($this);
-		foreach ($tables as $name => $value) {
-			if (! $value instanceof Table) unset($tables[$name]);
-		}
-		return $tables;
+		return $this->tables;
 	}
 	
 	/**
@@ -79,13 +107,13 @@ abstract class DB extends _SF_MVC
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
-		if (isset($this->{$tablename})) return $this->{$tablename};
+		if (isset($this->tables[$tablename])) return $this->tables[$tablename];
 		
 		$modelName = $tablename.'Model';
 
 		if (class_exists($modelName)) {
 			$model = new $modelName;
-			return $this->{$tablename} = $this->getTableInstance($this, $tablename, $model);
+			return $this->tables[$tablename] = $this->getTableInstance($this, $tablename, $model);
 		}
 		else throw new privateException('Unknown model ' . $modelName);
 	}
@@ -108,6 +136,7 @@ abstract class DB extends _SF_MVC
 	 * Depending on the driver this can be any type of content. It should
 	 * only be used by applications with special needs.
 	 * 
+	 * @abstract
 	 * @return mixed The connector used by the system to communicate with
 	 * the database server. The data-type of the return value depends on
 	 * the driver used by the system.
