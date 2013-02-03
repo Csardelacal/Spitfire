@@ -58,10 +58,6 @@ abstract class Table extends Queriable
 	
 	public function getField($name) {
 		if (isset($this->fields[$name])) return $this->fields[$name];
-		#Check if the name was prefixed
-		$prefix = environment::get('db_table_prefix');
-		$unprefixed = substr($name, strlen($prefix));
-		if (isset($this->fields[$unprefixed])) return $this->fields[$unprefixed];
 		#Else the table couldn't be found
 		throw new \privateException('Field ' . $name . ' does not exist');
 	}

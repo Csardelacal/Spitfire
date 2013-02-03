@@ -103,10 +103,13 @@ abstract class DB extends _SF_MVC
 	 * Returns a table adapter for the database table with said name to allow
 	 * querying and data-manipulation..
 	 * 
-	 * @param String $tablename Name of the table that should be used.
+	 * @param string|Model $tablename Name of the table that should be used.
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
+		#If the parameter is a Model, we get it's name
+		if ($tablename instanceof Model) $tablename = $tablename->getName ();
+		#If the table has already been imported continue
 		if (isset($this->tables[$tablename])) return $this->tables[$tablename];
 		
 		$modelName = $tablename.'Model';

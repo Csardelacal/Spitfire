@@ -252,5 +252,6 @@ abstract class stdSQLDriver extends DB
 	}
 	
 	public abstract function quote($text);
+	public abstract function execute($statement, $attemptrepair = true);
 	
 }
