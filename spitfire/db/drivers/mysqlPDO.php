@@ -13,6 +13,12 @@ use PDOException;
 use privateException;
 use databaseRecord;
 
+/**
+ * MySQL driver via PDO. This driver does <b>not</b> make use of prepared 
+ * statements, prepared statements become too difficult to handle for the driver
+ * when using several JOINs or INs. For this reason the driver has moved from
+ * them back to standard querying.
+ */
 class mysqlPDODriver extends stdSQLDriver implements Driver
 {
 
@@ -33,7 +39,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 */
 	protected function connect() {
 
-		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server;
+		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server;echo $this->schema;
 		$user = $this->user;
 		$pass = $this->password;
 
@@ -136,6 +142,14 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $stt;
 	}
 
+	/**
+	 * 
+	 * @deprecated since version 0.1Dev
+	 * @param \spitfire\storage\database\Table $table
+	 * @param \spitfire\storage\database\Query $query
+	 * @param type $fields
+	 * @return \spitfire\storage\database\drivers\mysqlPDOResultSet
+	 */
 	public function query(Table $table, Query $query, $fields = false) {
 
 		#Get the SQL Statement
@@ -149,6 +163,12 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		
 	}
 
+	/**
+	 * 
+	 * @deprecated since version 0.1Dev
+	 * @param \spitfire\storage\database\Table $table
+	 * @param databaseRecord $data
+	 */
 	public function delete(Table $table, databaseRecord $data) {
 		#Get the SQL Statement
 		$statement = parent::delete($table, $data);
@@ -158,6 +178,14 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$this->execute($statement);
 	}
 
+	/**
+	 * 
+	 * @deprecated since version 0.1Dev
+	 * @param \spitfire\storage\database\Table $table
+	 * @param databaseRecord $data
+	 * @param type $field
+	 * @param type $value
+	 */
 	public function inc(Table $table, databaseRecord $data, $field, $value) {
 		
 		$statement = parent::inc($table, $data, $field, $value);
@@ -165,6 +193,13 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$this->execute( $statement );
 	}
 
+	/**
+	 * 
+	 * @deprecated since version 0.1Dev
+	 * @param \spitfire\storage\database\Table $table
+	 * @param databaseRecord $data
+	 * @return type
+	 */
 	public function insert(Table $table, databaseRecord $data) {
 		$statement = parent::insert($table, $data);
 		$values    = $data->getData();
@@ -176,6 +211,13 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		return $this->connection->lastInsertId();
 	}
 
+	/**
+	 * 
+	 * @deprecated since version 0.1Dev
+	 * @param \spitfire\storage\database\Table $table
+	 * @param databaseRecord $data
+	 * @return type
+	 */
 	public function update(Table $table, databaseRecord$data) {
 		$statement = parent::update($table, $data);
 		$values = $data->getDiff();
@@ -194,10 +236,25 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		
 	}
 	
+	/**
+	 * Creates a new Table and returns it.
+	 * 
+	 * @param spitfire.storage.database.DB $db
+	 * @param string $tablename
+	 * @param Model $model
+	 * @return spitfire.storage.database.drivers.MysqlPDOTable
+	 */
 	public function getTableInstance(DB$db, $tablename, Model$model) {
 		return new MysqlPDOTable($db, $tablename, $model);
 	}
 	
+	/**
+	 * Escapes a string to be used in a SQL statement. PDO offers this
+	 * functionality out of the box so there's nothing to do.
+	 * 
+	 * @param string $text
+	 * @return string Quoted and escaped string
+	 */
 	public function quote($text) {
 		return $this->getConnection()->quote($text);
 	}
