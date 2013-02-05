@@ -21,10 +21,11 @@ class Field
 	protected $datatype;
 	protected $references;
 	
-	const TYPE_INTEGER = 'int';
-	const TYPE_LONG    = 'long';
-	const TYPE_STRING  = 'string';
-	const TYPE_TEXT    = 'txt';
+	const TYPE_INTEGER   = 'int';
+	const TYPE_LONG      = 'long';
+	const TYPE_STRING    = 'string';
+	const TYPE_TEXT      = 'txt';
+	const TYPE_DATETIME  = 'datetime';
 	
 	/**
 	 * Returns true if the field is an auto-increment field on the database.

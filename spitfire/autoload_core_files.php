@@ -42,6 +42,7 @@ AutoLoad::registerClass('spitfire\model\Field',                                 
 AutoLoad::registerClass('IntegerField',                                         $cur_dir.'/model/fields/integer.php');
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
+AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
 
 
 AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',       $cur_dir.'/db/drivers/stdSQL.php');
@@ -49,6 +50,9 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLTable',        
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',     $cur_dir.'/db/drivers/mysqlPDO.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOTable',      $cur_dir.'/db/drivers/mysqlPDOTable.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOField',      $cur_dir.'/db/drivers/mysqlPDOField.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOQuery',      $cur_dir.'/db/drivers/mysqlPDOQuery.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestriction',$cur_dir.'/db/drivers/mysqlPDORestriction.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestrictionGroup',$cur_dir.'/db/drivers/mysqlPDORestrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet',  $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');

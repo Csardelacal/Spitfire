@@ -18,6 +18,8 @@ class mysqlPDOField extends DBField
 				return "VARCHAR({$this->length})";
 			case Field::TYPE_TEXT:
 				return "TEXT";
+			case Field::TYPE_DATETIME:
+				return "DATETIME";
 		}
 	}
 	
@@ -35,10 +37,6 @@ class mysqlPDOField extends DBField
 		return $definition;
 	}
 
-	public function __toString() {
-		return "`{$this->table->getTableName()}`.`$this->name`";
-	}
-
 	public function add() {
 		$stt = "ALTER TABLE `{$this->table->getTableName()}` 
 			ADD ({$this->getName()} {$this->columnDefinition()} )";
@@ -51,6 +49,10 @@ class mysqlPDOField extends DBField
 				ADD PRIMARY KEY(" . $pk . ")";
 			$this->table->getDb()->execute($stt);
 		}
+	}
+
+	public function __toString() {
+		return "`{$this->table->getTableName()}`.`$this->name`";
 	}
 	
 }
