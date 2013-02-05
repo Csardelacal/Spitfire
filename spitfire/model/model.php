@@ -21,9 +21,17 @@ class Model
 		return $fields;
 	}
 	
-	public function getReferencedFields() {
+	public function getReferencedFields(Model$target = null) {
+		#Init the fields array to be returned
 		$fields = Array();
-		foreach ($this->references as $reference) {
+		
+		#If a target model is set get the related fields
+		if (is_null($target)) $references = $this->references;
+		elseif (in_array($target, $this->references)) $references = Array($target);
+		else throw new BadMethodCallException('No valid model specified');
+		
+		#Get the fields for the target model(s)
+		foreach ($references as $reference) {
 			$primary = $reference->getPrimary();
 			foreach($primary as $field) {
 				$field = clone $field;

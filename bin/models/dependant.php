@@ -13,6 +13,7 @@ class dependantModel extends Model
 		$this->field('content2', 'TextField');
 		
 		$this->reference('test');
+		$this->reference('test2');
 	
 	}
 	
