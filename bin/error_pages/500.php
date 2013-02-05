@@ -6,40 +6,82 @@ use spitfire\environment;
 ?><!DOCTYPE html>
 <html>
 	<head>
-		<title>Spitfire - Server error</title>
-		<style type="text/css">
-			.wrapper {
-				display: block;
-				width:   800px;
-				padding:  10px 20px;
-				border:  solid 1px #999;
-				border-radius: 5px;
-				background: #FFF;
-				box-shadow: 3px 3px 3px #777;
+		<title>Spitfire - Server Error</title>
+		<style>
+			body, html {
+				margin: 0;
+				padding: 0;
+				font-family: arial;
 				color: #555;
-				margin: 50px auto 0;
-				font-size: 13px;
 			}
-
-			.wrapper h1 {
-				color: #911;
-				margin: 5px;
+			.errormsg {
+				background-color: #2478C6;
+				background-image: -moz-linear-gradient(90deg, #1E63B4 0%, #2478C6 10%, #2478C6 90%, #1E63B4);
+				background-image: -webkit-linear-gradient(90deg, #1E63B4 0%, #2478C6 10%, #2478C6 90%, #1E63B4);
+				color: #FFF;
+				padding: 20px;
+			}
+			
+			.errormsg p {
+				color: #FFF;
+			}
+			
+			.wrapper {
+				margin: 0 auto;
+				width: 960px;
+			}
+			
+			h1 {
+				margin: 8px 0 4px;
+				font-size: 20px;
+			}
+			h2 {
+				margin: 8px 0 3px;
 				font-size: 17px;
 			}
-			body{ 
-				background: #CCC;
+			
+			p {
+				font-size: 13px;
+				color: #555;
+			}
+			
+			small {
+				font-size: 70%;
+				color: #777;
+			}
+			
+			.sfheader {
+				margin: 20px 0 10px 0;
+			}
+			
+			.errordescription pre,
+			.errordescription .debugmessages {
+				border: dashed 1px #cccccc;
+				background: #f2f2f2;
+				border-radius: 5px;
+				padding: 5px;
+				max-height: 300px;
+				overflow: auto;
 			}
 		</style>
 	</head>
 	<body>
 		<div class="wrapper">
-			<h1><?=$message?></h1>
-			<p>Sorry, but the page you requested is generating an error that prevents it from loading.	
-			Please try visiting another site or try again in five minutes. </p>
-			<?php if(environment::get('debugging_mode')): ?>
-				<p>Following details were provided to solve the the error:</p> 
-				<h2>Scope</h2>
-				<pre><?=$moreInfo?></pre>
+			<h1 class="sfheader">Spitfire <small>//Error page</small></h1>
+		</div>
+		<div class="errormsg">
+			<div class="wrapper">
+				<h1>500: Server error</h1>
+			<p><?=$message?></p>
+			</div>
+		</div>
+
+		<?php if(environment::get('debugging_mode')): ?>
+		<div class="errordescription wrapper">
+			<h2>Further error information <small>To hide this set debug_mode to false.</small></h2>
+			<p>The stacktrace displays the function calls made that led to the error. They are displayed in an inverted order to how they were called.</p>
+			<pre><?=$moreInfo?></pre>
+			<div class="debugmessages">
 				<?php
 					$messages = SpitFire::$debug->getMessages();
 					if ($messages){
@@ -50,7 +92,8 @@ use spitfire\environment;
 						echo '</ul>';
 					}
 				?>
-			<?php endif; ?>
+			</div>
 		</div>
+		<?php endif; ?>
 	</body>
 </html>
