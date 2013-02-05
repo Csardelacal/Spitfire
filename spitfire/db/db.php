@@ -104,6 +104,9 @@ abstract class DB extends _SF_MVC
 	 * querying and data-manipulation..
 	 * 
 	 * @param string|Model $tablename Name of the table that should be used.
+	 *                 If you pass a model to this function it will automatically
+	 *                 read the name from the model and use it to find the 
+	 *                 table.
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {

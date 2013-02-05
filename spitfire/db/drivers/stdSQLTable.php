@@ -20,6 +20,12 @@ abstract class stdSQLTable extends Table
 		return $fields;
 	}
 	
+	/**
+	 * Creates a list of definitions for CONSTRAINTS defined by the references
+	 * this table's model makes to other models.
+	 * 
+	 * @return array
+	 */
 	private function foreignKeyDefinitions() {
 		
 		$ret = Array();
@@ -30,12 +36,17 @@ abstract class stdSQLTable extends Table
 		foreach ($refs as $ref) {
 			//Check the integrity of the remote table
 			$this->getDb()->table($ref)->repair();
+			#Get the fields the model references from $ref
+			$referencedfields = $this->model->getReferencedFields($ref);
+			#Get the table that represents $ref
+			$referencedtable = $this->getDb()->table($ref);
 			//Prepare the statement
-			$refstt.= 'FOREIGN KEY(' . 
-				implode(', ', $this->model->getReferencedFields()) . 
-				') REFERENCES '. 
-				$this->db->table($ref)->getTableName() . 
-				'(' . implode(', ', $ref->getPrimary()) . ')';
+			$refstt = sprintf('FOREIGN KEY (%s) REFERENCES %s(%s)',
+				implode(', ', $referencedfields),
+				$referencedtable->getTablename(),
+				implode(', ', $ref->getPrimary()) 
+				);
+			
 			$ret[] = $refstt;
 		}
 		
@@ -46,22 +57,18 @@ abstract class stdSQLTable extends Table
 		
 		$definitions = $this->columnDefinitions();
 		$foreignkeys = $this->foreignKeyDefinitions();
-		
-		
 		$pk = array_keys($this->getPrimaryKey());
 		
-		if (!empty($pk)) $pk = ', PRIMARY KEY(' . implode(', ', $pk) . ')';
-		else $pk = '';
+		if (!empty($pk)) $definitions[] = 'PRIMARY KEY(' . implode(', ', $pk) . ')';
 		
-		if (!empty($foreignkeys)) $foreignkeys = ', ' . implode (', ', $foreignkeys);
-		else $foreignkeys = '';
+		if (!empty($foreignkeys)) $definitions = array_merge ($definitions, $foreignkeys);
 		
-		$stt = "CREATE TABLE " . $this->getTablename();
-		$stt.= "(";
-		$stt.= implode(', ', $definitions);
-		$stt.= $pk;
-		$stt.= $foreignkeys;
-		$stt.= ")";
+		$definitions = array_filter($definitions);
+		
+		$stt = sprintf('CREATE TABLE %s (%s)',
+			$this->getTablename(),
+			implode(', ', $definitions)
+			);
 		
 		return $this->getDb()->execute($stt);
 	}
