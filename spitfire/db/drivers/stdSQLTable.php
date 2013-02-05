@@ -63,11 +63,12 @@ abstract class stdSQLTable extends Table
 		
 		if (!empty($foreignkeys)) $definitions = array_merge ($definitions, $foreignkeys);
 		
-		$definitions = array_filter($definitions);
+		#Strip empty definitions from the list
+		$clean = array_filter($definitions);
 		
 		$stt = sprintf('CREATE TABLE %s (%s)',
 			$this->getTablename(),
-			implode(', ', $definitions)
+			implode(', ', $clean)
 			);
 		
 		return $this->getDb()->execute($stt);

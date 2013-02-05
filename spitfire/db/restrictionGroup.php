@@ -2,7 +2,7 @@
 
 namespace spitfire\storage\database;
 
-class RestrictionGroup
+abstract class RestrictionGroup
 {
 	private $restrictions;
 	private $belongsto;
@@ -18,7 +18,7 @@ class RestrictionGroup
 		
 		$field = $this->belongsto->getTable()->getField($fieldname);
 		if (!$field) throw new \privateException('Field ' . $fieldname . ' not found');
-		$this->restrictions[] = new Restriction($field, $value, $operator);
+		$this->restrictions[] = $this->belongsto->restrictionInstance($field, $value, $operator);
 		return $this;
 	}
 	
@@ -45,7 +45,5 @@ class RestrictionGroup
 		foreach ($this->restrictions as $r) $r->setStringify($callback);
 	}
 	
-	public function __toString() {
-		return implode(' AND ', $this->restrictions);
-	}
+	abstract public function __toString();
 }

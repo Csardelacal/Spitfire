@@ -127,7 +127,7 @@ class databaseRecord
 	
 	public function getChildren($table) {
 		$query = new Query($table);
-		$query->setJoin($this);
+		$query->setParent($this);
 		return $query;
 	}
 	

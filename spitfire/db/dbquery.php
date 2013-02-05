@@ -5,7 +5,7 @@ namespace spitfire\storage\database;
 use databaseRecord;
 use privateException;
 
-class Query
+abstract class Query
 {
 	/** @var spitfire\storage\database\drivers\ResultSetInterface */
 	protected $result;
@@ -14,7 +14,7 @@ class Query
 	
 	protected $restrictions;
 	protected $restrictionGroups;
-	protected $join;
+	protected $parent;
 	protected $page = 1;
 	protected $rpp = 20;
 	protected $order;
@@ -36,7 +36,7 @@ class Query
 	public function addRestriction($fieldname, $value, $operator = '=') {
 		$field = $this->table->getField($fieldname);
 		if ($field == null) throw new privateException("No field '$fieldname'");
-		$restriction = new Restriction($field, $value, $operator);
+		$restriction = $this->restrictionInstance($field, $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
@@ -48,7 +48,7 @@ class Query
 	 * @return RestrictionGroup
 	 */
 	public function group() {
-		return $this->restrictionGroups[] = new RestrictionGroup($this);
+		return $this->restrictions[] = $this->restrictionGroupInstance($this);
 	}
 	
 	/**
@@ -107,8 +107,8 @@ class Query
 		return $this->result->fetchAll();
 	}
 
-	protected function query($fields = false, $returnresult = false) {
-		$result = $this->table->getDB()->query($this->table, $this, $fields);
+	protected function query($fields = null, $returnresult = false) {
+		$result = $this->execute($fields);
 		if ($returnresult) return $result;
 		else $this->result = $result;
 		return $this;
@@ -121,28 +121,26 @@ class Query
 	}
 	
 	public function getRestrictions() {
-		$values = $this->restrictionGroups;
-		
-		if (!empty($this->restrictions)) {
-			$values[] = new RestrictionGroup($this, $this->restrictions);
-		}
-		
-		return $values;
+		return $this->restrictions;
 	}
 	
 	public function getOrder() {
 		return $this->order;
 	}
 	
-	public function setJoin(databaseRecord$record) {
-		$this->join = $record;
+	public function setParent(databaseRecord$record) {
+		$this->parent = $record;
 	}
 	
-	public function getJoin() {
-		return $this->join;
+	public function getParent() {
+		return $this->parent;
 	}
 	
 	public function getTable() {
 		return $this->table;
 	}
+	
+	public abstract function execute($fields = null);
+	public abstract function restrictionInstance($field, $value, $operator);
+	public abstract function restrictionGroupInstance();
 }

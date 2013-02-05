@@ -4,7 +4,7 @@ namespace spitfire\storage\database;
 
 use spitfire\storage\database\DBField;
 
-class Restriction
+abstract class Restriction
 {
 	private $field;
 	private $value;
@@ -59,13 +59,5 @@ class Restriction
 		$this->stringifyCallback = $callback;
 	}
 	
-	public function __toString() {
-		
-		if ( $this->stringifyCallback ) {
-			$param_arr = Array($this);
-			return (string)call_user_func_array ($this->stringifyCallback, $param_arr);
-		}
-		
-		return "$this->field $this->operator ?";
-	}
+	abstract public function __toString();
 }

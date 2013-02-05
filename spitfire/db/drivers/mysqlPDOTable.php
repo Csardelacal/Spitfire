@@ -58,4 +58,8 @@ class MysqlPDOTable extends stdSQLTable
 	public function newRecord() {
 		throw new \RuntimeException('Not implemented');
 	}
+
+	public function getQueryInstance() {
+		return new MysqlPDOQuery($this);
+	}
 }

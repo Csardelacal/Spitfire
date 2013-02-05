@@ -180,8 +180,13 @@ class homeController extends Controller
 		$fields = $this->model->{$table}->getFields();
 		foreach($fields as $field) echo "{$field->getName()}\n";
 		echo("Row   ------------------- \n");
-		$row = $this->model->{$table}->get('id', 1)->fetch();
-		echo $row->id;
+		$row = $this->model->{$table}->get('id', 1)
+			->group()
+				->addRestriction('id', 2)
+				->addRestriction('id', 3)
+			->endGroup()
+			->count();
+		echo $row;
 		echo("Field ------------------- \n");
 		$fields = $this->model->{$table}->getFields();
 		foreach($fields as $field) echo "{$field->getName()}\n";

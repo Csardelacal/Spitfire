@@ -107,7 +107,5 @@ abstract class Queriable {
 	 * 
 	 * @return string Classname of the query
 	 */
-	public function getQueryInstance() {
-		return new \spitfire\storage\database\Query($this);
-	}
+	public abstract function getQueryInstance();
 }
