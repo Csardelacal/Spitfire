@@ -39,7 +39,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 */
 	protected function connect() {
 
-		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server;echo $this->schema;
+		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server;
 		$user = $this->user;
 		$pass = $this->password;
 

@@ -97,16 +97,31 @@ class homeController extends Controller
 			$rec = db()->table('test')->get('id1', 1)->fetch();
 			
 			if (!$rec->id1) {
-				$rec = new databaseRecord($this->model->test);
+				$rec = $this->model->test->newRecord();
 				$rec->id1 = 1;
 				$rec->id2 = 1;
 				$rec->content = "El1";
 				$rec->store();
 			}
+			//else echo 'Record exists \n';
+
+			$rec = db()->table('test2')->get('id1', 1)->fetch();
+			
+			if (!$rec->id1) {
+				$rec = $this->model->test2->newRecord();
+				$rec->id1 = 1;
+				$rec->id2 = 1;
+				$rec->content = "El1";
+				$rec->store();
+			}
+			//else echo 'Record exists \n';
 
 			try {
-				$child = new databaseRecord($this->model->dependant);
-				$child->test_id1 = -4;
+				$child = $this->model->dependant->newRecord();
+				$child->test_id1 = 1;
+				$child->test_id2 = 1;
+				$child->test2_id1 = 1;
+				$child->test2_id2 = 1;
 				$child->title    = time();
 				$child->content = '_SF_';
 				$child->store();
@@ -116,8 +131,11 @@ class homeController extends Controller
 			}
 
 			try {
-				$child = new databaseRecord($this->model->dependant);
+				$child = $this->model->dependant->newRecord();
 				$child->test_id1 = 1;
+				$child->test_id2 = 1;
+				$child->test2_id1 = 1;
+				$child->test2_id2 = 1;
 				$child->title    = time() . 'i';
 				$child->content  = '_SF_';
 				$child->store();
@@ -130,9 +148,9 @@ class homeController extends Controller
 				echo $e->getTraceAsString();
 			}
 			
-			$q = $rec->getChildren($this->model->dependant)->fetchAll();
+			//$q = $rec->getChildren($this->model->dependant)->fetchAll();
 			
-			foreach ($q as $e) echo $e->title . "\n";
+			//foreach ($q as $e) echo $e->title . "\n";
 			
 			
 			print_r(\spitfire\SpitFire::$debug->getMessages());
