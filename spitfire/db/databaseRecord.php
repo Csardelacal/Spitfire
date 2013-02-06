@@ -2,7 +2,7 @@
 
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
-use spitfire\storage\database\Restriction;
+use \spitfire\storage\database\DBField;
 
 /**
  * This class allows to track changes on database data along the use of a program
@@ -11,7 +11,7 @@ use spitfire\storage\database\Restriction;
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-class databaseRecord
+abstract class databaseRecord
 {
 	
 	private $src;
@@ -63,37 +63,15 @@ class databaseRecord
 		return $changed;
 	}
 	
-	public function delete() {
-		$this->table->delete($this);
-		$this->deleted = true;
-	}
 	
 	public function isSynced() {
 		return $this->synced && !$this->deleted;
 	}
 	
-	/**
-	 * Increments a value on high read/write environments. Using update can
-	 * cause data to be corrupted. Increment requires the data to be in sync
-	 * aka. stored to database.
-	 * 
-	 * @param String $key
-	 * @param int|float $diff
-	 * @throws privateException
-	 */
-	public function increment($key, $diff = 1) {
-		if (!$this->isSynced()) throw new privateException('Data is out of sync. Needs to be stored before increment');
-		
-		$this->table->getDb()->inc($this->table, $this, $key, $diff);
-		#Should the database update fail it'll throw an exception and break
-		$this->data[$key] = $this->data[$key] + $diff;
-		
-	}
-	
 	public function store() {
 		
 		if (empty($this->src)) {
-			$id = $this->table->insert($this);
+			$id = $this->insert();
 			$ai = $this->table->getAutoIncrement();
 			
 			if ($ai && empty($this->data[$ai->getName()]) ) {
@@ -101,7 +79,7 @@ class databaseRecord
 			}
 		}
 		else {
-			$this->table->update($this);
+			$this->update($this);
 		}
 		
 		$this->synced = true;
@@ -117,8 +95,7 @@ class databaseRecord
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$r = new Restriction($primary, $this->src[$primary->getName()]);
-			$r->setStringify(Array($this->table->getDb(), 'stringifyRestriction'));
+			$r = $this->restrictionInstance($primary, $this->src[$primary->getName()]);
 			$restrictions[] = $r;
 		}
 		
@@ -151,4 +128,21 @@ class databaseRecord
 		return $this->data[$field];
 	}
 	
+	
+	
+	public abstract function delete();
+	public abstract function insert();
+	public abstract function update();
+	public abstract function restrictionInstance(DBField$field, $value, $operator = null);
+	
+	/**
+	 * Increments a value on high read/write environments. Using update can
+	 * cause data to be corrupted. Increment requires the data to be in sync
+	 * aka. stored to database.
+	 * 
+	 * @param String $key
+	 * @param int|float $diff
+	 * @throws privateException
+	 */
+	public abstract function increment($key, $diff = 1);
 }

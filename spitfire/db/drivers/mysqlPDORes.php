@@ -18,12 +18,12 @@ class mysqlPDOResultSet implements resultSetInterface
 	public function fetch() {
 		$data = $this->result->fetch(PDO::FETCH_ASSOC);
 		$data = array_map( Array($this->table->getDB(), 'convertIn'), $data);
-		return new databaseRecord($this->table, $data);
+		return new MysqlPDORecord($this->table, $data);
 	}
 
 	public function fetchAll() {
 		$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
-		foreach($data as &$el) $el = new databaseRecord($this->table, array_map( Array($this->table->getDB(), 'convertIn'), $el));
+		foreach($data as &$el) $el = new MysqlPDORecord($this->table, array_map( Array($this->table->getDB(), 'convertIn'), $el));
 		return $data;
 	}
 	
