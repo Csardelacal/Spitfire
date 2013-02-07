@@ -33,6 +33,31 @@ class MysqlPDOQuery extends Query
 			$fields = implode(', ', $fields);
 		}
 		
+		#Join specific tasks
+		if ($_join) {
+			$rem_table = $_join->getTable();
+			$remotef   = $_join->getUniqueFields();
+			$_remotef  = Array();
+			
+			foreach ($remotef as $f) {
+				$model = $rem_table->getModel();
+				$local_field = $this->table->getField("{$model->getName()}_{$f->getName()}");
+				if ($local_field)
+					$_remotef[] = "$f = $local_field";
+			}
+			
+			foreach($localf as $f) {
+				if (in_array($f->getReference(), $remotef) )
+					$_remotef[] = $f . '=' . $f->getReference();
+				else echo $f, ', ', $f->getReference();
+			}
+			
+			
+			$join = 'RIGHT JOIN ' . $rem_table->getTableName();
+			$join.= ' ON (' . implode(' AND ', $_remotef) . ')';
+			$restrictions = array_merge($restrictions, $_join->getUniqueRestrictions());
+		}
+		
 		#Restrictions
 		if ( null != ($p = $this->getParent()) ) {
 			$restrictions = array_merge($restrictions, $p->getUniqueRestrictions());
@@ -43,26 +68,6 @@ class MysqlPDOQuery extends Query
 		}
 		else {
 			$restrictions = implode(' AND ', $restrictions);
-		}
-		
-		#Join specific tasks
-		if ($_join && false) {//TODO: Repair
-			$rem_table = $_join->getTable();
-			$remotef   = $_join->getUniqueFields();
-			$_remotef  = Array();
-			$localf    = $table->getFields();
-			foreach($localf as $f) {
-				if (in_array($f->getReference(), $remotef) )
-					$_remotef[] = $f . '=' . $f->getReference();
-				else echo $f, ', ', $f->getReference();
-			}
-			
-			foreach($remote as $r) $r->setStringify(Array($this, 'stringifyRestriction'));
-			foreach($remotef as &$r) $r = $r->getName();
-			
-			$join = 'RIGHT JOIN ' . $rem_table->getTableName();
-			$join.= ' ON (' . implode(', ', $_remotef) . ')';
-			$restrictions = implode(' AND ', $remote) . " AND ($restrictions)";
 		}
 		
 		if ($rpp < 0) {

@@ -103,7 +103,7 @@ abstract class databaseRecord
 	}
 	
 	public function getChildren($table) {
-		$query = new Query($table);
+		$query = $this->queryInstance($table);
 		$query->setParent($this);
 		return $query;
 	}
@@ -113,6 +113,14 @@ abstract class databaseRecord
 	}
 
 	public function __set($field, $value) {
+		
+		if ($value instanceof databaseRecord) {
+			$primary = $value->getUniqueFields();
+			foreach($primary as $pk) {
+				$this->{"{$field}_{$pk->getName()}"} = $value->{$pk->getName()};
+			}
+			return;
+		}
 		
 		if (!isset($this->data[$field]) || $value != $this->data[$field]) 
 			$this->synced = false;
@@ -134,6 +142,7 @@ abstract class databaseRecord
 	public abstract function insert();
 	public abstract function update();
 	public abstract function restrictionInstance(DBField$field, $value, $operator = null);
+	public abstract function queryInstance($table);
 	
 	/**
 	 * Increments a value on high read/write environments. Using update can
