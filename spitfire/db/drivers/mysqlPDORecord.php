@@ -58,4 +58,8 @@ class MysqlPDORecord extends databaseRecord
 	public function restrictionInstance(DBField$field, $value, $operator = null) {
 		return new MysqlPDORestriction($field, $value, $operator);
 	}
+
+	public function queryInstance($table) {
+		return new MysqlPDOQuery($table);
+	}
 }

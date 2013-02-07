@@ -8,7 +8,7 @@ use spitfire\storage\database\DB;
  * Shorthand function to create / retrieve the model the application is using
  * to store data.
  * 
- * @return DB
+ * @return DB|\spitfire\storage\database\DB
  */
 function db($options = null) {
 	
