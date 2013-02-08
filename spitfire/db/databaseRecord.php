@@ -1,14 +1,13 @@
 <?php
 
 use spitfire\storage\database\Table;
-use spitfire\storage\database\Query;
 use \spitfire\storage\database\DBField;
 
 /**
  * This class allows to track changes on database data along the use of a program
  * and creates interactions with the database in a safe way.
  * 
- * @package Spitfire.storage.database
+ * @todo Make this class implement Iterator
  * @author César de la Cal <cesar@magic3w.com>
  */
 abstract class databaseRecord
@@ -41,18 +40,45 @@ abstract class databaseRecord
 		$this->deleted = false;
 	}
 	
+	/**
+	 * Receives the data of an array and stores it into this record. This
+	 * does not verify the data is correct nor does it check if the data
+	 * fits into the table. You're assumed to pass the data correctly.
+	 * 
+	 * @param mixed $newdata
+	 */
 	public function setData($newdata) {
 		$this->data = $newdata;
 	}
 	
+	/**
+	 * Returns the data this record currently contains as associative array.
+	 * Remember that this data COULD be invalid when using setData to provide
+	 * it.
+	 * 
+	 * @return mixed
+	 */
 	public function getData() {
 		return $this->data;
 	}
 	
+	/**
+	 * Data contained by the database. Note that it is possible that this
+	 * function does provide data not actually in the DB (the record can have
+	 * been destroyed or modified, or this data altered)
+	 * 
+	 * @return mixed
+	 */
 	public function getSrcData() {
 		return $this->src;
 	}
 	
+	/**
+	 * Returns the data that has been modified since it was created / last 
+	 * stored.
+	 * 
+	 * @return mixed
+	 */
 	public function getDiff() {
 		$changed = Array();
 		
@@ -63,11 +89,25 @@ abstract class databaseRecord
 		return $changed;
 	}
 	
-	
+	/**
+	 * This function checks whether the data contained in this record is
+	 * 'in sync' with the DB. Being in sync means that the data contained
+	 * by this record is supposed to be the same as the physical record
+	 * on the DBMS.
+	 * 
+	 * @return boolean True if the data is in sync with the DB
+	 */
 	public function isSynced() {
 		return $this->synced && !$this->deleted;
 	}
 	
+	/**
+	 * This method stores the data of this record to the database. In case
+	 * of database error it throws an Exception and leaves the state of the
+	 * record unchanged.
+	 * 
+	 * @throws privateException
+	 */
 	public function store() {
 		
 		if (empty($this->src)) {
@@ -86,10 +126,21 @@ abstract class databaseRecord
 		$this->src    = $this->data;
 	}
 	
+	/**
+	 * Returns the fields that compound the primary key of this record.
+	 * 
+	 * @return DBField[]
+	 */
 	public function getUniqueFields() {
 		return $this->table->getPrimaryKey();
 	}
 	
+	/**
+	 * Creates a list of restrictions that identify this record inside it's
+	 * database table.
+	 * 
+	 * @return Restriction[]
+	 */
 	public function getUniqueRestrictions() {
 		$primaries    = $this->table->getPrimaryKey();
 		$restrictions = Array();
@@ -102,12 +153,24 @@ abstract class databaseRecord
 		return $restrictions;
 	}
 	
+	/**
+	 * Returns a query to fetch children of this record included in the 
+	 * selected table.
+	 * 
+	 * @param DBTable $table
+	 * @return Query
+	 */
 	public function getChildren($table) {
 		$query = $this->queryInstance($table);
 		$query->setParent($this);
 		return $query;
 	}
 	
+	/**
+	 * Returns the table this record belongs to.
+	 * 
+	 * @return Table
+	 */
 	public function getTable() {
 		return $this->table;
 	}
