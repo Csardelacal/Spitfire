@@ -19,8 +19,30 @@ class MysqlPDORecord extends databaseRecord
 		$db->execute($stt);
 	}
 
+	/**
+	 * Modifies this record on high write environments. If two processes modify
+	 * this record simultaneously they won't generate unconsistent data.
+	 * This function is especially useful for counters i.e. pageviews, clicks,
+	 * plays or any kind of transactions.
+	 * 
+	 * @throws privateException If the database couldn't handle the request.
+	 * @param string $key
+	 * @param int|float|double $diff
+	 */
 	public function increment($key, $diff = 1) {
-		throw new \BadMethodCallException('Unimplemented Method: increment');
+		
+		$table = $this->getTable();
+		$db = $table->getDb();
+		
+		$stt = sprintf('UPDATE %s SET %s = %s + %s WHERE %s',
+			$table, 
+			$key,
+			$key,
+			$db->quote($diff),
+			implode(' AND ', $this->getUniqueRestrictions())
+		);
+		
+		$db->execute($stt);
 	}
 
 	public function insert() {
