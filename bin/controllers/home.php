@@ -129,7 +129,7 @@ class homeController extends Controller
 			}
 
 			try {
-				$child = $this->model->dependant->newRecord();
+				$child = db()->table('dependant')->newRecord();
 				$child->test = $rec;
 				$child->test2 = $rec2;
 				$child->title    = time() . 'i';
@@ -138,6 +138,7 @@ class homeController extends Controller
 
 				$child->content.= time();
 				$child->store();
+				$child->increment('numeric');
 			}
 			catch (Exception $e) {
 				echo $e->getMessage();

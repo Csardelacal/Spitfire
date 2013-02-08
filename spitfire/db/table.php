@@ -74,7 +74,7 @@ abstract class Table extends Queriable
 	
 	/**
 	 * Returns the database the table belongs to.
-	 * @return DB
+	 * @return DB|spitfire\storage\database\DB
 	 */
 	public function getDb() {
 		return $this->db;
@@ -120,6 +120,12 @@ abstract class Table extends Queriable
 	
 	abstract public function create();
 	abstract public function repair();
+	
+	/**
+	 * Creates a new record in this table
+	 * 
+	 * @return databaseRecord Empty record for the selected table
+	 */
 	abstract public function newRecord();
 	
 	/**
