@@ -39,7 +39,7 @@ class mysqlPDOField extends DBField
 
 	public function add() {
 		$stt = "ALTER TABLE `{$this->table->getTableName()}` 
-			ADD ({$this->getName()} {$this->columnDefinition()} )";
+			ADD COLUMN (`{$this->getName()}` {$this->columnDefinition()} )";
 		$this->table->getDb()->execute($stt);
 		
 		if ($this->isPrimary()) {

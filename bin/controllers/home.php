@@ -138,6 +138,7 @@ class homeController extends Controller
 
 				$child->content.= time();
 				$child->store();
+				echo $child->id;
 				$child->increment('numeric');
 			}
 			catch (Exception $e) {
