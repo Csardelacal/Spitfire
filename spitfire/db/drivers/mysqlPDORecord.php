@@ -7,6 +7,12 @@ use \spitfire\storage\database\DBField;
 
 class MysqlPDORecord extends databaseRecord
 {
+	/**
+	 * Deletes this record from the database. This method's call cannot be
+	 * undone. <b>[NOTICE]</b>Usually Spitfire will cascade all the data
+	 * related to this record. So be careful calling it deliberately.
+	 * 
+	 */
 	public function delete() {
 		$table = $this->getTable();
 		$db    = $table->getDb();
@@ -34,7 +40,7 @@ class MysqlPDORecord extends databaseRecord
 		$table = $this->getTable();
 		$db = $table->getDb();
 		
-		$stt = sprintf('UPDATE %s SET %s = %s + %s WHERE %s',
+		$stt = sprintf('UPDATE %s SET `%s` = `%s` + %s WHERE %s',
 			$table, 
 			$key,
 			$key,
@@ -59,6 +65,7 @@ class MysqlPDORecord extends databaseRecord
 			implode(', ', $quoted)
 			);
 		$db->execute($stt);
+		return $db->getConnection()->lastInsertId();
 	}
 
 	public function update() {
