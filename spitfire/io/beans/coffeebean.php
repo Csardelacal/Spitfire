@@ -10,8 +10,13 @@ abstract class CoffeeBean
 	private $fields = Array();
 	public $model;
 	
-	public function insertIntoDBRecord(databaseRecord$record) {
-		throw new Exception('coffebean::insertIntoDBRecord - Not implemented');
+	public function makeDBRecord() {
+		if ($this->model) {
+			$fields = $this->fields;
+			$record = db()->table($this->model)->newRecord();
+			foreach ($fields as $field) $record->{$field->getModelField()} = $field->getValue();
+		}
+		return $record;
 	}
 	
 	public function field($instanceof, $name, $caption, $method = CoffeeBean::METHOD_POST) {

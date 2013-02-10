@@ -8,8 +8,12 @@ class UserBean extends CoffeeBean
 	public function __construct() {
 		$this->field('TextField', 'user', 'User Name')
 			->setModelField('username');
-		$this->field('TextField', 'email', 'Enter email');
-		$this->field('TextField', 'age', 'Enter your age');
+		
+		$this->field('TextField', 'email', 'Enter email')
+			->setModelField('email');
+		
+		$this->field('TextField', 'age', 'Enter your age')
+			->setModelField('age');
 	}
 	
 }

@@ -64,13 +64,15 @@ AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 
 
+AutoLoad::registerClass('spitfire\io\html\HTMLElement',                         $cur_dir.'/io/html/element.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            $cur_dir.'/io/html/form.php');
 
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
 
-AutoLoad::registerClass('ComponentManager',      $cur_dir.'/components/componentManager.php');
-AutoLoad::registerClass('Component',             $cur_dir.'/components/component.php');
+AutoLoad::registerClass('AppConfig',                                            $cur_dir.'/components/intent.php');
+AutoLoad::registerClass('AppManager',                                           $cur_dir.'/components/appManager.php');
+AutoLoad::registerClass('App',                                                  $cur_dir.'/components/app.php');
 AutoLoad::registerClass('assetsController',      $cur_dir.'/components/assets.php');
 
 AutoLoad::registerClass('URL',                   $cur_dir.'/url.php');

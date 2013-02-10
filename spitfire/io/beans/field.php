@@ -53,7 +53,9 @@ abstract class Field
 	}
 	
 	public function getValue() {
-		return $this->value;
+		if ($this->value) return $this->value;
+		elseif ($this->method == \CoffeeBean::METHOD_GET ) return $_GET[$this->name];
+		elseif ($this->method == \CoffeeBean::METHOD_POST) return $_POST[$this->name];
 	}
 	
 	public function setModelField($name) {
