@@ -1,6 +1,5 @@
 <?php
 
-use M3W\adminComponent;
 
 class adminController extends Controller
 {
@@ -9,8 +8,8 @@ class adminController extends Controller
 	
 	public function __construct() {
 		parent::__construct();
-		$this->config = adminComponent::getConfig();
-		$this->ctx = new adminComponent();
+		$this->ctx = ComponentManager::get('M3W', 'admin');
+		$this->config = $this->ctx->getConfig();
 	}
 	public function index() {
 		echo "Welcome to the admin panel. \nRunning from: {$this->ctx->getDir()}\nThis are the models loaded into this:";

@@ -2,10 +2,10 @@
 
 namespace M3W;
 
-use App;
+use Component;
 use \spitfire\AutoLoad;
 
-class adminComponent extends App
+class adminComponent extends Component
 {
 	
 	public function __construct() {

@@ -134,6 +134,8 @@ class AutoLoad
 				break;
 				
 		}
+		
+		if (SpitFire::$debug) SpitFire::$debug->log(".... failed! No class $className");
 
 	}
 

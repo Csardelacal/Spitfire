@@ -5,7 +5,7 @@ class homeController extends Controller
 
 	public function index ($object = '', $params = '') {
 		
-		$test = AppManager::get('M3W', 'testing');
+		$test = ComponentManager::get('M3W', 'testing');
 		
 		$this->view->set('FW_NAME', 'SpitfirePHP');
 		$this->view->set('helloworld', $test->helloWorld());

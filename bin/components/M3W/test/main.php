@@ -2,9 +2,9 @@
 
 namespace M3W;
 
-use App;
+use Component;
 
-class testComponent extends App
+class testComponent extends Component
 {
 	
 	public function helloWorld() {
