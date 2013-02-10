@@ -1,34 +1,30 @@
 <?php
 
+use spitfire\io\html\HTMLForm;
+
 abstract class CoffeeBean
 {
+	const METHOD_POST = 'POST';
+	const METHOD_GET  = 'GET';
 	
-	protected $method = "POST";
-	protected $fields = Array();
-	
-	public function __construct() {
-		if     ($this->method == "POST") $src = &$_POST;
-		elseif ($this->method == "GET" ) $src = &$_GET;
-		else                             $src = &$_REQUEST;
-		
-		foreach ($this->fields as $local => $remote) {
-			#Check if valid and store
-			if ($this->_validate($local, $src[$remote]))
-			$this->{$local} = $src[$remote];
-		}
-		
-	}
-	
-	public function isComplete() {
-		$fields = array_keys($this->fields);
-		foreach ($fields as $field)
-			if (!isset ($this->$field)) return false;
-	}
+	private $fields = Array();
+	public $model;
 	
 	public function insertIntoDBRecord(databaseRecord$record) {
-		$fields = array_keys($this->fields);
-		foreach ($fields as $field) $record->{$field} = $this->$field;
-		return $record;
+		throw new Exception('coffebean::insertIntoDBRecord - Not implemented');
+	}
+	
+	public function field($instanceof, $name, $caption, $method = CoffeeBean::METHOD_POST) {
+		$instanceof = "\\spitfire\\io\\beans\\$instanceof";
+		return $this->fields[] = new $instanceof($name, $caption, $method);
+	}
+	
+	public function getFields() {
+		return $this->fields;
+	}
+	
+	public function makeForm($action) {
+		return new HTMLForm($action, $this);
 	}
 	
 	/**

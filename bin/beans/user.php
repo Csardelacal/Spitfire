@@ -3,16 +3,13 @@
 class UserBean extends CoffeeBean
 {
 	
-	protected $method = "GET";
+	public $model = 'user';
 	
-	protected $fields = Array(
-	    'unique'  => 'username',
-	    'content' => 'surname',
-	    'id'      => 'age'
-	);
-	
-	public function validateId($id) {
-		return !!(int)$id;
+	public function __construct() {
+		$this->field('TextField', 'user', 'User Name')
+			->setModelField('username');
+		$this->field('TextField', 'email', 'Enter email');
+		$this->field('TextField', 'age', 'Enter your age');
 	}
 	
 }
