@@ -5,7 +5,7 @@ class homeController extends Controller
 
 	public function index ($object = '', $params = '') {
 		
-		$test = ComponentManager::get('M3W', 'testing');
+		$test = AppManager::get('M3W', 'testing');
 		
 		$this->view->set('FW_NAME', 'SpitfirePHP');
 		$this->view->set('helloworld', $test->helloWorld());
@@ -161,12 +161,21 @@ class homeController extends Controller
 		}
 	}
 	
-	public function beans() {
+	public function register() {
 		
 		$user = CoffeeBean::getBean('user');//->insertIntoDBRecord(new databaseRecord($this->model->test));
 		print_r($user);
-		echo $user->makeForm(new URL('home', 'save'));
+		echo $user->makeForm(new URL('home', 'createUser'));
 		//$user->store();
+	}
+	
+	public function createUser() {
+		$user = CoffeeBean::getBean('user');//->insertIntoDBRecord(new databaseRecord($this->model->test));
+		print_r($user);
+		print_r($user->makeDBRecord());
+		$user->makeDBRecord()->store();
+		
+		print_r(\spitfire\SpitFire::$debug->getMessages());
 	}
 	
 	public function writetodb() {

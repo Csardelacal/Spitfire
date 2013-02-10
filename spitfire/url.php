@@ -117,4 +117,8 @@ class URL
 	public static function asset($asset_name) {
 		return SpitFire::baseUrl() . '/assets/' . $asset_name;
 	}
+	
+	public static function make($url) {
+		return SpitFire::baseUrl() . $url;
+	}
 }

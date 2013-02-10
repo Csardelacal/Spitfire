@@ -3,6 +3,7 @@
 namespace spitfire;
 
 use Headers;
+use publicException;
 
 require_once 'spitfire/core/functions.php';
 

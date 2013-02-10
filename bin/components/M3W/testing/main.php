@@ -2,9 +2,9 @@
 
 namespace M3W;
 
-use Component;
+use App;
 
-class testingComponent extends Component
+class testingComponent extends App
 {
 	
 	public function helloWorld() {
@@ -13,7 +13,7 @@ class testingComponent extends Component
 
 	public static function info() {
 		
-		\ComponentManager::requires('M3W', 'test');
+		\AppManager::requires('M3W', 'test');
 		
 		return Array(
 		    'vendor' => 'M3W',
