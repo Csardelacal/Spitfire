@@ -57,9 +57,14 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestrictionGr
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet',  $cur_dir.'/db/drivers/mysqlPDORes.php');
 
 AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
-AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/coffeebean.php');
+AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/io/beans/coffeebean.php');
+AutoLoad::registerClass('spitfire\io\beans\Field',                              $cur_dir.'/io/beans/field.php');
+AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
 AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
+
+
+AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            $cur_dir.'/io/html/form.php');
 
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
