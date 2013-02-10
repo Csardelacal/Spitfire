@@ -15,7 +15,7 @@ abstract class stdSQLTable extends Table
 	private function columnDefinitions() {
 		$fields = $this->getFields();
 		foreach ($fields as $name => $f) {
-			$fields[$name] = $name . ' ' . $f->columnDefinition();
+			$fields[$name] = '`'. $name . '` ' . $f->columnDefinition();
 		}
 		return $fields;
 	}
@@ -41,7 +41,7 @@ abstract class stdSQLTable extends Table
 			#Get the table that represents $ref
 			$referencedtable = $this->getDb()->table($ref);
 			//Prepare the statement
-			$refstt = sprintf('FOREIGN KEY (%s) REFERENCES %s(%s)',
+			$refstt = sprintf('FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE CASCADE ON UPDATE CASCADE',
 				implode(', ', $referencedfields),
 				$referencedtable->getTablename(),
 				implode(', ', $ref->getPrimary()) 

@@ -150,6 +150,7 @@ class homeController extends Controller
 			
 			foreach ($q as $e) echo $e->title . "\n";
 			
+			if ($rec->getChildren($this->model->dependant)->count() > 10) $rec->delete();
 			
 			print_r(\spitfire\SpitFire::$debug->getMessages());
 		}
