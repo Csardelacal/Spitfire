@@ -70,9 +70,8 @@ AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
 
-AutoLoad::registerClass('AppConfig',                                            $cur_dir.'/components/intent.php');
-AutoLoad::registerClass('AppManager',                                           $cur_dir.'/components/appManager.php');
-AutoLoad::registerClass('App',                                                  $cur_dir.'/components/app.php');
+AutoLoad::registerClass('ComponentManager',                                     $cur_dir.'/components/componentManager.php');
+AutoLoad::registerClass('Component',                                            $cur_dir.'/components/component.php');
 AutoLoad::registerClass('assetsController',      $cur_dir.'/components/assets.php');
 
 AutoLoad::registerClass('URL',                   $cur_dir.'/url.php');

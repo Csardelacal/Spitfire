@@ -3,6 +3,7 @@
 namespace spitfire\exceptions;
 
 use Exception;
+use \fileNotFoundException;
 use spitfire\SpitFire;
 use spitfire\environment;
 

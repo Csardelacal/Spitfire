@@ -1,6 +1,6 @@
 <?php
 
-class AppManager
+class ComponentManager
 {
 	
 	private static $apps = Array();
@@ -11,7 +11,6 @@ class AppManager
 
 	public static function register($vendor, $component) {
 		self::$apps[$vendor . '\\' . $component] = call_user_func_array(Array($vendor.'\\'.$component, 'info'), Array());
-		return call_user_func_array(Array($vendor.'\\'.$component, 'getConfig'), Array());
 	}
 	
 	public static function get($p1, $p2 = false, $min_version = 0, $max_version = 0) {
