@@ -34,7 +34,7 @@ class MysqlPDOTable extends stdSQLTable
 	}
 
 	public function repair() {
-		$stt = "DESCRIBE `{$this->tablename}`";
+		$stt = "DESCRIBE $this";
 		$fields = $this->getFields();
 		//Fetch the DB Fields and create on error.
 		try {
