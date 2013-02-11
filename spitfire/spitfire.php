@@ -2,9 +2,10 @@
 
 namespace spitfire;
 
+use App;
 use Headers;
-use publicException;
 
+require_once 'spitfire/app.php';
 require_once 'spitfire/core/functions.php';
 
 /**
@@ -13,38 +14,40 @@ require_once 'spitfire/core/functions.php';
  * @package spitfire
  */
 
-class SpitFire 
+class SpitFire extends App
 {
 	
-	static $started         = false;
-	static $cwd             = false;
+	static  $started         = false;
+	private $cwd             = false;
 
-	static $autoload        = false;
-	static $controller      = false;
-	static $view            = false;
+	private $autoload        = false;
 	static $model           = false;
 	
 	/** var URL Depicts the current system url*/
 	static $current_url     = false;
 
-	static $debug           = false;
+	private $debug           = false;
 	static $headers         = false;
-
-	public static function init() {
-
-		if (self::$started) return false;
-		self::$cwd = getcwd();
-		$cur_dir = self::$cwd . DIRECTORY_SEPARATOR . 'spitfire';
+	
+	private $apps = Array();
+	
+	public function __construct() {
+		#Check if SF is running
+		if (self::$started) throw new \privateException('Spitfire is already running');
+		
+		#Set the current working directory
+		$this->cwd = getcwd();
+		$cur_dir = $this->cwd . DIRECTORY_SEPARATOR . 'spitfire';
 
 		#Try to start autoload
-		if (! class_exists('_SF_AutoLoad')) include dirname(__FILE__).'/autoload.php';
-		self::$autoload = new AutoLoad();
+		self::includeIfPossible($cur_dir.'/autoload.php');
+		$this->autoload = new AutoLoad($this);
 
 		#Include file to define the location of core components
 		self::includeIfPossible("$cur_dir/autoload_core_files.php");
 
 		#Initialize the exception handler
-		self::$debug   = new exceptions\ExceptionHandler();
+		$this->debug   = new exceptions\ExceptionHandler();
 		self::$headers = new Headers();
 
 		#Try to include the user's evironment & routes
@@ -56,40 +59,34 @@ class SpitFire
 		self::$current_url = Path::getPath();
 
 		self::$started = true;
-		return true;
 	}
 
-	public static function fire() {
+	public function fire() {
 
 		#Start debugging output
 		ob_start();
-		#Import and instance the controller
-		$classBase   = implode('_', self::$current_url->getController());
-		$_controller = $classBase .'Controller';
-		if (!class_exists($_controller)) throw new publicException("Page not found", 404);
-		self::$controller = $controller = new $_controller();
-		#Create the view
-		$_view      = $classBase . 'View';
-		if (class_exists($_view)) self::$view = new $_view;
-		else                      self::$view = new View();
 		#Create the model
 		self::$model = db();
-		#Check if the action is available
-		$method = Array($controller, self::$current_url->getAction());
 		
-		#Onload
-		if (method_exists($controller, 'onload') ) 
-			call_user_func_array(Array($controller, 'onload'), Array(self::$current_url->getAction()));
-		#Fire!
-		if (is_callable($method)) call_user_func_array($method, self::$current_url->getObject());
-		else throw new publicException('E_PAGE_NOT_FOUND', 404);
+		#Select the app
+		$controller = implode('\\', self::$current_url->getController());
+		if (isset($this->apps[$controller])) $app = $this->apps[$controller];
+		else $app = $this;
+		
+		$app->runTask($controller, self::$current_url->getAction(), self::$current_url->getObject());
+		
 		#End debugging output
-		self::$view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
+		$app->view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
 
 		ob_start();
-		self::$view->render();
+		$app->view->render();
 		self::$headers->send();
 		ob_flush();
+	}
+	
+	public function registerController($controller, $location, $app) {
+		self::$autoload->registerClass($controller . 'Controller', $location);
+		$this->apps[$controller] = $app;
 	}
 	
 	public static function baseUrl(){
@@ -101,6 +98,22 @@ class SpitFire
 	public static function includeIfPossible($file) {
 		if (file_exists($file)) return include $file;
 		else return false;
+	}
+	
+	public function log($msg) {
+		if ($this->debug) $this->debug->log ($msg);
+	}
+	
+	public function getMessages() {
+		return $this->debug->getMessages();
+	}
+
+	public function getAssetsDirectory() {
+		return 'assets/';
+	}
+
+	public function getTemplateDirectory() {
+		return TEMPLATES_DIRECTORY;
 	}
 
 }

@@ -4,6 +4,15 @@ use spitfire\SpitFire;
 use spitfire\environment;
 use spitfire\storage\database\DB;
 
+function spitfire() {
+	static $sf;
+	if ($sf) return $sf;
+	
+	$sf = new SpitFire();
+	$sf->fire();
+	return $sf;
+}
+
 /**
  * Shorthand function to create / retrieve the model the application is using
  * to store data.

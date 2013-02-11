@@ -13,13 +13,10 @@ use spitfire\SpitFire;
 
 class _SF_MVC
 {
+	private $app;
 	
-	/**
-	 * 
-	 * @return DBInterface
-	 */
-	function _getModel() {
-		return $this->model;
+	function __construct($app) {
+		$this->app = $app;
 	}
 	
 	/**
@@ -31,10 +28,10 @@ class _SF_MVC
 		
 		switch ($variable) {
 			case 'controller':
-				return $this->controller = SpitFire::$controller;
+				return $this->controller = $this->app->controller;
 				break;
 			case 'view':
-				return $this->view = Spitfire::$view;
+				return $this->view = $this->app->view;
 				break;
 			case 'model':
 				return $this->model = SpitFire::$model;

@@ -152,7 +152,7 @@ class homeController extends Controller
 			
 			if ($rec->getChildren($this->model->dependant)->count() > 10) $rec->delete();
 			
-			print_r(\spitfire\SpitFire::$debug->getMessages());
+			print_r(spitfire()->getMessages());
 		}
 		catch(Exception $e) {
 			echo $e->getMessage();

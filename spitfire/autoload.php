@@ -17,10 +17,12 @@ class AutoLoad
 
 	static $instance = false;
 
+	private $spitfire;
 	private $registered_classes = Array();
 
-	public function __construct() {
+	public function __construct($spitfire) {
 		self::$instance = $this;
+		$this->spitfire = $spitfire;
 		spl_autoload_register(Array($this, 'retrieveClass'));
 	}
 
@@ -31,7 +33,7 @@ class AutoLoad
 
 	public function retrieveClass($className) {
 
-		if (SpitFire::$debug) SpitFire::$debug->log("Imported class $className");
+		$this->spitfire->log("Imported class $className");
 		
 		if (isset($this->registered_classes[$className]))
 			return include $this->registered_classes[$className];
@@ -135,7 +137,7 @@ class AutoLoad
 				
 		}
 		
-		if (SpitFire::$debug) SpitFire::$debug->log(".... failed! No class $className");
+		$this->spitfire->log(".... failed! No class $className");
 
 	}
 
