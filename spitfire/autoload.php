@@ -11,6 +11,7 @@ class AutoLoad
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   MODEL_DIRECTORY        = 'bin/models/';
 	const   BEAN_DIRECTORY         = 'bin/beans/';
+	const   APP_DIRECTORY          = 'bin/apps/';
 	const   UI_COMPONENT_DIRECTORY = 'bin/ui/';
 	const   STD_CLASS_DIRECTORY    = 'bin/classes/';
 	const   CLASS_EXTENSION        = '.php';
@@ -117,6 +118,23 @@ class AutoLoad
 				
 				$filename = self::BEAN_DIRECTORY .
 						strtolower($class->getClassName()) .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				break;
+				
+			case ClassInfo::TYPE_APP:
+				$filename = self::APP_DIRECTORY .
+						$class->getClassName() .
+						DIRECTORY_SEPARATOR.
+						'main' .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::APP_DIRECTORY .
+						strtolower($class->getClassName()) .
+						DIRECTORY_SEPARATOR.
+						'main' .
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
 				

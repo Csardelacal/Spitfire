@@ -13,6 +13,12 @@ function spitfire() {
 	return $sf;
 }
 
+function app($name) {
+	$appName = $name . 'App';
+	$app = new $appName(APP_DIRECTORY . $name . DIRECTORY_SEPARATOR);
+	return $app;
+}
+
 /**
  * Shorthand function to create / retrieve the model the application is using
  * to store data.

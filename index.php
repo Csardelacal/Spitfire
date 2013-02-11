@@ -30,6 +30,7 @@ include 'spitfire/spitfire.php';
 /* Define bootstrap settings. Environments are a better way to handle
  * config but we need to create them first.
  */
+define ('APP_DIRECTORY',         'bin/apps/',        true);
 define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
 define ('TEMPLATES_DIRECTORY',   'bin/views/',       true);

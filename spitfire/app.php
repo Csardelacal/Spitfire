@@ -6,6 +6,11 @@ abstract class App
 {
 	public $view;
 	public $controller;
+	public $basedir;
+	
+	public function __construct($basedir) {
+		$this->basedir = $basedir;
+	}
 	
 	public function runTask($controller, $action, $object) {
 		#Create a controller
@@ -25,9 +30,10 @@ abstract class App
 		#Check if the controller can handle the request
 		$request = Array($this->controller, $action);
 		if (is_callable($request)) call_user_func_array($request, $object);
-		else throw new publicException('Action not found');
+		else throw new publicException('Action not found', 404);
 	}
 	
+	abstract public function enable();
 	abstract public function getAssetsDirectory();
 	abstract public function getTemplateDirectory();
 	

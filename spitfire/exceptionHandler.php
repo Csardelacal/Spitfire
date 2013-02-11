@@ -19,10 +19,10 @@ use spitfire\environment;
  * @param string $message
  */
 function get_error_page($code, $message, $moreInfo = '') {
-	$error_page = Spitfire::$cwd . '/bin/error_pages/'.$code.'.php';
+	$error_page = spitfire()->getCWD() . '/bin/error_pages/'.$code.'.php';
 	if (file_exists($error_page)) {
 		include $error_page;
-	} elseif (file_exists($error_page = SpitFire::$cwd . '/bin/error_pages/default.php')) {
+	} elseif (file_exists($error_page = spitfire()->getCWD() . '/bin/error_pages/default.php')) {
 		include $error_page;
 	} else {
 		echo 'Error page not found. 
