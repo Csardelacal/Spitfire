@@ -55,13 +55,15 @@ class SpitFire extends App
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
 
-		#Get the current path...
-		self::$current_url = Path::getPath();
 
 		self::$started = true;
 	}
 
 	public function fire() {
+		
+		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
+		#Get the current path...
+		self::$current_url = Path::getPath();
 
 		#Start debugging output
 		ob_start();
@@ -85,7 +87,7 @@ class SpitFire extends App
 	}
 	
 	public function registerController($controller, $location, $app) {
-		self::$autoload->registerClass($controller . 'Controller', $location);
+		$this->autoload->registerClass($controller . 'Controller', $location);
 		$this->apps[$controller] = $app;
 	}
 	
@@ -107,6 +109,10 @@ class SpitFire extends App
 	public function getMessages() {
 		return $this->debug->getMessages();
 	}
+	
+	public function getCWD() {
+		return $this->cwd;
+	}
 
 	public function getAssetsDirectory() {
 		return 'assets/';
@@ -114,6 +120,10 @@ class SpitFire extends App
 
 	public function getTemplateDirectory() {
 		return TEMPLATES_DIRECTORY;
+	}
+
+	public function enable() {
+		return null;
 	}
 
 }

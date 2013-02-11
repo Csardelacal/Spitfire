@@ -83,7 +83,7 @@ use spitfire\environment;
 			<pre><?=$moreInfo?></pre>
 			
 			<?php
-				$messages = SpitFire::$debug->getMessages();
+				$messages = spitfire()->getMessages();
 				if ($messages){
 					echo '<h2>Debugging messages <small>To hide this set debug_mode to false.</small></h2>';
 					echo '<p>List of messages the app generated during it\'s execution</p>';
