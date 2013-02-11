@@ -18,7 +18,9 @@ class View extends _SF_MVC
 	 * 
 	 * @param URL $url
 	 */
-	public function __construct() {
+	public function __construct($app) {
+		
+		parent::__construct($app);
 		
 		$url        = $this->current_url;
 		$controller = implode(DIRECTORY_SEPARATOR, $url->getController());

@@ -116,7 +116,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		
 		try {
 			$stt = $con->query($statement);
-			SpitFire::$debug->log("DB: " . $statement);
+			spitfire()->log("DB: " . $statement);
 			#Execute the query
 		}
 		catch(PDOException $e) {
@@ -131,7 +131,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			try{
 				$this->repair();
 				$stt = $con->query($statement);
-				SpitFire::$debug->log("DB: " . $statement);
+				spitfire()->log("DB: " . $statement);
 				return $stt;
 			}
 			catch (Exception $e) {/*Ignore*/}

@@ -32,7 +32,7 @@ include 'spitfire/spitfire.php';
  */
 define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
-define ('VIEWS_DIRECTORY',       'bin/views/',       true);
+define ('TEMPLATES_DIRECTORY',   'bin/views/',       true);
 
 /* SESSION DEFAULTS AND START_______________________________________
  * This sets basic settings about user sessions and their duration,
@@ -51,7 +51,4 @@ ini_set('session.save_path', "bin/usr/sessions");
 ini_set('memory_limit', '64M');/**/
 
 /* Call the selected controller with the selected method. */
-use spitfire\SpitFire;
-
-SpitFire::init();
-SpitFire::fire();
+spitfire();
