@@ -1,11 +1,16 @@
 <?php
 
+namespace home\test;
 
-class home_test_testController extends Controller
+use Controller;
+
+class testController extends Controller
 {
 	
 	public function index() {
-		die('Hi! Hi!');
+		echo 'Hi! Hi!';
+		ob_flush();
+		die();
 	}
 	
 }

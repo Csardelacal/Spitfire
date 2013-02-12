@@ -28,32 +28,45 @@ class Path
 
 		/** @var $path_info string */
 		$path_info = router::rewrite($_SERVER['PATH_INFO']);
-		$path = explode('/', $path_info);
-		if ( empty($path[0]) ) array_shift ($path);
+		$path = array_filter(explode('/', $path_info));
 
-		//Try to fetch the extension
-		$last      = explode('.', end($path));
-		$extension = (isset($last[1]))? $last[1] : false;
-
-		if ($extension) {
-			array_pop($path);
+		/* If the path is empty it means that no parameters were given
+		 * so Spitfire doesn't need to work parsing the URL. Otherwise
+		 * it will retrieve data about it.
+		 */
+		if (!empty($path))
+		{
+			/* To fetch the extension requested by the user we do the
+			 * following:
+			 * * We get the last element of the path.
+			 * * Split it by the .
+			 * * Keep the first part as filename
+			 * * And the rest as extension.
+			 */
+			$last      = explode('.', array_pop($path));
+			$extension = (isset($last[1]))? $last[1] : false;
 			array_push($path, $last[0]);
-		}
-
-		//Assign the object as array (with multiple elements) to a Global
-		$controller_data = Array();
-		if (isset($path[0]) && $path[0]) {
+			
+			/* To get the controller and action of an element we 
+			 * keep checking if each element is a valid controller,
+			 * once it didn't find a valid controller it stops.
+			 */
 			do {
-				$controller_data[] = array_shift($path); 
-			}while (class_exists(implode('_', $controller_data) . 'Controller'));
+				$controller[] = array_shift($path);
+			} while (class_exists ( implode('\\', $controller) . 'Controller'));
+			
+			$action = array_pop($controller);
+			$object = $path;
+			
+		
 		}
-
-		if (isset($controller_data[0]) )
-			array_unshift($path, array_pop($controller_data));
-
-		$controller = $controller_data;
-		$action     = array_shift($path);
-		$object     = $path;
+		else {
+			$controller = null;
+			$action = null;
+			$object = null;
+		}
+		
+		
 
 		//Check if invalid url's are being requested
 		if ($controller == environment::get('maintenance_controller') ) 
