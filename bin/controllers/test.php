@@ -1,6 +1,6 @@
 <?php
 
-class controller_test extends controller
+class testController extends Controller
 {
 	public function index ($object, $params) {
 		echo '<html><head></head><body><form method="post" action="' 

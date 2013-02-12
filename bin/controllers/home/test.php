@@ -1,7 +1,10 @@
 <?php
 
+namespace home;
 
-class home_testController extends Controller
+use Controller;
+
+class testController extends Controller
 {
 	
 	public function index() {
