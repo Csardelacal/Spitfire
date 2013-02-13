@@ -1,3 +1,3 @@
 <?php
 
-app('admin')->enable();
+app('admin', 'admin')->enable();

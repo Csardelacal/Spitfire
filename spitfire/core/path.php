@@ -47,13 +47,23 @@ class Path
 			$extension = (isset($last[1]))? $last[1] : false;
 			array_push($path, $last[0]);
 			
+			/* Try to get the current namespace, if one is registered
+			 * we will redirect the request to another app.
+			 */
+			if (spitfire()->appExists(reset($path))) {
+				$namespace = array_shift($path);
+			}
+			else $namespace = '';
+			
+			$app = spitfire()->getApp($namespace);
+			
 			/* To get the controller and action of an element we 
 			 * keep checking if each element is a valid controller,
 			 * once it didn't find a valid controller it stops.
 			 */
 			do {
 				$controller[] = array_shift($path);
-			} while (class_exists ( implode('\\', $controller) . 'Controller'));
+			} while ($app->hasController( implode('\\', $controller)));
 			
 			$action = array_pop($controller);
 			$object = $path;
@@ -77,6 +87,7 @@ class Path
 		//Define controllers
 		$url = new URL($controller, $action, $object);
 		$url->setExtension($extension);
+		$url->setNamespace($namespace);
 		self::$current_url = $url;
 		return $url;
 	}
