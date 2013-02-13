@@ -72,7 +72,7 @@ class SpitFire extends App
 		
 		#Select the app
 		$controller = implode('\\', self::$current_url->getController());
-		if (isset($this->apps[$controller])) $app = $this->apps[$controller];
+		if (null != ($ns = self::$current_url->getNamespace())) $app = $this->apps[$ns];
 		else $app = $this;
 		
 		$app->runTask($controller, self::$current_url->getAction(), self::$current_url->getObject());
@@ -86,9 +86,16 @@ class SpitFire extends App
 		ob_flush();
 	}
 	
-	public function registerController($controller, $location, $app) {
-		$this->autoload->registerClass($controller . 'Controller', $location);
-		$this->apps[$controller] = $app;
+	public function registerApp($app, $namespace) {
+		$this->apps[$namespace] = $app;
+	}
+	
+	public function appExists($namespace) {
+		return isset($this->apps[$namespace]);
+	}
+	
+	public function getApp($namespace) {
+		return isset($this->apps[$namespace]) ? $this->apps[$namespace] : $this;
 	}
 	
 	public static function baseUrl(){
@@ -124,6 +131,16 @@ class SpitFire extends App
 
 	public function enable() {
 		return null;
+	}
+
+	public function getControllerClassName($controller) {
+		if (is_array($controller)) $c = implode('\\', $controller). 'Controller';
+		else $c = $controller . 'Controller';
+		return $c;
+	}
+
+	public function hasController($controller) {
+		return class_exists($this->getControllerClassName($controller));
 	}
 
 }

@@ -14,7 +14,7 @@ abstract class App
 	
 	public function runTask($controller, $action, $object) {
 		#Create a controller
-		$controllerClass = $controller . 'Controller';
+		$controllerClass = $this->getControllerClassName($controller);
 		if (!class_exists($controllerClass)) throw new publicException('Page not found', 404);
 		$this->controller = new $controllerClass($this);
 		
@@ -33,8 +33,14 @@ abstract class App
 		else throw new publicException('Action not found', 404);
 	}
 	
+	public function getBaseDir() {
+		return $this->basedir;
+	}
+	
 	abstract public function enable();
 	abstract public function getAssetsDirectory();
 	abstract public function getTemplateDirectory();
+	abstract public function hasController($controller);
+	abstract public function getControllerClassName($controller);
 	
 }

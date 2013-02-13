@@ -13,9 +13,10 @@ function spitfire() {
 	return $sf;
 }
 
-function app($name) {
+function app($name, $namespace) {
 	$appName = $name . 'App';
 	$app = new $appName(APP_DIRECTORY . $name . DIRECTORY_SEPARATOR);
+	spitfire()->registerApp($app, $namespace);
 	return $app;
 }
 

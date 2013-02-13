@@ -15,6 +15,7 @@ use spitfire\SpitFire;
 class URL
 {
 	//Private
+	private $namespace;
 	private $controller;
 	private $action;
 	private $object;
@@ -65,6 +66,15 @@ class URL
 	
 	public function getExtension() {
 		return $this->extension;
+	}
+	
+	public function setNamespace($namespace) {
+		if (! empty($namespace) )
+		$this->namespace = $namespace;
+	}
+	
+	public function getNamespace() {
+		return $this->namespace;
 	}
 	
 	/**
