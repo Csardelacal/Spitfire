@@ -3,6 +3,7 @@
 namespace spitfire;
 
 use _SF_MVC;
+use \_SF_ViewElement;
 
 class View extends _SF_MVC
 {
@@ -10,29 +11,42 @@ class View extends _SF_MVC
 	private $data = Array();
 	
 	private $render_layout = true;
-	private $layout = "bin/views/layout.php";
+	private $layout;
 	
-	const default_view = 'bin/views/default.php';
+	const default_view = 'default.php';
 	
 	/**
 	 * 
-	 * @param URL $url
+	 * @param App $app
 	 */
 	public function __construct($app) {
 		
 		parent::__construct($app);
+		
+		/*
+		 * Set default files. This includes the view's file, layout and
+		 * the basedir for elements.
+		 */
+		
+		$basedir    = $app->getTemplateDirectory();
 		
 		$url        = $this->current_url;
 		$controller = implode(DIRECTORY_SEPARATOR, $url->getController());
 		$action     = $url->getAction();
 		$extension  = $url->getExtension();
 		
-		if     ( file_exists("bin/views/$controller/$action.$extension"))
-			$this->file = "bin/views/$controller/$action.$extension";
-		elseif ( file_exists("bin/views/$controller.$extension"))
-			$this->file = "bin/views/$controller.$extension";
+		if     ( file_exists("$basedir$controller/$action.$extension"))
+			$this->file = "$basedir$controller/$action.$extension";
+		elseif ( file_exists("$basedir$controller.$extension"))
+			$this->file = "$basedir$controller.$extension";
 		else
-			$this->file = self::default_view;
+			$this->file = $basedir . self::default_view;
+		
+		
+		if     ( file_exists("{$basedir}layout.$extension"))
+			$this->file = "{$basedir}layout.$extension";
+		else
+			$this->layout = $basedir . 'layout.php';
 	}
 	
 	/**
@@ -46,13 +60,13 @@ class View extends _SF_MVC
 	}
 	
 	public function setFile ($fileName) {
-		if (file_exists($filename)) $this->file($fileName);
+		if (file_exists($fileName)) $this->file($fileName);
 		else throw new fileNotFoundException('File ' . $fileName . 'not found. View can\'t use it');
 	}
 
 
 	public function element($file) {
-		$filename = 'bin/views/elements/' . $file . '.php';
+		$filename = $this->getApp()->getTemplateDirectory() . 'elements/' . $file . '.php';
 		if (!file_exists($filename)) throw new privateException('Element ' . $file . ' missing');
 		return new _SF_ViewElement($filename, $this->data);
 	}

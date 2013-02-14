@@ -1,15 +1,18 @@
 <?php
 
 use spitfire\View;
+use spitfire\SpitFire;
 
 abstract class App
 {
 	public $view;
 	public $controller;
 	public $basedir;
+	public $namespace;
 	
-	public function __construct($basedir) {
+	public function __construct($basedir, $namespace) {
 		$this->basedir = $basedir;
+		$this->namespace = $namespace;
 	}
 	
 	public function runTask($controller, $action, $object) {
@@ -33,6 +36,17 @@ abstract class App
 		else throw new publicException('Action not found', 404);
 	}
 	
+	
+	public function url($url) {
+		
+		$ns = ($this->namespace)? '/' . $this->namespace : '';
+		
+		if (0 === strpos($url, 'http://')) return $url;
+		if (0 === strpos($url, 'https://')) return $url;
+		if (0 === strpos($url, 'www.')) return 'http://' . $url;
+		else return SpitFire::baseUrl() . $ns . $url;
+	}
+	
 	public function getBaseDir() {
 		return $this->basedir;
 	}
@@ -42,5 +56,6 @@ abstract class App
 	abstract public function getTemplateDirectory();
 	abstract public function hasController($controller);
 	abstract public function getControllerClassName($controller);
+	abstract public function getViewClassName($controller);
 	
 }
