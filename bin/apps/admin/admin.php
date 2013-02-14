@@ -17,7 +17,5 @@ class homeController extends Controller
 		preg_match('/\.([a-zA-Z0-9-_]+)$/', $p, $m);
 		print_r($m);
 		
-		ob_flush();
-		die();
 	}
 }

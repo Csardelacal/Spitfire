@@ -13,10 +13,14 @@ use spitfire\SpitFire;
 
 class _SF_MVC
 {
-	private $app;
+	protected $app;
 	
 	function __construct($app) {
 		$this->app = $app;
+	}
+	
+	function getApp() {
+		return $this->app;
 	}
 	
 	/**
