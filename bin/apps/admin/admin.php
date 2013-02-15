@@ -7,15 +7,15 @@ use Controller;
 class homeController extends Controller
 {
 	function index() {
-		echo 'Hi! ';
+		$this->view->set('beans', $this->app->getBeans());
 		
-		$p = $_SERVER['PATH_INFO'];
-		echo $p;
-		preg_match_all('/\/[a-zA-Z0-9-_]+/', $p, $m);
-		print_r($m);
-		
-		preg_match('/\.([a-zA-Z0-9-_]+)$/', $p, $m);
-		print_r($m);
-		
+	}
+	
+	function lst($bean) {
+		if (in_array($bean, $this->app->getBeans())) {
+			$beanClass = $bean . 'Bean';
+			$this->view->set('bean', new $beanClass());
+		}
+		else throw new \publicException('Not found', 404);
 	}
 }

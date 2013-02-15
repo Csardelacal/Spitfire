@@ -3,6 +3,14 @@
 use spitfire\View;
 use spitfire\SpitFire;
 
+/**
+ * Spitfire Application Class. This class is the base of every other 'app', an 
+ * app is a wrapper of controllers (this allows to plug them into other SF sites)
+ * that defines a set of rules to avoid collissions with the rest of the apps.
+ * 
+ * Every app resides inside of a namespace, this externally defined variable
+ * defines what calls Spitfire redirects to the app.
+ */
 abstract class App
 {
 	public $view;
@@ -10,6 +18,13 @@ abstract class App
 	public $basedir;
 	public $namespace;
 	
+	/**
+	 * Creates a new App. Receives the directory where this app resides in
+	 * and the URI namespace it uses.
+	 * 
+	 * @param String $basedir The root directory of this app
+	 * @param String $namespace The URI namespace it 'owns'
+	 */
 	public function __construct($basedir, $namespace) {
 		$this->basedir = $basedir;
 		$this->namespace = $namespace;
@@ -22,7 +37,7 @@ abstract class App
 		$this->controller = new $controllerClass($this);
 		
 		#Create a view
-		$viewClass = $controller . 'View';
+		$viewClass = $this->getViewClassName($controller);
 		if (class_exists($viewClass)) $this->view = new $viewClass($this);
 		else $this->view = new View($this);
 		

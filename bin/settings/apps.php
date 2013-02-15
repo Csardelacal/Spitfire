@@ -1,3 +1,5 @@
 <?php
 
-app('admin', 'admin')->enable();
+app('admin', 'admin')
+	->putBean('user')
+	->enable();
