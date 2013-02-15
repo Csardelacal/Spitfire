@@ -144,8 +144,8 @@ class SpitFire extends App
 	}
 
 	public function getViewClassName($controller) {
-		if (is_array($controller)) $c = implode('\\', $controller). 'Controller';
-		else $c = $controller . 'Controller';
+		if (is_array($controller)) $c = implode('\\', $controller). 'View';
+		else $c = $controller . 'View';
 		return $c;
 	}
 

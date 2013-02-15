@@ -4,6 +4,16 @@ use \spitfire\AutoLoad;
 
 class adminApp extends App
 {
+	private $beans = Array();
+	
+	public function putBean($name) {
+		$this->beans[] = $name;
+		return $this;
+	}
+	
+	public function getBeans() {
+		return $this->beans;
+	}
 
 	public function enable() {
 		AutoLoad::registerClass('M3W\admin\homeController', $this->getBaseDir() . 'admin.php');
