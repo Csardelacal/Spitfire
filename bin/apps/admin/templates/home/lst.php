@@ -1,6 +1,7 @@
 
 <?php
 
-echo $bean->makeForm($this->app->url('/save'));
+print_r($records);
 
 ?>
+<a href="<?= $this->app->url("/create/$bean") ?>">New</a>

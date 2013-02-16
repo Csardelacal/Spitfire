@@ -88,6 +88,7 @@ class Path
 		$url = new URL($controller, $action, $object);
 		$url->setExtension($extension);
 		$url->setNamespace($namespace);
+		
 		self::$current_url = $url;
 		return $url;
 	}
