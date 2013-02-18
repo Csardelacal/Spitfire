@@ -54,3 +54,19 @@ function __($str, $maxlength = false) {
 	if ($maxlength) return Strings::ellipsis ($str, $maxlength);
 	else return $str;
 }
+
+function lang($set = null) {
+	static $lang = null;
+	if ($set != null) $lang = $set;
+	if ($lang == null) $lang = 'en';
+	return $lang;
+}
+
+function _t() {
+	static $lang = null;
+	if ($lang == null) {
+		$classname = lang() . 'Locale';
+		$lang = new $classname();
+	}
+	return call_user_func_array(Array($lang, 'say'), func_get_args());
+}

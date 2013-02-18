@@ -8,6 +8,7 @@ class ClassInfo
 	const TYPE_COMPONENT  = 'Component';
 	const TYPE_MODEL      = 'Model';
 	const TYPE_VIEW       = 'View';
+	const TYPE_LOCALE     = 'Locale';
 	const TYPE_APP        = 'App';
 	const TYPE_BEAN       = 'Bean';
 	const TYPE_STDCLASS   = '';
@@ -25,6 +26,7 @@ class ClassInfo
 	    self::TYPE_MODEL,
 	    self::TYPE_VIEW,
 	    self::TYPE_APP,
+	    self::TYPE_LOCALE,
 	    self::TYPE_BEAN,
 	    self::TYPE_STDCLASS
 	);
