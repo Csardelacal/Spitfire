@@ -74,6 +74,8 @@ class Path
 			$controller = null;
 			$action = null;
 			$object = null;
+			$namespace = null;
+			$extension = null;
 		}
 		
 		

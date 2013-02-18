@@ -10,6 +10,7 @@ class AutoLoad
 	const   VIEW_DIRECTORY         = 'bin/viewControllers/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   MODEL_DIRECTORY        = 'bin/models/';
+	const   LOCALE_DIRECTORY       = 'bin/locales/';
 	const   BEAN_DIRECTORY         = 'bin/beans/';
 	const   APP_DIRECTORY          = 'bin/apps/';
 	const   UI_COMPONENT_DIRECTORY = 'bin/ui/';
@@ -135,6 +136,19 @@ class AutoLoad
 						strtolower($class->getClassName()) .
 						DIRECTORY_SEPARATOR.
 						'main' .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				break;
+				
+			case ClassInfo::TYPE_LOCALE:
+				$filename = self::LOCALE_DIRECTORY .
+						$class->getClassName() .
+						self::CLASS_EXTENSION;
+				if (file_exists($filename)) return include $filename;
+				
+				$filename = self::LOCALE_DIRECTORY .
+						strtolower($class->getClassName()) .
 						self::CLASS_EXTENSION;
 				if (file_exists($filename)) return include $filename;
 				

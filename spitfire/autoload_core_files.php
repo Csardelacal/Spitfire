@@ -69,6 +69,7 @@ AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            
 
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
+AutoLoad::registerClass('Locale',                $cur_dir.'/locale/locale.php');
 
 AutoLoad::registerClass('ComponentManager',                                     $cur_dir.'/components/componentManager.php');
 AutoLoad::registerClass('Component',                                            $cur_dir.'/components/component.php');
