@@ -45,6 +45,9 @@ AutoLoad::registerClass('StringField',                                          
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
 
 
+AutoLoad::registerClass('spitfire\model\defaults\userModel',                    $cur_dir.'/model/defaults/usermodel_default.php');
+
+
 AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLDriver',       $cur_dir.'/db/drivers/stdSQL.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\stdSQLTable',        $cur_dir.'/db/drivers/stdSQLTable.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',     $cur_dir.'/db/drivers/mysqlPDO.php');
@@ -69,7 +72,9 @@ AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            
 
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
+
 AutoLoad::registerClass('Locale',                $cur_dir.'/locale/locale.php');
+AutoLoad::registerClass('spitfire\locales\langInfo',                            $cur_dir.'/locale/lang_info.php');
 
 AutoLoad::registerClass('ComponentManager',                                     $cur_dir.'/components/componentManager.php');
 AutoLoad::registerClass('Component',                                            $cur_dir.'/components/component.php');

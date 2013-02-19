@@ -5,9 +5,26 @@ namespace M3W\Admin;
 use Controller;
 use publicException;
 use CoffeeBean;
+use session;
 
 class homeController extends Controller
 {
+	private $session;
+	
+	function onload() {
+		
+		$this->session = new session();
+		if (!$this->session->isSafe()) {
+			print_r($_SESSION);
+			print_r($this->session->getUser());
+			print_r($this->session->get('_SF_Auth'));
+			ob_flush();
+			die();
+			die(header('location: ' . $this->app->url('/auth/') ));
+		}
+	}
+
+
 	function index() {
 		$this->view->set('beans', $this->app->getBeans());
 		
