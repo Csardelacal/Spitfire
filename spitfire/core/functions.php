@@ -2,6 +2,7 @@
 
 use spitfire\SpitFire;
 use spitfire\environment;
+use spitfire\locales\langInfo;
 use spitfire\storage\database\DB;
 
 function spitfire() {
@@ -57,16 +58,31 @@ function __($str, $maxlength = false) {
 
 function lang($set = null) {
 	static $lang = null;
-	if ($set != null) $lang = $set;
-	if ($lang == null) $lang = 'en';
+	
+	# If we have chosen one retrieve it 
+	if ($set != null) {
+		$set.= 'Locale';
+		$lang = new $set();
+	}
+	
+	#Else try to set one
+	if ($lang == null) {
+		$langs = explode(';', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		
+		foreach($langs as $l) {
+			$l = new langInfo($l);
+			if ($l->isUnderstood())	break;
+		}
+		
+		$lang = $l->getLocaleClass();
+		
+	}
+	
 	return $lang;
 }
 
 function _t() {
 	static $lang = null;
-	if ($lang == null) {
-		$classname = lang() . 'Locale';
-		$lang = new $classname();
-	}
+	if ($lang == null) $lang = lang();
 	return call_user_func_array(Array($lang, 'say'), func_get_args());
 }
