@@ -9,6 +9,7 @@ use session;
 
 class authController extends Controller
 {
+	/** @var session Session info */
 	private $session;
 	
 	function onload() {
@@ -23,7 +24,11 @@ class authController extends Controller
 	
 	public function login() {
 		$user = db()->table($this->app->getUserModel())
-			->get('username', $this->post->username->value())
+			->get('admin', true)
+			->group()
+				->addRestriction('username', $this->post->username->value())
+				->addRestriction('email', $this->post->username->value())
+			->endGroup()
 			->addRestriction('password', $this->post->password->toPassword())
 			->fetch();
 		
@@ -33,5 +38,11 @@ class authController extends Controller
 			header ('location: '. $this->app->url('/'));
 		}
 		else header ('location: '. $this->app->url('/auth'));
+	}
+	
+	
+	public function logout() {
+		$this->session->destroy();
+		header('location: ' . $this->app->url('/') );
 	}
 }
