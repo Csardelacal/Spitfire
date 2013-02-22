@@ -1,0 +1,5 @@
+<?php
+
+$record->makeForm($bean);
+
+?>

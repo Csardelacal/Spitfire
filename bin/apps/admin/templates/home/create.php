@@ -1,1 +1,1 @@
-<?= $bean->makeForm('/store') ?>
+<?= CoffeeBean::getBean($bean)->makeForm($this->app->url('/insert/' . $bean)) ?>

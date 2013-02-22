@@ -1,14 +1,23 @@
 <?php
 
 use spitfire\io\html\HTMLForm;
+use spitfire\io\html\HTMLTable;
+use spitfire\io\html\HTMLTableRow;
 
 abstract class CoffeeBean
 {
 	const METHOD_POST = 'POST';
 	const METHOD_GET  = 'GET';
 	
+	const VISIBILITY_HIDDEN = 0;
+	const VISIBILITY_LIST   = 1;
+	const VISIBILITY_FORM   = 2;
+	const VISIBILITY_ALL    = 3;
+	
 	private $fields = Array();
+	public $name;
 	public $model;
+	
 	
 	public function makeDBRecord() {
 		if ($this->model) {
@@ -19,6 +28,15 @@ abstract class CoffeeBean
 		return $record;
 	}
 	
+	/**
+	 * Creates a new field for the bean.
+	 * 
+	 * @param string $instanceof
+	 * @param string $name
+	 * @param string $caption
+	 * @param string $method
+	 * @return spitfire\io\beans\Field
+	 */
 	public function field($instanceof, $name, $caption, $method = CoffeeBean::METHOD_POST) {
 		$instanceof = "\\spitfire\\io\\beans\\$instanceof";
 		return $this->fields[] = new $instanceof($name, $caption, $method);
@@ -28,8 +46,52 @@ abstract class CoffeeBean
 		return $this->fields;
 	}
 	
+	public function getName() {
+		if ($this->name) return $this->name;
+		else return get_class ($this);
+	}
+
+
 	public function makeForm($action) {
 		return new HTMLForm($action, $this);
+	}
+	
+	/**
+	 * Creates a list of records according to this Bean's settings.
+	 * 
+	 * @todo Implement actions
+	 * @param type $records
+	 * @param type $actions
+	 * @return \spitfire\io\html\HTMLTable
+	 */
+	public function makeList($records, $actions = Array()) {
+		$table = new HTMLTable();
+		//headers
+		$row = new HTMLTableRow();
+		foreach ($this->fields as $field) {
+			if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
+			$row->putCell($field->getCaption());
+		}
+		$row->putCell('Actions');
+		$table->putRow($row);
+		//Content
+		foreach($records as $record) {
+			$row = new HTMLTableRow();
+			foreach ($this->fields as $field) {
+				if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
+				$row->putCell($record->{$field->getModelField()});
+			}
+			//Actions
+			$str = '';
+			foreach ($actions as $name => $url) {
+				$action = sprintf($url, $record->id);
+				$str.= sprintf('<a href="%s">%s</a>', $action, $name);
+			}
+			$row->putCell($str);
+			
+			$table->putRow($row);
+		}
+		return $table;
 	}
 	
 	/**
