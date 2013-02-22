@@ -11,6 +11,7 @@ abstract class Field
 	private $caption;
 	private $value;
 	private $model_field;
+	private $visibility = 3;
 	
 	protected $type = 'text';
 	
@@ -65,6 +66,15 @@ abstract class Field
 	
 	public function getModelField() {
 		return $this->model_field;
+	}
+	
+	public function setVisibility($visibility) {
+		if ($visibility >= 0 && $visibility <= 3) $this->visibility = $visibility;
+		return $this;
+	}
+	
+	public function getVisibility() {
+		return $this->visibility;
 	}
 	
 	public function __toString() {

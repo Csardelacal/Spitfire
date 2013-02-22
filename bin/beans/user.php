@@ -13,7 +13,8 @@ class UserBean extends CoffeeBean
 			->setModelField('email');
 		
 		$this->field('TextField', 'age', 'Enter your age')
-			->setModelField('age');
+			->setModelField('age')
+			->setVisibility(CoffeeBean::VISIBILITY_FORM);
 	}
 	
 }

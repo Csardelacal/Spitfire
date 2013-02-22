@@ -37,8 +37,24 @@ class homeController extends Controller
 	
 	function create($bean) {
 		if (in_array($bean, $this->app->getBeans())) {
-			$beanClass = $bean . 'Bean';
-			$this->view->set('bean', new $beanClass());
+			$this->view->set('bean', $bean);
+		}
+		else throw new publicException('Not found', 404);
+	}
+	
+	function edit($bean, $id) {
+		if (in_array($bean, $this->app->getBeans())) {
+			$this->view->set('bean', $bean);
+			$this->view->set('record', db()->table(CoffeeBean::getBean($bean)->model)->get('id', $id)->fetch());
+		}
+		else throw new publicException('Not found', 404);
+	}
+	
+	function insert($bean) {
+		if (in_array($bean, $this->app->getBeans())) {
+			$r = CoffeeBean::getBean($bean)->makeDBRecord();
+			$r->store();
+			die(header('location: ' . $this->app->url('/edit/' . $bean . '/' . $r->id) ));
 		}
 		else throw new publicException('Not found', 404);
 	}

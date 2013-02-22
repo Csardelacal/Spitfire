@@ -174,6 +174,12 @@ abstract class databaseRecord
 	public function getTable() {
 		return $this->table;
 	}
+	
+	public function makeForm($bean) {
+		$b = CoffeeBean::getBean($bean);
+		$f = $b->getFields();
+		print_r($this->data);
+	}
 
 	public function __set($field, $value) {
 		

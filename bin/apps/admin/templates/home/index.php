@@ -3,5 +3,5 @@
 <?= $this->element('test'); ?>
 
 <?php foreach($beans as $bean): ?>
-	<a href="<?= $this->app->url('/lst/' . $bean)?>"><?=$bean ?></a><br/>
+	<a href="<?= $this->app->url('/lst/' . $bean)?>"><?= CoffeeBean::getBean($bean)->getName() ?></a><br/>
 <?php endforeach; ?>

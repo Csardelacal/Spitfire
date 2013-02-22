@@ -69,6 +69,8 @@ AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 
 AutoLoad::registerClass('spitfire\io\html\HTMLElement',                         $cur_dir.'/io/html/element.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            $cur_dir.'/io/html/form.php');
+AutoLoad::registerClass('spitfire\io\html\HTMLTable',                           $cur_dir.'/io/html/table.php');
+AutoLoad::registerClass('spitfire\io\html\HTMLTableRow',                        $cur_dir.'/io/html/table_row.php');
 
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
