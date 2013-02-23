@@ -82,6 +82,8 @@ class MysqlPDORecord extends databaseRecord
 			implode(' AND ', $this->getUniqueRestrictions())
 		);
 		
+		$this->getTable()->getDb()->execute($stt);
+		
 	}
 
 	public function restrictionInstance(DBField$field, $value, $operator = null) {

@@ -58,4 +58,14 @@ class homeController extends Controller
 		}
 		else throw new publicException('Not found', 404);
 	}
+	
+	function update($bean, $id) {
+		if (in_array($bean, $this->app->getBeans())) {
+			$data = db()->table(CoffeeBean::getBean($bean)->model)->get('id', $id)->fetch();
+			$r = CoffeeBean::getBean($bean)->updateDBRecord($data);
+			$r->store();
+			die(header('location: ' . $this->app->url('/edit/' . $bean . '/' . $r->id) ));
+		}
+		else throw new publicException('Not found', 404);
+	}
 }
