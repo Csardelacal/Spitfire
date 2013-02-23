@@ -166,11 +166,12 @@ abstract class Table extends Queriable
 		foreach ($fields as $name => $field) {
 			
 			$function = Array($this->model, 'validate' . ucfirst($name) );
-			$value    = Array($data->$name);
+			$value    = Array($data->$name, $this);
 			
 			if (method_exists( $function[0], $function[1] ) ) {
-				$ok = $ok && call_user_func_array($function, $value);
+				$ok = call_user_func_array($function, $value) && $ok;
 			}
+			unset($errors);
 		}
 		
 		return $ok;

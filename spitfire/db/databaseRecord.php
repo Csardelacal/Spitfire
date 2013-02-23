@@ -110,6 +110,10 @@ abstract class databaseRecord
 	 */
 	public function store() {
 		
+		if( !$this->table->validate($this)) {
+			throw new privateException(_t('invalid_data'));
+		}
+		
 		if (empty($this->src)) {
 			$id = $this->insert();
 			$ai = $this->table->getAutoIncrement();
@@ -126,6 +130,11 @@ abstract class databaseRecord
 		$this->src    = $this->data;
 	}
 	
+	public function getErrors() {
+		return $this->table->getErrors();
+	}
+
+
 	/**
 	 * Returns the fields that compound the primary key of this record.
 	 * 
@@ -173,12 +182,6 @@ abstract class databaseRecord
 	 */
 	public function getTable() {
 		return $this->table;
-	}
-	
-	public function makeForm($bean) {
-		$b = CoffeeBean::getBean($bean);
-		$f = $b->getFields();
-		print_r($this->data);
 	}
 
 	public function __set($field, $value) {
