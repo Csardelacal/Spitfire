@@ -3,8 +3,7 @@
 namespace M3W\Admin;
 
 use Controller;
-use publicException;
-use CoffeeBean;
+use _SF_InputSanitizer;
 use session;
 
 class authController extends Controller
@@ -19,7 +18,16 @@ class authController extends Controller
 	}
 	
 	public function index() {
-		
+		$model = $this->app->getUserModel();
+		if (!db()->table($model)->getAll()->count()) {
+			$user = db()->table($model)->newRecord();
+			$user->username = 'admin';
+			$user->email = 'admin@example.com';
+			$user->admin = true;
+			$password = new _SF_InputSanitizer('admin');
+			$user->password = $password->toPassword();
+			$user->store();
+		}
 	}
 	
 	public function login() {

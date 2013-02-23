@@ -54,9 +54,9 @@ abstract class Field
 	}
 	
 	public function getValue() {
-		if ($this->value) return $this->value;
-		elseif ($this->method == \CoffeeBean::METHOD_GET ) return $_GET[$this->name];
-		elseif ($this->method == \CoffeeBean::METHOD_POST) return $_POST[$this->name];
+		if     ($this->method == CoffeeBean::METHOD_GET  && !empty($_GET[$this->name]) ) return $_GET[$this->name];
+		elseif ($this->method == CoffeeBean::METHOD_POST && !empty($_POST[$this->name])) return $_POST[$this->name];
+		elseif ($this->value) return $this->value;
 	}
 	
 	public function setModelField($name) {
@@ -79,8 +79,8 @@ abstract class Field
 	
 	public function __toString() {
 		$id = "field_{$this->name}";
-		return sprintf('<div class="field"><label for="%s">%s</label><input type="%s" id="%s" name="%s" ></div>',
-			$id, $this->caption, $this->type, $id, $this->name 
+		return sprintf('<div class="field"><label for="%s">%s</label><input type="%s" id="%s" name="%s" value="%s" ></div>',
+			$id, $this->caption, $this->type, $id, $this->name, $this->getValue() 
 			);
 	}
 }

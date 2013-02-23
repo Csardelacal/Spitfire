@@ -28,6 +28,22 @@ abstract class CoffeeBean
 		return $record;
 	}
 	
+	public function updateDBRecord(databaseRecord$record) {
+		if ($this->model) {
+			$fields = $this->fields;
+			foreach ($fields as $field) $record->{$field->getModelField()} = $field->getValue();
+		}
+		return $record;
+	}
+	
+	public function setDBRecord(databaseRecord$record) {
+		if ($this->model) {
+			$fields = $this->fields;
+			foreach ($fields as $field) $field->setValue($record->{$field->getModelField()});
+		}
+		return $record;
+	}
+	
 	/**
 	 * Creates a new field for the bean.
 	 * 
