@@ -8,6 +8,5 @@ if (!$record->getTable()->validate($nr)) {
 	print_r($record->getTable()->getErrors());
 }
 
-echo $b->makeForm();
+echo $b->makeForm($this->app->url('/update/' . $bean . '/' . $record->id));
 
-?>

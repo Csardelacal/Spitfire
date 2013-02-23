@@ -31,7 +31,10 @@ abstract class CoffeeBean
 	public function updateDBRecord(databaseRecord$record) {
 		if ($this->model) {
 			$fields = $this->fields;
-			foreach ($fields as $field) $record->{$field->getModelField()} = $field->getValue();
+			foreach ($fields as $field) {
+				if ($field->getValue())
+					$record->{$field->getModelField()} = $field->getValue();
+			}
 		}
 		return $record;
 	}
