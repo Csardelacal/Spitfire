@@ -187,9 +187,11 @@ abstract class databaseRecord
 	public function __set($field, $value) {
 		
 		if ($value instanceof databaseRecord) {
-			$primary = $value->getUniqueFields();
-			foreach($primary as $pk) {
-				$this->{"{$field}_{$pk->getName()}"} = $value->{$pk->getName()};
+			$model = $value->getTable()->getModel();
+			$refs  = $this->getTable()->getModel()->getReferencedModels();
+			
+			if (in_array($model, $refs)) {
+				$this->data[$field] = $value;
 			}
 			return;
 		}
