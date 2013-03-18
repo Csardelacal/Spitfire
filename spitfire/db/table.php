@@ -114,6 +114,10 @@ abstract class Table extends Queriable
 		return  $this->auto_increment = $ai;
 	}
 	
+	/**
+	 * 
+	 * @return Model
+	 */
 	public function getModel() {
 		return $this->model;
 	}
