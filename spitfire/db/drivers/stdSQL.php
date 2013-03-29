@@ -14,8 +14,8 @@ abstract class stdSQLDriver extends DB
 	 * Creates a SQL statement for database entry deletion. It will delete
 	 * 
 	 * 
-	 * @param _SF_DBTable $table
-	 * @param type $primaries
+	 * @param  Table $table
+	 * @param  databaseRecord $record
 	 * @return type
 	 */
 	public function delete(Table $table, databaseRecord $record) {
