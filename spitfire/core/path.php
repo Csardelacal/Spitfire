@@ -29,6 +29,8 @@ class Path
 		/** @var $path_info string */
 		$path_info = router::rewrite($_SERVER['PATH_INFO']);
 		$path = array_filter(explode('/', $path_info));
+		
+		$request = new Request();
 
 		/* If the path is empty it means that no parameters were given
 		 * so Spitfire doesn't need to work parsing the URL. Otherwise
@@ -43,9 +45,8 @@ class Path
 			 * * Keep the first part as filename
 			 * * And the rest as extension.
 			 */
-			$last      = explode('.', array_pop($path));
-			$extension = (isset($last[1]))? $last[1] : false;
-			array_push($path, $last[0]);
+			$info      = pathinfo($path_info, PATHINFO_EXTENSION);
+			$extension = (!empty($info))? $info : 'php';
 			
 			/* Try to get the current namespace, if one is registered
 			 * we will redirect the request to another app.
@@ -56,43 +57,56 @@ class Path
 			else $namespace = '';
 			
 			$app = spitfire()->getApp($namespace);
+			$request->setApp($app);
 			
 			/* To get the controller and action of an element we 
 			 * keep checking if each element is a valid controller,
 			 * once it didn't find a valid controller it stops.
 			 */
-			do {
-				$controller[] = array_shift($path);
-			} while ($app->hasController( implode('\\', $controller)));
+			if ($app->hasController(reset($path))){
+				$controllerName = array_shift($path);
+				$controller = $app->getController($controllerName);
+			}
+			else{
+				$controller = $app->getController(environment::get('default_controller'));
+				$controllerName = environment::get('default_controller');
+			}
 			
-			$action = array_pop($controller);
+			if (is_callable(Array($controller, reset($path)))) {
+				$action = array_shift($path);
+			}
+			elseif (!reset($path)) {
+				$action = environment::get('default_action');
+			}
+			else {
+				throw new \publicException('Action not Found', 404);
+				$action = 'detail';
+			}
+			
 			$object = $path;
-			
 		
 		}
 		else {
-			$controller = null;
-			$action = null;
-			$object = null;
-			$namespace = null;
-			$extension = null;
+			$app        = spitfire();
+			$controllerName = environment::get('default_controller');
+			$controller = $app->getController(environment::get('default_controller'));
+			$action     = environment::get('default_action');
+			$object     = Array();
+			$extension  = 'php';
 		}
 		
-		
+		$request->setApp($app);
+		$request->setController($controller);
+		$request->setControllerURI($controllerName);
+		$request->setAction($action);
+		$request->setObject($object);
+		$request->setExtension($extension);
 
-		//Check if invalid url's are being requested
-		if ($controller == environment::get('maintenance_controller') ) 
-			throw new publicException('User tried to access maintenance mode', 401);
 		if (substr($action, 0,1) == '_' || $action == 'onload') 
 			throw new publicException('E_PAGE_NOT_FOUND', 404);
 
-		//Define controllers
-		$url = new URL($controller, $action, $object);
-		$url->setExtension($extension);
-		$url->setNamespace($namespace);
 		
-		self::$current_url = $url;
-		return $url;
+		return $request;
 	}
 	
 }
