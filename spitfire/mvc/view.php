@@ -31,9 +31,12 @@ class View extends _SF_MVC
 		$basedir    = $app->getTemplateDirectory();
 		
 		$url        = $this->current_url;
-		$controller = implode(DIRECTORY_SEPARATOR, $url->getController());
+		$controller = implode(DIRECTORY_SEPARATOR, explode('\\', $url->getControllerURI()));
 		$action     = $url->getAction();
 		$extension  = $url->getExtension();
+		
+		echo $controller, $action, $extension;
+		ob_flush();
 		
 		if     ( file_exists("$basedir$controller/$action.$extension"))
 			$this->file = "$basedir$controller/$action.$extension";

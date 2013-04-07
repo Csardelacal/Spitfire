@@ -21,13 +21,12 @@ class SpitFire extends App
 	private $cwd             = false;
 
 	private $autoload        = false;
-	static $model           = false;
+	static $model            = false;
 	
-	/** var URL Depicts the current system url*/
-	static $current_url     = false;
+	private $request;
 
 	private $debug           = false;
-	static $headers         = false;
+	static $headers          = false;
 	
 	private $apps = Array();
 	
@@ -63,7 +62,7 @@ class SpitFire extends App
 		
 		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 		#Get the current path...
-		self::$current_url = Path::getPath();
+		$request = $this->request = Path::getPath();
 
 		#Start debugging output
 		ob_start();
@@ -71,17 +70,14 @@ class SpitFire extends App
 		self::$model = db();
 		
 		#Select the app
-		$controller = implode('\\', self::$current_url->getController());
-		if (null != ($ns = self::$current_url->getNamespace())) $app = $this->apps[$ns];
-		else $app = $this;
 		
-		$app->runTask($controller, self::$current_url->getAction(), self::$current_url->getObject());
+		$request->getApp()->runTask($request->getController(), $request->getAction(), $request->getObject());
 		
 		#End debugging output
-		$app->view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
+		$request->getApp()->view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
 
 		ob_start();
-		$app->view->render();
+		$request->getApp()->view->render();
 		self::$headers->send();
 		ob_flush();
 	}
@@ -94,6 +90,11 @@ class SpitFire extends App
 		return isset($this->apps[$namespace]);
 	}
 	
+	/**
+	 * 
+	 * @param string $namespace
+	 * @return App
+	 */
 	public function getApp($namespace) {
 		return isset($this->apps[$namespace]) ? $this->apps[$namespace] : $this;
 	}
@@ -132,9 +133,14 @@ class SpitFire extends App
 	public function enable() {
 		return null;
 	}
+	
+	public function getRequest() {
+		return $this->request;
+	}
 
 	public function getControllerClassName($controller) {
 		if (is_array($controller)) $c = implode('\\', $controller). 'Controller';
+		elseif(is_object($controller)) {print_r (\debug_backtrace());ob_flush();die();}
 		else $c = $controller . 'Controller';
 		return $c;
 	}
@@ -144,9 +150,7 @@ class SpitFire extends App
 	}
 
 	public function getViewClassName($controller) {
-		if (is_array($controller)) $c = implode('\\', $controller). 'View';
-		else $c = $controller . 'View';
-		return $c;
+		return $controller . 'View';
 	}
 
 }

@@ -41,7 +41,7 @@ class _SF_MVC
 				return $this->model = SpitFire::$model;
 				break;
 			case 'current_url':
-				return $this->current_url = SpitFire::$current_url;
+				return $this->current_url = spitfire()->getRequest();
 			default:
 				return false;
 				break;

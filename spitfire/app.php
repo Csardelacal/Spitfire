@@ -32,12 +32,11 @@ abstract class App
 	
 	public function runTask($controller, $action, $object) {
 		#Create a controller
-		$controllerClass = $this->getControllerClassName($controller);
-		if (!class_exists($controllerClass)) throw new publicException('Page not found', 404);
-		$this->controller = new $controllerClass($this);
+		$this->controller = $controller;
 		
 		#Create a view
-		$viewClass = $this->getViewClassName($controller);
+		$controllerName = spitfire()->getRequest()->getControllerURI();
+		$viewClass = $this->getViewClassName($controllerName);
 		if (class_exists($viewClass)) $this->view = new $viewClass($this);
 		else $this->view = new View($this);
 		
@@ -64,6 +63,12 @@ abstract class App
 	
 	public function getBaseDir() {
 		return $this->basedir;
+	}
+	
+	public function getController($controller) {
+		if (is_array($controller)) $controller = implode ('\\', $controller);
+		$c = $this->getControllerClassName($controller);
+		return new $c($this);
 	}
 	
 	abstract public function enable();

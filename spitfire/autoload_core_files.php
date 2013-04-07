@@ -82,7 +82,8 @@ AutoLoad::registerClass('ComponentManager',                                     
 AutoLoad::registerClass('Component',                                            $cur_dir.'/components/component.php');
 AutoLoad::registerClass('assetsController',      $cur_dir.'/components/assets.php');
 
-AutoLoad::registerClass('URL',                   $cur_dir.'/url.php');
+AutoLoad::registerClass('URL',                                                  $cur_dir.'/url.php');
+AutoLoad::registerClass('spitfire\Request',                                     $cur_dir.'/core/request.php');
 AutoLoad::registerClass('session',               $cur_dir.'/session.php');
 
 AutoLoad::registerClass('Email',                 $cur_dir.'/mail.php');
