@@ -4,7 +4,7 @@ class Locale
 {
 	public $comment_count   = Array('No comments', 'One comment', '%s comments');
 	
-	private $currency   = 1;
+	private $_msgStack;
 	
 	public function say() {
 		$args = func_get_args();
@@ -26,4 +26,19 @@ class Locale
 		return call_user_func_array('sprintf', $args);
 		
 	}
+	
+	public function getLangCode() {
+		return '';
+	}
+	
+	public function start($lang) {
+		ob_start();
+		$this->_msgStack[] = $lang;
+	}
+	
+	public function end() {
+		$msg = ob_get_clean();
+		if (array_pop($this->_msgStack) == $this->getLangCode()) echo $msg;
+	}
+	
 }

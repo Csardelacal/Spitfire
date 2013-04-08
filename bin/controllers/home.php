@@ -39,55 +39,7 @@ class homeController extends Controller
 	}
 	
 	public function test2 () {
-//		print_r($this->model);
-//		print_r($this->model->test);
-//		print_r($this->model->test->get('unique', 'test'));
-//		print_r($this->model->test->get('unique', 'test2')->fetch()->content);
-//		print_r($this->model);
-		
-		
-		$t = new databaseRecord($this->model->test);
-		//$t->content = 'Hello';
-		//$t->title   = 'Hello World';
-		$t->id1     = 3;
-		$t->id2     = 3;
-		//$t->store();
-		
-		$p = new databaseRecord($this->model->test);
-		//$t->content = 'Hello';
-		//$t->title   = 'Hello World';
-		$t->id1     = 3;
-		$t->id2     = 3;
-		
-		try {
-			$p->store();
-		}
-		catch (Exception $e) {
-			echo 'Error: repeated id';
-		}
-		
-		$t = $this->model->test->get('id1', $t->id)->fetch();
-		$t->content.= 't';
-		$t->store();
-		$t->increment('id1', -1);
-		
-		echo '-----';
-		$p = $this->model->test->get('id1', $t->id)
-			->group()
-				->addRestriction('id1', '1')
-				->addRestriction('id2', '2')
-			->endGroup()
-			->group()
-				->addRestriction('id1', '3')
-			->endGroup()
-			->fetch();
-		echo '----';
-		
-		$t = $this->model->test->get('id1', $t->id)->fetch();
-		echo $t->content;
-		$t->delete();
-		
-		print_r(\spitfire\SpitFire::$debug->getMessages());
+		//Only for view
 	}
 	
 	public function dbTest() {
@@ -122,6 +74,9 @@ class homeController extends Controller
 				$child->test2 = $rec2;
 				$child->title    = time();
 				$child->content = '_SF_';
+				//print_r($child);
+				//ob_flush();
+				//die();
 				$child->store();
 			}
 			catch(Exception $e) {

@@ -17,4 +17,16 @@ class Headers
 			header("$header: $value");
 		}
 	}
+	
+	public function contentType($str) {
+		switch ($str) {
+			case 'php':
+			case 'html':
+				$this->set('Content-type', 'text/html;charset=utf-8');
+			case 'xml':
+				$this->set('Content-type', 'text/xml;charset=utf-8');
+			case 'json':
+				$this->set('Content-type', 'application/json;charset=utf-8');
+		}
+	}
 }

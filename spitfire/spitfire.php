@@ -53,6 +53,9 @@ class SpitFire extends App
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
+                
+                #Set the display errors directive to the value of debug
+                ini_set("display_errors" , environment::get('debugging_mode'));
 
 
 		self::$started = true;

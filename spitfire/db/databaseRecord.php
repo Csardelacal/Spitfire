@@ -143,6 +143,24 @@ abstract class databaseRecord
 	public function getUniqueFields() {
 		return $this->table->getPrimaryKey();
 	}
+        
+        /**
+         * Returns the values of the fields included in this records primary
+         * fields
+         * 
+         * @todo Find better function name
+	 * @return Array
+         */
+        public function getPrimaryData() {
+            $primaryFields = $this->getUniqueFields();
+	    $ret = Array();
+	    
+	    foreach ($primaryFields as $field) {
+		    $ret[$field->getName()] = $this->data[$field->getName()];
+	    }
+	    
+	    return $ret;
+        }
 	
 	/**
 	 * Creates a list of restrictions that identify this record inside it's
@@ -186,20 +204,10 @@ abstract class databaseRecord
 
 	public function __set($field, $value) {
 		
-		if ($value instanceof databaseRecord) {
-			$model = $value->getTable()->getModel();
-			$refs  = $this->getTable()->getModel()->getReferencedModels();
-			
-			if (in_array($model, $refs)) {
-				$this->data[$field] = $value;
-			}
-			return;
-		}
-		
 		if (!isset($this->data[$field]) || $value != $this->data[$field]) 
 			$this->synced = false;
 		
-		if ($this->table->getField($field)) {
+		if ($this->table->getModel()->getField($field)) {
 			$this->data[$field] = $value;
 		}
 		else throw new privateException ('Setting non-existent database field: ' . $field);

@@ -69,7 +69,7 @@ class ExceptionHandler {
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
-			ob_flush();
+			if(ob_get_length()) ob_flush();
 			die();
 
 		} catch (Exception $e) { //Whatever happens, it won't leave this function

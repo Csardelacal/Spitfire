@@ -20,6 +20,12 @@ class Model
 			if (!$field instanceof Field) unset($fields[$name]);
 		return $fields;
 	}
+        
+        public function getField($name) {
+            if (isset($this->fields[$name]))     return $this->fields[$name];
+            if (isset($this->references[$name])) return $this->references[$name];
+            else return null;
+        }
 	
 	public function getReferencedFields(Model$target = null) {
 		#Init the fields array to be returned
@@ -67,7 +73,7 @@ class Model
 
 	public function reference($model) {
 		$modelname = $model.'Model';
-		$this->references[] = new $modelname();
+		$this->references[$model] = new $modelname();
 	}
 	
 	public function field($name, $instanceof, $length = false) {

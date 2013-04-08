@@ -45,8 +45,10 @@ class Path
 			 * * Keep the first part as filename
 			 * * And the rest as extension.
 			 */
-			$info      = pathinfo($path_info, PATHINFO_EXTENSION);
+			$last      = explode('.', array_pop($path));
+			$info      = array_pop($last);
 			$extension = (!empty($info))? $info : 'php';
+			array_push($path, implode('.', $last));
 			
 			/* Try to get the current namespace, if one is registered
 			 * we will redirect the request to another app.
