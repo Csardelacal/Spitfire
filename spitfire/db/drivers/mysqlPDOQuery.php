@@ -46,13 +46,6 @@ class MysqlPDOQuery extends Query
 					$_remotef[] = "$f = $local_field";
 			}
 			
-			foreach($localf as $f) {
-				if (in_array($f->getReference(), $remotef) )
-					$_remotef[] = $f . '=' . $f->getReference();
-				else echo $f, ', ', $f->getReference();
-			}
-			
-			
 			$join = 'RIGHT JOIN ' . $rem_table->getTableName();
 			$join.= ' ON (' . implode(' AND ', $_remotef) . ')';
 			$restrictions = array_merge($restrictions, $_join->getUniqueRestrictions());

@@ -53,9 +53,20 @@ class MysqlPDORecord extends databaseRecord
 
 	public function insert() {
 		$data = $this->getData();
-		$fields = array_keys($data);
 		$table = $this->getTable();
 		$db = $table->getDb();
+                
+                foreach ($data as $field => $value) {
+			if ($value instanceof databaseRecord) {
+				$primary = $value->getPrimaryData();
+				foreach ($primary as $key => $v) {
+					$data[$value->getTable()->getModel()->getName() . '_' . $key] = $v;
+				}
+				unset($data[$field]);
+			}
+                }
+		
+		$fields = array_keys($data);
 		
 		$quoted = array_map(Array($db, 'quote'), $data);
 		
@@ -72,6 +83,16 @@ class MysqlPDORecord extends databaseRecord
 		$data = $this->getData();
 		$table = $this->getTable();
 		$db = $table->getDb();
+		
+                foreach ($data as $field => $value) {
+			if ($value instanceof databaseRecord) {
+				$primary = $value->getPrimaryData();
+				foreach ($primary as $key => $v) {
+					$data[$value->getTable()->getModel()->getName() . '_' . $key] = $v;
+				}
+				unset($data[$field]);
+			}
+                }
 		
 		$quoted = Array();
 		foreach ($data as $f => $v) $quoted[] = "$f = {$db->quote($v)}";

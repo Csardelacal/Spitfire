@@ -15,7 +15,7 @@ class langInfo
 			$e = trim($e);
 			if (strlen($e) == 2) $this->langcode = $e;
 			if (strlen($e) == 5) $this->localecode = $e;
-			else $this->quality = (float)substr($e, 0, 2);
+			else $this->quality = (float)substr($e, 0, 3);
 		}
 	}
 	

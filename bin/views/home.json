@@ -1,0 +1,9 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+{
+	"name": "cesar",
+	"content": <?php echo json_encode(get_defined_vars()) ?>
+}
