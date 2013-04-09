@@ -37,6 +37,7 @@ AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface', $cur_dir.'/db/resultset.php');
 AutoLoad::registerClass('databaseRecord',                                       $cur_dir.'/db/databaseRecord.php');
 
+AutoLoad::registerClass('Validatable',                                          $cur_dir.'/validatable.php');
 AutoLoad::registerClass('Model',                                                $cur_dir.'/model/model.php');
 AutoLoad::registerClass('spitfire\model\Field',                                 $cur_dir.'/model/field.php');
 AutoLoad::registerClass('IntegerField',                                         $cur_dir.'/model/fields/integer.php');

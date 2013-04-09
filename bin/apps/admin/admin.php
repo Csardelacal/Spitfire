@@ -62,9 +62,15 @@ class homeController extends Controller
 	function update($bean, $id) {
 		if (in_array($bean, $this->app->getBeans())) {
 			$data = db()->table(CoffeeBean::getBean($bean)->model)->get('id', $id)->fetch();
-			$r = CoffeeBean::getBean($bean)->updateDBRecord($data);
-			$r->store();
-			die(header('location: ' . $this->app->url('/edit/' . $bean . '/' . $r->id) ));
+			$b = CoffeeBean::getBean($bean);
+			if ($b->validate()) {
+				$r = $b->updateDBRecord($data);
+				$r->store();
+				die(header('location: ' . $this->app->url('/edit/' . $bean . '/' . $r->id) ));
+			}
+			else {
+				print_r($b->getErrors());
+			}
 		}
 		else throw new publicException('Not found', 404);
 	}

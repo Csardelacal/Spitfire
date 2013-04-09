@@ -17,4 +17,13 @@ class UserBean extends CoffeeBean
 			->setVisibility(CoffeeBean::VISIBILITY_FORM);
 	}
 	
+	public function validateEmail($email) {
+		if (strlen($email) < 5) {
+			$this->validationError("Email is too short");
+			return false;
+		}
+		
+		return true;
+	}
+	
 }
