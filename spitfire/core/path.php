@@ -46,7 +46,7 @@ class Path
 			 * * And the rest as extension.
 			 */
 			$last      = explode('.', array_pop($path));
-			$info      = array_pop($last);
+			$info      = (count($last) > 1)? array_pop($last) : '';
 			$extension = (!empty($info))? $info : 'php';
 			array_push($path, implode('.', $last));
 			

@@ -149,6 +149,7 @@ class SpitFire extends App
 	}
 
 	public function hasController($controller) {
+		if (empty($controller)) return false;
 		return class_exists($this->getControllerClassName($controller));
 	}
 
