@@ -45,7 +45,6 @@ class homeController extends Controller
 	public function dbTest() {
 		
 		try {
-
 			$rec = db()->table('test')->get('id1', 1)->fetch();
 			
 			if (!$rec->id1) {

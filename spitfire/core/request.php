@@ -64,6 +64,10 @@ class Request
 	}
 
 	public function getExtension() {
-		return $this->answerformat;
+		$allowed = environment::get('supported_view_extensions');
+		
+		if ( in_array($this->answerformat, $allowed) )
+			return $this->answerformat;
+		else return $allowed[0];
 	}
 }

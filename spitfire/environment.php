@@ -41,6 +41,9 @@ class environment
 		'default_controller'       => 'home',
 		'default_action'           => 'index',
 		'default_object'           => Array(),
+	    
+		#Content support
+		'supported_view_extensions'=> Array('php', 'xml', 'json'),
 		
 		#Memcached settings
 		'memcached_enabled'        => false,
