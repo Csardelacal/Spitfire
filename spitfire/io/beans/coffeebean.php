@@ -4,7 +4,7 @@ use spitfire\io\html\HTMLForm;
 use spitfire\io\html\HTMLTable;
 use spitfire\io\html\HTMLTableRow;
 
-abstract class CoffeeBean
+abstract class CoffeeBean extends Validatable
 {
 	const METHOD_POST = 'POST';
 	const METHOD_GET  = 'GET';
@@ -58,7 +58,7 @@ abstract class CoffeeBean
 	 */
 	public function field($instanceof, $name, $caption, $method = CoffeeBean::METHOD_POST) {
 		$instanceof = "\\spitfire\\io\\beans\\$instanceof";
-		return $this->fields[] = new $instanceof($name, $caption, $method);
+		return $this->fields[$name] = new $instanceof($name, $caption, $method);
 	}
 	
 	public function getFields() {
@@ -114,22 +114,14 @@ abstract class CoffeeBean
 	}
 	
 	/**
-	 * Check if the contents of a field are valid.
+	 * Check if the contents of this bean are valid.
 	 * 
-	 * @param string $field
-	 * @param mixed $value
+	 * @param mixed $data Is ignored
 	 * @return boolean
 	 */
-	public function _validate($field, $value) {
-		
-		$fnname = 'validate' . ucfirst($field);
-		
-		if (method_exists($this, $fnname)) {
-			$callback = Array($this, $fnname);
-			return call_user_func_array($callback, (array)$value);
-		}
-		#If there is no way to validate guess it's ok
-		return true;
+	public function validate($data = null) {
+		foreach ($this->fields as $field => $content) $data[$field] = $content->getValue(); 
+		return parent::validate($data);
 	}
 
 	
