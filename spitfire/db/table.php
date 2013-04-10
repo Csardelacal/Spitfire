@@ -21,6 +21,7 @@ abstract class Table extends Queriable
 	protected $model;
 	protected $tablename;
 	protected $fields;
+	protected $primaryK;
 
 
 	protected $errors    = Array();
@@ -57,6 +58,12 @@ abstract class Table extends Queriable
 	}
 	
 	public function getField($name) {
+		#If the data we get is already a DBField check it belongs to this table
+		if ($name instanceof DBField) {
+			if ($name->getTable() == $this) return $name;
+			else throw new \privateException('Field ' . $name . ' does not belong to ' . $this);
+		}
+		#Otherwise search for it in the fields list
 		if (isset($this->fields[$name])) return $this->fields[$name];
 		#Else the table couldn't be found
 		throw new \privateException('Field ' . $name . ' does not exist');
