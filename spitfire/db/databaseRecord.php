@@ -10,7 +10,7 @@ use \spitfire\storage\database\DBField;
  * @todo Make this class implement Iterator
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class databaseRecord
+abstract class databaseRecord implements Serializable
 {
 	
 	private $src;
@@ -218,6 +218,24 @@ abstract class databaseRecord
 		return $this->data[$field];
 	}
 	
+	public function serialize() {
+		if (! $this->synced) throw new privateException("Database record cannot be serialized out of sync");
+		
+		$output = Array();
+		$output['model'] = $this->table->getModel()->getName();
+		$output['data']  = $this->data;
+		
+		return serialize($output);
+	}
+	
+	public function unserialize($serialized) {
+		
+		$input = unserialize($serialized);
+		$this->table = db()->table($input['model']);
+		$this->src   = $input['data'];
+		$this->data  = $input['data'];
+		$this->synced= true;
+	}
 	
 	
 	public abstract function delete();

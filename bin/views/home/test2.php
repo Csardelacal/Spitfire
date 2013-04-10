@@ -14,3 +14,5 @@
 <?php lang()->start('de'); ?>
 	Dieser text ist deutsch
 <?php lang()->end(); ?>
+
+<?php echo $_SF_DEBUG_OUTPUT; ?>

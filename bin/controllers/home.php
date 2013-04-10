@@ -39,7 +39,15 @@ class homeController extends Controller
 	}
 	
 	public function test2 () {
-		//Only for view
+		$s = new session();
+		$a = $s->get('admin');
+		
+		if (!$a) {
+			$a = db()->table('user')->get('id', 1)->fetch();
+			$s->set('admin', $a);
+		}
+		
+		print_r($a->getData());
 	}
 	
 	public function dbTest() {
