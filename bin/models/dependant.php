@@ -7,7 +7,7 @@ class dependantModel extends Model
 		
 		parent::__construct();
 		
-		$this->field('test', 'IntegerField');
+		//$this->field('test', 'IntegerField');
 		$this->field('title', 'StringField', 200);
 		$this->field('numeric', 'IntegerField');
 		$this->field('content', 'TextField');
