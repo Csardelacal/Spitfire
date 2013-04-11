@@ -9,7 +9,7 @@ class MysqlPDORestriction extends Restriction
 {
 	public function __toString() {
 		try {
-			if(is_a('databaseRecord', $this->getValue())) {
+			if(is_a($this->getValue(), 'databaseRecord', false)) {
 				$data = $this->getValue()->getUniqueRestrictions();
 				$str  = '';
 				foreach($data as $r) $str.= $r;
