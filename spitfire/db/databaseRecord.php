@@ -35,6 +35,7 @@ abstract class databaseRecord implements Serializable
 	public function __construct(Table $table, $srcData = Array() ) {
 		
 		//TODO: Move to separate function/method
+		//TODO: Fix when counting
 		//Parse referenced data
 		if (!empty($srcData)) {
 			$referenced = $table->getModel()->getReferencedModels();
