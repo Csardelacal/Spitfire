@@ -64,6 +64,7 @@ AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitiza
 AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/io/beans/coffeebean.php');
 AutoLoad::registerClass('spitfire\io\beans\Field',                              $cur_dir.'/io/beans/field.php');
 AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
+AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
 AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 

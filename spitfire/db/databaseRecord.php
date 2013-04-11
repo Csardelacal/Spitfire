@@ -2,6 +2,7 @@
 
 use spitfire\storage\database\Table;
 use \spitfire\storage\database\DBField;
+use \spitfire\storage\database\Query;
 
 /**
  * This class allows to track changes on database data along the use of a program
@@ -32,6 +33,35 @@ abstract class databaseRecord implements Serializable
 	 *                       empty and use setData.
 	 */
 	public function __construct(Table $table, $srcData = Array() ) {
+		
+		//TODO: Move to separate function/method
+		//Parse referenced data
+		if (!empty($srcData)) {
+			$referenced = $table->getModel()->getReferencedModels();
+			foreach ($referenced as /** @var Model Remote model */$model) {
+				$name = $model->getName();
+				$primary = $model->getPrimary();
+
+				if (!isset($srcData[$name]) || !$srcData[$name] instanceof databaseRecord) {
+					$fields = $table->getModel()->getReferencedFields($model);
+					$query  = $table->getDB()->table($model)->getAll();
+
+					foreach($fields as $field) {
+						list($model, $f) = $field->getReference();
+						$query->addRestriction($f->getName(), $srcData[$field->getName()]);
+					}
+
+					$srcData[$name] = $query;
+
+				}
+			}
+
+			foreach($srcData as $index => $content) {
+				if (!$table->getModel()->getField($index)) unset($srcData[$index]);
+			}
+		}
+		
+		
 		$this->src     = $srcData;
 		$this->data    = $srcData;
 		$this->table   = $table;
@@ -215,7 +245,13 @@ abstract class databaseRecord implements Serializable
 	}
 	
 	public function __get($field) {
-		return (isset($this->data[$field])) ? $this->data[$field] : null;
+		if (isset($this->data[$field])) {
+			if ($this->data[$field] instanceof Query) {
+				return $this->data[$field]->fetch();
+			}
+			else return $this->data[$field];
+		}
+		return null;
 	}
 	
 	public function serialize() {
