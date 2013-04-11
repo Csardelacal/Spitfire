@@ -15,7 +15,7 @@ class session
 	public function get($key) {
 
 		if (!session_id()) $this->start();
-		return $_SESSION[$key];
+		return isset($_SESSION[$key])? $_SESSION[$key] : null;
 
 	}
 

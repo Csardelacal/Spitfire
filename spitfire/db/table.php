@@ -21,6 +21,9 @@ abstract class Table extends Queriable
 	protected $model;
 	protected $tablename;
 	protected $fields;
+	
+	protected $primaryK;
+	protected $auto_increment;
 
 
 	protected $errors    = Array();
