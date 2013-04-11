@@ -40,11 +40,13 @@ class Model
 		foreach ($references as $reference) {
 			$primary = $reference->getPrimary();
 			foreach($primary as $field) {
+				$ref   = $field;
 				$field = clone $field;
 				$name = $reference->getName() . '_' . $field->getName();
 				$field->setName($name);
 				$field->setPrimary(false);
 				$field->setAutoIncrement(false);
+				$field->setReference($reference, $ref);
 				$fields[$name] = $field;
 			}
 		}

@@ -169,7 +169,11 @@ class AutoLoad
 				
 		}
 		
-		$this->spitfire->log(".... failed! No class $className");
+		$trace = debug_backtrace();
+		$str   = '';
+		foreach ($trace as $e) $str = $e['function'] . ' > ' . $str;
+		
+		$this->spitfire->log(".... failed! No class $className in $str");
 
 	}
 
