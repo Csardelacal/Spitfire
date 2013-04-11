@@ -81,6 +81,9 @@ class homeController extends Controller
 				$child->test2 = $rec2;
 				$child->title    = time();
 				$child->content = '_SF_';
+				echo '<br/>--------------------<br/>';
+				echo $child->test2->content;
+				echo '<br/>--------------------<br/>';
 				//print_r($child);
 				//ob_flush();
 				//die();
@@ -99,6 +102,7 @@ class homeController extends Controller
 				$child->store();
 
 				$child->content.= time();
+				$child->content.= 'áéë ' . date('d/m/Y H:i:s', time());
 				$child->store();
 				echo $child->id;
 				$child->increment('numeric');
@@ -110,9 +114,14 @@ class homeController extends Controller
 			
 			$q = $rec->getChildren($this->model->dependant)->fetchAll();
 			
-			foreach ($q as $e) echo $e->title . "\n";
+			foreach ($q as $e) echo $e->title . ' ' . $e->content . "\n";
 			
 			if ($rec->getChildren($this->model->dependant)->count() > 10) $rec->delete();
+			
+			
+			echo '<br/>--------------------<br/>';
+			echo memory_get_peak_usage() / 1024;
+			echo '<br/>--------------------<br/>';
 			
 			print_r(spitfire()->getMessages());
 		}

@@ -215,7 +215,7 @@ abstract class databaseRecord implements Serializable
 	}
 	
 	public function __get($field) {
-		return $this->data[$field];
+		return (isset($this->data[$field])) ? $this->data[$field] : null;
 	}
 	
 	public function serialize() {

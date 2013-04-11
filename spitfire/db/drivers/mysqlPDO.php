@@ -8,6 +8,7 @@ use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Field;
 use spitfire\SpitFire;
+use spitfire\environment;
 use PDO;
 use PDOException;
 use privateException;
@@ -256,6 +257,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * @return string Quoted and escaped string
 	 */
 	public function quote($text) {
-		return $this->getConnection()->quote( strval($text) );
+		$str = iconv( environment::get('system_encoding'), environment::get('database_encoding'), strval($text) );
+		return $this->getConnection()->quote( $str );
 	}
 }
