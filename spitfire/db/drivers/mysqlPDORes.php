@@ -29,6 +29,11 @@ class mysqlPDOResultSet implements resultSetInterface
 		return $data;
 	}
 	
+
+	public function fetchArray() {
+		return $this->result->fetch(PDO::FETCH_ASSOC);
+	}
+	
 	public function __destruct() {
 		$this->result->closeCursor();
 	}

@@ -115,8 +115,8 @@ abstract class Query
 	}
 	
 	public function count() {
-		$query = $this->query(Array('count(*)'), true)->fetch();
-		$count = $query->{'count(*)'};//end($query);
+		$query = $this->query(Array('count(*)'), true)->fetchArray();
+		$count = $query['count(*)'];//end($query);
 		return $count;
 	}
 	
