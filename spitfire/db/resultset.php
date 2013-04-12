@@ -10,5 +10,6 @@ interface resultSetInterface
 	 * @return databaseRecord A record of a database.
 	 */
 	public function fetch();
+	public function fetchArray();
 	public function fetchAll();
 }

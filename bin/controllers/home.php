@@ -55,7 +55,7 @@ class homeController extends Controller
 		try {
 			$rec = db()->table('test')->get('id1', 1)->fetch();
 			
-			if (!$rec->id1) {
+			if ($rec === null) {
 				$rec = $this->model->test->newRecord();
 				$rec->id1 = 1;
 				$rec->id2 = 1;
@@ -66,7 +66,7 @@ class homeController extends Controller
 
 			$rec2 = db()->table('test2')->get('id1', 1)->fetch();
 			
-			if (!$rec2->id1) {
+			if ($rec2 === null) {
 				$rec2 = $this->model->test2->newRecord();
 				$rec2->id1 = 1;
 				$rec2->id2 = 1;
