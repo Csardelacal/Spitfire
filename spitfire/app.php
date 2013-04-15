@@ -68,6 +68,8 @@ abstract class App
 	public function getController($controller) {
 		if (is_array($controller)) $controller = implode ('\\', $controller);
 		$c = $this->getControllerClassName($controller);
+		$reflection = new ReflectionClass($c);
+		if ($reflection->isAbstract()) throw new publicException("Abstract Controller", 404);
 		return new $c($this);
 	}
 	
