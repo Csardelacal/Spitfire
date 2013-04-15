@@ -5,7 +5,6 @@ namespace spitfire;
 class AutoLoad
 {
 
-	const   APPCONTROLLER_LOCATION = 'bin/controllers/appController.php';
 	const   CONTROLLER_DIRECTORY   = 'bin/controllers/';
 	const   VIEW_DIRECTORY         = 'bin/viewControllers/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';

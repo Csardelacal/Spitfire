@@ -37,13 +37,12 @@ class ClassInfo
 		$this->namespace = explode (self::NAMESPACE_SEPARATOR, $className);
 		$this->className = array_pop($this->namespace);
 		
-		foreach($this->types as $type) {
-			if ( substr($this->className, 0 - strlen($type) ) == $type) {
-				$this->type      = $type;
-				$this->className = substr($this->className, 0, strlen($this->className) - strlen($type) );
-			}
-			
-		}
+		$full = preg_split('/(?=[A-Z])/', $this->className, 2, PREG_SPLIT_NO_EMPTY);
+		$type = in_array(end($full), $this->types)? array_shift($full) : self::TYPE_STDCLASS;
+		$name = implode('', $full);
+		
+		$this->className = $name;
+		$this->type      = $type;
 		
 	}
 	
