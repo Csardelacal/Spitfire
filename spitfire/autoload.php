@@ -15,6 +15,17 @@ class AutoLoad
 	const   UI_COMPONENT_DIRECTORY = 'bin/ui/';
 	const   STD_CLASS_DIRECTORY    = 'bin/classes/';
 	const   CLASS_EXTENSION        = '.php';
+	
+	private $directories = Array(
+	    ClassInfo::TYPE_CONTROLLER => self::CONTROLLER_DIRECTORY,
+	    ClassInfo::TYPE_APP        => self::APP_DIRECTORY,
+	    ClassInfo::TYPE_BEAN       => self::BEAN_DIRECTORY,
+	    ClassInfo::TYPE_COMPONENT  => self::COMPONENT_DIRECTORY,
+	    ClassInfo::TYPE_LOCALE     => self::LOCALE_DIRECTORY,
+	    ClassInfo::TYPE_MODEL      => self::MODEL_DIRECTORY,
+	    ClassInfo::TYPE_VIEW       => self::VIEW_DIRECTORY,
+	    ClassInfo::TYPE_STDCLASS   => self::STD_CLASS_DIRECTORY
+	);
 
 	static $instance = false;
 
@@ -40,133 +51,59 @@ class AutoLoad
 			return include $this->registered_classes[$className];
 		
 		$class = new ClassInfo($className);
+		$dir   = $this->directories[$class->getType()];
 		
-		switch($class->getType()) {
-			case ClassInfo::TYPE_CONTROLLER:
-				$filename = self::CONTROLLER_DIRECTORY .
-						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
-						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
-						$class->getClassName() . 
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::CONTROLLER_DIRECTORY .
-						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
-						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
-						strtolower($class->getClassName()) . 
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_VIEW:
-				$filename = self::VIEW_DIRECTORY .
-						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
-						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
-						$class->getClassName() . 
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::VIEW_DIRECTORY .
-						(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
-						(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
-						strtolower($class->getClassName()) . 
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_COMPONENT:
-				$filename = self::COMPONENT_DIRECTORY .
-						implode(DIRECTORY_SEPARATOR, $class->getNameSpace()) .
-						DIRECTORY_SEPARATOR .
-						$class->getClassName() .
-						DIRECTORY_SEPARATOR .
-						'main' .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::COMPONENT_DIRECTORY .
-						implode(DIRECTORY_SEPARATOR, $class->getNameSpace()) .
-						DIRECTORY_SEPARATOR .
-						strtolower($class->getClassName()) . 
-						DIRECTORY_SEPARATOR .
-						'main' .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_MODEL:
-				$filename = self::MODEL_DIRECTORY .
-						$class->getClassName() .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::MODEL_DIRECTORY .
-						strtolower($class->getClassName()) .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_BEAN:
-				$filename = self::BEAN_DIRECTORY .
-						$class->getClassName() .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::BEAN_DIRECTORY .
-						strtolower($class->getClassName()) .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_APP:
-				$filename = self::APP_DIRECTORY .
-						$class->getClassName() .
-						DIRECTORY_SEPARATOR.
-						'main' .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::APP_DIRECTORY .
-						strtolower($class->getClassName()) .
-						DIRECTORY_SEPARATOR.
-						'main' .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_LOCALE:
-				$filename = self::LOCALE_DIRECTORY .
-						$class->getClassName() .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::LOCALE_DIRECTORY .
-						strtolower($class->getClassName()) .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
-			case ClassInfo::TYPE_STDCLASS:
-				$filename = self::STD_CLASS_DIRECTORY .
-						$class->getClassName() .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				$filename = self::STD_CLASS_DIRECTORY .
-						strtolower($class->getClassName()) .
-						self::CLASS_EXTENSION;
-				if (file_exists($filename)) return include $filename;
-				
-				break;
-				
+		if ($class->getType() == ClassInfo::TYPE_APP) {
+			
+			$filename = self::APP_DIRECTORY .
+					$class->getClassName() .
+					DIRECTORY_SEPARATOR.
+					'main' .
+					self::CLASS_EXTENSION;
+			if (file_exists($filename)) return include $filename;
+
+			$filename = self::APP_DIRECTORY .
+					strtolower($class->getClassName()) .
+					DIRECTORY_SEPARATOR.
+					'main' .
+					self::CLASS_EXTENSION;
+			if (file_exists($filename)) return include $filename;
 		}
+		
+		$filename = $dir . 
+			(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+			(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
+			$class->getClassName() . 
+			self::CLASS_EXTENSION;
+		
+		if (file_exists($filename)) return include $filename;
+		
+		$filename = $dir . 
+			(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+			(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
+			strtolower($class->getClassName()) . 
+			self::CLASS_EXTENSION;
+		
+		if (file_exists($filename)) return include $filename;
+		
+		$filename = $dir . 
+			(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+			(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
+			strtolower($class->getClassName()) . '-' . strtolower($class->getType()) .
+			self::CLASS_EXTENSION;
+		
+		if (file_exists($filename)) return include $filename;
+		
+		$filename = $dir . 
+			(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') .
+			(($class->getNameSpace())?DIRECTORY_SEPARATOR:'') .
+			$class->getClassName() . 
+			DIRECTORY_SEPARATOR .
+			'main' .
+			self::CLASS_EXTENSION;
+		
+		if (file_exists($filename)) return include $filename;
+		
 		
 		$trace = debug_backtrace();
 		$str   = '';

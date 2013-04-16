@@ -70,4 +70,8 @@ class Request
 			return $this->answerformat;
 		else return $allowed[0];
 	}
+	
+	public function handle() {
+		$this->app->runTask($this->controller, $this->action, $this->object);
+	}
 }

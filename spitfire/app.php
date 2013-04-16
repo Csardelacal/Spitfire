@@ -73,6 +73,18 @@ abstract class App
 		return new $c($this);
 	}
 	
+	public function swapController($newURI, $action, $object) {
+		
+		if (!is_array($newURI)) $newURI = str_replace('/', '\\', $newURI);
+		
+		$request = spitfire()->getRequest();
+		$request->setControllerURI($newURI);
+		$request->setController($this->getController($newURI));
+		$request->setAction($action);
+		$request->setObject($object);
+		$request->handle();
+	}
+	
 	abstract public function enable();
 	abstract public function getAssetsDirectory();
 	abstract public function getTemplateDirectory();

@@ -38,7 +38,7 @@ class ClassInfo
 		$this->className = array_pop($this->namespace);
 		
 		$full = preg_split('/(?=[A-Z])/', $this->className, 2, PREG_SPLIT_NO_EMPTY);
-		$type = in_array(end($full), $this->types)? array_shift($full) : self::TYPE_STDCLASS;
+		$type = in_array(end($full), $this->types)? array_pop($full) : self::TYPE_STDCLASS;
 		$name = implode('', $full);
 		
 		$this->className = $name;
