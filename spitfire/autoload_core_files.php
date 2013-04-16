@@ -39,6 +39,7 @@ AutoLoad::registerClass('databaseRecord',                                       
 
 AutoLoad::registerClass('Validatable',                                          $cur_dir.'/validatable.php');
 AutoLoad::registerClass('Model',                                                $cur_dir.'/model/model.php');
+AutoLoad::registerClass('OTFModel',                                             $cur_dir.'/model/onthefly.php');
 AutoLoad::registerClass('spitfire\model\Field',                                 $cur_dir.'/model/field.php');
 AutoLoad::registerClass('IntegerField',                                         $cur_dir.'/model/fields/integer.php');
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');

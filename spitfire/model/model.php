@@ -13,6 +13,10 @@ class Model
 			->setAutoIncrement(true);
 	}
 	
+	public function setFields($fields) {
+		$this->fields = $fields;
+	}
+	
 	public function getFields() {
 		$fields = array_filter(array_merge($this->fields, $this->getReferencedFields()));
 		#If the given type os a field return it.

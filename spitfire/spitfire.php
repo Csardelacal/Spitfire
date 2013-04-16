@@ -39,6 +39,7 @@ class SpitFire extends App
 		$cur_dir = $this->cwd . DIRECTORY_SEPARATOR . 'spitfire';
 
 		#Try to start autoload
+		self::includeIfPossible($cur_dir.'/class.php');
 		self::includeIfPossible($cur_dir.'/autoload.php');
 		$this->autoload = new AutoLoad($this);
 

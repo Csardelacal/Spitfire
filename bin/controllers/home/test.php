@@ -3,6 +3,7 @@
 namespace home;
 
 use Controller;
+use Strings;
 
 class testController extends Controller
 {
@@ -11,7 +12,8 @@ class testController extends Controller
 		echo Strings::camel2underscores('someCamelCasedString');
 		echo Strings::camel2underscores('SomeCamelCasedString');
 		echo (isset($this->get->test))?'test is true': 'test is false';
-		die('Hi!');
+		
+		print_r(db()->table('people')->getAll()->fetchAll());
 	}
 	
 }

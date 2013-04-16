@@ -260,4 +260,17 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$str = iconv( environment::get('system_encoding'), environment::get('database_encoding'), strval($text) );
 		return $this->getConnection()->quote( $str );
 	}
+
+	public function getOTFModel($tablename) {
+		$model = new \OTFModel();
+		
+		$fields = $this->execute("DESCRIBE `" . environment::get('db_table_prefix') . $tablename . "`", false);
+		
+		while ($row = $fields->fetch()) {
+			$model->field($row['Field'], 'TextField');
+		}
+		
+		$model->setName($tablename);
+		return $model;
+	}
 }

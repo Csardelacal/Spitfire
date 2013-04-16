@@ -121,7 +121,7 @@ abstract class DB extends _SF_MVC
 			$model = new $modelName;
 			return $this->tables[$tablename] = $this->getTableInstance($this, $tablename, $model);
 		}
-		else throw new privateException('Unknown model ' . $modelName);
+		else return $this->tables[$tablename] = $this->getTableInstance($this, $tablename, $this->getOTFModel($tablename));
 	}
 
 	/**
@@ -157,5 +157,7 @@ abstract class DB extends _SF_MVC
 	 * @return string Class of the table
 	 */
 	abstract public function getTableInstance(DB$db, $tablename, Model$model);
+	
+	abstract public function getOTFModel($tablename);
 
 }
