@@ -121,7 +121,7 @@ abstract class Query
 	}
 	
 	public function getRestrictions() {
-		return $this->restrictions;
+		return array_merge($this->table->getModel()->getBaseRestrictions(), $this->restrictions);
 	}
 	
 	public function getOrder() {

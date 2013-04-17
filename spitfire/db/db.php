@@ -119,9 +119,12 @@ abstract class DB extends _SF_MVC
 
 		if (class_exists($modelName)) {
 			$model = new $modelName;
-			return $this->tables[$tablename] = $this->getTableInstance($this, $tablename, $model);
+			return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
 		}
-		else return $this->tables[$tablename] = $this->getTableInstance($this, $tablename, $this->getOTFModel($tablename));
+		else {
+			$model = $this->getOTFModel($tablename);
+			return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
+		}
 	}
 
 	/**

@@ -51,7 +51,14 @@ class homeController extends appController
 			$s->set('admin', $a);
 		}
 		
+		echo '<pre>';
 		print_r($a->getData());
+		
+		print_r(db()->adult->getAll()->fetchAll());
+		
+		print_r(spitfire()->getMessages());
+		
+		echo '</pre>';
 	}
 	
 	public function dbTest() {
