@@ -74,7 +74,19 @@ class Model
 	public function getName() {
 		static $name;
 		if ($name) return $name;
-		return $name = str_replace('Model', '', get_class($this));
+		
+		$name = get_class($this);
+		$name = substr($name, 0, 0 - strlen('Model'));
+		$name = str_replace('\\', '-', $name);
+		return strtolower($name);
+	}
+	
+	public function getTableName() {
+		return $this->getName();
+	}
+	
+	public function getBaseRestrictions() {
+		return Array();
 	}
 
 	public function reference($model) {
