@@ -36,9 +36,6 @@ class View extends _SF_MVC
 		$extension  = $url->getExtension();
 		
 		SpitFire::$headers->contentType($extension);
-	
-		
-		ob_flush();
 		
 		
 		if     ( file_exists("$basedir$controller/$action.$extension"))
@@ -50,7 +47,7 @@ class View extends _SF_MVC
 		
 		
 		if     ( file_exists("{$basedir}layout.$extension"))
-			$this->file = "{$basedir}layout.$extension";
+			$this->layout = "{$basedir}layout.$extension";
 		else
 			$this->layout = $basedir . 'layout.php';
 	}

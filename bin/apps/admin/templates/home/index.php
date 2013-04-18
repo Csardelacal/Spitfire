@@ -2,6 +2,6 @@
 <pre><?= $_SF_DEBUG_OUTPUT ?></pre>
 <?= $this->element('test'); ?>
 
-<?php foreach($beans as $bean): ?>
-	<a href="<?= $this->app->url('/lst/' . $bean)?>"><?= CoffeeBean::getBean($bean)->getName() ?></a><br/>
+<?php foreach($beans as $bean_name): ?>
+	<a href="<?= $this->app->url('/lst/' . $bean_name)?>"><?= CoffeeBean::getBean($bean_name)->getName() ?></a><br/>
 <?php endforeach; ?>

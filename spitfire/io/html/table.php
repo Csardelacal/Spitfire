@@ -15,7 +15,7 @@ class HTMLTable extends HTMLElement
 	}
 
 	public function getParams() {
-		return Array();
+		return Array('cellspacing' => 0);
 	}
 
 	public function getTag() {

@@ -56,6 +56,20 @@ class homeController extends appController
 		
 		print_r(db()->adult->getAll()->fetchAll());
 		
+		echo new URL('hello', 'world');
+		echo "\n";
+		echo new URL('hello', 'world', Array('test' => 'ok'));
+		echo "\n";
+		echo new URL('hello/world', Array('test' => 'ok'));
+		echo "\n";
+		echo URL::current();
+		echo "\n";
+		
+		$url = new URL('hello', 'world');
+		$url[0] = 'goodbye';
+		$url['test'] = 'goodbye';
+		echo $url;
+		
 		print_r(spitfire()->getMessages());
 		
 		echo '</pre>';

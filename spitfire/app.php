@@ -53,12 +53,10 @@ abstract class App
 	
 	public function url($url) {
 		
-		$ns = ($this->namespace)? '/' . $this->namespace : '';
-		
 		if (0 === strpos($url, 'http://')) return $url;
 		if (0 === strpos($url, 'https://')) return $url;
 		if (0 === strpos($url, 'www.')) return 'http://' . $url;
-		else return SpitFire::baseUrl() . $ns . $url;
+		else return new URL($this, $url);
 	}
 	
 	public function getBaseDir() {
