@@ -1,5 +1,8 @@
 <?php
 
+use spitfire\SpitFire;
+use spitfire\storage\database\Query;
+
 class Pagination
 {
 	/**
@@ -12,7 +15,7 @@ class Pagination
 	private $url     = false;
 	private $param   = 'page';
 	
-	public function __construct(_SF_DBQuery $query) {
+	public function __construct(Query $query) {
 		$this->query = $query;
 	}
 	
@@ -79,7 +82,7 @@ class Pagination
 
 	public function __toString() {
 		$pages = $this->getPageNumbers();
-		$this->url = $this->url? $this->url : SpitFire::$current_url;
+		$this->url = $this->url? $this->url : URL::current();
 		$max   = $this->max = $this->getPageCount();
 		$previous = 0;
 		

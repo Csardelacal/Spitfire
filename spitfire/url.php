@@ -12,51 +12,29 @@ use spitfire\SpitFire;
  * @author C�sar
  *
  */
-class URL
+class URL implements ArrayAccess
 {
 	//Private
-	private $namespace;
-	private $controller;
-	private $action;
-	private $object;
-	private $params;
+	private $app;
+	private $path = Array();
+	private $params = Array();
 	private $extension = 'php';
 	
-	public function __construct($c = false, $a= false, $o = false, $p = Array()) {
-		if($c) $this->controller = (is_array($c)) ? $c : Array($c);
-		else $this->controller = ( is_array(environment::get('default_controller')) )? environment::get('default_controller'):Array(environment::get('default_controller'));
-
-		if($a) $this->action = $a;
-		else $this->action = environment::get('default_action');
-
-		if($o) $this->object = (is_array($o)) ? $o : Array($o);
-		else $this->object = environment::get('default_object');
-
-		$this->params = $p;
-	}
-	
-	public function setController ($controller) {
-		$this->controller = $controller;
-	}
-	
-	public function getController() {
-		return $this->controller;
-	}
-	
-	public function setAction ($action) {
-		$this->action = $action;
-	}
-	
-	public function getAction() {
-		return $this->action;
-	}
-	
-	public function setObject ($object) {
-		$this->object = $object;
-	}
-	
-	public function getObject() {
-		return $this->object;
+	public function __construct() {
+		$params = func_get_args();
+		
+		foreach ($params as $param) {
+			if (is_array($param)) $this->params = $param;
+			elseif (is_a($param, 'App')) $this->app = $param;
+			elseif (strstr($param, '/') || strstr($param, '?')) {
+				$info = parse_url($param);
+				$this->path = array_merge ($this->path, explode('/', $info['path']));
+				if (isset($info['query'])) {
+					$this->params = parse_str($info['query']);
+				}
+			}
+			else $this->path[] = $param;
+		}
 	}
 	
 	public function setExtension($extension) {
@@ -68,13 +46,18 @@ class URL
 		return $this->extension;
 	}
 	
-	public function setNamespace($namespace) {
-		if (! empty($namespace) )
-		$this->namespace = $namespace;
+	public function setPath($path) {
+		if (! empty($path) )
+		$this->path = $path;
 	}
 	
-	public function getNamespace() {
-		return $this->namespace;
+	public function setApp($app) {
+		if (! empty($app) )
+		$this->app = $app;
+	}
+	
+	public function getApp() {
+		return $this->app;
 	}
 	
 	/**
@@ -102,16 +85,10 @@ class URL
 	 */
 	public function __toString() {
 		
-		if ( is_array($this->object) ) $object = implode('/', $this->object);
-		else $object = $this->object;
+		if ($this->app) $path = array_unshift ($path, $this->app->namespace);
+		$path = implode('/', array_filter($this->path));
 		
-		if ( is_array($this->controller) ) $controller = implode('/', $this->controller);
-		else $controller = $this->controller;
-		
-		$str =  SpitFire::baseUrl().
-				'/'. $controller.
-				'/'. $this->action.
-				'/'. $object;
+		$str =  SpitFire::baseUrl().'/'. $path;
 		
 		if ($this->extension != 'php') $str.= ".$this->extension";
 		
@@ -124,11 +101,36 @@ class URL
 		return $str;
 	}
 	
-	public static function asset($asset_name) {
-		return SpitFire::baseUrl() . '/assets/' . $asset_name;
+	public static function asset($asset_name, $app = null) {
+		if ($app == null) return SpitFire::baseUrl() . '/assets/' . $asset_name;
+		else return SpitFire::baseUrl() . '/' . $app->getAssetDirectory() . $asset_name;
 	}
 	
 	public static function make($url) {
 		return SpitFire::baseUrl() . $url;
+	}
+	
+	public static function current() {
+		return new self($_SERVER['PATH_INFO'], $_GET);
+	}
+
+	public function offsetExists($offset) {
+		if (is_numeric($offset)) return isset($this->path[$offset]);
+		else return isset($this->params[$offset]);
+	}
+
+	public function offsetGet($offset) {
+		if (is_numeric($offset)) return $this->path[$offset];
+		else return $this->params[$offset];
+	}
+
+	public function offsetSet($offset, $value) {
+		if (is_numeric($offset)) return $this->path[$offset] = $value;
+		else return $this->params[$offset] = $value;
+	}
+
+	public function offsetUnset($offset) {
+		if (is_numeric($offset)) unset($this->path[$offset]);
+		else unset( $this->params[$offset]);
 	}
 }

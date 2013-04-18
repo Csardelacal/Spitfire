@@ -17,11 +17,13 @@ class homeController extends Controller
 		if (!$this->session->isSafe()) {
 			die(header('location: ' . $this->app->url('/auth/') ));
 		}
+		
+		$this->view->set('beans', $this->app->getBeans());
+		$this->view->set('bean',  '');
 	}
 
 
 	function index() {
-		$this->view->set('beans', $this->app->getBeans());
 		
 	}
 	
@@ -31,7 +33,11 @@ class homeController extends Controller
 		
 		$q = db()->table($b->model)->getAll();
 		if (isset($_GET['page'])) $q->setPage($_GET['page']);
+		
+		$p = new \Pagination($q);
+		
 		$this->view->set('records', $q->fetchAll());
+		$this->view->set('paging',  $p);
 		$this->view->set('bean', $bean);
 	}
 	
