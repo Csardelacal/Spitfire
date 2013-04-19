@@ -85,8 +85,9 @@ class URL implements ArrayAccess
 	 */
 	public function __toString() {
 		
-		if ($this->app) $path = array_unshift ($path, $this->app->namespace);
-		$path = implode('/', array_filter($this->path));
+		$path = $this->path;
+		if ($this->app) array_unshift ($path, $this->app->namespace);
+		$path = implode('/', array_filter($path));
 		
 		$str =  SpitFire::baseUrl().'/'. $path;
 		
