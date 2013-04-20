@@ -7,6 +7,7 @@ $nr = $b->makeDBRecord();
 if (!$record->getTable()->validate($nr)) {
 	print_r($record->getTable()->getErrors());
 }
-
-echo $b->makeForm($this->app->url('/update/' . $bean . '/' . $record->id));
-
+?>
+<div class="edit">
+	<?= $b->makeForm($this->app->url('/update/' . $bean . '/' . $record->id)); ?>
+</div>

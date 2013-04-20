@@ -7,9 +7,19 @@
 */
 
 body {
-	background: #FFF;
+	background: #F2F2F2;
 	margin: 0;
 	height: 100%;
+}
+
+a {
+	color: #444;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #333;
+	text-decoration: underline;
 }
 
 .wrapper {
@@ -40,11 +50,19 @@ body {
 	margin: 15px;
 }
 
-.beans-list {
-	padding-top: 10px;
-	position: absolute;
+.beans-help {
+	font-size: 10px;
+	background: #D5DAE4;
+	font-weight: bold;
+	display: block;
 	width: 140px;
-	background: #dde0e5;
+	padding: 5px;
+}
+
+.beans-list {
+	position: absolute;
+	width: 150px;
+	border-right: solid 1px #CCC;
 	top: 50px;
 	left: 0;
 	bottom: 0;
@@ -54,7 +72,7 @@ body {
 	display: block;
 	color: #040809;
 	font-size: 12px;
-	width: 100px;
+	width: 110px;
 	padding: 3px 30px 3px 10px;
 	text-transform: capitalize;
 	text-decoration: none;
@@ -71,13 +89,14 @@ body {
 
 .main {
 	position: relative;
-	margin-left: 150px;
+	margin-left: 160px;
 	padding-top:   10px;
 }
 
 .new-record {
 	float: right;
 	margin: 5px;
+	margin-right: 20px;
 	color: #444;
 	font-size: 12px;
 	text-decoration: none;
@@ -98,11 +117,17 @@ body {
 	text-align: center;
 }
 
+.table-wrapper {
+	margin: 10px 20px;
+	clear: both;
+}
+
 table {
-	width: auto;
-	margin: auto;
+	width:  100%;
 	border: solid 1px #CCC;
-	min-width: 95%;
+	
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
 }
 
 table tr {
@@ -124,4 +149,104 @@ table td {
 	padding: 2px 5px;
 	margin: 0;
 	border: none;
+}
+
+.pagination {
+	float: right;
+}
+
+.pagination ul {
+	list-style: none;
+}
+
+.pagination ul:after,
+.pagination:after,
+.table-wrapper:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.pagination ul li {
+	float: left;
+	border: solid 1px #CCC;
+	border-right: none;
+	background: #FFF;
+	padding: 3px 10px;
+}
+
+.pagination ul li a {
+	color: #333;
+	text-decoration: none;
+	font-size: 12px;
+}
+
+.pagination ul li.disabled a {
+	color: #999;
+	text-decoration: none;
+	font-size: 12px;
+	cursor: default;
+}
+
+.pagination ul li:first-child {
+	border-radius: 3px 0 0 3px;
+}
+
+.pagination ul li:last-child {
+	border-radius: 0 3px 3px 0;
+	border-right: solid 1px #CCC;
+}
+
+
+/* EDITION____________________________________________________________________*/
+.edit {
+	display: block;
+	width: 520px;
+	margin: 20px auto;
+	padding: 20px;
+	background: #FFF;
+	border-radius: 3px;
+	border: solid 1px #CCC;
+	box-shadow: 2px 2px 5px #E3E3E3;
+}
+
+.edit .field {
+	margin-top: 5px;
+}
+
+.edit label {
+	display: inline-block;
+	width: 200px;
+	font-size: 12px;
+	text-align: right;
+	color: #555;
+}
+
+.edit input {
+	display: inline-block;
+	border: solid 1px #CCC;
+	border-radius: 3px;
+	margin-left: 20px;
+	padding: 3px;
+}
+
+.edit input[type="text"] {
+	width: 200px;
+}
+
+.edit input[type="submit"] {
+	float: right;
+	margin-right: 100px;
+	margin-top:   10px;
+	color: #FFF;
+	background-color: #416F9B;
+	padding: 3px;
+	cursor: pointer;
+}
+
+
+.edit:after {
+	content: '';
+	clear: both;
+	display: table;
 }
