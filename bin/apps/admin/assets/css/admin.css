@@ -222,15 +222,18 @@ table td {
 	color: #555;
 }
 
-.edit input {
+.edit input,
+.edit select {
 	display: inline-block;
 	border: solid 1px #CCC;
 	border-radius: 3px;
 	margin-left: 20px;
 	padding: 3px;
+	background: #FFF;
 }
 
-.edit input[type="text"] {
+.edit input[type="text"],
+.edit select  {
 	width: 200px;
 }
 

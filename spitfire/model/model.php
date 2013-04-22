@@ -77,12 +77,11 @@ class Model
 		
 		$name = get_class($this);
 		$name = substr($name, 0, 0 - strlen('Model'));
-		$name = str_replace('\\', '-', $name);
 		return strtolower($name);
 	}
 	
 	public function getTableName() {
-		return $this->getName();
+		return str_replace('\\', '-', $this->getName());
 	}
 	
 	public function getBaseRestrictions() {
