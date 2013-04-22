@@ -51,7 +51,15 @@ class homeController extends Controller
 	function edit($bean, $id) {
 		if (in_array($bean, $this->app->getBeans())) {
 			$this->view->set('bean', $bean);
-			$this->view->set('record', db()->table(CoffeeBean::getBean($bean)->model)->get('id', $id)->fetch());
+			$ids = db()->table(CoffeeBean::getBean($bean)->model)->getPrimaryKey();
+			$query = db()->table(CoffeeBean::getBean($bean)->model)->getAll();
+			$primary = explode('|', $id);
+			
+			foreach ($ids as $tid => $data) {
+				$query->addRestriction($tid, array_shift($primary));
+			}
+			
+			$this->view->set('record', $query->fetch());
 		}
 		else throw new publicException('Not found', 404);
 	}
@@ -67,12 +75,22 @@ class homeController extends Controller
 	
 	function update($bean, $id) {
 		if (in_array($bean, $this->app->getBeans())) {
-			$data = db()->table(CoffeeBean::getBean($bean)->model)->get('id', $id)->fetch();
+			
+			$ids = db()->table(CoffeeBean::getBean($bean)->model)->getPrimaryKey();
+			$query = db()->table(CoffeeBean::getBean($bean)->model)->getAll();
+			$primary = explode('|', $id);
+			
+			foreach ($ids as $tid => $data) {
+				$query->addRestriction($tid, array_shift($primary));
+			}
+			
+			$data = $query->fetch();
+			
 			$b = CoffeeBean::getBean($bean);
 			if ($b->validate()) {
 				$r = $b->updateDBRecord($data);
 				$r->store();
-				die(header('location: ' . $this->app->url('/edit/' . $bean . '/' . $r->id) ));
+				die(header('location: ' . $this->app->url('/edit/' . $bean . '/' . implode('|', $r->getPrimaryData())) ));
 			}
 			else {
 				print_r($b->getErrors());

@@ -103,7 +103,7 @@ abstract class CoffeeBean extends Validatable
 			//Actions
 			$str = '';
 			foreach ($actions as $name => $url) {
-				$action = sprintf($url, $record->id);
+				$action = sprintf($url, implode('|', $record->getPrimaryData()));
 				$str.= sprintf('<a href="%s">%s</a>', $action, $name);
 			}
 			$row->putCell($str);
