@@ -274,6 +274,9 @@ abstract class databaseRecord implements Serializable
 		$this->synced= true;
 	}
 	
+	public function __toString() {
+		return sprintf('%s(%s)', $this->getTable()->getModel()->getName(), implode(',', $this->getPrimaryData()) );
+	}
 	
 	public abstract function delete();
 	public abstract function insert();
