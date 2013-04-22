@@ -9,5 +9,5 @@ if (!$record->getTable()->validate($nr)) {
 }
 ?>
 <div class="edit">
-	<?= $b->makeForm($this->app->url('/update/' . $bean . '/' . $record->id)); ?>
+	<?= $b->makeForm($this->app->url('/update/' . $bean . '/' . implode('|', $record->getPrimaryData()) )); ?>
 </div>
