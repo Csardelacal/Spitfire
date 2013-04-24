@@ -43,7 +43,7 @@ abstract class databaseRecord implements Serializable
 				$name = $model->getName();
 				$primary = $model->getPrimary();
 
-				if (!isset($srcData[$name]) || !$srcData[$name] instanceof databaseRecord) {
+				if (!isset($srcData[$alias]) || !$srcData[$alias] instanceof databaseRecord) {
 					$fields = $table->getModel()->getReferencedFields($model, $alias);
 					$query  = $table->getDB()->table($model)->getAll();
 
@@ -52,7 +52,7 @@ abstract class databaseRecord implements Serializable
 						$query->addRestriction($f->getName(), $srcData[$field->getName()]);
 					}
 
-					$srcData[$name] = $query;
+					$srcData[$alias] = $query;
 
 				}
 			}
