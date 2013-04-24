@@ -66,7 +66,7 @@ abstract class Table extends Queriable
 			else throw new \privateException('Field ' . $name . ' does not belong to ' . $this);
 		}
 		#Otherwise search for it in the fields list
-		if (isset($this->fields[$name])) return $this->fields[$name];
+		if (isset($this->fields[(string)$name])) return $this->fields[(string)$name];
 		#Else the table couldn't be found
 		throw new \privateException('Field ' . $name . ' does not exist in ' . $this);
 	}

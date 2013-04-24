@@ -111,7 +111,6 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 *                     than the ones the system manages to fix.
 	 */
 	public function execute($statement, $attemptrepair = true) {
-		
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
 		

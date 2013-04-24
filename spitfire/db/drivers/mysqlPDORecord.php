@@ -60,7 +60,7 @@ class MysqlPDORecord extends databaseRecord
 			if ($value instanceof databaseRecord) {
 				$primary = $value->getPrimaryData();
 				foreach ($primary as $key => $v) {
-					$data[$value->getTable()->getModel()->getName() . '_' . $key] = $v;
+					$data[$field . '_' . $key] = $v;
 				}
 				unset($data[$field]);
 			}
@@ -88,7 +88,7 @@ class MysqlPDORecord extends databaseRecord
 			if ($value instanceof databaseRecord) {
 				$primary = $value->getPrimaryData();
 				foreach ($primary as $key => $v) {
-					$data[$value->getTable()->getModel()->getName() . '_' . $key] = $v;
+					$data[$field . '_' . $key] = $v;
 				}
 				unset($data[$field]);
 			}

@@ -33,11 +33,12 @@ abstract class stdSQLTable extends Table
 		
 		if (empty($refs)) return Array();
 		
-		foreach ($refs as $ref) {
+		foreach ($refs as $alias => $ref) {
 			//Check the integrity of the remote table
-			$this->getDb()->table($ref)->repair();
+			if ($ref != $this->model)
+				$this->getDb()->table($ref)->repair();
 			#Get the fields the model references from $ref
-			$referencedfields = $this->model->getReferencedFields($ref);
+			$referencedfields = $this->model->getReferencedFields($ref, $alias);
 			#Get the table that represents $ref
 			$referencedtable = $this->getDb()->table($ref);
 			//Prepare the statement

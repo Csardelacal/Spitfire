@@ -39,12 +39,12 @@ abstract class databaseRecord implements Serializable
 		//Parse referenced data
 		if (!empty($srcData)) {
 			$referenced = $table->getModel()->getReferencedModels();
-			foreach ($referenced as /** @var Model Remote model */$model) {
+			foreach ($referenced as $alias =>/** @var Model Remote model */$model) {
 				$name = $model->getName();
 				$primary = $model->getPrimary();
 
 				if (!isset($srcData[$name]) || !$srcData[$name] instanceof databaseRecord) {
-					$fields = $table->getModel()->getReferencedFields($model);
+					$fields = $table->getModel()->getReferencedFields($model, $alias);
 					$query  = $table->getDB()->table($model)->getAll();
 
 					foreach($fields as $field) {

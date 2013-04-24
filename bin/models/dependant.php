@@ -15,7 +15,8 @@ class dependantModel extends Model
 		$this->field('date', 'DatetimeField');
 		
 		$this->reference('test');
-		$this->reference('test2');
+		$this->reference('test2', 'piedra');
+		$this->reference('dependant', 'prueba');
 	
 	}
 	
