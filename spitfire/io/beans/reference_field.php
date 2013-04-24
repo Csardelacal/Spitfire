@@ -55,11 +55,11 @@ class ReferenceField extends Field
 		$query = db()->table($this->getModelField())->getAll();
 		$query->setPage(-1);
 		$possibilities = $query->fetchAll();
-		$active = $this->getValue()->getPrimaryData();
+		$active = (!$this->getValue())? null : $this->getValue()->getPrimaryData();
 		$str = '';
 		
 		foreach($possibilities as $pos) {
-			$selected = ($active == $pos->getPrimaryData());
+			$selected = ($active == $pos->getPrimaryData())? 'selected' : '';
 			
 			$str.= sprintf('<option value="%s" %s>%s</option>' . "\n", 
 				implode('|', $pos->getPrimaryData()), 

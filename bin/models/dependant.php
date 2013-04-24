@@ -17,6 +17,7 @@ class dependantModel extends Model
 		$this->reference('test');
 		$this->reference('test2', 'piedra');
 		$this->reference('dependant', 'prueba');
+		$this->reference('dependant', 'parent');
 	
 	}
 	

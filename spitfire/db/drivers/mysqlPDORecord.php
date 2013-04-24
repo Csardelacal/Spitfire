@@ -3,6 +3,7 @@
 namespace spitfire\storage\database\drivers;
 
 use \databaseRecord;
+use \spitfire\storage\database\Query;
 use \spitfire\storage\database\DBField;
 
 class MysqlPDORecord extends databaseRecord
@@ -85,6 +86,10 @@ class MysqlPDORecord extends databaseRecord
 		$db = $table->getDb();
 		
                 foreach ($data as $field => $value) {
+			if ($value instanceof Query) {
+				$value = $value->fetch();
+			}
+			
 			if ($value instanceof databaseRecord) {
 				$primary = $value->getPrimaryData();
 				foreach ($primary as $key => $v) {
@@ -95,7 +100,7 @@ class MysqlPDORecord extends databaseRecord
                 }
 		
 		$quoted = Array();
-		foreach ($data as $f => $v) $quoted[] = "$f = {$db->quote($v)}";
+		foreach ($data as $f => $v) $quoted[] = "{$table->getField($f)} = {$db->quote($v)}";
 		
 		$stt = sprintf('UPDATE %s SET %s WHERE %s',
 			$table, 
