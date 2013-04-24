@@ -121,8 +121,9 @@ class homeController extends appController
 			try {
 				$child = db()->table('dependant')->newRecord();
 				$child->test = $rec;
-				$child->test2 = $rec2;
+				$child->piedra = $rec2;
 				$child->title    = time() . 'i';
+				$child->prueba   = db()->dependant->get('id' ,1)->fetch();
 				$child->content  = '_SF_';
 				$child->store();
 

@@ -31,22 +31,23 @@ class Model
             else return null;
         }
 	
-	public function getReferencedFields(Model$target = null) {
+	public function getReferencedFields(Model$target = null, $alias = null) {
 		#Init the fields array to be returned
 		$fields = Array();
 		
 		#If a target model is set get the related fields
 		if (is_null($target)) $references = $this->references;
-		elseif (in_array($target, $this->references)) $references = Array($target);
+		elseif (in_array($target, $this->references)) $references = Array($alias => $target);
 		else throw new BadMethodCallException('No valid model specified');
 		
 		#Get the fields for the target model(s)
-		foreach ($references as $reference) {
+		foreach ($references as $alias => $reference) {
 			$primary = $reference->getPrimary();
 			foreach($primary as $field) {
 				$ref   = $field;
 				$field = clone $field;
-				$name = $reference->getName() . '_' . $field->getName();
+				if (!$alias) {print_r(debug_backtrace());ob_flush(); die();}
+				$name = $alias . '_' . $field->getName();
 				$field->setName($name);
 				$field->setPrimary(false);
 				$field->setAutoIncrement(false);
@@ -62,7 +63,7 @@ class Model
 	}
 	
 	public function getPrimary() {
-		$fields = $this->getFields();
+		$fields = $this->fields;
 		
 		foreach($fields as $name => $content) {
 			if (!$content->isPrimary()) unset($fields[$name]);
@@ -88,9 +89,16 @@ class Model
 		return Array();
 	}
 
-	public function reference($model) {
+	public function reference($model, $alias = null) {
 		$modelname = $model.'Model';
-		$this->references[$model] = new $modelname();
+		if (is_null($alias)) $alias = $model;
+		
+		if (get_class($this) == $modelname) $this->references[$alias] = $this;
+		else $this->references[$alias] = new $modelname();
+	}
+	
+	public function unreference($model) {
+		unset($this->references[$model]);
 	}
 	
 	public function field($name, $instanceof, $length = false) {
