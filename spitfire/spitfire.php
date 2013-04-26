@@ -138,6 +138,11 @@ class SpitFire extends App
 		return null;
 	}
 	
+	/**
+	 * Returns the current request.
+	 * 
+	 * @return Request The current request
+	 */
 	public function getRequest() {
 		return $this->request;
 	}
@@ -155,7 +160,7 @@ class SpitFire extends App
 	}
 
 	public function getViewClassName($controller) {
-		return $controller . 'View';
+		return implode('\\', $controller) . 'View';
 	}
 
 }
