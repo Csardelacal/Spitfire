@@ -28,7 +28,12 @@ class Request
 	}
 	
 	public function setControllerURI($controller) {
-		$this->controllerURI = $controller;
+		if (is_string($controller)) {
+			$this->controllerURI = explode ('\\', $controller);
+		}
+		else {
+			$this->controllerURI = $controller;
+		}
 	}
 	
 	public function getControllerURI() {
@@ -44,7 +49,8 @@ class Request
 	}
 	
 	public function setAction($action) {
-		$this->action = $action;
+		if (!$action) $this->action = environment::get('default_action');
+		else $this->action = $action;
 	}
 	
 	public function getAction() {

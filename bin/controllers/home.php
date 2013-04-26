@@ -15,10 +15,10 @@ class homeController extends appController
 	public function detail($object, $params) {
 		//DO nothing
 	}
-	
+	/*
 	public function home() {
 		$this->app->swapController('home/test', 'index', Array());
-	}
+	}*/
 
 	public function save ($object, $params) {
 		//$this->view->set('FW_NAME', 'Spitfire - ' . memory_get_peak_usage()/1024);

@@ -31,7 +31,7 @@ class View extends _SF_MVC
 		$basedir    = $app->getTemplateDirectory();
 		
 		$url        = $this->current_url;
-		$controller = implode(DIRECTORY_SEPARATOR, explode('\\', $url->getControllerURI()));
+		$controller = implode(DIRECTORY_SEPARATOR, $url->getControllerURI());
 		$action     = $url->getAction();
 		$extension  = $url->getExtension();
 		

@@ -16,4 +16,25 @@ abstract class Controller extends _SF_MVC
 		$this->get       = new _SF_InputSanitizer($_GET);
 	}
 	
+	public function __call($name, $arguments) {
+		$request = spitfire()->getRequest();
+		$controller = $request->getControllerURI();
+		$action = $name;
+		$object = $arguments;
+		
+		if (class_exists( implode('\\', $controller) . '\\' . $action . 'Controller')) {
+			array_push($controller, $action);
+			$action     = array_shift($object);
+			
+			$controllerName = implode('\\', $controller) . 'Controller';
+			$request->setController(new $controllerName($request->getApp()));
+			$request->setAction($action);
+			$request->setObject($object);
+			$request->handle();
+		}
+		else {
+			throw new publicException("Action not found", 404);
+		}
+	}
+	
 }
