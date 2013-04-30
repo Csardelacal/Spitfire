@@ -48,10 +48,10 @@ class URL implements ArrayAccess
 	 * @param mixed $_ You can pass any amount of parameters to this class,
 	 * the constructor will try to automatically parse the URL as good as possible.
 	 * <ul>
-	 * <li>Arrays are used as _GET</li>
-	 * <li>App objects are used to identify the namespace</li>
-	 * <li>Strings that contain / or ? will be parsed and added to GET and path</li>
-	 * <li>The rest of strings will be pushed to the path.</li>
+	 *	<li>Arrays are used as _GET</li>
+	 * 	<li>App objects are used to identify the namespace</li>
+	 *	<li>Strings that contain / or ? will be parsed and added to GET and path</li>
+	 *	<li>The rest of strings will be pushed to the path.</li>
 	 * </ul>
 	 */
 	public function __construct() {
