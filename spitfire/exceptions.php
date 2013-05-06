@@ -21,10 +21,11 @@
  * it will hide the message from the user and try to log information about the
  * error that caused this.
  * 
- * @package nLive
  * @author César de la Cal Bretschneider <cesar@magic3w.com>
  */
 class privateException extends Exception {}
+class fileNotFoundException  extends privateException {}
+class filePermissionsException  extends privateException {}
 
 /**
  * Public Exceptions
@@ -36,9 +37,6 @@ class privateException extends Exception {}
  * Will cause the browser to display an error page with the message 'User not found'
  * and keep everything else hidden.
  * 
- * @package nLive
  * @author César de la Cal Bretschneider <cesar@magic3w.com>
  */
 class publicException  extends Exception {}
-class fileNotFoundException  extends privateException {}
-class filePermissionsException  extends privateException {}

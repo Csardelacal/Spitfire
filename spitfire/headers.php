@@ -10,6 +10,16 @@ class Headers
 	    'x-version'    => '0.1 Beta'
 	);
 	
+	private $states = Array(
+		 200 => '200 OK',
+		 301 => '301 Moved Permanently',
+		 302 => '302 Found',
+		 401 => '401 Unauthorized',
+		 403 => '403 Forbidden',
+		 404 => '404 Not Found',
+		 500 => '500 Server Error'
+	);
+	
 	public function set ($header, $value) {
 		$this->headers[$header] = $value;
 	}
@@ -37,4 +47,10 @@ class Headers
 				break;
 		}
 	}
+	
+	public function redirect($location, $status = 302) {
+		$this->set('Content-Location', $location);
+		$this->set('Status', $this->states[$status]);
+	}
+	
 }
