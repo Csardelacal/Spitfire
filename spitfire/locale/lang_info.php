@@ -2,6 +2,8 @@
 
 namespace spitfire\locales;
 
+use spitfire\Request;
+
 class langInfo
 {
 	private $quality = 1.0;
@@ -28,10 +30,10 @@ class langInfo
 	}
 	
 	public function getLocaleClass() {
-		$classname = $this->langcode . 'Locale';
+		$classname = Request::get()->getApp()->getLocaleClassName($this->langcode);
 		if (!empty($this->langcode) && class_exists($classname)) return new $classname();
 		
-		$classname = substr($this->localecode, 0, 2) . 'Locale';
+		$classname = Request::get()->getApp()->getLocaleClassName(substr($this->localecode, 0, 2));
 		if (!empty($this->localecode) && class_exists($classname)) return new $classname();
 		
 		else return new \enLocale();

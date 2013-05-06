@@ -163,4 +163,8 @@ class SpitFire extends App
 		return implode('\\', $controller) . 'View';
 	}
 
+	public function getLocaleClassName($locale) {
+		return "{$locale}Locale";
+	}
+
 }

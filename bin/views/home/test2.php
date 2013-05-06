@@ -14,5 +14,8 @@
 <?php lang()->start('de'); ?>
 	Dieser text ist deutsch
 <?php lang()->end(); ?>
+	
+<?= __(_t('comment_count', 2), 10) ?>
+<?= _c(time()) ?>
 
 <?php echo $_SF_DEBUG_OUTPUT; ?>

@@ -144,7 +144,7 @@ class URL implements ArrayAccess
 	
 	public static function asset($asset_name, $app = null) {
 		if ($app == null) return SpitFire::baseUrl() . '/assets/' . $asset_name;
-		else return SpitFire::baseUrl() . '/' . $app->getAssetDirectory() . $asset_name;
+		else return SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name;
 	}
 	
 	public static function make($url) {

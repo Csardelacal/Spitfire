@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>Spitfire Administration</title>
-		<link rel="stylesheet" type="text/css" href="<?= spitfire()->url('/' . $this->app->getAssetsDirectory() . 'css/admin.css') ?>" />
+		<link rel="stylesheet" type="text/css" href="<?= URL::asset('css/admin.css', $this->app) ?>" />
 	</head>
 	<body>
 		<div class="header">
