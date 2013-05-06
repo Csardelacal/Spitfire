@@ -31,6 +31,14 @@ class Locale
 		return '';
 	}
 	
+	public function getCurrency() {
+		return '$';
+	}
+	
+	public function convertCurrency($original) {
+		return $original;
+	}
+	
 	public function start($lang) {
 		ob_start();
 		$this->_msgStack[] = $lang;

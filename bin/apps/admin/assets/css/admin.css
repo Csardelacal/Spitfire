@@ -253,3 +253,52 @@ table td {
 	clear: both;
 	display: table;
 }
+
+/**AUTH_______________________________________________________________________*/
+#auth {
+	display: block;
+	width: 520px;
+	background: #FFF;
+	padding: 25px;
+	margin: 0 auto;
+	border: solid 1px #CCC;
+	border-radius: 5px;
+}
+
+#auth .field {
+	margin-top: 5px;
+}
+
+#auth label {
+	display: inline-block;
+	width: 200px;
+	font-size: 12px;
+	text-align: right;
+	color: #555;
+}
+
+#auth input {
+	display: inline-block;
+	border: solid 1px #CCC;
+	border-radius: 3px;
+	margin-left: 20px;
+	padding: 3px;
+	background: #FFF;
+}
+
+
+#auth input[type="text"],
+#auth input[type="password"],
+#auth select  {
+	width: 200px;
+}
+
+#auth input[type="submit"] {
+	float: right;
+	margin-right: 100px;
+	margin-top:   10px;
+	color: #FFF;
+	background-color: #416F9B;
+	padding: 3px;
+	cursor: pointer;
+}

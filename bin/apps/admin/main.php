@@ -33,6 +33,9 @@ class adminApp extends App
 	public function enable() {
 		AutoLoad::registerClass('M3W\admin\homeController', $this->getBaseDir() . 'admin.php');
 		AutoLoad::registerClass('M3W\admin\authController', $this->getBaseDir() . 'auth.php');
+		
+		AutoLoad::registerClass('M3W\admin\enLocale',       $this->getBaseDir() . 'locales/en.php');
+		AutoLoad::registerClass('M3W\admin\esLocale',       $this->getBaseDir() . 'locales/es.php');
 	}
 	
 	public function getAssetsDirectory() {
@@ -53,5 +56,12 @@ class adminApp extends App
 
 	public function hasController($controller) {
 		return class_exists($this->getControllerClassName($controller));
+	}
+
+	public function getLocaleClassName($locale) {
+		$className = "M3W\\admin\\{$locale}Locale";
+		
+		if (class_exists($className)) return $className;
+		else return "M3W\\admin\\enLocale";
 	}
 }

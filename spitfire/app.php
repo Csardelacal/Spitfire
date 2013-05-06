@@ -71,16 +71,16 @@ abstract class App
 		return new $c($this);
 	}
 	
-	public function swapController($newURI, $action, $object) {
+	public function getLocale($locale) {
+		$c = $this->getLocaleClassName($locale);
 		
-		if (!is_array($newURI)) $newURI = str_replace('/', '\\', $newURI);
+		if (!class_exists($c)) {
+			$c = $this->getLocaleClassName('en');
+		}
 		
-		$request = spitfire()->getRequest();
-		$request->setControllerURI($newURI);
-		$request->setController($this->getController($newURI));
-		$request->setAction($action);
-		$request->setObject($object);
-		$request->handle();
+		$reflection = new ReflectionClass($c);
+		if ($reflection->isAbstract()) throw new publicException("Abstract locale", 404);
+		return new $c();
 	}
 	
 	abstract public function enable();
@@ -88,6 +88,7 @@ abstract class App
 	abstract public function getTemplateDirectory();
 	abstract public function hasController($controller);
 	abstract public function getControllerClassName($controller);
+	abstract public function getLocaleClassName($locale);
 	abstract public function getViewClassName($controller);
 	
 }
