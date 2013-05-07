@@ -51,6 +51,8 @@ class homeController extends appController
 			$s->set('admin', $a);
 		}
 		
+		echo CoffeeBean::getBean('test')->makeForm(new URL('/test3'));
+		
 		echo '<pre>';
 		print_r($a->getData());
 		
@@ -73,6 +75,11 @@ class homeController extends appController
 		print_r(spitfire()->getMessages());
 		
 		echo '</pre>';
+	}
+	
+	public function test3() {
+		$bean = CoffeeBean::getBean('test');
+		print_r($bean->makeDBRecord());
 	}
 	
 	public function dbTest() {

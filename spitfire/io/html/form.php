@@ -22,10 +22,14 @@ class HTMLForm extends HTMLElement
 	}
 
 	public function getParams() {
-		return Array('action' => $this->action, 'method' => $this->method);
+		return Array('action' => $this->action, 'method' => $this->method, 'enctype' => 'multipart/form-data');
 	}
 
 	public function getTag() {
 		return 'form';
+	}
+
+	public function getChildren() {
+		return $this->fields;
 	}
 }

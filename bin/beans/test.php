@@ -18,6 +18,10 @@ class TestBean extends CoffeeBean
 		$this->field('TextField', 'content', 'Content')
 			->setModelField('content')
 			->setVisibility(CoffeeBean::VISIBILITY_FORM);
+		
+		$this->field('FileField', 'image', 'image')
+			->setModelField('image')
+			->setVisibility(CoffeeBean::VISIBILITY_FORM);
 	}
 	
 }

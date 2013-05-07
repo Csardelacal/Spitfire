@@ -214,6 +214,25 @@ table td {
 	margin-top: 5px;
 }
 
+.edit .field small {
+	font-size: 10px;
+	color: #555;
+	display: block;
+	width: 200px;
+	margin-left: 220px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: right;
+	
+	-moz-transition: width 0.5s ease, margin-left 0.5s ease;
+}
+
+.edit .field small:hover {
+	margin-left: 0;
+	width: 420px;
+}
+
+
 .edit label {
 	display: inline-block;
 	width: 200px;

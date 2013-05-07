@@ -24,6 +24,7 @@ class Field
 	const TYPE_INTEGER   = 'int';
 	const TYPE_LONG      = 'long';
 	const TYPE_STRING    = 'string';
+	const TYPE_FILE      = 'file';
 	const TYPE_TEXT      = 'txt';
 	const TYPE_DATETIME  = 'datetime';
 	

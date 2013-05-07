@@ -42,6 +42,7 @@ AutoLoad::registerClass('Model',                                                
 AutoLoad::registerClass('OTFModel',                                             $cur_dir.'/model/onthefly.php');
 AutoLoad::registerClass('spitfire\model\Field',                                 $cur_dir.'/model/field.php');
 AutoLoad::registerClass('IntegerField',                                         $cur_dir.'/model/fields/integer.php');
+AutoLoad::registerClass('FileField',                                            $cur_dir.'/model/fields/file.php');
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
@@ -66,6 +67,7 @@ AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/io/beans/coffeebean.
 AutoLoad::registerClass('spitfire\io\beans\Field',                              $cur_dir.'/io/beans/field.php');
 AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
+AutoLoad::registerClass('spitfire\io\beans\FileField',                          $cur_dir.'/io/beans/file_field.php');
 AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 
