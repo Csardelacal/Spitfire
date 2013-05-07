@@ -34,7 +34,7 @@ abstract class Controller extends _SF_MVC
 			$request->handle();
 		}
 		else {
-			throw new publicException("Action not found", 404);
+			throw new publicException("Page not found", 404, new privateException('Action not found', 0));
 		}
 	}
 	
