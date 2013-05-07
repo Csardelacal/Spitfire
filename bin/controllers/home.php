@@ -42,7 +42,11 @@ class homeController extends appController
 		$this->view->set('test', print_r($data, true));/**/
 	}
 	
-	public function test2 () {
+	public function forohfor() {
+		spitfire\Spitfire::$headers->redirect(new URL('save'), 302);
+	}
+	
+	public function test2 ($test) {
 		$s = new session();
 		$a = $s->get('admin');
 		
@@ -57,6 +61,8 @@ class homeController extends appController
 		print_r($a->getData());
 		
 		print_r(db()->adult->getAll()->fetchAll());
+		
+		echo $test;
 		
 		echo new URL('hello', 'world');
 		echo "\n";

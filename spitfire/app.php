@@ -47,7 +47,7 @@ abstract class App
 		#Check if the controller can handle the request
 		$request = Array($this->controller, $action);
 		if (is_callable($request)) call_user_func_array($request, $object);
-		else throw new publicException('Action not found', 404);
+		else throw new publicException('Page not found', 404, new privateException('Action not found', 0));
 	}
 	
 	
@@ -67,7 +67,7 @@ abstract class App
 		if (is_array($controller)) $controller = implode ('\\', $controller);
 		$c = $this->getControllerClassName($controller);
 		$reflection = new ReflectionClass($c);
-		if ($reflection->isAbstract()) throw new publicException("Abstract Controller", 404);
+		if ($reflection->isAbstract()) throw new publicException("Page not found", 404, new privateException("Abstract Controller", 0) );
 		return new $c($this);
 	}
 	
@@ -79,7 +79,7 @@ abstract class App
 		}
 		
 		$reflection = new ReflectionClass($c);
-		if ($reflection->isAbstract()) throw new publicException("Abstract locale", 404);
+		if ($reflection->isAbstract()) throw new publicException("Page not found", 404, new privateException("Abstract Locale", 0) );
 		return new $c();
 	}
 	
