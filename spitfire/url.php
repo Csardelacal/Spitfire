@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\SpitFire;
+use spitfire\Request;
 
 /**
  * 
@@ -72,7 +73,7 @@ class URL implements ArrayAccess
 		}
 		
 		#Check if the first element of the path is an app.
-		if (!$this->app && spitfire()->appExists($this->path[0])) {
+		if (!$this->app && isset($this->path[0]) && spitfire()->appExists($this->path[0])) {
 			$this->app = spitfire()->getApp(array_shift($this->path));
 		}
 	}
@@ -153,6 +154,20 @@ class URL implements ArrayAccess
 	
 	public static function current() {
 		return new self($_SERVER['PATH_INFO'], $_GET);
+	}
+	
+	public static function canonical() {
+		$r = Request::get();
+		$canonical = new self($_GET);
+		
+		$path   = $r->getControllerURI();
+		$path[] = $r->getAction();
+		array_merge($path, $r->getObject());
+		
+		$canonical->setPath($path);
+		$canonical->setExtension($r->getExtension());
+		
+		return $canonical;
 	}
 
 	public function offsetExists($offset) {

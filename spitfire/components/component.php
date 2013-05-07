@@ -14,7 +14,7 @@ abstract class Component
 	}
 	
 	public function getAsset($asset) {
-		return URL::make($this->getDir() . '/' . $asset);
+		return URL::make('/' . $this->getDir() . $asset);
 	}
 	
 	public static function info() {

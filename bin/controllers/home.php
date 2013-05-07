@@ -66,6 +66,12 @@ class homeController extends appController
 		echo "\n";
 		echo URL::current();
 		echo "\n";
+		echo URL::canonical();
+		echo "\n";
+		echo absoluteURL::canonical();
+		echo "\n";
+		echo ComponentManager::get('M3W', 'testing')->helloWorld();
+		echo "\n";
 		
 		$url = new URL('hello', 'world');
 		$url[0] = 'goodbye';

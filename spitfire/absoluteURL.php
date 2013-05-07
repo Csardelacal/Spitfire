@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\environment;
+use spitfire\Request;
 
 class absoluteURL extends URL
 {
@@ -13,6 +14,20 @@ class absoluteURL extends URL
 	
 	public function getSubDomain() {
 		return $this->subdomain;
+	}
+	
+	public static function canonical() {
+		$r = Request::get();
+		$canonical = new self($_GET);
+		
+		$path   = $r->getControllerURI();
+		$path[] = $r->getAction();
+		array_merge($path, $r->getObject());
+		
+		$canonical->setPath($path);
+		$canonical->setExtension($r->getExtension());
+		
+		return $canonical;
 	}
 
 	public function __toString() {
