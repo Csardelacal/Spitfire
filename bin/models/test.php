@@ -16,6 +16,8 @@ class testModel extends Model
 		$this->field('id3', 'IntegerField');
 		
 		$this->field('content', 'StringField', 100);
+		
+		$this->field('image', 'FileField');
 	
 	}
 	

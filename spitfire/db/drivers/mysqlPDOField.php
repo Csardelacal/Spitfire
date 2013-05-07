@@ -16,6 +16,8 @@ class mysqlPDOField extends DBField
 				return 'BIGINT';
 			case Field::TYPE_STRING:
 				return "VARCHAR({$this->length})";
+			case Field::TYPE_FILE:
+				return "VARCHAR(255)";
 			case Field::TYPE_TEXT:
 				return "TEXT";
 			case Field::TYPE_DATETIME:
