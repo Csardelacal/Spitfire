@@ -62,8 +62,9 @@ class ExceptionHandler {
 
 			if ( is_a($e, 'publicException') ) {
 				$previous = $e->getPrevious();
-				$prevmsg  = ($previous)? $previous->getMessage() : '';
-				get_error_page($e->getCode(), $e->getMessage(),  $prevmsg);
+				$trace    = $e->getTraceAsString();
+				$prevmsg  = ($previous)? '###' . $previous->getMessage() . "###\n" : '';
+				get_error_page($e->getCode(), $e->getMessage(),  $prevmsg . $trace);
 			} else { 
 				error_log($e->getMessage());
 				$trace = $e->getTraceAsString();
