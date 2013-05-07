@@ -47,7 +47,7 @@ abstract class App
 		#Check if the controller can handle the request
 		$request = Array($this->controller, $action);
 		if (is_callable($request)) call_user_func_array($request, $object);
-		else throw new publicException('Action not found', 404);
+		else throw new publicException('Page not found', 404, new privateException('Action not found', 0));
 	}
 	
 	

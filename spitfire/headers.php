@@ -26,6 +26,13 @@ class Headers
 	
 	public function send () {
 		foreach ($this->headers as $header => $value) {
+			
+			#Special condition for status headers
+			if ($header == 'Status') {
+				header("HTTP/1.1 $value");
+				continue;
+			}
+			
 			header("$header: $value");
 		}
 	}
@@ -49,7 +56,9 @@ class Headers
 	}
 	
 	public function redirect($location, $status = 302) {
-		$this->set('Content-Location', $location);
+		$this->set('Location', $location);
+		$this->set('Expires', date("r", time()));
+		$this->set('Cache-Control', 'no-cache, must-revalidate');
 		$this->set('Status', $this->states[$status]);
 	}
 	
