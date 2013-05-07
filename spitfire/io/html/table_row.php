@@ -14,6 +14,10 @@ class HTMLTableRow extends HTMLElement
 		return '<td>' . implode('</td><td>', $this->cells) . '</td>';
 	}
 
+	public function getChildren() {
+		return  $this->cells;
+	}
+
 	public function getParams() {
 		return Array();
 	}

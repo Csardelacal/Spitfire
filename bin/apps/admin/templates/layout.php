@@ -1,7 +1,8 @@
 <html>
 	<head>
 		<title>Spitfire Administration</title>
-		<link rel="stylesheet" type="text/css" href="<?= URL::asset('css/admin.css', $this->app) ?>" />
+		<?php $this->css(URL::asset('css/admin.css', $this->app)) ?>
+		<?= $this->css ?>
 	</head>
 	<body>
 		<div class="header">

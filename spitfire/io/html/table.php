@@ -10,8 +10,8 @@ class HTMLTable extends HTMLElement
 		$this->rows[] = $row;
 	}
 
-	public function getContent() {
-		return implode('', $this->rows);
+	public function getChildren() {
+		return  $this->rows;
 	}
 
 	public function getParams() {

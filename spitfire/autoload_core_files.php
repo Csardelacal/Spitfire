@@ -83,9 +83,13 @@ AutoLoad::registerClass('spitfire\locales\langInfo',                            
 
 AutoLoad::registerClass('ComponentManager',                                     $cur_dir.'/components/componentManager.php');
 AutoLoad::registerClass('Component',                                            $cur_dir.'/components/component.php');
-AutoLoad::registerClass('assetsController',      $cur_dir.'/components/assets.php');
+
+AutoLoad::registerClass('spitfire\registry\Registry',                           $cur_dir.'/io/registry/registry.php');
+AutoLoad::registerClass('spitfire\registry\JSRegistry',                         $cur_dir.'/io/registry/jsregistry.php');
+AutoLoad::registerClass('spitfire\registry\CSSRegistry',                        $cur_dir.'/io/registry/cssregistry.php');
 
 AutoLoad::registerClass('URL',                                                  $cur_dir.'/url.php');
+AutoLoad::registerClass('absoluteURL',                                          $cur_dir.'/absoluteURL.php');
 AutoLoad::registerClass('spitfire\Request',                                     $cur_dir.'/core/request.php');
 AutoLoad::registerClass('session',               $cur_dir.'/session.php');
 

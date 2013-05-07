@@ -5,9 +5,13 @@ namespace spitfire\io\html;
 abstract class HTMLElement
 {
 	public abstract function getTag();
-	public abstract function getContent();
 	public abstract function getParams();
-	
+	public abstract function getChildren();
+
+	public function getContent() {
+		return implode("\n", $this->getChildren());
+	}
+
 	public function __toString() {
 		$tag = $this->getTag();
 		$params = $this->getParams();

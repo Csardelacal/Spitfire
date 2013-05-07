@@ -4,11 +4,16 @@ namespace spitfire;
 
 use _SF_MVC;
 use \_SF_ViewElement;
+use spitfire\registry\JSRegistry;
+use spitfire\registry\CSSRegistry;
 
 class View extends _SF_MVC
 {
 	private $file = '';
 	private $data = Array();
+	
+	private $js;
+	private $css;
 	
 	private $render_layout = true;
 	private $layout;
@@ -22,6 +27,10 @@ class View extends _SF_MVC
 	public function __construct($app) {
 		
 		parent::__construct($app);
+		
+		#Create registries
+		$this->js  = new JSRegistry();
+		$this->css = new CSSRegistry();
 		
 		/*
 		 * Set default files. This includes the view's file, layout and
@@ -84,6 +93,16 @@ class View extends _SF_MVC
 		
 		if ($this->render_layout && file_exists($this->layout) ) include ($this->layout);
 		else echo $content_for_layout;
+	}
+	
+	public function css($add = null) {
+		if ($add) $this->css->add ($add);
+		else return $this->css;
+	}
+	
+	public function js($add = null) {
+		if ($add) $this->js->add ($add);
+		else return $this->js;
 	}
 	
 }
