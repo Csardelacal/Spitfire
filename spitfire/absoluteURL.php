@@ -6,13 +6,13 @@ use spitfire\Request;
 class absoluteURL extends URL
 {
 	
-	public $subdomain;
+	public $domain;
 	
-	public function setSubdomain($subdomain) {
-		$this->subdomain = $subdomain;
+	public function setDomain($domain) {
+		$this->domain = $domain;
 	}
 	
-	public function getSubDomain() {
+	public function getDomain() {
 		return $this->subdomain;
 	}
 	
@@ -34,8 +34,8 @@ class absoluteURL extends URL
 		$rel = parent::__toString();
 		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
-		$subdomain = $this->subdomain? $this->subdomain . '.' : '';
+		$subdomain = $this->domain? $this->domain : $server;
 		
-		return $proto . $subdomain . $server . $rel;
+		return $proto . $domain . $rel;
 	}
 }

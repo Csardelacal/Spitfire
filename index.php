@@ -33,7 +33,7 @@ include 'spitfire/spitfire.php';
 define ('APP_DIRECTORY',         'bin/apps/',        true);
 define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
-define ('TEMPLATES_DIRECTORY',   'bin/views/',       true);
+define ('TEMPLATES_DIRECTORY',   'bin/templates/',   true);
 
 /* SESSION DEFAULTS AND START_______________________________________
  * This sets basic settings about user sessions and their duration,
