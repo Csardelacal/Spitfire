@@ -87,6 +87,10 @@ class URL implements ArrayAccess
 		return $this->extension;
 	}
 	
+	public function getPath() {
+		return array_filter($this->path);
+	}
+	
 	public function setPath($path) {
 		if (! empty($path) )
 		$this->path = $path;

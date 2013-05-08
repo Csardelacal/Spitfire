@@ -9,7 +9,7 @@ class Locale
 	public function say() {
 		$args = func_get_args();
 		
-		if ($this->{$args[0]}) {
+		if (isset($this->{$args[0]})) {
 			$msg = $this->{$args[0]};
 			if (is_array($msg)) {
 				switch($args[1]) {
