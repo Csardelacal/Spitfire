@@ -6,7 +6,7 @@ class AutoLoad
 {
 
 	const   CONTROLLER_DIRECTORY   = 'bin/controllers/';
-	const   VIEW_DIRECTORY         = 'bin/viewControllers/';
+	const   VIEW_DIRECTORY         = 'bin/views/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   MODEL_DIRECTORY        = 'bin/models/';
 	const   LOCALE_DIRECTORY       = 'bin/locales/';
