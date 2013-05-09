@@ -4,7 +4,7 @@ class Locale
 {
 	public $comment_count   = Array('No comments', 'One comment', '%s comments');
 	
-	private $_msgStack;
+	private $_current_output;
 	
 	public function say() {
 		$args = func_get_args();
@@ -40,13 +40,15 @@ class Locale
 	}
 	
 	public function start($lang) {
+		if ($this->_current_output) $this->end();
+		$this->_current_output = $lang;
 		ob_start();
-		$this->_msgStack[] = $lang;
 	}
 	
 	public function end() {
 		$msg = ob_get_clean();
-		if (array_pop($this->_msgStack) == $this->getLangCode()) echo $msg;
+		if ($this->_current_output == $this->getLangCode()) echo $msg;
+		$this->_current_output = null;
 	}
 	
 }

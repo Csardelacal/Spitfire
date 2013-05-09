@@ -10,10 +10,15 @@ class absoluteURL extends URL
 	
 	public function setDomain($domain) {
 		$this->domain = $domain;
+		return $this;
 	}
 	
 	public function getDomain() {
-		return $this->subdomain;
+		return $this->domain;
+	}
+	
+	public static function current() {
+		return new self($_SERVER['PATH_INFO'], $_GET);
 	}
 	
 	public static function canonical() {
@@ -34,7 +39,7 @@ class absoluteURL extends URL
 		$rel = parent::__toString();
 		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
-		$subdomain = $this->domain? $this->domain : $server;
+		$domain = $this->domain? $this->domain : $server;
 		
 		return $proto . $domain . $rel;
 	}
