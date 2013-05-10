@@ -72,6 +72,9 @@ class MysqlPDOQuery extends Query
 			$orderstt = '';
 			$order    = '';
 		}
+		else {
+			$order = "`{$order['field']}` {$order['mode']}";
+		}
 		
 		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $tablename, $join, 
 		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));

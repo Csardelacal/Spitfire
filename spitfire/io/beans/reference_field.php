@@ -64,7 +64,7 @@ class ReferenceField extends Field
 			$str.= sprintf('<option value="%s" %s>%s</option>' . "\n", 
 				implode('|', $pos->getPrimaryData()), 
 				$selected,
-				implode('-', $pos->getData())
+				__(implode('-', $pos->getData()), 40)
 				);
 		}
 		

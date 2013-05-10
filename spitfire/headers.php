@@ -52,6 +52,8 @@ class Headers
 			case 'json':
 				$this->set('Content-type', 'application/json;charset=' . $encoding);
 				break;
+			default:
+				$this->set('Content-type', $str);
 		}
 	}
 	

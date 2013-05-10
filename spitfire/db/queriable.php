@@ -46,7 +46,7 @@ abstract class Queriable {
 	 * friendliness oriented method as it does exactly the same as startQuery
 	 * 
 	 * @see _SF_Queriable::startQuery
-	 * @return DBQuery
+	 * @return Query
 	 */
 	public function getAll() {
 		

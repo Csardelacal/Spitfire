@@ -9,13 +9,25 @@ class FileField extends Field
 	
 	protected $type = 'file';
 	
+	private $upload = null;
+	
 	public function getValue() {
-		if     (!empty($_FILES[$this->getName()])) $file = $_FILES[$this->getName()]['tmp_name'];
+		if     ($this->upload) return $this->upload;
+		elseif (!empty($_FILES[$this->getName()]) && $_FILES[$this->getName()]['error'] == 0) $file = $_FILES[$this->getName()]['tmp_name'];
 		elseif (parent::getValue()) return parent::getValue();
 		else return '';
 		
-		move_uploaded_file($file, 'bin/usr/uploads/' . base_convert(time(), 10, 32) . '_' . base_convert(rand(), 10, 32) . $_FILES[$this->getName()]['name']);
-		return 'bin/usr/uploads/' . base_convert(time(), 10, 32) . base_convert(rand(), 10, 32) . $_FILES[$this->getName()]['name'];
+		if (!is_dir('bin/usr/uploads/')) {
+			if (!mkdir('bin/usr/uploads/')) throw new privateException('Upload directory does not exist and could not be crated');
+		}
+		elseif (!is_writable('bin/usr/uploads/')) {
+			throw new privateException('Upload directory is not writable');
+		}
+		
+		$filename = 'bin/usr/uploads/' . base_convert(time(), 10, 32) . '_' . base_convert(rand(), 10, 32) . '_' . $_FILES[$this->getName()]['name'];
+		
+		move_uploaded_file($file, $filename);
+		return $this->upload = $filename;
 	}
 	
 	
