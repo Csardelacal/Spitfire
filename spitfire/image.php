@@ -43,8 +43,6 @@ class Image
 		
 		$wider = ($this->meta[0] / $width) > ($this->meta[1] / $height);
 		
-		error_log(($this->meta[0] - $width * $ratio) / 2);
-		
 		if ($wider) {
 			$ratio    = $this->meta[1] / $height;
 			$offset_x = ($this->meta[0] - $width * $ratio) / 2;

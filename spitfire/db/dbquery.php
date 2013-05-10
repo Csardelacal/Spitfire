@@ -140,6 +140,10 @@ abstract class Query
 		return $this->table;
 	}
 	
+	public function __toString() {
+		return $this->getTable() . implode(',', $this->getRestrictions());
+	}
+	
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance($field, $value, $operator);
 	public abstract function restrictionGroupInstance();

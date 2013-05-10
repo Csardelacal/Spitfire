@@ -39,14 +39,23 @@ class Pagination
 		if (!in_array(1, $pages)) $pages[] = 1;
 		if (!in_array($max, $pages)) $pages[] = $max;
 		
-		for ($i = 1; $i < $this->maxJump + 1; $i++) {
-			$page = $this->getCurrentPage() - $i;
-			if ($page > 1 && !in_array($page, $pages)) $pages[] = $page;
-		}
+		$slots = $this->maxJump * 2;
+		$up    = $this->getCurrentPage()+1;
+		$down  = $this->getCurrentPage()-1;
 		
-		for ($i = 1; $i < $this->maxJump*2 + 1; $i++) {
-			$page = $this->getCurrentPage() + $i;
-			if ($page < $max && !in_array($page, $pages) && count($pages) < $this->maxJump*2 + 2) $pages[] = $page;
+		for ($i = 0; $i < $this->maxJump * 2; $i++) {
+			
+			if (!in_array($up, $pages) && $up < $max && $slots) {
+				$pages[] = $up;
+				$up++;
+				$slots--;
+			}
+			
+			if (!in_array($down, $pages) && $down > 0 && $slots) {
+				$pages[] = $down;
+				$down--;
+				$slots--;
+			}
 		}
 		
 		sort($pages);

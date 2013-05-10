@@ -18,4 +18,9 @@ class Strings
 		return (strlen($str) > $newlen)? substr($str, 0, $newlen) . '...' : $str;
 	}
 	
+	public static function slug($string) {
+		$str = preg_replace('/[[:^print:]]/', '', $string);
+		return str_replace(Array('  ', ' '), Array(' ', '-'), $str);
+	}
+	
 }

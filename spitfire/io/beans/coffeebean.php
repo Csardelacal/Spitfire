@@ -25,6 +25,9 @@ abstract class CoffeeBean extends Validatable
 			$record = db()->table($this->model)->newRecord();
 			foreach ($fields as $field) $record->{$field->getModelField()} = $field->getValue();
 		}
+		else {
+			throw new privateException('No model defined for bean ' . $this->getName());
+		}
 		return $record;
 	}
 	
