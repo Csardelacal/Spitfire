@@ -11,7 +11,7 @@ use \spitfire\storage\database\Query;
  * @todo Make this class implement Iterator
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class databaseRecord implements Serializable
+class databaseRecord implements Serializable
 {
 	
 	private $src;
@@ -219,7 +219,7 @@ abstract class databaseRecord implements Serializable
 	 * @return Query
 	 */
 	public function getChildren($table) {
-		$query = $this->queryInstance($table);
+		$query = $this->table->queryInstance($table);
 		$query->setParent($this);
 		return $query;
 	}
@@ -278,11 +278,21 @@ abstract class databaseRecord implements Serializable
 		return sprintf('%s(%s)', $this->getTable()->getModel()->getName(), implode(',', $this->getPrimaryData()) );
 	}
 	
-	public abstract function delete();
-	public abstract function insert();
-	public abstract function update();
-	public abstract function restrictionInstance(DBField$field, $value, $operator = null);
-	public abstract function queryInstance($table);
+	public function delete() {
+		$this->table->delete($this);
+	}
+	
+	public function insert() {
+		$this->table->insert($this);
+	}
+	
+	public function update() {
+		$this->table->update($this);
+	}
+	
+	public function restrictionInstance(DBField$field, $value, $operator = null) {
+		return $this->table->restrictionInstance($field, $value, $operator);
+	}
 	
 	/**
 	 * Increments a value on high read/write environments. Using update can
@@ -293,5 +303,7 @@ abstract class databaseRecord implements Serializable
 	 * @param int|float $diff
 	 * @throws privateException
 	 */
-	public abstract function increment($key, $diff = 1);
+	public function increment($key, $diff = 1) {
+		$this->table->increment($this, $key, $diff);
+	}
 }

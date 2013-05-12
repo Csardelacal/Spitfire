@@ -7,6 +7,7 @@ class ClassInfo
 	const TYPE_CONTROLLER = 'Controller';
 	const TYPE_COMPONENT  = 'Component';
 	const TYPE_MODEL      = 'Model';
+	const TYPE_RECORD     = 'Record';
 	const TYPE_VIEW       = 'View';
 	const TYPE_LOCALE     = 'Locale';
 	const TYPE_APP        = 'App';
@@ -24,6 +25,7 @@ class ClassInfo
 	    self::TYPE_CONTROLLER,
 	    self::TYPE_COMPONENT,
 	    self::TYPE_MODEL,
+	    self::TYPE_RECORD,
 	    self::TYPE_VIEW,
 	    self::TYPE_APP,
 	    self::TYPE_LOCALE,

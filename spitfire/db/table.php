@@ -137,9 +137,18 @@ abstract class Table extends Queriable
 	/**
 	 * Creates a new record in this table
 	 * 
-	 * @return databaseRecord Empty record for the selected table
+	 * @return databaseRecord Record for the selected table
 	 */
-	abstract public function newRecord();
+	public function newRecord($data = Array()) {
+		$classname = $this->getModel()->getName() . 'Record';
+		
+		if (class_exists($classname)) {
+			return new $classname($this, $data);
+		}
+		else {
+			return new databaseRecord($this, $data);
+		}
+	}
 	
 	/**
 	 * If the table cannot handle the request it will pass it on to the db
@@ -213,5 +222,22 @@ abstract class Table extends Queriable
 	 * @return DBField Field
 	 */
 	abstract public function getFieldInstance(Table$t, Field$data);
+	
+	/**
+	 * Increments a value on high read/write environments. Using update can
+	 * cause data to be corrupted. Increment requires the data to be in sync
+	 * aka. stored to database.
+	 * 
+	 * @param String $key
+	 * @param int|float $diff
+	 * @throws privateException
+	 */
+	public abstract function increment(DatabaseRecord$record, $key, $diff = 1);
+	
+	public abstract function delete(DatabaseRecord$record);
+	public abstract function insert(DatabaseRecord$record);
+	public abstract function update(DatabaseRecord$record);
+	public abstract function restrictionInstance(DBField$field, $value, $operator = null);
+	public abstract function queryInstance($table);
 
 }
