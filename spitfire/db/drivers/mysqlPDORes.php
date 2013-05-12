@@ -20,12 +20,12 @@ class mysqlPDOResultSet implements resultSetInterface
 		#If the data does not contain anything we return a null object
 		if (!$data) return null;
 		$data = array_map( Array($this->table->getDB(), 'convertIn'), $data);
-		return new MysqlPDORecord($this->table, $data);
+		return $this->table->newRecord($data);
 	}
 
 	public function fetchAll() {
 		$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
-		foreach($data as &$el) $el = new MysqlPDORecord($this->table, array_map( Array($this->table->getDB(), 'convertIn'), $el));
+		foreach($data as &$el) $el = $this->table->newRecord(array_map( Array($this->table->getDB(), 'convertIn'), $el));
 		return $data;
 	}
 	

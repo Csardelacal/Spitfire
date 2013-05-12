@@ -9,6 +9,7 @@ class AutoLoad
 	const   VIEW_DIRECTORY         = 'bin/views/';
 	const   COMPONENT_DIRECTORY    = 'bin/components/';
 	const   MODEL_DIRECTORY        = 'bin/models/';
+	const   RECORD_DIRECTORY       = 'bin/types/';
 	const   LOCALE_DIRECTORY       = 'bin/locales/';
 	const   BEAN_DIRECTORY         = 'bin/beans/';
 	const   APP_DIRECTORY          = 'bin/apps/';
@@ -23,6 +24,7 @@ class AutoLoad
 	    ClassInfo::TYPE_COMPONENT  => self::COMPONENT_DIRECTORY,
 	    ClassInfo::TYPE_LOCALE     => self::LOCALE_DIRECTORY,
 	    ClassInfo::TYPE_MODEL      => self::MODEL_DIRECTORY,
+	    ClassInfo::TYPE_RECORD     => self::RECORD_DIRECTORY,
 	    ClassInfo::TYPE_VIEW       => self::VIEW_DIRECTORY,
 	    ClassInfo::TYPE_STDCLASS   => self::STD_CLASS_DIRECTORY
 	);
@@ -104,7 +106,7 @@ class AutoLoad
 		
 		if (file_exists($filename)) return include $filename;
 		
-		
+		$className.= "({$class->getType()})";
 		$trace = debug_backtrace();
 		$str   = '';
 		foreach ($trace as $e) $str = $e['function'] . ' > ' . $str;
