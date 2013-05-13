@@ -8,6 +8,16 @@ class absoluteURL extends URL
 	
 	public $domain;
 	
+	/**
+	 * Set the domain name this URL points to. This is intended to address
+	 * Spitfire apps that work on a multi-domain environment / subdomains
+	 * and require linking to itself on another domain. They are also good 
+	 * for sharing / email links where the URL without server name would
+	 * be useless.
+	 * 
+	 * @param string $domain The domain of the URL. I.e. www.google.com
+	 * @return absoluteURL
+	 */
 	public function setDomain($domain) {
 		$this->domain = $domain;
 		return $this;
