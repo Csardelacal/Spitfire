@@ -43,7 +43,7 @@ abstract class DB extends _SF_MVC
 	public function __construct($options = null) {
 		$this->server   = (isset($options['server']))?   $options['server']   : environment::get('db_server');
 		$this->user     = (isset($options['user']))?     $options['user']     : environment::get('db_user');
-		$this->password = (isset($options['password']))? $options['password'] : environment::get('db_password');
+		$this->password = (isset($options['password']))? $options['password'] : environment::get('db_pass');
 		$this->schema   = (isset($options['schema']))?   $options['schema']   : environment::get('db_database');
 		$this->prefix   = (isset($options['prefix']))?   $options['prefix']   : environment::get('db_table_prefix');
 	}

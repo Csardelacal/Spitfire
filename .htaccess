@@ -1,10 +1,7 @@
-
-
-#LoadModule rewrite_module modules/mod_rewrite.so
-#AddModule mod_rewrite.c
-
+#Disable GPC
 php_flag magic_quotes_gpc Off
 
+#Enable mod rewrite to send requests to Spitfire
 <IfModule mod_rewrite.c>
 	RewriteEngine on
 	
@@ -12,3 +9,15 @@ php_flag magic_quotes_gpc Off
 	RewriteRule .* index.php/$0 [L]
 	
 </IfModule>
+
+
+#Compress items that contain text and therefore should be served smaller
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/xml
+AddOutputFilterByType DEFLATE application/xhtml+xml
+AddOutputFilterByType DEFLATE application/rss+xml
+AddOutputFilterByType DEFLATE application/javascript
+AddOutputFilterByType DEFLATE application/x-javascript
