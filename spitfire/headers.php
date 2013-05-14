@@ -57,6 +57,10 @@ class Headers
 		}
 	}
 	
+	public function status($code= 200) {
+		$this->set('Status', $this->states[$code]);
+	}
+	
 	public function redirect($location, $status = 302) {
 		$this->set('Location', $location);
 		$this->set('Expires', date("r", time()));

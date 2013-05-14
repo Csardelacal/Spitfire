@@ -4,6 +4,7 @@ namespace spitfire\exceptions;
 
 use Exception;
 use \fileNotFoundException;
+use spitfire\SpitFire;
 use spitfire\environment;
 
 /**
@@ -60,17 +61,21 @@ class ExceptionHandler {
 		try {
 			while(ob_get_clean()); //The content generated till now is not valid. DESTROY. DESTROY!
 
+			ob_start();
 			if ( is_a($e, 'publicException') ) {
 				$previous = $e->getPrevious();
 				$trace    = $e->getTraceAsString();
 				$prevmsg  = ($previous)? '###' . $previous->getMessage() . "###\n" : '';
+				SpitFire::$headers->status($e->getCode());
 				get_error_page($e->getCode(), $e->getMessage(),  $prevmsg . $trace);
 			} else { 
 				error_log($e->getMessage());
 				$trace = $e->getTraceAsString();
+				SpitFire::$headers->status(500);
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
+			SpitFire::$headers->send();
 			if(ob_get_length()) ob_flush();
 			die();
 
