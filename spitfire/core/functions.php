@@ -95,10 +95,13 @@ function lang($set = null) {
 	
 	#Else try to set one
 	if ($lang == null) {
-		if(environment::get('system_language'))
-			return $lang = Request::get()->getApp()->getLocale(environment::get('system_language'));
+		try {
+			if(environment::get('system_language'))
+				return $lang = Request::get()->getApp()->getLocale(environment::get('system_language'));
+		}
+		catch (Exception $e) {/*Ignore*/}
 		
-		$langs = explode(';', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 		
 		foreach($langs as $l) {
 			$l = new langInfo($l);

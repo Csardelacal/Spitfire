@@ -11,7 +11,7 @@ class langInfo
 	private $localecode = '';
 	
 	public function __construct($str) {
-		$data = explode(',', $str);
+		$data = explode(';', $str);
 		
 		foreach($data as $e) {
 			$e = trim($e);
