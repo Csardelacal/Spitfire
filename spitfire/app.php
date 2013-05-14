@@ -75,7 +75,7 @@ abstract class App
 		$c = $this->getLocaleClassName($locale);
 		
 		if (!class_exists($c)) {
-			$c = $this->getLocaleClassName('en');
+			throw new privateException('Not a valid locale for this app');
 		}
 		
 		$reflection = new ReflectionClass($c);
