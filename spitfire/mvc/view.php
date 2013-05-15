@@ -57,8 +57,6 @@ class View extends _SF_MVC
 		
 		if     ( file_exists("{$basedir}layout.$extension"))
 			$this->layout = "{$basedir}layout.$extension";
-		else
-			$this->layout = $basedir . 'layout.php';
 	}
 	
 	/**
