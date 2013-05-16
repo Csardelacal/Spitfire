@@ -4,6 +4,18 @@ use spitfire\model\Field;
 
 class Model
 {
+	/**
+	 * Contains alist of the Models currently loaded. This allows the system
+	 * to access them via a singleton pattern. Models are not intended to be
+	 * used outside this singleton to avoid issues when comparing two of them
+	 * to test if they are the same model.
+	 * 
+	 * @static
+	 * @var <Model>
+	 */
+	private static $models = Array();
+
+
 	private $fields;
 	private $references = Array();
 	
@@ -119,6 +131,21 @@ class Model
 		
 		if (!is_null($set)) $primary = $set;
 		else return $primary;
+	}
+	
+	/**
+	 * Returns the model for the specified name. Using a singleton pattern
+	 * for models allows us to test them when looking for two equal models
+	 * with == instead of string comparing their names.
+	 * 
+	 * This also allows us to register two named references aka. boss and 
+	 * employees.
+	 * 
+	 * @todo Everything!
+	 * @param string $model
+	 */
+	public final static function getInstance($model) {
+		
 	}
 	
 }
