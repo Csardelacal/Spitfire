@@ -64,4 +64,8 @@ class adminApp extends App
 		if (class_exists($className)) return $className;
 		else return "M3W\\admin\\enLocale";
 	}
+	
+	public function getClassNameSpace() {
+		return 'M3W\Admin\\';
+	}
 }

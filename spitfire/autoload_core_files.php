@@ -10,7 +10,7 @@ AutoLoad::registerClass('fileNotFoundException', $cur_dir.'/exceptions.php');
 AutoLoad::registerClass('publicException',       $cur_dir.'/exceptions.php');
 AutoLoad::registerClass('privateException',      $cur_dir.'/exceptions.php');
 AutoLoad::registerClass('spitfire\exceptions\ExceptionHandler',  $cur_dir.'/exceptionHandler.php');
-AutoLoad::registerClass('spitfire\Path',         $cur_dir.'/core/path.php');
+//AutoLoad::registerClass('spitfire\Path',         $cur_dir.'/core/path.php');
 
 AutoLoad::registerClass('router',                $cur_dir.'/router.php');
 AutoLoad::registerClass('spitfire\environment',  $cur_dir.'/environment.php');

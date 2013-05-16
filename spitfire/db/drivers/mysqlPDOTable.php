@@ -161,10 +161,10 @@ class MysqlPDOTable extends stdSQLTable
 		$stt = sprintf('UPDATE %s SET %s WHERE %s',
 			$table, 
 			implode(', ', $quoted),
-			implode(' AND ', $this->getUniqueRestrictions())
+			implode(' AND ', $record->getUniqueRestrictions())
 		);
 		
-		$this->getTable()->getDb()->execute($stt);
+		$this->getDb()->execute($stt);
 		
 	}
 
@@ -174,5 +174,9 @@ class MysqlPDOTable extends stdSQLTable
 
 	public function queryInstance($table) {
 		return new MysqlPDOQuery($table);
+	}
+
+	public function destroy() {
+		$this->getDb()->execute('DROP TABLE ' . $this);
 	}
 }

@@ -64,7 +64,7 @@ class ReferenceField extends Field
 			$str.= sprintf('<option value="%s" %s>%s</option>' . "\n", 
 				implode('|', $pos->getPrimaryData()), 
 				$selected,
-				__(implode('-', $pos->getData()), 40)
+				$pos
 				);
 		}
 		
@@ -72,11 +72,6 @@ class ReferenceField extends Field
 		$id = "field_{$this->getName()}";
 		return sprintf('<div class="field"><label for="%s">%s</label><select id="%s" name="%s">%s</select></div>',
 			$id, $this->getCaption(), $id, $this->getName(), $str
-			);
-		
-		return sprintf('<div class="field"><select name="%s">%s</select></div>',
-			$this->getName(),
-			$str
 			);
 	}
 	

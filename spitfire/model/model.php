@@ -46,10 +46,9 @@ class Model
 			foreach($primary as $field) {
 				$ref   = $field;
 				$field = clone $field;
-				if (!$alias) {print_r(debug_backtrace());ob_flush(); die();}
 				$name = $alias . '_' . $field->getName();
 				$field->setName($name);
-				$field->setPrimary(false);
+				$field->setPrimary($reference->primary());
 				$field->setAutoIncrement(false);
 				$field->setReference($reference, $ref);
 				$fields[$name] = $field;
@@ -95,14 +94,31 @@ class Model
 		
 		if (get_class($this) == $modelname) $this->references[$alias] = $this;
 		else $this->references[$alias] = new $modelname();
+		
+		return $this->references[$alias];
 	}
 	
 	public function unreference($model) {
 		unset($this->references[$model]);
 	}
 	
+	/**
+	 * Adds a new field to the model.
+	 * 
+	 * @param string $name
+	 * @param string $instanceof
+	 * @param int $length
+	 * @return Field
+	 */
 	public function field($name, $instanceof, $length = false) {
 		return $this->fields[$name] = new $instanceof($name, $length);
+	}
+	
+	public function primary($set = null) {
+		static $primary = false;
+		
+		if (!is_null($set)) $primary = $set;
+		else return $primary;
 	}
 	
 }

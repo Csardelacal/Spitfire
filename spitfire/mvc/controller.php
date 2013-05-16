@@ -28,7 +28,6 @@ abstract class Controller extends _SF_MVC
 			
 			$controllerName = implode('\\', $controller) . 'Controller';
 			$request->setController(new $controllerName($request->getApp()));
-			$request->setControllerURI($controller);
 			$request->setAction($action);
 			$request->setObject($object);
 			$request->handle();

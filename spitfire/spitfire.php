@@ -4,6 +4,7 @@ namespace spitfire;
 
 use App;
 use Headers;
+use router;
 
 require_once 'spitfire/app.php';
 require_once 'spitfire/core/functions.php';
@@ -18,16 +19,11 @@ class SpitFire extends App
 {
 	
 	static  $started         = false;
-	private $cwd             = false;
-
-	private $autoload        = false;
-	static $model            = false;
 	
+	private $cwd;
+	private $autoload;
 	private $request;
-
-	private $debug           = false;
-	static $headers          = false;
-	
+	private $debug;
 	private $apps = Array();
 	
 	public function __construct() {
@@ -48,7 +44,6 @@ class SpitFire extends App
 
 		#Initialize the exception handler
 		$this->debug   = new exceptions\ExceptionHandler();
-		self::$headers = new Headers();
 
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
@@ -66,15 +61,13 @@ class SpitFire extends App
 		
 		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 		#Get the current path...
-		$request = $this->request = Path::getPath();
+		$path = router::rewrite($_SERVER['PATH_INFO']);
+		$request = $this->request = Request::get($path);
 
 		#Start debugging output
 		ob_start();
-		#Create the model
-		self::$model = db();
 		
 		#Select the app
-		
 		$request->getApp()->runTask($request->getController(), $request->getAction(), $request->getObject());
 		
 		#End debugging output
@@ -82,7 +75,7 @@ class SpitFire extends App
 
 		ob_start();
 		$request->getApp()->view->render();
-		self::$headers->send();
+		$request->getHeaders()->send();
 		ob_flush();
 	}
 	
@@ -165,6 +158,10 @@ class SpitFire extends App
 
 	public function getLocaleClassName($locale) {
 		return "{$locale}Locale";
+	}
+	
+	public function getClassNameSpace() {
+		return '';
 	}
 
 }
