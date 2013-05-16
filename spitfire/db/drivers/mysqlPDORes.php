@@ -3,7 +3,6 @@
 namespace spitfire\storage\database\drivers;
 
 use PDO;
-use databaseRecord;
 
 class mysqlPDOResultSet implements resultSetInterface
 {

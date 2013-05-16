@@ -239,5 +239,6 @@ abstract class Table extends Queriable
 	public abstract function update(DatabaseRecord$record);
 	public abstract function restrictionInstance(DBField$field, $value, $operator = null);
 	public abstract function queryInstance($table);
+	public abstract function destroy();
 
 }

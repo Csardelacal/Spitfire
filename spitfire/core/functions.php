@@ -40,8 +40,9 @@ function app($name, $namespace) {
  * @return DB|\spitfire\storage\database\DB|spitfire.storage.database.DB
  */
 function db($options = null) {
+	static $model;
 	
-	if (is_null($options) && !empty(SpitFire::$model)) return SpitFire::$model;
+	if (is_null($options) && !empty($model)) return $model;
 	
 	#If the driver is not selected we get the one we want from env.
 	if (!isset($options['db_driver'])) $driver = environment::get('db_driver');
@@ -51,7 +52,7 @@ function db($options = null) {
 	$driver = 'spitfire\storage\database\drivers\\' . $driver . 'Driver';
 	$driver = new $driver($options);
 	#Store to main model
-	if (is_null($options)) SpitFire::$model = $driver;
+	if (is_null($options)) $model = $driver;
 	return $driver;
 }
 

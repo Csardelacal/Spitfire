@@ -90,5 +90,6 @@ abstract class App
 	abstract public function getControllerClassName($controller);
 	abstract public function getLocaleClassName($locale);
 	abstract public function getViewClassName($controller);
+	abstract public function getClassNameSpace();
 	
 }

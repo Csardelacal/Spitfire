@@ -44,7 +44,7 @@ class View extends _SF_MVC
 		$action     = $url->getAction();
 		$extension  = $url->getExtension();
 		
-		SpitFire::$headers->contentType($extension);
+		spitfire()->getRequest()->getHeaders()->contentType($extension);
 		
 		
 		if     ( file_exists("$basedir$controller/$action.$extension"))

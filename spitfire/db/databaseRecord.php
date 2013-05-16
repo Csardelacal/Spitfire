@@ -141,6 +141,10 @@ class databaseRecord implements Serializable
 	 */
 	public function store() {
 		
+		if (is_callable(Array($this, 'onbeforesave'))) {
+			$this->onbeforesave();
+		}
+		
 		if( !$this->table->validate($this)) {
 			throw new privateException(_t('invalid_data'));
 		}
@@ -187,7 +191,25 @@ class databaseRecord implements Serializable
 	    $ret = Array();
 	    
 	    foreach ($primaryFields as $field) {
-		    $ret[$field->getName()] = $this->data[$field->getName()];
+		    
+			if (!isset($this->data[$field->getName()])) {
+				$refs = $this->table->getModel()->getReferencedFields();
+				foreach ($refs as $ref) {
+					if ($ref->getName() == $field->getName()) {
+						$reference = $ref->getReference();
+						$model     = reset($reference)->getName();
+						$ref_field = end($reference)->getName();
+
+						if($this->data[$model] instanceof Query) {
+							$this->data[$model] = $this->data[$model]->fetch();
+						}
+						$ret[$field->getName()] = $this->data[$model]->{$ref_field};
+					}
+				}
+			}
+			else {
+			    $ret[$field->getName()] = $this->data[$field->getName()];
+			}
 	    }
 	    
 	    return $ret;
@@ -204,8 +226,20 @@ class databaseRecord implements Serializable
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$r = $this->restrictionInstance($primary, $this->src[$primary->getName()]);
+			$ref = $primary->getReference();
+			if ($ref) $value =& $this->src[$ref->getTable()->getModel()->getName()];
+			else $value = $this->src[$primary->getName()];
+			
+			if ($value instanceof Query) $value = $value->fetch();
+			if ($value instanceof databaseRecord) {
+				unset($value);
+				$value = $this->src[$ref->getTable()->getModel()->getName()]->{$ref->getName()};
+			}
+			
+			$r = $this->restrictionInstance($primary, $value);
 			$restrictions[] = $r;
+			
+			unset($value);
 		}
 		
 		return $restrictions;
@@ -248,7 +282,7 @@ class databaseRecord implements Serializable
 	public function __get($field) {
 		if (isset($this->data[$field])) {
 			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field]->fetch();
+				return $this->data[$field] = $this->data[$field]->fetch();
 			}
 			else return $this->data[$field];
 		}
@@ -283,7 +317,7 @@ class databaseRecord implements Serializable
 	}
 	
 	public function insert() {
-		$this->table->insert($this);
+		return $this->table->insert($this);
 	}
 	
 	public function update() {

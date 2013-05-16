@@ -33,6 +33,7 @@ class AutoLoad
 
 	private $spitfire;
 	private $registered_classes = Array();
+	private $imported_classes   = Array();
 
 	public function __construct($spitfire) {
 		self::$instance = $this;
@@ -47,6 +48,8 @@ class AutoLoad
 
 	public function retrieveClass($className) {
 
+		if (in_array($className, $this->imported_classes)) return;
+		$this->imported_classes[] = $className;
 		$this->spitfire->log("Imported class $className");
 		
 		if (isset($this->registered_classes[$className]))
@@ -106,12 +109,7 @@ class AutoLoad
 		
 		if (file_exists($filename)) return include $filename;
 		
-		$className.= "({$class->getType()})";
-		$trace = debug_backtrace();
-		$str   = '';
-		foreach ($trace as $e) $str = $e['function'] . ' > ' . $str;
-		
-		$this->spitfire->log(".... failed! No class $className in $str");
+		$this->spitfire->log(".... failed! No class $className");
 
 	}
 
