@@ -35,25 +35,25 @@ class MysqlPDOQuery extends Query
 		
 		#Join specific tasks
 		if ($_join) {
-			$rem_table = $_join->getTable();
-			$remotef   = $_join->getUniqueFields();
+			$rem_table = $_join->getParent()->getTable();
+			$remotef   = $_join->getParent()->getUniqueFields();
 			$_remotef  = Array();
 			
 			foreach ($remotef as $f) {
 				$model = $rem_table->getModel();
-				$local_field = $this->table->getField("{$model->getName()}_{$f->getName()}");
+				$local_field = $this->table->getField("{$_join->getRelation()->getRole()}_{$f->getName()}");
 				if ($local_field)
 					$_remotef[] = "$f = $local_field";
 			}
 			
-			$join = 'RIGHT JOIN ' . $rem_table->getTableName();
+			$join = 'LEFT JOIN ' . $rem_table->getTableName();
 			$join.= ' ON (' . implode(' AND ', $_remotef) . ')';
-			$restrictions = array_merge($restrictions, $_join->getUniqueRestrictions());
+			$restrictions = array_merge($restrictions, $_join->getParent()->getUniqueRestrictions());
 		}
 		
 		#Restrictions
 		if ( null != ($p = $this->getParent()) ) {
-			$restrictions = array_merge($restrictions, $p->getUniqueRestrictions());
+			$restrictions = array_merge($restrictions, $p->getParent()->getUniqueRestrictions());
 		}
 		
 		if (empty($restrictions)) {

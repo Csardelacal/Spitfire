@@ -39,7 +39,7 @@ abstract class Table extends Queriable
 		$this->tablename = environment::get('db_table_prefix') . $tablename;
 		
 		$this->model = $model;
-		$fields = $this->model->getFields();
+		$fields = $this->model->getDBFields();
 		$dbfields = Array();
 		foreach ($fields as $f) {
 			$dbfields[$f->getName()] = $this->getFieldInstance($this, $f);

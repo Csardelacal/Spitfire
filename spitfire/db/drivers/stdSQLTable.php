@@ -29,23 +29,23 @@ abstract class stdSQLTable extends Table
 	private function foreignKeyDefinitions() {
 		
 		$ret = Array();
-		$refs = $this->model->getReferencedModels();
+		$refs = $this->model->getReferences();
 		
 		if (empty($refs)) return Array();
 		
 		foreach ($refs as $alias => $ref) {
 			//Check the integrity of the remote table
-			if ($ref != $this->model)
-				$this->getDb()->table($ref)->repair();
+			if ($ref->getTarget() != $this->model)
+				$this->getDb()->table($ref->getTarget())->repair();
 			#Get the fields the model references from $ref
-			$referencedfields = $this->model->getReferencedFields($ref, $alias);
+			$referencedfields = $this->model->getReferencedFields($ref->getTarget(), $alias);
 			#Get the table that represents $ref
-			$referencedtable = $this->getDb()->table($ref);
+			$referencedtable = $this->getDb()->table($ref->getTarget());
 			//Prepare the statement
 			$refstt = sprintf('FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE CASCADE ON UPDATE CASCADE',
 				implode(', ', $referencedfields),
 				$referencedtable->getTablename(),
-				implode(', ', $ref->getPrimary()) 
+				implode(', ', $ref->getTarget()->getPrimaryDBFields()) 
 				);
 			
 			$ret[] = $refstt;

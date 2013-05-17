@@ -112,13 +112,16 @@ abstract class DB extends _SF_MVC
 	public function table($tablename) {
 		#If the parameter is a Model, we get it's name
 		if ($tablename instanceof Model) $tablename = $tablename->getName();
+		elseif (is_string($tablename)) {}
+		else throw new privateException('Invalid type');
+		
 		#If the table has already been imported continue
 		if (isset($this->tables[$tablename])) return $this->tables[$tablename];
 		
 		$modelName = $tablename.'Model';
 
 		if (class_exists($modelName)) {
-			$model = new $modelName;
+			$model = Model::getInstance($tablename);
 			return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
 		}
 		else {

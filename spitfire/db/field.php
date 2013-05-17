@@ -24,11 +24,14 @@ abstract class DBField extends Field
 		return $this->name;
 	}
 	
-	public function getReference() {
-		list($model, $field) = parent::getReference();
-		if (!$model) return false;
+	public function getReferencedField() {
+		$ref   = parent::getReference();
+		$field = parent::getReferencedField();
 		$db = $this->getTable()->getDb();
-		return $db->table($model->getName())->getField($field);
+		
+		if (!$ref) return null;
+		
+		return $db->table($ref->getTarget())->getField($field->getName());
 	}
 
 
