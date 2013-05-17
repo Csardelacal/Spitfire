@@ -1,8 +1,10 @@
 <?php
 
 use spitfire\storage\database\Table;
-use \spitfire\storage\database\DBField;
-use \spitfire\storage\database\Query;
+use spitfire\storage\database\DBField;
+use spitfire\storage\database\Query;
+use spitfire\storage\database\Ancestor;
+use spitfire\model\Reference;
 
 /**
  * This class allows to track changes on database data along the use of a program
@@ -38,17 +40,20 @@ class databaseRecord implements Serializable
 		//TODO: Fix when counting
 		//Parse referenced data
 		if (!empty($srcData)) {
-			$referenced = $table->getModel()->getReferencedModels();
-			foreach ($referenced as $alias =>/** @var Model Remote model */$model) {
-				$name = $model->getName();
-				$primary = $model->getPrimary();
+			$referenced = $table->getModel()->getReferences();
+			foreach ($referenced as $alias =>$reference) {
+				/** @var Reference|\spitfire\model\Reference Remote model */
+				$model = $reference->getTarget();
 
 				if (!isset($srcData[$alias]) || !$srcData[$alias] instanceof databaseRecord) {
 					$fields = $table->getModel()->getReferencedFields($model, $alias);
 					$query  = $table->getDB()->table($model)->getAll();
 
 					foreach($fields as $field) {
-						list($model, $f) = $field->getReference();
+						//list($model, $f) = $field->getReference();
+						$r = $field->getReference();
+						$model = $r->getTarget();
+						$f = $field->getReferencedField();
 						$query->addRestriction($f->getName(), $srcData[$field->getName()]);
 					}
 
@@ -249,12 +254,39 @@ class databaseRecord implements Serializable
 	 * Returns a query to fetch children of this record included in the 
 	 * selected table.
 	 * 
-	 * @param DBTable $table
+	 * @param DBTable|Model|string $table
+	 * @param string|Reference $role
 	 * @return Query
 	 */
-	public function getChildren($table) {
+	public function getChildren($table, $role = null) {
+		
+		#Check if the selected table is a Table object
+		if ($table instanceof Table) {
+			$dbtable = $table;
+			$model = $table->getModel();
+		}
+		
+		elseif ($table instanceof Model) {
+			$dbtable = $this->getTable()->getDb()->table($table);
+			$model = $table;
+		}
+		
+		elseif (is_string($table)) {
+			$dbtable = $this->getTable()->getDb()->table($table);
+			$model = $table->getModel();
+		}
+		
+		if ($role instanceof Reference) {
+			$reference = $role;
+		}
+		
+		else {
+			$reference = $model->getReference($this->getTable()->getModel(), $role);
+		}
+		
+		
 		$query = $this->table->queryInstance($table);
-		$query->setParent($this);
+		$query->setParent(new Ancestor($this, $reference));
 		return $query;
 	}
 	

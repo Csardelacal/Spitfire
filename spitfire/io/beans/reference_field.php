@@ -3,6 +3,7 @@
 namespace spitfire\io\beans;
 
 use \databaseRecord;
+use Exception;
 
 class ReferenceField extends Field 
 {
@@ -52,27 +53,35 @@ class ReferenceField extends Field
 	}
 	
 	public function __toString() {
-		$query = db()->table($this->getModelField())->getAll();
-		$query->setPage(-1);
-		$possibilities = $query->fetchAll();
-		$active = (!$this->getValue())? null : $this->getValue()->getPrimaryData();
-		$str = '';
-		
-		foreach($possibilities as $pos) {
-			$selected = ($active == $pos->getPrimaryData())? 'selected' : '';
-			
-			$str.= sprintf('<option value="%s" %s>%s</option>' . "\n", 
-				implode('|', $pos->getPrimaryData()), 
-				$selected,
-				$pos
+		try {
+			$query = db()->table($this->getModelField())->getAll();
+			$query->setPage(-1);
+			$possibilities = $query->fetchAll();
+			$active = (!$this->getValue())? null : $this->getValue()->getPrimaryData();
+			$str = '';
+
+			foreach($possibilities as $pos) {
+				$selected = ($active == $pos->getPrimaryData())? 'selected' : '';
+
+				$str.= sprintf('<option value="%s" %s>%s</option>' . "\n", 
+					implode('|', $pos->getPrimaryData()), 
+					$selected,
+					$pos
+					);
+			}
+
+
+			$id = "field_{$this->getName()}";
+			return sprintf('<div class="field"><label for="%s">%s</label><select id="%s" name="%s">%s</select></div>',
+				$id, $this->getCaption(), $id, $this->getName(), $str
+				);
+		} catch (Exception $e) {
+			return sprintf('<div class="error"><h1>%s: %s</h1><pre>%s</pre></div>',
+				$e->getCode(),
+				$e->getMessage(),
+				$e->getTraceAsString()
 				);
 		}
-		
-		
-		$id = "field_{$this->getName()}";
-		return sprintf('<div class="field"><label for="%s">%s</label><select id="%s" name="%s">%s</select></div>',
-			$id, $this->getCaption(), $id, $this->getName(), $str
-			);
 	}
 	
 }

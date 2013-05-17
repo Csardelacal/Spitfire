@@ -2,8 +2,6 @@
 
 namespace spitfire\model;
 
-use Model;
-
 /**
  * Represents a table's field in a database. Contains information about the
  * table the field belongs to, the name of the field and if it is (or not) a
@@ -20,6 +18,7 @@ class Field
 	protected $auto_increment;
 	protected $datatype;
 	protected $references;
+	protected $referencedField;
 	
 	const TYPE_INTEGER   = 'int';
 	const TYPE_LONG      = 'long';
@@ -87,8 +86,16 @@ class Field
 		return $this->references;
 	}
 	
-	public function setReference(Model$model, $field) {
-		$this->references = Array($model, $field);
+	public function setReference(Reference$reference) {
+		$this->references = $reference;
+	}
+	
+	public function getReferencedField() {
+		return $this->referencedField;
+	}
+	
+	public function setReferencedField(Field$field) {
+		$this->referencedField = $field;
 	}
 	
 	public function getDataType() {

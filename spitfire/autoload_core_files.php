@@ -32,6 +32,7 @@ AutoLoad::registerClass('spitfire\storage\database\Query',             $cur_dir.
 AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
+AutoLoad::registerClass('spitfire\storage\database\Ancestor',                   $cur_dir.'/db/ancestor.php');
 AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
 AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface', $cur_dir.'/db/resultset.php');
@@ -46,6 +47,7 @@ AutoLoad::registerClass('FileField',                                            
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
+AutoLoad::registerClass('spitfire\model\Reference',                             $cur_dir.'/model/reference.php');
 
 
 AutoLoad::registerClass('spitfire\model\defaults\userModel',                    $cur_dir.'/model/defaults/usermodel_default.php');

@@ -121,14 +121,15 @@ abstract class Query
 	}
 	
 	public function getRestrictions() {
-		return array_merge($this->table->getModel()->getBaseRestrictions(), $this->restrictions);
+		$this->table->getModel()->getBaseRestrictions($this);
+		return $this->restrictions;
 	}
 	
 	public function getOrder() {
 		return $this->order;
 	}
 	
-	public function setParent(databaseRecord$record) {
+	public function setParent(Ancestor$record) {
 		$this->parent = $record;
 	}
 	

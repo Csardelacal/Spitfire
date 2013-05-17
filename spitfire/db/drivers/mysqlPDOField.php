@@ -32,7 +32,7 @@ class mysqlPDOField extends DBField
 		if ($this->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
 		if ($this->isUnique())        $definition.= "UNIQUE ";
 		
-		if ($ref = $this->getReference()) {
+		if (null != $ref = $this->getReferencedField()) {
 			$definition.= 'REFERENCES ' . $ref . ' ON DELETE CASCADE ON UPDATE CASCADE';
 		}
 		
