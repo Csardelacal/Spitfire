@@ -12,14 +12,15 @@ class _SF_ViewElement extends _SF_MVC
 	
 	public function set ($key, $value) {
 		$this->data[$key] = $value;
+		return $this;
 	}
 	
 	public function render () {
 		ob_start();
 		foreach ($this->data as $k => $v) $$k = $v;
-		echo '<!-- Started: ' . $this->file .' -->';
+		echo '<!-- Started: ' . $this->file .' -->' . "\n";
 		include $this->file;
-		echo '<!-- Ended: ' . $this->file .' -->';
+		echo "\n" . '<!-- Ended: ' . $this->file .' -->';
 		return ob_get_clean();
 		
 	}

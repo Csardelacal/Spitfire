@@ -67,6 +67,7 @@ class View extends _SF_MVC
 	public function set($key, $value) {
 		//echo $key;
 		$this->data[$key] = $value;
+		return $this;
 	}
 	
 	public function setFile ($fileName) {
