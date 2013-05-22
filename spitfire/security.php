@@ -1,7 +1,5 @@
 <?php
 
-include ('security_io_sanitization.php');
-
 
 //TODO: (Re)move this functions and stuff
 
@@ -9,10 +7,10 @@ include ('security_io_sanitization.php');
 class browser
 {
 	
-	const TYPE_UNKNOWN = 'unknown';
 	const TYPE_DESKTOP = 'desktop';
-	const TYPE_MOBILE = 'mobile';
-	const TYPE_SEBOT = 'search engine';
+	const TYPE_MOBILE  = 'mobile';
+	const TYPE_SEBOT   = 'search engine';
+	const TYPE_UNKNOWN = 'Unknown';
 	
 	static $oss = Array(
 		'windows'   => self::TYPE_DESKTOP,
@@ -23,6 +21,7 @@ class browser
 		'ipad'      => self::TYPE_MOBILE,
 		'android'   => self::TYPE_MOBILE,
 		'googlebot' => self::TYPE_SEBOT,
+		'bingbot'   => self::TYPE_SEBOT,
 		'msnbot'    => self::TYPE_SEBOT
 		);
 	
@@ -56,11 +55,11 @@ class browser
 			}
 		}
 		
-		if (!self::$browser || !self::$os) {
+		if (!self::$browser && !self::$os) {
 			self::$browser = 'undefined';
 			self::$os      = 'undefined';
-			self::$type    = TYPE_UNKNOWN;
-			log_to_file('logs/unknown_agents.log', 'Unknown user agent: '.self::$uas, true);
+			self::$type    = self::TYPE_UNKNOWN;
+			//log_to_file('logs/unknown_agents.log', 'Unknown user agent: '.self::$uas, true);
 		}
 	}
 	

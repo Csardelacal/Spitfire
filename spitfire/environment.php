@@ -47,7 +47,10 @@ class environment
 		
 		#Memcached settings
 		'memcached_enabled'        => false,
-		'memcached_servers'        => Array('localhost')
+		'memcached_servers'        => Array('localhost'),
+	    
+		#Timezone settings
+		'timezone'                 => 'Europe/Berlin'
 		
 	);
 	
