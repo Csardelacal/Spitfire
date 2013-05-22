@@ -22,6 +22,7 @@ AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php
 
 AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
 AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
+AutoLoad::registerClass('browser',               $cur_dir.'/security.php');
 
 #Database related imports
 AutoLoad::registerClass('spitfire\storage\database\DB',                $cur_dir.'/db/db.php');
