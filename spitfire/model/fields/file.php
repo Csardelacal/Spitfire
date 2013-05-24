@@ -5,8 +5,7 @@ use spitfire\model\Field;
 class FileField extends Field
 {
 	
-	public function __construct($name) {
+	public function __construct() {
 		$this->datatype = Field::TYPE_FILE;
-		$this->name = $name;
 	}
 }

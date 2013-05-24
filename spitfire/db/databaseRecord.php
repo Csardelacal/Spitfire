@@ -273,7 +273,7 @@ class databaseRecord implements Serializable
 		
 		elseif (is_string($table)) {
 			$dbtable = $this->getTable()->getDb()->table($table);
-			$model = $table->getModel();
+			$model = $dbtable->getModel();
 		}
 		
 		if ($role instanceof Reference) {
@@ -285,7 +285,7 @@ class databaseRecord implements Serializable
 		}
 		
 		
-		$query = $this->table->queryInstance($table);
+		$query = $this->table->queryInstance($dbtable);
 		$query->setParent(new Ancestor($this, $reference));
 		return $query;
 	}
