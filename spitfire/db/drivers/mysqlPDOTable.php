@@ -173,6 +173,8 @@ class MysqlPDOTable extends stdSQLTable
 	}
 
 	public function queryInstance($table) {
+		if (!$table instanceof Table) throw new \privateException('Need a table object');
+		
 		return new MysqlPDOQuery($table);
 	}
 

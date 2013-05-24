@@ -39,6 +39,15 @@ class Model
 	 * @var Field[]
 	 */
 	private $fields;
+	
+	/**
+	 * Contains a list of the references this model uses to point to other 
+	 * models. In this new relations this model will be the source, this are
+	 * used to improve the ease of navigating the data without the need to
+	 * generate additional queries. References are stored with FILO.
+	 *
+	 * @var Reference[]
+	 */
 	private $references = Array();
 	
 	public function __construct() {
@@ -51,6 +60,17 @@ class Model
 		$this->fields = $fields;
 	}
 	
+	/**
+	 * Returns the list of fields Spitfire considers necessary to hold the 
+	 * data it generates. This means, it returns a list of the fields for 
+	 * this model and a list of referenced fields for models that are
+	 * in some way connected to this one.
+	 * 
+	 * This function is intended to be used by DBMS engines to ease the 
+	 * work of generating schemas to store the data.
+	 * 
+	 * @return Field[]
+	 */
 	public function getDBFields() {
 		$fields = array_filter(array_merge($this->fields, $this->getReferencedFields()));
 		#If the given type is a field return it.
@@ -59,6 +79,15 @@ class Model
 		return $fields;
 	}
         
+	/**
+	 * Returns a logical field for this model. Logical fields refers to fields
+	 * that can also contain complex datatypes aka References. Instead of 
+	 * resoltving them like a DBFields function would do this returns a 
+	 * raw reference when requested.
+	 * 
+	 * @param string $name
+	 * @return Field|Reference|null
+	 */
 	public function getField($name) {
 		if (isset($this->fields[$name]))     return $this->fields[$name];
 		if (isset($this->references[$name])) return $this->references[$name];
@@ -180,15 +209,38 @@ class Model
 		return $fields;
 	}
 	
+	/**
+	 * Returns the 'name' of the model. The name of a model is obtained by 
+	 * removing the Model part of tit's class name. It's best practice to 
+	 * avoid the usage of this function for anything rather than logging.
+	 * 
+	 * This function has a special use case, it also defines the name of the
+	 * future table. By changing this you change the table this model uses
+	 * on DBMS, this is particularly useful when creating multiple models
+	 * that refer to a single dataset like 'People' and 'Adults'.
+	 * 
+	 * @staticvar string $name
+	 * @return string
+	 */
 	public function getName() {
-		static $name = null;
+		static $name;
 		if ($name) return $name;
 		
-		$name = get_class($this);
-		$name = substr($name, 0, 0 - strlen('Model'));
+		$name = substr(get_class($this), 0, 0 - strlen('Model'));
 		return strtolower($name);
 	}
 	
+	/**
+	 * Returns the tablename spitfire considers best for this Model. This 
+	 * value is calculated by using the Model's name and replacing any 
+	 * <b>\</b> with hyphens to make the name database friendly.
+	 * 
+	 * Hyphens are the only chars that DBMS tend to accept that class names
+	 * do not. So this way we avoid any colissions in names that could be 
+	 * concidentally similar.
+	 * 
+	 * @return string
+	 */
 	public function getTableName() {
 		return str_replace('\\', '-', $this->getName());
 	}
@@ -273,7 +325,45 @@ class Model
 	 * @return Field
 	 */
 	public function field($name, $instanceof, $length = false) {
-		return $this->fields[$name] = new $instanceof($name, $length);
+		$this->fields[$name] = $field = new $instanceof($length);
+		$field->setName($name);
+		return $field;
+	}
+	
+	/**
+	 * The getters and setters for this class allow us to create fields with
+	 * a simplified syntax and access them just like they were properties
+	 * of the object. Please note that some experts recommend avoiding magic
+	 * methods for performance reasons. In this case you can use the field()
+	 * method.
+	 * 
+	 * @param type $name
+	 * @param \spitfire\model\Field $value
+	 */
+	public function __set($name, $value) {
+		
+		if ($value instanceof Field) {
+			$value->setName($name);
+			$this->fields[$name] = $value;
+		}
+		
+	}
+	
+	/**
+	 * The getters and setters for this class allow us to create fields with
+	 * a simplified syntax and access them just like they were properties
+	 * of the object. Please note that some experts recommend avoiding magic
+	 * methods for performance reasons. In this case you can use the field()
+	 * method.
+	 * 
+	 * @param type $name
+	 * @return Field
+	 */
+	public function __get($name) {
+		if (isset($this->fields[$name]))
+			return $this->fields[$name];
+		else
+			throw new privateException('No field ' . $name . ' found');
 	}
 	
 	/**

@@ -7,10 +7,9 @@ class StringField extends Field
 	
 	protected $length;
 	
-	public function __construct($name, $length) {
+	public function __construct($length) {
 		$this->datatype = Field::TYPE_STRING;
 		$this->length   = $length;
-		$this->name = $name;
 	}
 	
 	public function getLength() {
