@@ -3,10 +3,11 @@
 namespace spitfire\io\beans;
 
 use CoffeeBean;
+use privateException;
 
 abstract class Field
 {
-	private $method;
+	private $bean;
 	private $name;
 	private $caption;
 	private $value;
@@ -15,10 +16,19 @@ abstract class Field
 	
 	protected $type = 'text';
 	
-	public function __construct($name, $caption, $method = CoffeeBean::METHOD_POST) {
+	public function __construct(CoffeeBean$bean, $name, $caption) {
+		$this->bean = $bean;
 		$this->name = $name;
 		$this->caption = $caption;
-		$this->method = $method;
+	}
+	
+	public function setBean(CoffeeBean$bean) {
+		$this->bean = $bean;
+		return $this;
+	}
+	
+	public function getBean() {
+		return $this->bean;
 	}
 	
 	public function setName($name) {
@@ -28,15 +38,6 @@ abstract class Field
 	
 	public function getName() {
 		return $this->name;
-	}
-	
-	public function setMethod($method) {
-		$this->method = $method;
-		return $this;
-	}
-	
-	public function getMethod() {
-		return $this->method;
 	}
 	
 	public function setCaption($caption) {
@@ -54,9 +55,22 @@ abstract class Field
 	}
 	
 	public function getValue() {
-		if     ($this->method == CoffeeBean::METHOD_GET  && !empty($_GET[$this->name]) ) return $_GET[$this->name];
-		elseif ($this->method == CoffeeBean::METHOD_POST && !empty($_POST[$this->name])) return $_POST[$this->name];
-		elseif ($this->value) return $this->value;
+		try {
+			return $this->getRequestValue();
+		}
+		catch (privateException $e) {
+			return $this->getDefaultValue();
+		}
+	}
+	
+	public function getRequestValue() {
+		if     (!empty($_POST[$this->name])) return $_POST[$this->name];
+		elseif (!empty($_GET[$this->name]) ) return $_GET[$this->name];
+		else throw new privateException('Field ' . $this->name . ' was not sent with request');
+	}
+	
+	public function getDefaultValue() {
+		return $this->value;
 	}
 	
 	public function setModelField($name) {

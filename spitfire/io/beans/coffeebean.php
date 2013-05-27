@@ -59,9 +59,9 @@ abstract class CoffeeBean extends Validatable
 	 * @param string $method
 	 * @return spitfire\io\beans\Field
 	 */
-	public function field($instanceof, $name, $caption, $method = CoffeeBean::METHOD_POST) {
+	public function field($instanceof, $name, $caption) {
 		$instanceof = "\\spitfire\\io\\beans\\$instanceof";
-		return $this->fields[$name] = new $instanceof($name, $caption, $method);
+		return $this->fields[$name] = new $instanceof($this, $name, $caption);
 	}
 	
 	public function getFields() {
