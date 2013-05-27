@@ -4,6 +4,7 @@ namespace spitfire\io\beans;
 
 use \databaseRecord;
 use Exception;
+use Model;
 
 class ReferenceField extends Field 
 {
@@ -17,10 +18,11 @@ class ReferenceField extends Field
 			return $v;
 		}
 		else {
-			$table  = db()->table($this->getModelField());
-			$pk     = $table->getPrimaryKey();
-			$search = explode('|', $v);
-			$query  = $table->get(array_shift($pk), array_shift($search));
+			$reference = Model::getInstance($this->getBean()->model)->getField($this->getModelField());
+			$table     = db()->table($reference->getTarget());
+			$pk        = $table->getPrimaryKey();
+			$search    = explode('|', $v);
+			$query     = $table->get(array_shift($pk), array_shift($search));
 			
 			if (count($pk)) {
 				$query->addRestriction(array_shift($pk), array_shift($search));
@@ -33,7 +35,8 @@ class ReferenceField extends Field
 	public function setValue($value) {
 		
 		if ($value instanceof databaseRecord) {
-			if ($value->getTable()->getModel()->getName() == $this->getModelField()	) {
+			$reference = Model::getInstance($this->getBean()->model)->getField($this->getModelField());
+			if ($value->getTable()->getModel() == $reference->getTarget() ) {
 				parent::setValue($value);
 			}
 			else throw new \privateException("Incompatible field types");
@@ -54,7 +57,10 @@ class ReferenceField extends Field
 	
 	public function __toString() {
 		try {
-			$query = db()->table($this->getModelField())->getAll();
+			$reference = Model::getInstance($this->getBean()->model)->getField($this->getModelField());
+			
+			
+			$query = db()->table($reference->getTarget())->getAll();
 			$query->setPage(-1);
 			$possibilities = $query->fetchAll();
 			$active = (!$this->getValue())? null : $this->getValue()->getPrimaryData();

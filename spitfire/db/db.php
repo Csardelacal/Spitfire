@@ -55,7 +55,7 @@ abstract class DB extends _SF_MVC
 	 * @return String The string encoded with Spitfire's encoding
 	 */
 	public function convertIn($str) {
-		return iconv(environment::get('database_encoding'), environment::get('system_encoding'), $str);
+		return iconv(environment::get('database_encoding'), environment::get('system_encoding').'//TRANSLIT', $str);
 	}
 	
 	
@@ -66,7 +66,7 @@ abstract class DB extends _SF_MVC
 	 * @return String The string encoded with the database's encoding
 	 */
 	public function convertOut($str) {
-		return iconv(environment::get('system_encoding'), environment::get('database_encoding'), $str);
+		return iconv(environment::get('system_encoding'), environment::get('database_encoding').'//TRANSLIT', $str);
 	}
 	
 	/**

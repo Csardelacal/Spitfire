@@ -256,7 +256,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * @return string Quoted and escaped string
 	 */
 	public function quote($text) {
-		$str = iconv( environment::get('system_encoding'), environment::get('database_encoding'), strval($text) );
+		$str = $this->convertOut(strval($text));
 		return $this->getConnection()->quote( $str );
 	}
 
