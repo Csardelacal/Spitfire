@@ -201,9 +201,8 @@ class databaseRecord implements Serializable
 				$refs = $this->table->getModel()->getReferencedFields();
 				foreach ($refs as $ref) {
 					if ($ref->getName() == $field->getName()) {
-						$reference = $ref->getReference();
-						$model     = reset($reference)->getName();
-						$ref_field = end($reference)->getName();
+						$model     = $ref->getReference()->getTarget()->getName();
+						$ref_field = $ref->getReferencedField()->getName();
 
 						if($this->data[$model] instanceof Query) {
 							$this->data[$model] = $this->data[$model]->fetch();
