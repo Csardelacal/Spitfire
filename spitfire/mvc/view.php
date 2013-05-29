@@ -71,7 +71,7 @@ class View extends _SF_MVC
 	}
 	
 	public function setFile ($fileName) {
-		if (file_exists($fileName)) $this->file($fileName);
+		if (file_exists($fileName)) $this->file = $fileName;
 		else throw new fileNotFoundException('File ' . $fileName . 'not found. View can\'t use it');
 	}
 
