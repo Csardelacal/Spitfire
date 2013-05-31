@@ -1,5 +1,6 @@
 <?php
 
+use spitfire\io\beans\ChildBean;
 use spitfire\io\html\HTMLForm;
 use spitfire\io\html\HTMLTable;
 use spitfire\io\html\HTMLTableRow;
@@ -23,7 +24,8 @@ abstract class CoffeeBean extends Validatable
 		if ($this->model) {
 			$fields = $this->fields;
 			$record = db()->table($this->model)->newRecord();
-			foreach ($fields as $field) $record->{$field->getModelField()} = $field->getValue();
+			foreach ($fields as $field) 
+				if (!$field instanceof ChildBean) $record->{$field->getModelField()} = $field->getValue();
 		}
 		else {
 			throw new privateException('No model defined for bean ' . $this->getName());
@@ -64,8 +66,16 @@ abstract class CoffeeBean extends Validatable
 		return $this->fields[$name] = new $instanceof($this, $name, $caption);
 	}
 	
+	public function childBean($beanname) {
+		return $this->fields[$beanname] = new ChildBean($this, $beanname, $beanname);
+	}
+	
 	public function getFields() {
 		return $this->fields;
+	}
+	
+	public function getField($name) {
+		return $this->fields[$name];
 	}
 	
 	public function getName() {

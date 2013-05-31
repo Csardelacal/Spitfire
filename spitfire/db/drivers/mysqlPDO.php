@@ -26,7 +26,13 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	private $connection    = false;
 	private $fields        = Array();
 	
-	/**@var mixed List of errors the repair() method can fix*/
+	/**@var mixed List of errors the repair() method can fix. This include:
+	 *     <ul>
+	 *     <li>1051 - Unknown table.</li>
+	 *     <li>1054 - Unknown column</li>
+	 *     <li>1146 - No such table</li>
+	 *     </ul>
+	 */
 	private $reparable_errors = Array(1051, 1054, 1146);
 	
 	

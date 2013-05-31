@@ -72,6 +72,7 @@ AutoLoad::registerClass('spitfire\io\beans\TextField',                          
 AutoLoad::registerClass('spitfire\io\beans\LongTextField',                      $cur_dir.'/io/beans/long_text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
 AutoLoad::registerClass('spitfire\io\beans\FileField',                          $cur_dir.'/io/beans/file_field.php');
+AutoLoad::registerClass('spitfire\io\beans\ChildBean',                          $cur_dir.'/io/beans/childbean.php');
 AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 
