@@ -33,7 +33,7 @@ class _SF_Route
 		for ($pos = 0; $pos < $length; $pos++) {
 			if ($pattern[$pos] == '*')                                                  //If it's a wildcard asimilate it
 				$pattern[$pos] = $route[$pos];
-			else if (isset($route[$pos]) && $pattern[$pos] != $route[$pos])            //Otherwise check if it matches.
+			else if (!isset($route[$pos]) || $pattern[$pos] != $route[$pos])            //Otherwise check if it matches.
 				return false;				                            //By returning false we avoid further checking
 		}
 		
