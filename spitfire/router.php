@@ -20,9 +20,9 @@ class _SF_Route
 	
 	public function rewrite($route) {
 		//STEP 1: PARSE ROUTES INTO ARRAYS
-		$route   = explode('/', $route);                       //Turn a route [/this/is/a/route] into Arrays
-		$target  = explode('/', $this->new_route);             //Array(this, is, a, route)
-		$pattern = explode('/', $this->old_route);             //So we can analyze the components.
+		$route   = array_values(array_filter(explode('/', $route)));                       //Turn a route [/this/is/a/route] into Arrays
+		$target  = array_values(array_filter(explode('/', $this->new_route)));             //Array(this, is, a, route)
+		$pattern = array_values(array_filter(explode('/', $this->old_route)));             //So we can analyze the components.
 		
 		
 		#Store the size of the route.
@@ -30,11 +30,11 @@ class _SF_Route
 
 		//STEP 2: CHECK IF THE TARGET ROUTE MATCHES THE EXPRESSION GIVEN
 		//We start at 1 because 0 is always empty
-		for ($pos = 1; $pos < $length; $pos++) {
-			if ($pattern[$pos] == '*')                          //If it's a wildcard asimilate it
+		for ($pos = 0; $pos < $length; $pos++) {
+			if ($pattern[$pos] == '*')                                                  //If it's a wildcard asimilate it
 				$pattern[$pos] = $route[$pos];
-			else if ($pattern[$pos] != $route[$pos])            //Otherwise check if it matches.
-				return false;				    //By returning false we avoid further checking
+			else if (isset($route[$pos]) && $pattern[$pos] != $route[$pos])            //Otherwise check if it matches.
+				return false;				                            //By returning false we avoid further checking
 		}
 		
 		
@@ -43,13 +43,21 @@ class _SF_Route
 		$length = count($target);
 
 		//Loop through the new route to start rewriting.
-		for($pos = 1; $pos < $length; $pos++) {
+		for($pos = 0; $pos < $length; $pos++) {
 			if ($target[$pos] && $target[$pos][0] == '$') {  //Maybe it's a $XX to be replaced
 				$new_pos = (int)substr($target[$pos], 1);    //Find it's new position
 				$target[$pos] = $pattern[$new_pos];          //Write the value from the route into the new one.
 			}
 		}
-		return implode($target, '/');                        //Return the route adding the slashes
+		
+		//Check if the source route was longer and add additional params
+		$length = count($route);
+		
+		for ($pos = count($target); $pos < $length; $pos++) {
+			$target[$pos] = $route[$pos];
+		}
+		
+		return '/' . implode($target, '/');                        //Return the route adding the slashes
 	}
 }
 
@@ -67,7 +75,7 @@ class router
 	
 	static function rewrite ($route) {
 		foreach (self::$routes as $rule)
-			if ($t = $rule->rewrite($route)) return $t;
+			if (false !== $t = $rule->rewrite($route)) return $t;
 		#Implicit else.
 		return $route;
 	}
