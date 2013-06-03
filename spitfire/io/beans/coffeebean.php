@@ -7,33 +7,53 @@ use spitfire\io\html\HTMLTableRow;
 
 abstract class CoffeeBean extends Validatable
 {
-	const METHOD_POST = 'POST';
-	const METHOD_GET  = 'GET';
 	
 	const VISIBILITY_HIDDEN = 0;
 	const VISIBILITY_LIST   = 1;
 	const VISIBILITY_FORM   = 2;
 	const VISIBILITY_ALL    = 3;
 	
+	const STATUS_SUBMITTED_OK  = 2;
+	const STATUS_SUBMITTED_ERR = 1;
+	const STATUS_UNSUBMITTED   = 0;
+	
 	private $fields = Array();
+	private $record;
+	
 	public $name;
 	public $model;
 	
-	
-	public function makeDBRecord() {
-		if ($this->model) {
-			$fields = $this->fields;
-			$record = db()->table($this->model)->newRecord();
-			foreach ($fields as $field) 
-				if (!$field instanceof ChildBean) $record->{$field->getModelField()} = $field->getValue();
+	/**
+	 * This function informs you about the status of the bean. This status
+	 * can take three different values.
+	 * <ul>
+	 * <li>STATUS_SUBMITTED_OK: If the bean did receive data and it is valid.</li>
+	 * <li>STATUS_SUBMITTED_ERR: If the data was received but not valid</li>
+	 * <li>STATUS_UNSUBMITTED: If the data wasn't received at all</li>
+	 * </ul>
+	 * 
+	 * This function is meant to aid you taking the decision whether the bean
+	 * should display a form or store the data. To do so you can compare the
+	 * values or compare status to be less (&lt;) than OK.
+	 * 
+	 * @return int Status code of the submission
+	 */
+	public function getStatus() {
+		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($this->validate())
+				return self::STATUS_SUBMITTED_OK;
+			else
+				return self::STATUS_SUBMITTED_ERR;
 		}
 		else {
-			throw new privateException('No model defined for bean ' . $this->getName());
+			return self::STATUS_UNSUBMITTED;
 		}
-		return $record;
 	}
 	
-	public function updateDBRecord(databaseRecord$record) {
+	public function updateDBRecord() {
+		
+		$record = $this->record;
+		
 		if ($this->model) {
 			$fields = $this->fields;
 			foreach ($fields as $field) {
@@ -41,15 +61,14 @@ abstract class CoffeeBean extends Validatable
 					$record->{$field->getModelField()} = $field->getValue();
 			}
 		}
-		return $record;
 	}
 	
 	public function setDBRecord(databaseRecord$record) {
-		if ($this->model) {
-			$fields = $this->fields;
-			foreach ($fields as $field) $field->setValue($record->{$field->getModelField()});
-		}
-		return $record;
+		$this->record = $record;
+	}
+	
+	public function getRecord() {
+		return $this->record;
 	}
 	
 	/**
@@ -80,7 +99,7 @@ abstract class CoffeeBean extends Validatable
 	
 	public function getName() {
 		if ($this->name) return $this->name;
-		else return get_class ($this);
+		else return substr( get_class ($this), 0, - strlen('Bean'));
 	}
 
 
@@ -88,42 +107,9 @@ abstract class CoffeeBean extends Validatable
 		return new HTMLForm($action, $this);
 	}
 	
-	/**
-	 * Creates a list of records according to this Bean's settings.
-	 * 
-	 * @todo Implement actions
-	 * @param type $records
-	 * @param type $actions
-	 * @return \spitfire\io\html\HTMLTable
-	 */
-	public function makeList($records, $actions = Array()) {
-		$table = new HTMLTable();
-		//headers
-		$row = new HTMLTableRow();
-		foreach ($this->fields as $field) {
-			if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
-			$row->putCell($field->getCaption());
-		}
-		$row->putCell('Actions');
-		$table->putRow($row);
-		//Content
-		foreach($records as $record) {
-			$row = new HTMLTableRow();
-			foreach ($this->fields as $field) {
-				if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
-				$row->putCell($record->{$field->getModelField()});
-			}
-			//Actions
-			$str = '';
-			foreach ($actions as $name => $url) {
-				$action = sprintf($url, implode('|', $record->getPrimaryData()));
-				$str.= sprintf('<a href="%s">%s</a>', $action, $name);
-			}
-			$row->putCell($str);
-			
-			$table->putRow($row);
-		}
-		return $table;
+	
+	public function makeList($renderer, $records) {
+		return $renderer->renderList($this, $records);
 	}
 	
 	/**
