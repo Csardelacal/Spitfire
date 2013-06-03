@@ -10,11 +10,8 @@ abstract class Field
 	private $bean;
 	private $name;
 	private $caption;
-	private $value;
 	private $model_field;
 	private $visibility = 3;
-	
-	protected $type = 'text';
 	
 	public function __construct(CoffeeBean$bean, $name, $caption) {
 		$this->bean = $bean;
@@ -49,11 +46,6 @@ abstract class Field
 		return $this->caption;
 	}
 	
-	public function setValue($value) {
-		$this->value = $value;
-		return $this;
-	}
-	
 	public function getValue() {
 		try {
 			return $this->getRequestValue();
@@ -70,7 +62,7 @@ abstract class Field
 	}
 	
 	public function getDefaultValue() {
-		return $this->value;
+		return $this->bean->getRecord()->{$this->getModelField()};
 	}
 	
 	public function setModelField($name) {
