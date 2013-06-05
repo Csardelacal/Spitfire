@@ -2,7 +2,7 @@
 
 namespace spitfire\io\beans;
 
-class LongTextField extends Field 
+class LongTextField extends BasicField 
 {
 	
 	

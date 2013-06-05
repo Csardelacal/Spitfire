@@ -5,13 +5,23 @@ namespace spitfire\io\beans\renderers;
 use \CoffeeBean;
 use spitfire\io\html\HTMLTable;
 use spitfire\io\html\HTMLTableRow;
-use spitfire\io\html\HTMLTableCell;
+use spitfire\io\html\HTMLForm;
 
 class SimpleBeanRenderer extends Renderer
 {
 	
 	public function renderForm(CoffeeBean $bean) {
+		$form = new HTMLForm($this->getFormAction($bean));
+		$fields = $bean->getFields();
+		$renderer = new SimpleFieldRenderer();
 		
+		foreach ($fields as $field) {
+			if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_FORM) {
+				$form->addChild($renderer->renderForm($field));
+			}
+		}
+		
+		return $form;
 	}
 
 	public function renderList(CoffeeBean $bean, $records) {
@@ -32,14 +42,18 @@ class SimpleBeanRenderer extends Renderer
 				$row->putCell($record->{$field->getModelField()});
 			}
 			//Actions
-			$row->putCell(implode(' ', $this->getActions($bean, $record)));
+			$row->putCell(implode(' ', $this->getListActions($bean, $record)));
 			
 			$table->putRow($row);
 		}
 		return $table;
 	}
 	
-	public function getActions($bean, $record) {
+	public function getListActions($bean, $record) {
 		return Array();
+	}
+	
+	public function getFormAction(CoffeeBean$bean) {
+		return '';
 	}
 }

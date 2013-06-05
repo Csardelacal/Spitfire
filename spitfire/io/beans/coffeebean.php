@@ -2,8 +2,6 @@
 
 use spitfire\io\beans\ChildBean;
 use spitfire\io\html\HTMLForm;
-use spitfire\io\html\HTMLTable;
-use spitfire\io\html\HTMLTableRow;
 
 abstract class CoffeeBean extends Validatable
 {
@@ -103,8 +101,8 @@ abstract class CoffeeBean extends Validatable
 	}
 
 
-	public function makeForm($action) {
-		return new HTMLForm($action, $this);
+	public function makeForm($renderer) {
+		return $renderer->renderForm($this);
 	}
 	
 	
