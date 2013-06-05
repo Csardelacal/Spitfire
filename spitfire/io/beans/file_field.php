@@ -2,12 +2,8 @@
 
 namespace spitfire\io\beans;
 
-use \CoffeeBean;
-
-class FileField extends Field 
+class FileField extends BasicField 
 {
-	
-	protected $type = 'file';
 	
 	private $upload = null;
 	

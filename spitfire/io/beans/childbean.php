@@ -7,6 +7,7 @@ use \CoffeeBean;
 
 class ChildBean extends Field 
 {
+	private $relation;
 	
 	public function __toString() {
 		$target = Model::getInstance($this->getBean()->model);

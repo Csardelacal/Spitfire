@@ -6,7 +6,7 @@ use \databaseRecord;
 use Exception;
 use Model;
 
-class ReferenceField extends Field 
+class ReferenceField extends BasicField 
 {
 	
 	public function getValue() {

@@ -16,10 +16,10 @@ abstract class HTMLUnclosedElement extends HTMLElement
 	public function __toString() {
 		$tag = $this->getTag();
 		$params = $this->getParams();
-		foreach ($params as $name => &$p) $p = "$name = \"$p\"";
+		foreach ($params as $name => &$p) $p = "$name=\"$p\"";
 		unset($p);
 		
-		return sprintf('<%s %s>' . "\n", 
+		return sprintf('<%s %s>', 
 			$tag, implode(' ', $params));
 	}
 }
