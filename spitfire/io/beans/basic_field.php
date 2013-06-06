@@ -6,6 +6,15 @@ class BasicField extends Field
 {
 	private $model_field;
 	
+	public function getDefaultValue() {
+		if ($this->getBean()->getRecord()) {
+			return $this->getBean()->getRecord()->{$this->getModelField()};
+		}
+		else {
+			return null;
+		}
+	}
+	
 	public function setModelField($name) {
 		$this->model_field = $name;
 		return $this;

@@ -85,6 +85,9 @@ AutoLoad::registerClass('spitfire\io\html\HTMLElement',                         
 AutoLoad::registerClass('spitfire\io\html\HTMLUnclosedElement',                 $cur_dir.'/io/html/unclosed.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLDiv',                             $cur_dir.'/io/html/div.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLInput',                           $cur_dir.'/io/html/input.php');
+AutoLoad::registerClass('spitfire\io\html\HTMLTextArea',                        $cur_dir.'/io/html/textarea.php');
+AutoLoad::registerClass('spitfire\io\html\HTMLSelect',                          $cur_dir.'/io/html/select.php');
+AutoLoad::registerClass('spitfire\io\html\HTMLOption',                          $cur_dir.'/io/html/option.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLLabel',                           $cur_dir.'/io/html/label.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            $cur_dir.'/io/html/form.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLTable',                           $cur_dir.'/io/html/table.php');
