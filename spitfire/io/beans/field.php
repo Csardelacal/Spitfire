@@ -33,6 +33,10 @@ abstract class Field
 	}
 	
 	public function getName() {
+		if ($this->getBean()->getParent()) {
+			$record = implode(':', $this->getBean()->getRecord()->getPrimaryData());
+			return $this->getBean()->getName() . "[$record][$this->name]";
+		}
 		return $this->name;
 	}
 	
@@ -60,14 +64,7 @@ abstract class Field
 		else throw new privateException('Field ' . $this->name . ' was not sent with request');
 	}
 	
-	public function getDefaultValue() {
-		if ($this->bean->getRecord()) {
-			return $this->bean->getRecord()->{$this->getModelField()};
-		}
-		else {
-			return null;
-		}
-	}
+	abstract public function getDefaultValue();
 	
 	public function setVisibility($visibility) {
 		if ($visibility >= 0 && $visibility <= 3) $this->visibility = $visibility;

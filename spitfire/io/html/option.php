@@ -3,17 +3,13 @@
 namespace spitfire\io\html;
 
 
-class HTMLLabel extends HTMLElement
+class HTMLOption extends HTMLElement
 {
 	private $caption = null;
-	
-	public function __construct(HTMLElement$input, $caption) {
-		$this->setParameter('for', $input->getParam('id'));
+
+	public function __construct($value, $caption) {
 		$this->caption = $caption;
-	}
-	
-	public function getContent() {
-		return $this->caption;
+		$this->setParameter('value', $value);
 	}
 	
 	public function getCaption() {
@@ -23,8 +19,12 @@ class HTMLLabel extends HTMLElement
 	public function setCaption($text) {
 		$this->caption = $text;
 	}
+	
+	public function getContent() {
+		return $this->caption;
+	}
 
 	public function getTag() {
-		return 'label';
-	}
+		return 'option';
+	}	
 }

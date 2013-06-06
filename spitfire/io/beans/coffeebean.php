@@ -21,6 +21,8 @@ abstract class CoffeeBean extends Validatable
 	public $name;
 	public $model;
 	
+	private $parent;
+	
 	/**
 	 * This function informs you about the status of the bean. This status
 	 * can take three different values.
@@ -55,7 +57,10 @@ abstract class CoffeeBean extends Validatable
 		if ($this->model) {
 			$fields = $this->fields;
 			foreach ($fields as $field) {
-				if ($field->getValue())
+				if ($field instanceof ChildBean) {
+					$field->store();
+				}
+				elseif ($field->getValue())
 					$record->{$field->getModelField()} = $field->getValue();
 			}
 		}
@@ -108,6 +113,14 @@ abstract class CoffeeBean extends Validatable
 	
 	public function makeList($renderer, $records) {
 		return $renderer->renderList($this, $records);
+	}
+	
+	public function setParent($bean) {
+		$this->parent = $bean;
+	}
+	
+	public function getParent() {
+		return $this->parent;
 	}
 	
 	/**

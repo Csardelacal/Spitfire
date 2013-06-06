@@ -26,6 +26,7 @@ class SimpleBeanRenderer extends Renderer
 
 	public function renderList(CoffeeBean $bean, $records) {
 		$table = new HTMLTable();
+		$renderer = new SimpleFieldRenderer();
 		//headers
 		$row = new HTMLTableRow();
 		foreach ($bean->getFields() as $field) {
@@ -39,7 +40,7 @@ class SimpleBeanRenderer extends Renderer
 			$row = new HTMLTableRow();
 			foreach ($bean->getFields() as $field) {
 				if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
-				$row->putCell($record->{$field->getModelField()});
+				$row->putCell($renderer->renderList ($record->{$field->getModelField()}) );
 			}
 			//Actions
 			$row->putCell(implode(' ', $this->getListActions($bean, $record)));
