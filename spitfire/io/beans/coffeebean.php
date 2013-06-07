@@ -1,7 +1,6 @@
 <?php
 
 use spitfire\io\beans\ChildBean;
-use spitfire\io\html\HTMLForm;
 
 abstract class CoffeeBean extends Validatable
 {

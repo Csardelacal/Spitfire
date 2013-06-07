@@ -24,7 +24,7 @@ class ReferenceField extends BasicField
 			$search    = explode('|', $v);
 			$query     = $table->get(array_shift($pk), array_shift($search));
 			
-			if (count($pk)) {
+			while (count($pk)) {
 				$query->addRestriction(array_shift($pk), array_shift($search));
 			}
 			
@@ -47,7 +47,7 @@ class ReferenceField extends BasicField
 			$search = explode('|', $value);
 			$query  = $table->get(array_shift($pk), array_shift($search));
 			
-			if (count($pk)) {
+			while (count($pk)) {
 				$query->addRestriction(array_shift($pk), array_shift($search));
 			}
 			
