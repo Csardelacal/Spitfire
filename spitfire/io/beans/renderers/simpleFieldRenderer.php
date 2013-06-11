@@ -58,13 +58,17 @@ class SimpleFieldRenderer {
 	}
 	
 	public function renderReferencedField($field) {
-		$select = new HTMLSelect($field->getName(), implode('|',$field->getValue()->getPrimaryData()));
+		$record = $field->getValue();
+		$selected = ($record)? implode('|',$record->getPrimaryData()) : '';
+		$select = new HTMLSelect($field->getName(), $selected);
 		$label = new HTMLLabel($select, $field->getCaption());
 		
 		$reference = Model::getInstance($field->getBean()->model)->getField($field->getModelField());
 		$query = db()->table($reference->getTarget())->getAll();
 		$query->setPage(-1);
 		$possibilities = $query->fetchAll();
+		
+		$select->addChild(new HTMLOption(null, 'Pick'));
 		
 		foreach ($possibilities as $possibility) {
 			$select->addChild(new HTMLOption(implode('|', $possibility->getPrimaryData()), strval($possibility)));
@@ -90,6 +94,17 @@ class SimpleFieldRenderer {
 			$ret->addChild('<h1>' . $record . '</h1>');
 			foreach ($fields as $f) $ret->addChild ($this->renderForm($f));
 		}
+		
+		$count = count($children);
+		do {
+			$childbean = CoffeeBean::getBean($child['bean']);
+			$childbean->setParent($field->getBean());
+			$childbean->setDBRecord(null);
+			$fields = $childbean->getFields();
+			$ret->addChild('<h1>New record</h1>');
+			foreach ($fields as $f) $ret->addChild ($this->renderForm($f));
+			$count++;
+		} while ($count < $field->getMinimumEntries());
 		
 		return $ret;
 	}

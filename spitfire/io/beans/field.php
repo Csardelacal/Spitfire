@@ -7,6 +7,7 @@ use privateException;
 
 abstract class Field
 {
+	
 	private $bean;
 	private $name;
 	private $caption;
@@ -34,8 +35,15 @@ abstract class Field
 	
 	public function getName() {
 		if ($this->getBean()->getParent()) {
-			$record = implode(':', $this->getBean()->getRecord()->getPrimaryData());
-			return $this->getBean()->getName() . "[$record][$this->name]";
+			$record = $this->getBean()->getRecord();
+			
+			if (!is_null($record)) {
+				$id = implode(':', $record->getPrimaryData());
+				return $this->getBean()->getName() . "[$id][$this->name]";
+			}
+			else {
+				return $this->getBean()->getName() . "[_new_{$this->getBean()->getId()}][$this->name]";
+			}
 		}
 		return $this->name;
 	}

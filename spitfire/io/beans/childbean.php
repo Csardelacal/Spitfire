@@ -10,9 +10,12 @@ class ChildBean extends Field
 	private $bean;
 	private $role;
 	
+	private $min_entries = 0;
+	
 	public function setRelation($bean, $role = null) {
 		$this->bean = $bean;
 		$this->role = $role;
+		return $this;
 	}
 	
 	public function getRelation() {
@@ -20,8 +23,18 @@ class ChildBean extends Field
 	}
 	
 	public function getRequestValue() {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
 		$data = $_POST[$this->bean];
-		return $data;
+		return array_filter($data);
+	}
+	
+	public function getMinimumEntries() {
+		return $this->min_entries;
+	}
+	
+	public function setMinimumEntries($amt) {
+		$this->min_entries = $amt;
+		return $this;
 	}
 	
 	public function store() {
@@ -29,18 +42,28 @@ class ChildBean extends Field
 		$record = $this->getBean()->getRecord();
 		
 		foreach ($data as $pk => $post) {
+			$post = array_filter($post);
+			if (empty($post)) continue;
+			
 			$child = CoffeeBean::getBean($this->bean);
 			$model = Model::getInstance($child->model);
 			$table  = db()->table($model);
-			$query  = $record->getChildren($table, $this->role);
-			$primary = $table->getPrimaryKey();
-			$pk = explode(':', $pk);
 			
-			foreach ($primary as $field => $meta) {
-				$query->addRestriction($field, array_shift($pk));
+			if (substr($pk, 0, 5) == '_new_') {
+				$r = $table->newRecord();
+			}
+			else {
+				$query  = $record->getChildren($table, $this->role);
+				$primary = $table->getPrimaryKey();
+				$pk = explode(':', $pk);
+
+				foreach ($primary as $field => $meta) {
+					$query->addRestriction($field, array_shift($pk));
+				}
+
+				$r = $query->fetch();
 			}
 			
-			$r = $query->fetch();
 			foreach ($post as $key => $value) {
 				$f = $child->getField($key);
 				if ($f instanceof ReferenceField) {
@@ -50,17 +73,27 @@ class ChildBean extends Field
 					$search    = explode('|', $value);
 					$query     = $table->get(array_shift($pk), array_shift($search));
 
-					if (count($pk)) {
+					while (count($pk)) {
 						$query->addRestriction(array_shift($pk), array_shift($search));
 					}
-
+					
 					$r->{$f->getModelField()} = $query->fetch();
 				}
 				else {
 					$r->{$f->getModelField()} = $value;
 				}
 			}
-			$r->store();
+			if ($r instanceof \databaseRecord) try {
+				$r->store();
+			} catch (\Exception $e) {
+				print_r($r->getData());
+				ob_flush();
+				die();
+			}
+			else {
+				ob_flush();
+				die();
+			}
 		}
 	}
 	
