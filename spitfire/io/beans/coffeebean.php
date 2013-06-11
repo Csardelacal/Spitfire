@@ -14,6 +14,9 @@ abstract class CoffeeBean extends Validatable
 	const STATUS_SUBMITTED_ERR = 1;
 	const STATUS_UNSUBMITTED   = 0;
 	
+	private static $counter = 0;
+	private $id = null;
+	
 	private $fields = Array();
 	private $record;
 	
@@ -65,7 +68,8 @@ abstract class CoffeeBean extends Validatable
 		}
 	}
 	
-	public function setDBRecord(databaseRecord$record) {
+	public function setDBRecord($record) {
+		if ($record instanceof databaseRecord || is_null($record))
 		$this->record = $record;
 	}
 	
@@ -120,6 +124,11 @@ abstract class CoffeeBean extends Validatable
 	
 	public function getParent() {
 		return $this->parent;
+	}
+	
+	public function getId() {
+		if (!is_null($this->id)) return $this->id;
+		else return $this->id = self::$counter++;
 	}
 	
 	/**

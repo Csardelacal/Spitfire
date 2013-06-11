@@ -230,7 +230,7 @@ class databaseRecord implements Serializable
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$ref = $primary->getReference();
+			$ref = $primary->getReferencedField();
 			if ($ref) $value =& $this->src[$ref->getTable()->getModel()->getName()];
 			else $value = $this->src[$primary->getName()];
 			
