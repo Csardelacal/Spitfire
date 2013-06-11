@@ -82,20 +82,25 @@ class SimpleFieldRenderer {
 		$childbean = CoffeeBean::getBean($child['bean']);
 		$childbean->setParent($field->getBean());
 		
-		$query  = $field->getBean()->getRecord()->getChildren($childbean->model, $child['role']);
-		$query->setPage(-1);
-		$children = $query->fetchAll();
+		if ($field->getBean()->getRecord()) {
+			$query  = $field->getBean()->getRecord()->getChildren($childbean->model, $child['role']);
+			$query->setPage(-1);
+			$children = $query->fetchAll();
+		}
 		
 		$ret = new HTMLDiv();
 		
-		foreach ($children as $record) {
-			$childbean->setDBRecord($record);
-			$fields = $childbean->getFields();
-			$ret->addChild('<h1>' . $record . '</h1>');
-			foreach ($fields as $f) $ret->addChild ($this->renderForm($f));
+		if (!empty($children)) {
+			foreach ($children as $record) {
+				$childbean->setDBRecord($record);
+				$fields = $childbean->getFields();
+				$ret->addChild($subform = new HTMLDiv());
+				$subform->addChild('<h1>' . $record . '</h1>');
+				foreach ($fields as $f) $subform->addChild ($this->renderForm($f));
+			}
 		}
 		
-		$count = count($children);
+		$count = (empty($children))? 0 : count($children);
 		do {
 			$childbean = CoffeeBean::getBean($child['bean']);
 			$childbean->setParent($field->getBean());
