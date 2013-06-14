@@ -64,36 +64,36 @@ class ChildBean extends Field
 				$r = $query->fetch();
 			}
 			
-			foreach ($post as $key => $value) {
+			$fields = $child->getFields();
+			foreach ($fields as $key => $f) {
+				$value = $post[$key];
 				$f = $child->getField($key);
 				if ($f instanceof ReferenceField) {
-					$reference = Model::getInstance($f->getBean()->model)->getField($f->getModelField());
-					$table     = db()->table($reference->getTarget());
-					$pk        = $table->getPrimaryKey();
-					$search    = explode('|', $value);
-					$query     = $table->get(array_shift($pk), array_shift($search));
-
-					while (count($pk)) {
-						$query->addRestriction(array_shift($pk), array_shift($search));
+					if ($f->getModelField() == $this->getBean()->getName()) {
+						$r->{$f->getModelField()} = $this->getBean()->getRecord();
+						
 					}
-					
-					$r->{$f->getModelField()} = $query->fetch();
+					else {
+						$reference = Model::getInstance($f->getBean()->model)->getField($f->getModelField());
+						$table     = db()->table($reference->getTarget());
+						$pk        = $table->getPrimaryKey();
+						$search    = explode('|', $value);
+						$query     = $table->get(array_shift($pk), array_shift($search));
+
+						while (count($pk)) {
+							$query->addRestriction(array_shift($pk), array_shift($search));
+						}
+
+						$r->{$f->getModelField()} = $query->fetch();
+					}
 				}
 				else {
 					$r->{$f->getModelField()} = $value;
 				}
 			}
-			if ($r instanceof \databaseRecord) try {
+			if ($r instanceof \databaseRecord) {
 				$r->store();
-			} catch (\Exception $e) {
-				print_r($r->getData());
-				ob_flush();
-				die();
-			}
-			else {
-				ob_flush();
-				die();
-			}
+			} 
 		}
 	}
 	

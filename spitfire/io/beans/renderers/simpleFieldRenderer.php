@@ -96,7 +96,9 @@ class SimpleFieldRenderer {
 				$fields = $childbean->getFields();
 				$ret->addChild($subform = new HTMLDiv());
 				$subform->addChild('<h1>' . $record . '</h1>');
-				foreach ($fields as $f) $subform->addChild ($this->renderForm($f));
+				foreach ($fields as $f) 
+					if (!($f instanceof ReferenceField && $f->getModelField() == $field->getBean()->getName()))
+						$subform->addChild ($this->renderForm($f));
 			}
 		}
 		

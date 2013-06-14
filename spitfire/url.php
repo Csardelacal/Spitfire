@@ -164,8 +164,19 @@ class URL implements ArrayAccess
 		$r = Request::get();
 		$canonical = new self($_GET);
 		
+		$default_controller = environment::get('default_controller');
+		$default_action     = environment::get('default_action');
+		
 		$path   = $r->getControllerURI();
-		$path[] = $r->getAction();
+		if (count($path) == 1 && reset($path) == $default_controller) {
+			$path = Array();
+		}
+		
+		$action = $r->getAction();
+		if ($action != $default_action) {
+			$path[] = $action;
+		}
+		
 		array_merge($path, $r->getObject());
 		
 		$canonical->setPath($path);

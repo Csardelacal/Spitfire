@@ -36,40 +36,25 @@ class databaseRecord implements Serializable
 	 */
 	public function __construct(Table $table, $srcData = Array() ) {
 		
-		//TODO: Move to separate function/method
-		//TODO: Fix when counting
-		//Parse referenced data
-		if (!empty($srcData)) {
-			$referenced = $table->getModel()->getReferences();
-			foreach ($referenced as $alias =>$reference) {
-				/** @var Reference|\spitfire\model\Reference Remote model */
-				$model = $reference->getTarget();
-
-				if (!isset($srcData[$alias]) || !$srcData[$alias] instanceof databaseRecord) {
-					$fields = $table->getModel()->getReferencedFields($model, $alias);
-					$query  = $table->getDB()->table($model)->getAll();
-
-					foreach($fields as $field) {
-						//list($model, $f) = $field->getReference();
-						$r = $field->getReference();
-						$model = $r->getTarget();
-						$f = $field->getReferencedField();
-						$query->addRestriction($f->getName(), $srcData[$field->getName()]);
-					}
-
-					$srcData[$alias] = $query;
-
+		$data = Array();
+		
+		$fields = $table->getModel()->getFields();
+		foreach ($fields as $name => $field) {
+			if ($field instanceof Reference) {
+				$import = $field->getFields();
+				$query  = $table->getDb()->table($field->getTarget())->getAll();
+				while(null !== $i = array_shift($import)) {
+					$query->addRestriction($i->getReferencedField()->getName(), $srcData[$i->getName()]);
 				}
+				$data[$name] = $query;
 			}
-
-			foreach($srcData as $index => $content) {
-				if (!$table->getModel()->getField($index)) unset($srcData[$index]);
+			else {
+				$data[$name] = $srcData[$name];
 			}
 		}
 		
-		
-		$this->src     = $srcData;
-		$this->data    = $srcData;
+		$this->src     = $data;
+		$this->data    = $data;
 		$this->table   = $table;
 		
 		$this->synced  = !empty($srcData);
@@ -178,7 +163,7 @@ class databaseRecord implements Serializable
 	/**
 	 * Returns the fields that compound the primary key of this record.
 	 * 
-	 * @return DBField[]
+	 * @return DBField[]|spitfire\storage\database\DBField[]
 	 */
 	public function getUniqueFields() {
 		return $this->table->getPrimaryKey();
@@ -192,27 +177,17 @@ class databaseRecord implements Serializable
 	 * @return Array
          */
         public function getPrimaryData() {
-            $primaryFields = $this->getUniqueFields();
-	    $ret = Array();
+		$primaryFields = $this->getUniqueFields();
+		$ret = Array();
 	    
-	    foreach ($primaryFields as $field) {
-		    
-			if (!isset($this->data[$field->getName()])) {
-				$refs = $this->table->getModel()->getReferencedFields();
-				foreach ($refs as $ref) {
-					if ($ref->getName() == $field->getName()) {
-						$model     = $ref->getReference()->getTarget()->getName();
-						$ref_field = $ref->getReferencedField()->getName();
-
-						if($this->data[$model] instanceof Query) {
-							$this->data[$model] = $this->data[$model]->fetch();
-						}
-						$ret[$field->getName()] = $this->data[$model]->{$ref_field};
-					}
-				}
+		foreach ($primaryFields as $field) {
+			if (null != $ref = $field->getReference()) {
+				$role = $ref->getRole();
+				$name = $field->getReferencedField()->getName();
+				$ret[$field->getName()] = $this->{$role}->{$name};
 			}
 			else {
-			    $ret[$field->getName()] = $this->data[$field->getName()];
+				$ret[$field->getName()] = $this->{$field->getName()};
 			}
 	    }
 	    
@@ -300,20 +275,29 @@ class databaseRecord implements Serializable
 
 	public function __set($field, $value) {
 		
-		if (!isset($this->data[$field]) || $value != $this->data[$field]) 
-			$this->synced = false;
+		$field_info = $this->table->getModel()->getField($field);
 		
-		if ($this->table->getModel()->getField($field)) {
+		if ($field_info instanceof Reference) {
+			if (!$value instanceof databaseRecord) {
+				throw new privateException('Not a record');
+			}
+			else {
+				$this->data[$field] = $value;
+			}
+		}
+		elseif (!is_null($field_info)) {
 			$this->data[$field] = $value;
 		}
-		else throw new privateException ('Setting non-existent database field: ' . $field);
+		else {
+			throw new privateException ('Setting non-existent database field: ' . $field);
+		}
 
 	}
 	
 	public function __get($field) {
 		if (isset($this->data[$field])) {
 			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field] = $this->data[$field]->fetch();
+				return $this->data[$field] = $this->src[$field] = $this->data[$field]->fetch();
 			}
 			else return $this->data[$field];
 		}

@@ -94,6 +94,10 @@ class Model
 		else return null;
 	}
 	
+	public function getFields() {
+		return array_merge($this->fields, $this->references);
+	}
+	
 	/**
 	 * Returns a list of the fields referenced by this model on a different
 	 * model. Depending on the parameters you set you can change the behavior
