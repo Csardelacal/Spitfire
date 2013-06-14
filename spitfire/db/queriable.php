@@ -105,7 +105,7 @@ abstract class Queriable {
 	 * Allows the driver to specify a class for the queries it needs to
 	 * generate.
 	 * 
-	 * @return string Classname of the query
+	 * @return Query The query object
 	 */
 	public abstract function getQueryInstance();
 }

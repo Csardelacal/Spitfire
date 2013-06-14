@@ -124,6 +124,33 @@ abstract class Table extends Queriable
 	}
 	
 	/**
+	 * Looks for a record based on it's primary data. This can be one of the
+	 * following:
+	 * <ul>
+	 * <li>A single basic data field like a string or a int</li>
+	 * <li>A string separated by : to separate those fields (SF POST standard)</li>
+	 * <li>An array with the data</li>
+	 * </ul>
+	 * 
+	 * @param mixed $id
+	 */
+	public function getById($id) {
+		#If the data is a string separate by colons
+		if (is_string($id)) $id = explode(':', $id);
+		
+		#Create a query
+		$primary = $this->getPrimaryKey();
+		$query   = $this->getQueryInstance();
+		
+		#Add the restrictions
+		while(count($primary))
+			$query->addRestriction (array_unshift($primary), array_unshift($id));
+		
+		#Return the result
+		return $query->fetch();
+	}
+	
+	/**
 	 * 
 	 * @return Model
 	 */
@@ -221,7 +248,7 @@ abstract class Table extends Queriable
 	 * 
 	 * @return DBField Field
 	 */
-	abstract public function getFieldInstance(Table$t, Field$data);
+	abstract public function getFieldInstance(Field$field, $name, DBField$references = null);
 	
 	/**
 	 * Increments a value on high read/write environments. Using update can

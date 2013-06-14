@@ -2,6 +2,14 @@
 
 use spitfire\io\beans\ChildBean;
 
+/**
+ * A Bean is the equivalent to a Model for users. Instead of generating SQL and
+ * reading resultsets a Bean generates forms and reads the POST data they 
+ * generate. This allows to automate data i/o tasks with users and quickly 
+ * produce applications that interact with the user.
+ * 
+ * @author César de la Cal <cesar@magic3w.com>
+ */
 abstract class CoffeeBean extends Validatable
 {
 	
@@ -19,11 +27,12 @@ abstract class CoffeeBean extends Validatable
 	
 	private $fields = Array();
 	private $record;
+	private $parent;
+	private $db;
 	
 	public $name;
 	public $model;
 	
-	private $parent;
 	
 	/**
 	 * This function informs you about the status of the bean. This status
