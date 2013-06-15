@@ -15,4 +15,8 @@ class StringField extends Field
 	public function getLength() {
 		return $this->length;
 	}
+
+	public function getDataType() {
+		return Field::TYPE_STRING;
+	}
 }

@@ -17,21 +17,11 @@ use spitfire\storage\database\Query;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-class Model
+abstract class Model
 {
-	/**
-	 * Contains a list of the Models currently loaded. This allows the system
-	 * to access them via a singleton pattern. Models are not intended to be
-	 * used outside this singleton to avoid issues when comparing two of them
-	 * to test if they are the same model.
-	 * 
-	 * @static
-	 * @var Model[]
-	 */
-	private static $models = Array();
 
 	/**
-	 * Contains a list of the fields that this model uses to store data. 
+	 * Contains a list of the fields that this model uses t ostore data. 
 	 * Fields are stored in a FILO way, so the earlier you register a field
 	 * the further left will it be on a database table (if you look at it 
 	 * in table mode).
@@ -41,23 +31,54 @@ class Model
 	private $fields;
 	
 	/**
-	 * Contains a list of the references this model uses to point to other 
-	 * models. In this new relations this model will be the source, this are
-	 * used to improve the ease of navigating the data without the need to
-	 * generate additional queries. References are stored with FILO.
+	 * Contains a reference to the table this model is 'templating'. This 
+	 * means that the current model is attached to said table and offers to 
+	 * it information about the data that is stored to the DBMS and the format
+	 * it should hold.
 	 *
-	 * @var Reference[]
+	 * @var spitfire\storage\database\Table 
 	 */
-	private $references = Array();
+	private $table;
 	
-	public function __construct() {
-		$this->field('id', 'IntegerField')
-			->setPrimary(true)
-			->setAutoIncrement(true);
+	/**
+	 * Creates a new instance of the Model. This allows Spitfire to create 
+	 * and manage data accordingly to your wishes on a DB engine without 
+	 * requiring you to integrate with any concrete engine but writing code
+	 * that SF will translate.
+	 * 
+	 * @param Table $table
+	 */
+	public final function __construct(Table$table) {
+		#Define the Model's table as the one just received
+		$this->table = $table;
+		#Create a field called ID that automatically identifies records 
+		$this->_id = new IntegerField(true);
+		#Define _id as primary key and auto_increment
+		$this->_id->setPrimary(true)->setAutoIncrement(true);
+		#Call definitions
+		$this->definitions();
+		#Make the physical counterparts of the fields
+		foreach ($this->fields as $field) {
+			$field->makePhysical();
+		}
 	}
 	
+	/**
+	 * @todo Document
+	 */
+	public abstract function definitions();
+
+	/**
+	 * Imports a set of fields. This allows to back them up in case they're 
+	 * needed. Please note that the parent setting for them will be rewritten.
+	 * 
+	 * @param Field[] $fields
+	 */
 	public function setFields($fields) {
-		$this->fields = $fields;
+		#Loop through the fields to import them
+		foreach($fields as $field) {
+			$this->{$field->getName()} = $field; #This triggers the setter
+		}
 	}
 	
 	/**
@@ -69,6 +90,8 @@ class Model
 	 * This function is intended to be used by DBMS engines to ease the 
 	 * work of generating schemas to store the data.
 	 * 
+	 * @deprecated since version 0.1.Dev
+	 * @todo Remove
 	 * @return Field[]
 	 */
 	public function getDBFields() {
@@ -86,16 +109,23 @@ class Model
 	 * raw reference when requested.
 	 * 
 	 * @param string $name
-	 * @return Field|Reference|null
+	 * @return Field|null
 	 */
 	public function getField($name) {
-		if (isset($this->fields[$name]))     return $this->fields[$name];
-		if (isset($this->references[$name])) return $this->references[$name];
+		if (isset($this->fields[$name]))   return $this->fields[$name];
 		else return null;
 	}
 	
+	/**
+	 * Returns the whole list of fields this model contains. This are logical fields
+	 * and therefore can contain data that is too complex to be stored directly
+	 * by a DB Engine, the table object is in charge of providing a list of 
+	 * DB Friendly fields.
+	 * 
+	 * @return Field[]
+	 */
 	public function getFields() {
-		return array_merge($this->fields, $this->references);
+		return $this->fields;
 	}
 	
 	/**
@@ -348,6 +378,7 @@ class Model
 		
 		if ($value instanceof Field) {
 			$value->setName($name);
+			$value->setModel($this);
 			$this->fields[$name] = $value;
 		}
 		
@@ -368,23 +399,6 @@ class Model
 			return $this->fields[$name];
 		else
 			throw new privateException('No field ' . $name . ' found');
-	}
-	
-	/**
-	 * Returns the model for the specified name. Using a singleton pattern
-	 * for models allows us to test them when looking for two equal models
-	 * with == instead of string comparing their names.
-	 * 
-	 * @param string $model
-	 */
-	public final static function getInstance($model) {
-		#If the model has already been instanced return it.
-		if (isset(self::$models[$model])) return self::$models[$model];
-		
-		#In case the instance was not ready create it.
-		$className = $model . 'Model';
-		$instance = new $className();
-		return self::$models[$model] = $instance;
 	}
 	
 }

@@ -82,21 +82,6 @@ abstract class Field
 	private $physical;
 	
 	/**
-	 * Creates a new instance fo the Field object. This allows Spitfire to
-	 * handle data on a database without hassle, by generating an ORM like
-	 * behavior that allows you to easily manage your DB.
-	 * 
-	 * @param \spitfire\model\Model $model
-	 * @param type $name
-	 */
-	public function __construct(Model$model, $name) {
-		$this->model = $model;
-		$this->name  = $name;
-		
-		$this->makePhysical();
-	}
-	
-	/**
 	 * Sets the physical equivalent of this field. This needs to be a instance
 	 * of DBField or an array of those. 
 	 * 
@@ -163,6 +148,29 @@ abstract class Field
 	public function setName($name) {
 		$this->name = $name;
 		return $this;
+	}
+	
+	
+	/**
+	 * Gets the parent model for this field. This allows the field to 
+	 * deliver data about which fields it's a sibling to and which fields
+	 * it refers too.
+	 * 
+	 * @return Model
+	 */
+	public function getModel() {
+		return $this->model;
+	}
+	
+	/**
+	 * Defines which model this field belongs to. This data basically is 
+	 * redundant but quickens development and makes it more efficient to
+	 * find the model for the field.
+	 * 
+	 * @param Model $model
+	 */
+	public function setModel($model) {
+		$this->model = $model;
 	}
 	
 	/**
