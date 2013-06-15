@@ -119,6 +119,7 @@ class ExceptionHandler {
 			case E_COMPILE_ERROR:
 			case E_USER_ERROR:
 			case E_PARSE:
+			case E_RECOVERABLE_ERROR:
 				get_error_page(500, $last_error['message'] . "@$last_error[file] [$last_error[line]]");
 		}
 	}

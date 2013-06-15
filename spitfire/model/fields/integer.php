@@ -16,5 +16,9 @@ class IntegerField extends Field
 	public function isUnsigned() {
 		return $this->unsigned;
 	}
+
+	public function getDataType() {
+		return Field::TYPE_INTEGER;
+	}
 	
 }
