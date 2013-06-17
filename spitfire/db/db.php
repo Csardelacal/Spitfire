@@ -121,8 +121,7 @@ abstract class DB extends _SF_MVC
 		$modelName = $tablename.'Model';
 
 		if (class_exists($modelName)) {
-			$model = Model::getInstance($tablename);
-			return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
+			return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
 		}
 		else {
 			$model = $this->getOTFModel($tablename);
@@ -162,7 +161,7 @@ abstract class DB extends _SF_MVC
 	 * @abstract
 	 * @return string Class of the table
 	 */
-	abstract public function getTableInstance(DB$db, $tablename, Model$model);
+	abstract public function getTableInstance(DB$db, $tablename);
 	
 	abstract public function getOTFModel($tablename);
 

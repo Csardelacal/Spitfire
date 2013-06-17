@@ -1,7 +1,7 @@
 <?php
 
 use spitfire\model\Field;
-use spitfire\model\Reference;
+use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 
 /**
@@ -188,6 +188,10 @@ abstract class Model
 	 */
 	public function getTableName() {
 		return str_replace('\\', '-', $this->getName());
+	}
+	
+	public function getTable() {
+		return $this->table;
 	}
 	
 	/**

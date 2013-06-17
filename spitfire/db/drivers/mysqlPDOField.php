@@ -4,18 +4,23 @@ namespace spitfire\storage\database\drivers;
 
 use spitfire\model\Field;
 use spitfire\storage\database\DBField;
+use \Reference;
 
 class mysqlPDOField extends DBField
 {
 	
 	public function columnType() {
-		switch ($this->getDataType()) {
+		$logical = $this->getLogicalField();
+		
+		if ($logical instanceof Reference) $logical = $this->getReferencedField()->getLogicalField();
+		
+		switch ($logical->getDataType()) {
 			case Field::TYPE_INTEGER:
 				return 'INT(11)';
 			case Field::TYPE_LONG:
 				return 'BIGINT';
 			case Field::TYPE_STRING:
-				return "VARCHAR({$this->length})";
+				return "VARCHAR({$logical->getLength()})";
 			case Field::TYPE_FILE:
 				return "VARCHAR(255)";
 			case Field::TYPE_TEXT:
@@ -29,8 +34,8 @@ class mysqlPDOField extends DBField
 		$definition = $this->columnType();
 		$definition.= " NOT NULL ";
 		
-		if ($this->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
-		if ($this->isUnique())        $definition.= "UNIQUE ";
+		if ($this->getLogicalField()->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
+		if ($this->getLogicalField()->isUnique())        $definition.= "UNIQUE ";
 		
 		if (null != $ref = $this->getReferencedField()) {
 			$definition.= 'REFERENCES ' . $ref . ' ON DELETE CASCADE ON UPDATE CASCADE';
@@ -40,21 +45,21 @@ class mysqlPDOField extends DBField
 	}
 
 	public function add() {
-		$stt = "ALTER TABLE `{$this->table->getTableName()}` 
+		$stt = "ALTER TABLE `{$this->getTable()->getTableName()}` 
 			ADD COLUMN (`{$this->getName()}` {$this->columnDefinition()} )";
-		$this->table->getDb()->execute($stt);
+		$this->getTable()->getDb()->execute($stt);
 		
 		if ($this->isPrimary()) {
-			$pk = implode(', ', array_keys($this->table->getPrimaryKey()));
-			$stt = "ALTER TABLE {$this->table->getTableName()} 
+			$pk = implode(', ', array_keys($this->getTable()->getPrimaryKey()));
+			$stt = "ALTER TABLE {$this->getTable()->getTableName()} 
 				DROP PRIMARY KEY, 
 				ADD PRIMARY KEY(" . $pk . ")";
-			$this->table->getDb()->execute($stt);
+			$this->getTable()->getDb()->execute($stt);
 		}
 	}
 
 	public function __toString() {
-		return "`{$this->table->getTableName()}`.`$this->name`";
+		return "`{$this->getTable()->getTableName()}`.`{$this->getName()}`";
 	}
 	
 }

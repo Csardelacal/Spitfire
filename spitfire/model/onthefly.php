@@ -14,5 +14,9 @@ class OTFModel extends Model
 	public function getName() {
 		return $this->name;
 	}
+
+	public function definitions() {
+		return;
+	}
 	
 }

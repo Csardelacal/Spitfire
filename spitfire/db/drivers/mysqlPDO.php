@@ -250,8 +250,8 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * @param Model $model
 	 * @return spitfire.storage.database.drivers.MysqlPDOTable
 	 */
-	public function getTableInstance(DB$db, $tablename, Model$model) {
-		return new MysqlPDOTable($db, $tablename, $model);
+	public function getTableInstance(DB$db, $tablename) {
+		return new MysqlPDOTable($db, $tablename);
 	}
 	
 	/**
