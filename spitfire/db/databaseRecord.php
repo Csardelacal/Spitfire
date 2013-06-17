@@ -3,7 +3,6 @@
 use spitfire\storage\database\Table;
 use spitfire\storage\database\DBField;
 use spitfire\storage\database\Query;
-use spitfire\storage\database\Ancestor;
 use spitfire\model\Reference;
 
 /**
@@ -16,13 +15,20 @@ use spitfire\model\Reference;
 class databaseRecord implements Serializable
 {
 	
-	private $src;
+	/**
+	 * The actual data that the record contains. The record is basically a wrapper
+	 * around the array that allows to validate data on the go and to alert the 
+	 * programmer about inconsistent types.
+	 * 
+	 * @var mixed 
+	 */
 	private $data;
 	private $table;
 	
 	#Status vars
-	private $synced;
-	private $deleted;
+	private $new = false;
+	private $synced = true;
+	private $deleted = false;
 	
 	/**
 	 * Creates a new record.
@@ -34,31 +40,11 @@ class databaseRecord implements Serializable
 	 *                       used by the system. To create a new record, leave
 	 *                       empty and use setData.
 	 */
-	public function __construct(Table $table, $srcData = Array() ) {
+	public function __construct(Table $table, $data) {
 		
-		$data = Array();
-		
-		$fields = $table->getModel()->getFields();
-		foreach ($fields as $name => $field) {
-			if ($field instanceof Reference) {
-				$import = $field->getFields();
-				$query  = $table->getDb()->table($field->getTarget())->getAll();
-				while(null !== $i = array_shift($import)) {
-					$query->addRestriction($i->getReferencedField()->getName(), $srcData[$i->getName()]);
-				}
-				$data[$name] = $query;
-			}
-			else {
-				$data[$name] = $srcData[$name];
-			}
-		}
-		
-		$this->src     = $data;
-		$this->data    = $data;
 		$this->table   = $table;
-		
-		$this->synced  = !empty($srcData);
-		$this->deleted = false;
+		$this->data    = $data;
+		$this->new     = empty($data);
 	}
 	
 	/**
@@ -95,22 +81,6 @@ class databaseRecord implements Serializable
 	}
 	
 	/**
-	 * Returns the data that has been modified since it was created / last 
-	 * stored.
-	 * 
-	 * @return mixed
-	 */
-	public function getDiff() {
-		$changed = Array();
-		
-		foreach($this->data as $key => $value) {
-			if ($value != $this->src[$key]) $changed[$key] = $value;
-		}
-		
-		return $changed;
-	}
-	
-	/**
 	 * This function checks whether the data contained in this record is
 	 * 'in sync' with the DB. Being in sync means that the data contained
 	 * by this record is supposed to be the same as the physical record
@@ -139,7 +109,7 @@ class databaseRecord implements Serializable
 			throw new privateException(_t('invalid_data'));
 		}
 		
-		if (empty($this->src)) {
+		if ($this->new) {
 			$id = $this->insert();
 			$ai = $this->table->getAutoIncrement();
 			
@@ -152,7 +122,7 @@ class databaseRecord implements Serializable
 		}
 		
 		$this->synced = true;
-		$this->src    = $this->data;
+		$this->new    = false;
 	}
 	
 	public function getErrors() {
@@ -169,14 +139,14 @@ class databaseRecord implements Serializable
 		return $this->table->getPrimaryKey();
 	}
         
-        /**
-         * Returns the values of the fields included in this records primary
-         * fields
-         * 
-         * @todo Find better function name
+	/**
+	 * Returns the values of the fields included in this records primary
+	 * fields
+	 * 
+	 * @todo Find better function name
 	 * @return Array
-         */
-        public function getPrimaryData() {
+	 */
+	public function getPrimaryData() {
 		$primaryFields = $this->getUniqueFields();
 		$ret = Array();
 	    
@@ -192,7 +162,7 @@ class databaseRecord implements Serializable
 	    }
 	    
 	    return $ret;
-        }
+	}
 	
 	/**
 	 * Creates a list of restrictions that identify this record inside it's
@@ -222,46 +192,6 @@ class databaseRecord implements Serializable
 		}
 		
 		return $restrictions;
-	}
-	
-	/**
-	 * Returns a query to fetch children of this record included in the 
-	 * selected table.
-	 * 
-	 * @param DBTable|Model|string $table
-	 * @param string|Reference $role
-	 * @return Query
-	 */
-	public function getChildren($table, $role = null) {
-		
-		#Check if the selected table is a Table object
-		if ($table instanceof Table) {
-			$dbtable = $table;
-			$model = $table->getModel();
-		}
-		
-		elseif ($table instanceof Model) {
-			$dbtable = $this->getTable()->getDb()->table($table);
-			$model = $table;
-		}
-		
-		elseif (is_string($table)) {
-			$dbtable = $this->getTable()->getDb()->table($table);
-			$model = $dbtable->getModel();
-		}
-		
-		if ($role instanceof Reference) {
-			$reference = $role;
-		}
-		
-		else {
-			$reference = $model->getReference($this->getTable()->getModel(), $role);
-		}
-		
-		
-		$query = $this->table->queryInstance($dbtable);
-		$query->setParent(new Ancestor($this, $reference));
-		return $query;
 	}
 	
 	/**
@@ -295,13 +225,29 @@ class databaseRecord implements Serializable
 	}
 	
 	public function __get($field) {
-		if (isset($this->data[$field])) {
+		
+		$field_info = $this->table->getModel()->getField($field);
+		
+		if ($field_info instanceof Reference) {
 			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field] = $this->src[$field] = $this->data[$field]->fetch();
+				return $this->data[$field] = $this->data[$field]->fetch();
+			} else {
+				return $this->data[$field];
 			}
-			else return $this->data[$field];
 		}
-		return null;
+		
+		elseif ($field_info instanceof ChildrenField) {
+			if ($this->data[$field] instanceof Query) {
+				return $this->data[$field] = $this->data[$field]->fetchAll($this);
+			} else {
+				return $this->data[$field];
+			}
+		}
+		
+		else {
+			if (isset($this->data[$field])) return $this->data[$field];
+			else return null;
+		}
 	}
 	
 	public function serialize() {

@@ -3,13 +3,36 @@
 namespace spitfire\storage\database\drivers;
 
 use PDO;
+use Reference;
+use ChildrenField;
+use databaseRecord;
 
+/**
+ * This class works as a traditional resultset. It acts as an adapter between the
+ * driver's raw data retrieving and the logical record classes.
+ * 
+ * @author César de la Cal <cesar@magic3w.com>
+ */
 class mysqlPDOResultSet implements resultSetInterface
 {
+	/**
+	 * Contains the raw pointer that PDO has created when executing the query.
+	 * This allows spitfire to retrieve all the data needed to create a complete
+	 * database record.
+	 *
+	 * @var PDOStatement
+	 */
 	private $result;
+	
+	/**
+	 * This is a reference to the table this resultset belongs to. This allows
+	 * Spitfire to retrieve data about the model and the fields the datatype has.
+	 *
+	 * @var spitfire\storage\database\Table 
+	 */
 	private $table;
 	
-	public function __construct($table, $stt) {
+	public function __construct(MysqlPDOTable$table, $stt) {
 		$this->result = $stt;
 		$this->table = $table;
 	}
@@ -19,13 +42,68 @@ class mysqlPDOResultSet implements resultSetInterface
 		#If the data does not contain anything we return a null object
 		if (!$data) return null;
 		$data = array_map( Array($this->table->getDB(), 'convertIn'), $data);
-		return $this->table->newRecord($data);
+		
+		#Once the data is clean parse it in
+		$_record = Array();
+		$fields  = $this->table->getModel()->getFields();
+		
+		foreach ($fields as $field) {
+			
+			if ($field instanceof Reference) {
+				$physical = $field->getPhysical();
+				$query    = $this->table->getDb()->table($field->getTarget())->getAll();
+				
+				foreach ($physical as $physical_field) {
+					$query->addRestriction($physical_field->getReferencedField()->getName(), $data[$physical_field->getName()]);
+				}
+				
+				$_record[$field->getName()] = $query;
+			}
+			
+			elseif ($field instanceof ChildrenField) {
+				if ($field->getTarget()->getField($field->getRole()) instanceof Reference) {
+					$query = $field->getTarget()->getTable()->getAll();
+					$remote = $field->getTarget()->getField($field->getRole())->getPhysical();
+					foreach ($remote as $f) {
+						$name = $f->getName();
+						$value = $data[$f->getReferencedField()->getName()];
+						$query->addRestriction($name, $value);
+					}
+					$_record[$field->getName()] = $query;
+				}
+			}
+			
+			else {
+				$_record[$field->getName()] = $data[array_shift($field->getPhysical())->getName()];
+			}
+			
+		}
+		
+		$record = $this->table->newRecord($_record);
+		return $record;
 	}
 
-	public function fetchAll() {
-		$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
-		foreach($data as &$el) $el = $this->table->newRecord(array_map( Array($this->table->getDB(), 'convertIn'), $el));
-		return $data;
+	public function fetchAll(databaseRecord$parent = null) {
+		//TODO: Swap to fatch all
+		//$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
+		$_return = Array();
+		$fields  = $this->table->getModel()->getFields();
+		$parentConnector = Array();
+		
+		if ($parent)
+		foreach ($fields as $field) {
+			if ($field instanceof Reference && $field->getTarget() == $parent->getTable()->getModel())
+				$parentConnector[] = $field;
+		}
+		
+		while ($data = $this->fetch()) {
+			foreach ($parentConnector as $field) {
+				$data->{$field->getName()} = $parent;
+			}
+			
+			$_return[] = $data;
+		}
+		return $_return;
 	}
 	
 

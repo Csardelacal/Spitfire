@@ -15,7 +15,7 @@ abstract class Restriction
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
-	public function __construct(DBField$field, $value, $operator = '=') {
+	public function __construct($field, $value, $operator = '=') {
 		if (is_null($operator)) $operator = self::EQUAL_OPERATOR;
 		$this->field    = $field;
 		$this->value    = $value;
