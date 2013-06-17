@@ -85,6 +85,17 @@ abstract class DBField
 	}
 	
 	/**
+	 * Defines which field is referenced by this one, this allows the DBMS to set
+	 * relations from one field to another and enforce referential integrity.
+	 * 
+	 * @param \spitfire\storage\database\DBField $referenced
+	 */
+	public function setReferencedField(DBField$referenced) {
+		$this->referenced = $referenced;
+	}
+
+
+	/**
 	 * Returns the logical field that contains this Physical field. The
 	 * logical field contains relevant data about what data it contains
 	 * and how it relates.
@@ -93,6 +104,16 @@ abstract class DBField
 	 */
 	public function getLogicalField() {
 		return $this->logical;
+	}
+	
+	/**
+	 * Defines which logical field this belongs to. The logical field is the one 
+	 * in charge to provide data about the field and the data it contains.
+	 * 
+	 * @param Field $logical
+	 */
+	public function setLogicalField(Field$logical) {
+		$this->logical = $logical;
 	}
 	
 	/**

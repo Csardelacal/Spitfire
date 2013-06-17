@@ -22,7 +22,7 @@ use Model;
  * @author César de la cal <cesar@magic3w.com>
  * @last-revision 2013-05-16
  */
-class Reference
+class Reference extends Field
 {
 	/**
 	 * Indicates which model is the target of the reference. If model A 
@@ -30,34 +30,6 @@ class Reference
 	 * @var Model
 	 */
 	private $target;
-	
-	/**
-	 * Indicates which model is the source of the reference. If model A 
-	 * references model B, then A is the source.
-	 * @var Model
-	 */
-	private $source;
-	
-	/**
-	 * This is the role the target model will play inside the source, i.e.
-	 * a person my be a friend or a boss for another, so you need to tell 
-	 * Spitfire which one it is (only needed if several are available for you 
-	 * to choose from) if none is specified it'll default to the target 
-	 * model's name. It is also the name the source model (alas. the one 
-	 * referencing the target) will use to reference the content of this 
-	 * relation.
-	 * 
-	 * @var string
-	 */
-	private $role;
-	
-	/**
-	 * Indicates if the fields inherited by the source model are primary to 
-	 * it, this can be useful for relationships were 1:1 is required, or 
-	 * where another field composes the primary key together with this one.
-	 * @var boolean 
-	 */
-	private $primary;
 	
 	/**
 	 * Creates a new reference between two models, this allows them to access
@@ -68,31 +40,8 @@ class Reference
 	 * @param Model  $target
 	 * @param string $alias
 	 */
-	public function __construct(Model$source, Model$target, $role = null) {
-		$this->source = $source;
+	public function __construct(Model$target) {
 		$this->target = $target;
-		$this->role   = $role;
-	}
-	
-	/**
-	 * Defines the source model for this relation. Notice that this won't 
-	 * magically include your relation into the new model. You've got to 
-	 * manually add it to the references array within it.
-	 * 
-	 * @param Model $source
-	 */
-	public function setSource(Model$source) {
-		$this->source = $source;
-	}
-	
-	/**
-	 * Returns the source of the relation (the model who is referencing the 
-	 * other model). Allowing us to determine where the reference started.
-	 * 
-	 * @return Model
-	 */
-	public function getSource() {
-		return $this->source;
 	}
 	
 	/**
@@ -117,48 +66,6 @@ class Reference
 	}
 	
 	/**
-	 * Defines the role the target model plays inside the source model. By
-	 * doing so you tell it how the elements should be named on the database,
-	 * records and several other places.
-	 * 
-	 * @param string $role
-	 */
-	public function setRole($role) {
-		$this->role = $role;
-	}
-	
-	/**
-	 * Returns the role the target plays inside the source. The role indicates
-	 * the name of the target records inside the source records.
-	 * 
-	 * @return string
-	 */
-	public function getRole() {
-		return $this->role;
-	}
-	
-	/**
-	 * Defines whether the fields inherited by this relationship should be 
-	 * primary to the source model. This allows to define 1:1 and other
-	 * special relations that may be useful.
-	 * 
-	 * @param boolean $primary
-	 */
-	public function setPrimary($primary) {
-		$this->primary = !!$primary;
-	}
-	
-	/**
-	 * Reports whether the fields inherited by this relationship should be 
-	 * considered primary or not by the source.
-	 * 
-	 * @return boolean
-	 */
-	public function getPrimary() {
-		return $this->primary;
-	}
-	
-	/**
 	 * Returns a list of the fields this reference generates on the source
 	 * Model. It copies the list of primary fields from the target model and
 	 * prepends the role (separated by underscores) to the name of the field.
@@ -169,23 +76,32 @@ class Reference
 	 * 
 	 * @return Field[]
 	 */
-	public function getFields() {
+	public function makePhysical() {
+		$fields   = $this->getTarget()->getPrimary();
+		$physical = Array();
+		$_return  = Array();
 		
-		$primary = $this->getTarget()->getPrimaryDBFields();
-		$fields  = Array();
+		foreach ($fields as $field) 
+			$physical = array_merge ($physical, $field->getPhysical());
 		
-		foreach($primary as $field) {
-			$ref   = $field;
-			$field = clone $field;
-			$name = $this->getRole() . '_' . $field->getName();
-			$field->setName($name);
-			$field->setPrimary($this->getPrimary());
-			$field->setAutoIncrement(false);
-			$field->setReference($this);
-			$field->setReferencedField($ref);
-			$fields[$name] = $field;
+		foreach ($physical as $remote_field) {
+			$field = clone $remote_field;
+			$field->setName($this->getName() . $field->getName());
+			$field->setLogicalField($this);
+			$field->setReferencedField($remote_field);
+			$_return[] = $field;
 		}
 		
-		return $fields;
+		return $_return;
 	}
+
+	/**
+	 * Defines this field and all of it's children as reference fields.
+	 * 
+	 * @return type
+	 */
+	public function getDataType() {
+		return Field::TYPE_REFERENCE;
+	}
+	
 }
