@@ -73,6 +73,10 @@ abstract class DBField
 		return $this->name;
 	}
 	
+	public function setName($name) {
+		$this->name = $name;
+	}
+	
 	/**
 	 * Returns the field this one is referencing to. This allows the DBMS to 
 	 * establish relations. In case this field does not reference any other

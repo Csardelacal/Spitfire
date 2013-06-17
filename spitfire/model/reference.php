@@ -1,8 +1,6 @@
 <?php
 
-namespace spitfire\model;
-
-use Model;
+use spitfire\model\Field;
 
 /**
  * Elements of this class indicate a connection between two Models, this allows
@@ -40,7 +38,7 @@ class Reference extends Field
 	 * @param Model  $target
 	 * @param string $alias
 	 */
-	public function __construct(Model$target) {
+	public function __construct($target) {
 		$this->target = $target;
 	}
 	
@@ -62,7 +60,16 @@ class Reference extends Field
 	 * @return Model
 	 */
 	public function getTarget() {
-		return $this->target;
+		#Check if the passed argument already is a model
+		if ($this->target instanceof Model) {
+			return $this->target;
+		} 
+		elseif ($this->target === $this->getModel()->getName()) {
+			return $this->target = $this->getModel();
+		}
+		else {
+			return $this->target = $this->getModel()->getTable()->getDB()->table($this->target)->getModel();
+		}
 	}
 	
 	/**
@@ -81,12 +88,15 @@ class Reference extends Field
 		$physical = Array();
 		$_return  = Array();
 		
-		foreach ($fields as $field) 
-			$physical = array_merge ($physical, $field->getPhysical());
+		foreach ($fields as $field) {
+			$children = $field->getPhysical();
+			foreach ($children as $child)
+				$physical[] = $child;
+		}
 		
 		foreach ($physical as $remote_field) {
 			$field = clone $remote_field;
-			$field->setName($this->getName() . $field->getName());
+			$field->setName($this->getName() . '_' . $field->getName());
 			$field->setLogicalField($this);
 			$field->setReferencedField($remote_field);
 			$_return[] = $field;

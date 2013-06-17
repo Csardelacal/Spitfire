@@ -17,9 +17,38 @@ use spitfire\environment;
 abstract class Table extends Queriable
 {
 
+	/**
+	 * A reference to the database driver loaded. This allows the system to 
+	 * use several databases without the models colliding.
+	 *
+	 * @var DB
+	 */
 	protected $db;
+	
+	/**
+	 * The model this table uses as template to create itself on the DBMS. This is
+	 * one of the key components to Spitfire's ORM as it allows the DB engine to 
+	 * create the tables automatically and to discover the data relations.
+	 *
+	 * @var Model 
+	 */
 	protected $model;
+	
+	/**
+	 * The prefixed name of the table. The prefix is defined by the environment
+	 * and allows to have several environments on the same database.
+	 *
+	 * @var string
+	 */
 	protected $tablename;
+	
+	/**
+	 * List of the physical fields this table handles. This array is just a 
+	 * shortcut to avoid looping through model-fields everytime a query is
+	 * performed.
+	 *
+	 * @var spitfire\storage\database\DBField[] 
+	 */
 	protected $fields;
 	
 	protected $primaryK;
@@ -29,20 +58,26 @@ abstract class Table extends Queriable
 	protected $errors    = Array();
 
 	/**
-	 * Creates a new Database Table instance.
+	 * Creates a new Database Table instance. The tablename will be used to find 
+	 * the right model for the table and will be stored prefixed to this object.
 	 * 
 	 * @param DBInterface $database
 	 * @param String $tablename
 	 */
-	public function __construct (DB$db, $tablename, Model$model) {
+	public function __construct (DB$db, $tablename) {
 		$this->db = $db;
 		$this->tablename = environment::get('db_table_prefix') . $tablename;
 		
-		$this->model = $model;
-		$fields = $this->model->getDBFields();
+		$model = $tablename . 'Model';
+		$this->model = new $model($this);
+		
+		$fields   = $this->model->getFields();
 		$dbfields = Array();
-		foreach ($fields as $f) {
-			$dbfields[$f->getName()] = $this->getFieldInstance($this, $f);
+		
+		foreach ($fields as $field) {
+			$physical = $field->getPhysical();
+			while ($phys = array_shift($physical))
+					  $dbfields[$phys->getName()] = $phys;
 		}
 		
 		$this->fields = $dbfields;
@@ -103,7 +138,7 @@ abstract class Table extends Queriable
 		$pk      = Array();
 		
 		foreach($fields as $name => $field) {
-			if ($field->isPrimary()) $pk[$name] = $field;
+			if ($field->getLogicalField()->isPrimary()) $pk[$name] = $field;
 		}
 		
 		return $this->primaryK = (array) $pk;
@@ -117,7 +152,7 @@ abstract class Table extends Queriable
 		$ai      = null;
 		
 		foreach($fields as $field) {
-			if ($field->isAutoIncrement()) $ai = $field;
+			if ($field->getLogical()->isAutoIncrement()) $ai = $field;
 		}
 		
 		return  $this->auto_increment = $ai;

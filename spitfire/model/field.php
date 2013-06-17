@@ -22,6 +22,7 @@ abstract class Field
 	const TYPE_TEXT      = 'txt';
 	const TYPE_DATETIME  = 'datetime';
 	const TYPE_REFERENCE = 'reference';
+	const TYPE_CHILDREN  = 'children';
 	
 	/**
 	 * Contains a reference to the parent model. This allows this field to 
@@ -103,7 +104,7 @@ abstract class Field
 	public function makePhysical() {
 		#The instancing is redirected to the table
 		$table = $this->getModel()->getTable();
-		$this->physical = $table->getFieldInstance($this, $this->getName());
+		return $table->getFieldInstance($this, $this->getName());
 	}
 	
 	/**
@@ -114,8 +115,10 @@ abstract class Field
 	 * @return spitfire\storage\database\DBField[]
 	 */
 	public function getPhysical() {
-		if ($this->physical === null) $this->makePhysical();
-		return (array) $this->physical;
+		if ($this->physical === null) $this->physical = $this->makePhysical();
+		
+		if (is_array($this->physical)) return $this->physical;
+		else return Array($this->physical);
 	}
 	
 	/**

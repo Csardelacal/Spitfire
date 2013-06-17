@@ -31,8 +31,8 @@ class MysqlPDOTable extends stdSQLTable
 	 * @param \spitfire\model\Field $data
 	 * @return \spitfire\storage\database\drivers\mysqlPDOField
 	 */
-	public function getFieldInstance(Table $t, Field $data) {
-		return new mysqlPDOField($t, $data);
+	public function getFieldInstance(Field$field, $name, DBField$references = null) {
+		return new mysqlPDOField($field, $name, $references);
 	}
 
 	public function repair() {

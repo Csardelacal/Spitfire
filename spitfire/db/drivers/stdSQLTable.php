@@ -3,6 +3,7 @@
 namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Table;
+use Reference;
 
 abstract class stdSQLTable extends Table
 {
@@ -29,7 +30,11 @@ abstract class stdSQLTable extends Table
 	private function foreignKeyDefinitions() {
 		
 		$ret = Array();
-		$refs = $this->model->getReferences();
+		$refs = $this->model->getFields();
+		
+		foreach ($refs as $name => $ref) {
+			if (!$ref instanceof Reference) unset($refs[$name]);
+		}
 		
 		if (empty($refs)) return Array();
 		
@@ -38,14 +43,19 @@ abstract class stdSQLTable extends Table
 			if ($ref->getTarget() != $this->model)
 				$this->getDb()->table($ref->getTarget())->repair();
 			#Get the fields the model references from $ref
-			$referencedfields = $this->model->getReferencedFields($ref->getTarget(), $alias);
+			$fields = $ref->getPhysical();
+			foreach ($fields as &$field) $field = $field->getName();
+			unset($field);
 			#Get the table that represents $ref
-			$referencedtable = $this->getDb()->table($ref->getTarget());
+			$referencedtable = $ref->getTarget()->getTable();
+			$primary = $referencedtable->getPrimaryKey();
+			foreach ($primary as &$field) $field = $field->getName();
+			unset($field);
 			//Prepare the statement
 			$refstt = sprintf('FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE CASCADE ON UPDATE CASCADE',
-				implode(', ', $referencedfields),
+				implode(', ', $fields),
 				$referencedtable->getTablename(),
-				implode(', ', $ref->getTarget()->getPrimaryDBFields()) 
+				implode(', ', $primary) 
 				);
 			
 			$ret[] = $refstt;
