@@ -107,6 +107,18 @@ abstract class Field
 	}
 	
 	/**
+	 * This method returns an array of Fields. Even if the field has only one db
+	 * equivalent the return value will be an array, for consistency with fields
+	 * which return several ones.
+	 * 
+	 * @return spitfire\storage\database\DBField[]
+	 */
+	public function getPhysical() {
+		if ($this->physical === null) $this->makePhysical();
+		return (array) $this->physical;
+	}
+	
+	/**
 	 * Returns whether the field is autoincrement. This means, everytime a 
 	 * new record of this kind is created the auto_increment field is 
 	 * increased by 1.

@@ -64,7 +64,11 @@ abstract class Model
 	}
 	
 	/**
-	 * @todo Document
+	 * This method is used to generate the 'template' for the table that allows
+	 * spitfire to automatically generate tables and allows it to check the types
+	 * of data and fix tables.
+	 * 
+	 * @abstract
 	 */
 	public abstract function definitions();
 
@@ -129,100 +133,6 @@ abstract class Model
 	}
 	
 	/**
-	 * Returns a list of the fields referenced by this model on a different
-	 * model. Depending on the parameters you set you can change the behavior
-	 * of this function.
-	 * 
-	 * With no parameters it returns all the fields that this model uses to
-	 * reference remote models.
-	 * 
-	 * [NOTICE] This function is intended to aid the development of database
-	 * drivers and functions and does not actually perform any task on the 
-	 * model. All the fields are generated during runtime and not cached.
-	 * 
-	 * @param Model $target When setting this parameter you will receive only
-	 *          the fields inside your target model.
-	 * 
-	 * @param string $role When several relations exist this parameter defines
-	 *          which relation is used.
-	 * 
-	 * @return Field[]
-	 * @throws privateException
-	 */
-	public function getReferencedFields(Model$target = null, $role = null) {
-		#Init the fields array to be returned
-		$fields = Array();
-		
-		#If a target model is set get the related fields
-		if (is_null($target)) {
-			$references = $this->references;
-		}
-		else {
-			#Find a model which is referenced by this
-			$references = Array($this->getReference($target, $role));
-		}
-		
-		#Get the fields for the target model(s)
-		foreach ($references as $reference) {
-			$fields = array_merge($fields, $reference->getFields());
-		}
-		return $fields;
-	}
-	
-	/**
-	 * Return the list of references this model uses to refer data placed on
-	 * remote models.
-	 * 
-	 * @return Reference[]
-	 */
-	public function getReferences() {
-		return $this->references;
-	}
-	
-	/**
-	 * Returns the reference this model uses to connect to the target model
-	 * you define in the parameters. In case a reference appears repeteadly
-	 * you need to specify the role you want the reference for.
-	 * 
-	 * @param Model $target
-	 * @param string $role
-	 * @return Reference
-	 * @throws privateException In case you use a model that is referenced 
-	 *       several times but indicate no valid role
-	 */
-	public function getReference(Model$target, $role = null) {
-		#Initialize an array to store references
-		$references = Array();
-		
-		#Loop through the references to retrieve those which reference the target
-		foreach ($this->references as /** @var Reference */ $r) {
-			$model = $r->getTarget();
-			if ($model == $target) {
-				$references[$r->getRole()] = $r;
-			}
-		}
-
-		#If the array is empty we need to inform that nothing was found
-		if (count($references) == 0) {
-			throw new privateException("Model {$target->getName()} not referenced by {$this->getName()}");
-		}
-
-		#If the array contains more than one detect this condition and get the right role.
-		if (count($references) > 1) {
-			if ($role) {
-				if (isset ($references[$role]))
-					return $references[$role];
-				else
-					throw new privateException('No valid role specified, role ' . $role . 'does not exist');
-			} else {
-				throw new privateException('Model ' . $this->getName() . ' has several roles for ' . $target->getName() );
-			}
-		}
-		
-		return reset($references);
-	}
-	
-	/**
 	 * Returns a list of primary DB Fields needed for this model to work.
 	 * 
 	 * Primary database fields are considered thoe who indicate to any 
@@ -256,12 +166,13 @@ abstract class Model
 	 * @staticvar string $name
 	 * @return string
 	 */
-	public function getName() {
-		static $name;
-		if ($name) return $name;
+	public final function getName() {
+		static $name = null;
 		
-		$name = substr(get_class($this), 0, 0 - strlen('Model'));
-		return strtolower($name);
+		if ($name !== null) 
+			return $name;
+		else
+			return $name = strtolower(substr(get_class($this), 0, 0 - strlen('Model')));
 	}
 	
 	/**
@@ -295,73 +206,22 @@ abstract class Model
 	public function getBaseRestrictions(Query$query) {
 		//Do nothing, this is meant for overriding
 	}
-
-	/**
-	 * Creates a new relation between two tables. This allows us to 'walk'
-	 * the relationships when in ORM mode. It greatly improves speed when
-	 * coding.
-	 * 
-	 * @param string|Model $model
-	 * @param string $alias
-	 * @return Reference
-	 * @throws privateException
-	 */
-	public function reference($model, $alias = null) {
-		#If the alias is empty we give it a default alias.
-		if (is_null($alias)) {
-			$alias = ($model instanceof Model)? $model->getName() : $model;
-		}
-		
-		#Check if the alias is already taken.
-		if (isset($this->references[$alias])) {
-			throw new privateException('Defined two references with the same alias');
-		}
-		
-		#If the object refers to itself it could cause a loop
-		if (is_string($model) && $model == $this->getName()) {
-			$model = $this;
-		}
-		
-		#If the reference is not a model try to fetch it.
-		if (!$model instanceof Model) {
-			$model = Model::getInstance($model);
-		}
-		
-		$ref = new Reference($this, $model, $alias);
-		return $this->references[$alias] = $ref;
-	}
 	
 	/**
-	 * This function SHOULD NOT be used. It serves the purpose of modifying 
-	 * the model in case of extreme need. Also, does not destroy existing
-	 * links in databases.
+	 * Returns a list of fields which compound the primary key of this model.
+	 * The primary key is a set of records that identify a unique record.
 	 * 
-	 * Deletes a reference by receiving the alias / role of the relationship
-	 * and dropping it from the relationships list. Use it to avoid the use 
-	 * of functions that rely on the connection between this model and a
-	 * parent.+
-	 * 
-	 * @param string $alias
+	 * @return spitfire\storage\database\DBField[]
 	 */
-	public function unreference($alias) {
-		unset($this->references[$model]);
-	}
-	
-	/**
-	 * Adds a new field to the model. Fields are the basic unit of storage
-	 * on Models allowing you to store different basic types of data. You can
-	 * use custom data types although this can provoke problems when connecting
-	 * the model to the database that should handle this data.
-	 * 
-	 * @param string $name
-	 * @param string $instanceof Accepts any valid classname
-	 * @param int $length
-	 * @return Field
-	 */
-	public function field($name, $instanceof, $length = false) {
-		$this->fields[$name] = $field = new $instanceof($length);
-		$field->setName($name);
-		return $field;
+	public function getPrimary() {
+		#Fetch the field list
+		$fields = $this->getFields();
+		#Drop the fields which aren't primary
+		foreach ($fields as $name => $field) {
+			if (!$field->isPrimary()) unset($fields[$name]);
+		}
+		#Return the cleared array
+		return $fields;
 	}
 	
 	/**
@@ -391,12 +251,25 @@ abstract class Model
 	 * methods for performance reasons. In this case you can use the field()
 	 * method.
 	 * 
-	 * @param type $name
+	 * @param string $name
+	 * @throws privateException
 	 * @return Field
 	 */
 	public function __get($name) {
 		if (isset($this->fields[$name]))
 			return $this->fields[$name];
+		else
+			throw new privateException('No field ' . $name . ' found');
+	}
+	
+	/**
+	 * 
+	 * @param string $name
+	 * @throws privateException
+	 */
+	public function __unset($name) {
+		if (isset($this->fields[$name]))
+			unset($this->fields[$name]);
 		else
 			throw new privateException('No field ' . $name . ' found');
 	}
