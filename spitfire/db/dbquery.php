@@ -34,7 +34,11 @@ abstract class Query
 	 * @return spitfire\storage\database\Query
 	 */
 	public function addRestriction($fieldname, $value, $operator = '=') {
-		$field = $this->table->getField($fieldname);
+		try {
+			$field = $this->table->getField($fieldname);
+		} catch (\Exception $e) {
+			$field = $this->table->getModel()->getField($fieldname);
+		}
 		if ($field == null) throw new privateException("No field '$fieldname'");
 		$restriction = $this->restrictionInstance($field, $value, $operator);
 		$this->restrictions[] = $restriction;
@@ -102,9 +106,9 @@ abstract class Query
 		return  $data;//array_map(Array($this->table->getDB(), 'convertIn'), $data) ;
 	}
 	
-	public function fetchAll() {
+	public function fetchAll($parent = null) {
 		if (!$this->result) $this->query();
-		return $this->result->fetchAll();
+		return $this->result->fetchAll($parent);
 	}
 
 	protected function query($fields = null, $returnresult = false) {

@@ -2,7 +2,7 @@
 
 use spitfire\model\Field;
 
-class childrenField extends Field
+class ChildrenField extends Field
 {
 	private $role;
 	private $target;

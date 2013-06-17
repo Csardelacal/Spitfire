@@ -2,6 +2,8 @@
 
 namespace spitfire\storage\database\drivers;
 
+use databaseRecord;
+
 interface resultSetInterface
 {
 	/**
@@ -11,5 +13,5 @@ interface resultSetInterface
 	 */
 	public function fetch();
 	public function fetchArray();
-	public function fetchAll();
+	public function fetchAll(databaseRecord$parent = null);
 }

@@ -49,6 +49,7 @@ AutoLoad::registerClass('TextField',                                            
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
 AutoLoad::registerClass('Reference',                                            $cur_dir.'/model/reference.php');
+AutoLoad::registerClass('ChildrenField',                                        $cur_dir.'/model/children.php');
 
 
 AutoLoad::registerClass('spitfire\model\defaults\userModel',                    $cur_dir.'/model/defaults/usermodel_default.php');

@@ -66,10 +66,10 @@ abstract class Table extends Queriable
 	 */
 	public function __construct (DB$db, $tablename) {
 		$this->db = $db;
-		$this->tablename = environment::get('db_table_prefix') . $tablename;
 		
 		$model = $tablename . 'Model';
 		$this->model = new $model($this);
+		$this->tablename = environment::get('db_table_prefix') . $this->model->getTableName();
 		
 		$fields   = $this->model->getFields();
 		$dbfields = Array();
