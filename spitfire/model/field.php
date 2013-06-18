@@ -189,6 +189,16 @@ abstract class Field
 	}
 	
 	/**
+	 * Returns the table this field belongs to. This is just a shortcut method 
+	 * provided to allow making logical fields and DBFields compatible.
+	 * 
+	 * @return spitfire\storage\database\Table
+	 */
+	public function getTable() {
+		return $this->model->getTable();
+	}
+	
+	/**
 	 * Returns true if the field belongs to the table's primary key. Keep in
 	 * mind that a primary key can cover several fields.
 	 * 
