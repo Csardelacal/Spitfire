@@ -151,10 +151,10 @@ class databaseRecord implements Serializable
 		$ret = Array();
 	    
 		foreach ($primaryFields as $field) {
-			if (null != $ref = $field->getReference()) {
-				$role = $ref->getRole();
-				$name = $field->getReferencedField()->getName();
-				$ret[$field->getName()] = $this->{$role}->{$name};
+			if (null != $ref = $field->getReferencedField()) {
+				$logical = $ref->getLogicalField();
+				$name    = $field->getReferencedField()->getName();
+				$ret[$field->getName()] = $this->{$logical->getName()}->{$name};
 			}
 			else {
 				$ret[$field->getName()] = $this->{$field->getName()};

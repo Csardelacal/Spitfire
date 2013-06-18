@@ -1,6 +1,13 @@
 <?php
 
 use spitfire\io\beans\ChildBean;
+use spitfire\storage\database\Table;
+use spitfire\model;
+
+use spitfire\io\beans\TextField;
+use spitfire\io\beans\LongTextField;
+use spitfire\io\beans\FileField;
+use spitfire\io\beans\ReferenceField;
 
 /**
  * A Bean is the equivalent to a Model for users. Instead of generating SQL and
@@ -28,12 +35,28 @@ abstract class CoffeeBean extends Validatable
 	private $fields = Array();
 	private $record;
 	private $parent;
-	private $db;
+	private $table;
 	
 	public $name;
 	public $model;
 	
+	/**
+	 * Create a new bean. This allows to generate forms to receive data from a 
+	 * client, it requires a Table to know which model it shall work on.
+	 * 
+	 * @param \spitfire\storage\database\Table $table
+	 */
+	public final function __construct(Table$table) {
+		$this->table = $table;
+		$this->definitions();
+	}
 	
+	/**
+	 * Creates the fields for this bean. By doing so the bean knows which fields
+	 * it can present to the user to input data.
+	 */
+	abstract public function definitions();
+
 	/**
 	 * This function informs you about the status of the bean. This status
 	 * can take three different values.
@@ -95,13 +118,31 @@ abstract class CoffeeBean extends Validatable
 	 * @param string $method
 	 * @return spitfire\io\beans\Field
 	 */
-	public function field($instanceof, $name, $caption) {
-		$instanceof = "\\spitfire\\io\\beans\\$instanceof";
-		return $this->fields[$name] = new $instanceof($this, $name, $caption);
-	}
-	
-	public function childBean($beanname) {
-		return $this->fields[$beanname] = new ChildBean($this, $beanname, $beanname);
+	public function field($field, $caption) {
+		$logical = $this->table->getModel()->getField($field);
+		
+		if (!$logical) throw new privateException('No field ' . $field);
+		
+		switch($field->getDataType()) {
+			case model\Field::TYPE_STRING:
+			case model\Field::TYPE_INTEGER:
+			case model\Field::TYPE_LONG:
+			case model\Field::TYPE_DATETIME:
+				return $this->fields[$field] = new TextField($this, $logical, $caption);
+				break;
+			case model\Field::TYPE_TEXT:
+				return $this->fields[$field] = new LongTextField($this, $logical, $caption);
+				break;
+			case model\Field::TYPE_FILE:
+				return $this->fields[$field] = new FileField($this, $logical, $caption);
+				break;
+			case model\Field::TYPE_REFERENCE:
+				return $this->fields[$field] = new ReferenceField($this, $logical, $caption);
+				break;
+			case model\Field::TYPE_CHILDREN:
+				return $this->fields[$field] = new ChildBean($this, $logical, $caption);
+				break;
+		}
 	}
 	
 	public function getFields() {

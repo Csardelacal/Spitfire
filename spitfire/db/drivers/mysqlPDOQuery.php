@@ -51,6 +51,27 @@ class MysqlPDOQuery extends Query
 			$restrictions = array_merge($restrictions, $_join->getParent()->getUniqueRestrictions());
 		}
 		
+		#Import tables for restrictions
+		if (!empty($restrictions)) {
+			foreach ($restrictions as $restriction) {
+				if ( ($value = $restriction->getValue()) instanceof Query) {
+					$rem_table = $value->getTable();
+					$remote_f  = $restriction->getField()->getReferencedFields();
+					$remote_p  = Array();
+					
+					foreach($remote_f as $field) {
+						$physical = $field->getPhysical();
+						foreach ($physical as $phys) {
+							$remote_p[] = "$phys = {$phys->getReferencedField()}";
+						} 
+					}
+					
+					$join.= 'LEFT JOIN ' . $rem_table->getTableName();
+					$join.= ' ON (' . implode(' AND ', $remote_p) . ')';
+				}
+			}
+		}
+		
 		#Restrictions
 		if ( null != ($p = $this->getParent()) ) {
 			$restrictions = array_merge($restrictions, $p->getParent()->getUniqueRestrictions());

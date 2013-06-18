@@ -49,7 +49,7 @@ class mysqlPDOField extends DBField
 			ADD COLUMN (`{$this->getName()}` {$this->columnDefinition()} )";
 		$this->getTable()->getDb()->execute($stt);
 		
-		if ($this->isPrimary()) {
+		if ($this->getLogicalField()->isPrimary()) {
 			$pk = implode(', ', array_keys($this->getTable()->getPrimaryKey()));
 			$stt = "ALTER TABLE {$this->getTable()->getTableName()} 
 				DROP PRIMARY KEY, 
