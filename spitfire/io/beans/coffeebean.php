@@ -123,7 +123,7 @@ abstract class CoffeeBean extends Validatable
 		
 		if (!$logical) throw new privateException('No field ' . $field);
 		
-		switch($field->getDataType()) {
+		switch($logical->getDataType()) {
 			case model\Field::TYPE_STRING:
 			case model\Field::TYPE_INTEGER:
 			case model\Field::TYPE_LONG:
@@ -151,6 +151,15 @@ abstract class CoffeeBean extends Validatable
 	
 	public function getField($name) {
 		return $this->fields[$name];
+	}
+	
+	/**
+	 * Returns the table using this bean to generate it's forms.
+	 * 
+	 * @return spitfire\storage\database\Table
+	 */
+	public function getTable() {
+		return $this->table;
 	}
 	
 	public function getName() {

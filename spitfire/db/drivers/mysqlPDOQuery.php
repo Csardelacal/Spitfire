@@ -3,6 +3,7 @@
 namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Query;
+use spitfire\storage\database\Restriction;
 
 class MysqlPDOQuery extends Query
 {
@@ -54,7 +55,7 @@ class MysqlPDOQuery extends Query
 		#Import tables for restrictions
 		if (!empty($restrictions)) {
 			foreach ($restrictions as $restriction) {
-				if ( ($value = $restriction->getValue()) instanceof Query) {
+				if ( $restriction instanceof Restriction && ($value = $restriction->getValue()) instanceof Query) {
 					$rem_table = $value->getTable();
 					$remote_f  = $restriction->getField()->getReferencedFields();
 					$remote_p  = Array();
