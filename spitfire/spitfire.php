@@ -53,8 +53,8 @@ class SpitFire extends App
 		#Define the current timezone
 		date_default_timezone_set(environment::get('timezone'));
                 
-                #Set the display errors directive to the value of debug
-                ini_set("display_errors" , environment::get('debugging_mode'));
+		#Set the display errors directive to the value of debug
+		ini_set("display_errors" , environment::get('debugging_mode'));
 
 
 		self::$started = true;
@@ -62,10 +62,12 @@ class SpitFire extends App
 
 	public function fire() {
 		
-		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 		#Get the current path...
 		$path = router::rewrite($_SERVER['PATH_INFO']);
 		$request = $this->request = Request::get($path);
+		
+		#Import the apps
+		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 
 		#Start debugging output
 		ob_start();

@@ -51,6 +51,14 @@ abstract class Table extends Queriable
 	 */
 	protected $fields;
 	
+	/**
+	 * Contains the bean this table uses to generate forms for itself. The bean
+	 * contains additional data to make the data request more user friendly.
+	 * 
+	 * @var CoffeBean
+	 */
+	protected $bean;
+	
 	protected $primaryK;
 	protected $auto_increment;
 
@@ -152,7 +160,7 @@ abstract class Table extends Queriable
 		$ai      = null;
 		
 		foreach($fields as $field) {
-			if ($field->getLogical()->isAutoIncrement()) $ai = $field;
+			if ($field->getLogicalField()->isAutoIncrement()) $ai = $field;
 		}
 		
 		return  $this->auto_increment = $ai;
@@ -179,7 +187,7 @@ abstract class Table extends Queriable
 		
 		#Add the restrictions
 		while(count($primary))
-			$query->addRestriction (array_unshift($primary), array_unshift($id));
+			$query->addRestriction (array_shift($primary), array_shift($id));
 		
 		#Return the result
 		return $query->fetch();
@@ -191,6 +199,21 @@ abstract class Table extends Queriable
 	 */
 	public function getModel() {
 		return $this->model;
+	}
+	
+	/**
+	 * Returns the bean this model uses to generate Forms to feed itself with data
+	 * the returned value normally is a class that inherits from CoffeeBean.
+	 * 
+	 * @return CoffeeBean
+	 */
+	public function getBean() {
+		if ($this->bean) {
+			return $this->bean;
+		} else {
+			$beanName = $this->model->getName() . 'Bean';
+			return $this->bean = new $beanName($this);
+		}
 	}
 	
 	abstract public function create();
