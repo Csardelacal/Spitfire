@@ -63,8 +63,8 @@ class SimpleFieldRenderer {
 		$select = new HTMLSelect($field->getName(), $selected);
 		$label = new HTMLLabel($select, $field->getCaption());
 		
-		$reference = Model::getInstance($field->getBean()->model)->getField($field->getModelField());
-		$query = db()->table($reference->getTarget())->getAll();
+		$reference = $field->getField()->getTarget();
+		$query = db()->table($reference)->getAll();
 		$query->setPage(-1);
 		$possibilities = $query->fetchAll();
 		
@@ -78,14 +78,12 @@ class SimpleFieldRenderer {
 	}
 	
 	public function renderChildBean($field) {
-		$child     = $field->getRelation();
-		$childbean = CoffeeBean::getBean($child['bean']);
+		$childmodel = $field->getField()->getTarget();
+		$childbean  = clone $childmodel->getTable()->getBean();
 		$childbean->setParent($field->getBean());
 		
 		if ($field->getBean()->getRecord()) {
-			$query  = $field->getBean()->getRecord()->getChildren($childbean->model, $child['role']);
-			$query->setPage(-1);
-			$children = $query->fetchAll();
+			$children  = $field->getBean()->{array_shift($field->getField()->getReferencedFields())};
 		}
 		
 		$ret = new HTMLDiv();
@@ -104,7 +102,7 @@ class SimpleFieldRenderer {
 		
 		$count = (empty($children))? 0 : count($children);
 		do {
-			$childbean = CoffeeBean::getBean($child['bean']);
+			$childbean = clone $childmodel->getTable()->getBean();
 			$childbean->setParent($field->getBean());
 			$childbean->setDBRecord(null);
 			$fields = $childbean->getFields();

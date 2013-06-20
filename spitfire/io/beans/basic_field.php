@@ -21,6 +21,6 @@ class BasicField extends Field
 	}
 	
 	public function getModelField() {
-		return $this->model_field;
+		return $this->getFieldName();
 	}
 }

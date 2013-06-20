@@ -10,12 +10,13 @@ abstract class Field
 	
 	private $bean;
 	private $name;
+	private $field;
 	private $caption;
 	private $visibility = 3;
 	
-	public function __construct(CoffeeBean$bean, $name, $caption) {
+	public function __construct(CoffeeBean$bean, $field, $caption) {
 		$this->bean = $bean;
-		$this->name = $name;
+		$this->field = $field;
 		$this->caption = $caption;
 	}
 	
@@ -34,23 +35,38 @@ abstract class Field
 	}
 	
 	public function getName() {
+		
+		$name = (!$this->name)? $this->field->getName() : $this->name;
+		
 		if ($this->getBean()->getParent()) {
 			$record = $this->getBean()->getRecord();
 			
 			if (!is_null($record)) {
 				$id = implode(':', $record->getPrimaryData());
-				return $this->getBean()->getName() . "[$id][$this->name]";
+				return $this->getBean()->getName() . "[$id][$name]";
 			}
 			else {
-				return $this->getBean()->getName() . "[_new_{$this->getBean()->getId()}][$this->name]";
+				return $this->getBean()->getName() . "[_new_{$this->getBean()->getId()}][$name]";
 			}
 		}
-		return $this->name;
+		return $name;
 	}
 	
 	public function setCaption($caption) {
 		$this->caption = $caption;
 		return $this;
+	}
+	
+	/**
+	 * @todo Document
+	 * @return spitfire\model\Field
+	 */
+	public function getField() {
+		return $this->field;
+	}
+	
+	public function getFieldName() {
+		return $this->field->getName();
 	}
 	
 	public function getCaption() {
@@ -67,8 +83,8 @@ abstract class Field
 	}
 	
 	public function getRequestValue() {
-		if     (!empty($_POST[$this->name])) return $_POST[$this->name];
-		elseif (!empty($_GET[$this->name]) ) return $_GET[$this->name];
+		if     (!empty($_POST[$this->getName()])) return $_POST[$this->getName()];
+		elseif (!empty($_GET[$this->getName()]) ) return $_GET [$this->getName()];
 		else throw new privateException('Field ' . $this->name . ' was not sent with request');
 	}
 	

@@ -12,16 +12,6 @@ class ChildBean extends Field
 	
 	private $min_entries = 0;
 	
-	public function setRelation($bean, $role = null) {
-		$this->bean = $bean;
-		$this->role = $role;
-		return $this;
-	}
-	
-	public function getRelation() {
-		return Array('bean' => $this->bean, 'role' => $this->role);
-	}
-	
 	public function getRequestValue() {
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
 		$data = $_POST[$this->bean];
