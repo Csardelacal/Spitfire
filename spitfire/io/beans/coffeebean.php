@@ -88,7 +88,7 @@ abstract class CoffeeBean extends Validatable
 		
 		$record = $this->record;
 		
-		if ($this->model) {
+		if ($this->table) {
 			$fields = $this->fields;
 			foreach ($fields as $field) {
 				if ($field instanceof ChildBean) {

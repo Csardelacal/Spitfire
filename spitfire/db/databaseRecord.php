@@ -23,6 +23,7 @@ class databaseRecord implements Serializable
 	 * @var mixed 
 	 */
 	private $data;
+	private $src;
 	private $table;
 	
 	#Status vars
@@ -44,6 +45,7 @@ class databaseRecord implements Serializable
 		
 		$this->table   = $table;
 		$this->data    = $data;
+		$this->src     = $data;
 		$this->new     = empty($data);
 	}
 	
@@ -121,6 +123,7 @@ class databaseRecord implements Serializable
 			$this->update($this);
 		}
 		
+		$this->src    = $this->data;
 		$this->synced = true;
 		$this->new    = false;
 	}

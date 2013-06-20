@@ -18,10 +18,10 @@ class ReferenceField extends BasicField
 			return $v;
 		}
 		else {
-			$reference = Model::getInstance($this->getBean()->model)->getField($this->getModelField());
-			$table     = db()->table($reference->getTarget());
+			$reference = $this->getField()->getTarget();
+			$table     = $reference->getTable();
 			$pk        = $table->getPrimaryKey();
-			$search    = explode('|', $v);
+			$search    = explode(':', $v);
 			$query     = $table->get(array_shift($pk), array_shift($search));
 			
 			while (count($pk)) {
@@ -35,32 +35,24 @@ class ReferenceField extends BasicField
 	public function setValue($value) {
 		
 		if ($value instanceof databaseRecord) {
-			$reference = Model::getInstance($this->getBean()->model)->getField($this->getModelField());
-			if ($value->getTable()->getModel() == $reference->getTarget() ) {
+			$reference = $this->getField()->getTarget();
+			if ($value->getTable()->getModel() == $reference ) {
 				parent::setValue($value);
 			}
 			else throw new \privateException("Incompatible field types");
 		}
 		else {
-			$table  = db()->table($this->getModelField());
-			$pk     = $table->getPrimaryKey();
-			$search = explode('|', $value);
-			$query  = $table->get(array_shift($pk), array_shift($search));
-			
-			while (count($pk)) {
-				$query->addRestriction(array_shift($pk), array_shift($search));
-			}
-			
-			parent::setValue($query->fetch());
+			$table  = $reference->getTable();
+			parent::setValue($table->getById($value)->fetch());
 		}
 	}
 	
 	public function __toString() {
 		try {
-			$reference = Model::getInstance($this->getBean()->model)->getField($this->getModelField());
+			$reference = $this->getField()->getTarget();
 			
 			
-			$query = db()->table($reference->getTarget())->getAll();
+			$query = db()->table($reference)->getAll();
 			$query->setPage(-1);
 			$possibilities = $query->fetchAll();
 			$active = (!$this->getValue())? null : $this->getValue()->getPrimaryData();
@@ -70,7 +62,7 @@ class ReferenceField extends BasicField
 				$selected = ($active == $pos->getPrimaryData())? 'selected' : '';
 
 				$str.= sprintf('<option value="%s" %s>%s</option>' . "\n", 
-					implode('|', $pos->getPrimaryData()), 
+					implode(':', $pos->getPrimaryData()), 
 					$selected,
 					$pos
 					);
