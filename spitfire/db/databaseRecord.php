@@ -3,7 +3,7 @@
 use spitfire\storage\database\Table;
 use spitfire\storage\database\DBField;
 use spitfire\storage\database\Query;
-use spitfire\model\Reference;
+use Reference;
 
 /**
  * This class allows to track changes on database data along the use of a program

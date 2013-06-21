@@ -43,7 +43,7 @@ class SimpleFieldRenderer {
 			$label = new HTMLLabel($input, $field->getCaption());
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 		}
-		if ($field instanceof LongTextField) {
+		elseif ($field instanceof LongTextField) {
 			$input = new HTMLTextArea('text', $field->getName(), $field->getValue());
 			$label = new HTMLLabel($input, $field->getCaption());
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
@@ -51,7 +51,8 @@ class SimpleFieldRenderer {
 		elseif ($field instanceof FileField) {
 			$input = new HTMLInput('file', $field->getName(), $field->getValue());
 			$label = new HTMLLabel($input, $field->getCaption());
-			return new HTMLDiv($label, $input, Array('class' => 'field'));
+			$file  = '<small>' . $field->getValue() . '</small>';
+			return new HTMLDiv($label, $input, $file, Array('class' => 'field'));
 		}
 		//TODO: Add more options
 		else return $field;
@@ -82,8 +83,15 @@ class SimpleFieldRenderer {
 		$childbean  = clone $childmodel->getTable()->getBean();
 		$childbean->setParent($field->getBean());
 		
+		$fields = $childbean->getFields();
+		foreach($fields as &$f) {
+			$f = clone $f;
+			$f->setBean($childbean);
+			unset($f);
+		}
+		
 		if ($field->getBean()->getRecord()) {
-			$children  = $field->getBean()->{array_shift($field->getField()->getReferencedFields())};
+			$children  = $field->getBean()->getRecord()->{$field->getName()};
 		}
 		
 		$ret = new HTMLDiv();
@@ -91,23 +99,21 @@ class SimpleFieldRenderer {
 		if (!empty($children)) {
 			foreach ($children as $record) {
 				$childbean->setDBRecord($record);
-				$fields = $childbean->getFields();
 				$ret->addChild($subform = new HTMLDiv());
 				$subform->addChild('<h1>' . $record . '</h1>');
 				foreach ($fields as $f) 
-					if (!($f instanceof ReferenceField && $f->getModelField() == $field->getBean()->getName()))
+					if (!($f instanceof ReferenceField && $f->getField()->getTarget() == $field->getBean()->getTable()->getModel()))
 						$subform->addChild ($this->renderForm($f));
 			}
 		}
 		
 		$count = (empty($children))? 0 : count($children);
 		do {
-			$childbean = clone $childmodel->getTable()->getBean();
-			$childbean->setParent($field->getBean());
 			$childbean->setDBRecord(null);
-			$fields = $childbean->getFields();
 			$ret->addChild('<h1>New record</h1>');
-			foreach ($fields as $f) $ret->addChild ($this->renderForm($f));
+			foreach ($fields as $f) 
+					if (!($f instanceof ReferenceField && $f->getField()->getTarget() == $field->getBean()->getTable()->getModel()))
+						$ret->addChild ($this->renderForm($f));
 			$count++;
 		} while ($count < $field->getMinimumEntries());
 		

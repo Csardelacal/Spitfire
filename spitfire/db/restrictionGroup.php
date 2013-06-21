@@ -15,8 +15,12 @@ abstract class RestrictionGroup
 	}
 	
 	public function addRestriction($fieldname, $value, $operator = null) {
+		try {
+			$field = $this->belongsto->getTable()->getField($fieldname);
+		} catch (\Exception $e) {
+			$field = $this->belongsto->getTable()->getModel()->getField($fieldname);
+		}
 		
-		$field = $this->belongsto->getTable()->getField($fieldname);
 		if (!$field) throw new \privateException('Field ' . $fieldname . ' not found');
 		$this->restrictions[] = $this->belongsto->restrictionInstance($field, $value, $operator);
 		return $this;
