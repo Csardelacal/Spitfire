@@ -3,6 +3,7 @@
 namespace spitfire\io\beans;
 
 use \databaseRecord;
+use spitfire\storage\database\Query;
 use Exception;
 use Model;
 
@@ -16,6 +17,9 @@ class ReferenceField extends BasicField
 		
 		if ($v instanceof databaseRecord) {
 			return $v;
+		}
+		elseif ($v instanceof Query) {
+			return $v->fetch();
 		}
 		else {
 			$reference = $this->getField()->getTarget();

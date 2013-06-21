@@ -3,6 +3,7 @@
 namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Table;
+use spitfire\storage\database\Query;
 use spitfire\storage\database\DBField;
 use spitfire\model\Field;
 use databaseRecord;
@@ -141,9 +142,12 @@ class MysqlPDOTable extends stdSQLTable
 		$table = $record->getTable();
 		$db = $table->getDb();
 		
-                foreach ($data as $field => $value) {
+		foreach ($data as $field => $value) {
 			if ($value instanceof Query) {
-				$value = $value->fetch();
+				if ($this->getModel()->getField($field) instanceof \ChildrenField) 
+					unset($data[$field]);
+				else 
+					$value = $value->fetch();
 			}
 			
 			if ($value instanceof databaseRecord) {
@@ -153,7 +157,12 @@ class MysqlPDOTable extends stdSQLTable
 				}
 				unset($data[$field]);
 			}
-                }
+			
+			if (is_array($value)) {
+				foreach ($value as $record) $record->store();
+				unset($data[$field]);
+			}
+		}
 		
 		$quoted = Array();
 		foreach ($data as $f => $v) $quoted[] = "{$table->getField($f)} = {$db->quote($v)}";
