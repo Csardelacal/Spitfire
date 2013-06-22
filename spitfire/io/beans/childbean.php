@@ -7,14 +7,16 @@ use \CoffeeBean;
 
 class ChildBean extends Field 
 {
-	private $bean;
-	private $role;
 	
 	private $min_entries = 0;
 	
 	public function getRequestValue() {
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
-		$data = $_POST[$this->getField()->getTarget()->getTable()->getBean()->getName()];
+		
+		$field = $this->getField();
+		/* @var $field \ChildrenField */
+		
+		$data = $_POST[$field->getTarget()->getTable()->getBean()->getName()];
 		return array_filter($data);
 	}
 	

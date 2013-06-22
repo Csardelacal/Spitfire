@@ -58,8 +58,10 @@ abstract class Field
 	}
 	
 	/**
-	 * @todo Document
-	 * @return spitfire\model\Field
+	 * Returns the field this one represents on the model. This provides the field
+	 * and the renderers with information about the data it can contain.
+	 * 
+	 * @return \spitfire\model\Field
 	 */
 	public function getField() {
 		return $this->field;

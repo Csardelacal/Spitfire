@@ -101,6 +101,7 @@ abstract class CoffeeBean extends Validatable
 	}
 	
 	public function setDBRecord($record) {
+		$this->id = self::$counter++;
 		if ($record instanceof databaseRecord || is_null($record))
 		$this->record = $record;
 	}
@@ -186,8 +187,7 @@ abstract class CoffeeBean extends Validatable
 	}
 	
 	public function getId() {
-		if (!is_null($this->id)) return $this->id;
-		else return $this->id = self::$counter++;
+		return $this->id;
 	}
 	
 	/**

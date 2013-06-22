@@ -195,7 +195,7 @@ abstract class Table extends Queriable
 	
 	/**
 	 * 
-	 * @return Model
+	 * @return \Model
 	 */
 	public function getModel() {
 		return $this->model;
@@ -205,7 +205,7 @@ abstract class Table extends Queriable
 	 * Returns the bean this model uses to generate Forms to feed itself with data
 	 * the returned value normally is a class that inherits from CoffeeBean.
 	 * 
-	 * @return CoffeeBean
+	 * @return \CoffeeBean
 	 */
 	public function getBean() {
 		if ($this->bean) {
