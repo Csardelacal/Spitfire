@@ -5,6 +5,14 @@ namespace spitfire\io\beans;
 use Model;
 use \CoffeeBean;
 
+/**
+ * This class allows a bean to receive data that belongs to this but is handled
+ * by another bean. In this case the childbean will take care of handling the 
+ * data and returning it to the parent bean.
+ * 
+ * Basically this generates what other apps call sub-forms, a form that allows 
+ * you to handle data in a clean way.
+ */
 class ChildBean extends Field 
 {
 	
