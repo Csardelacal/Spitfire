@@ -36,6 +36,7 @@ abstract class CoffeeBean extends Validatable
 	private $record;
 	private $parent;
 	private $table;
+	private $postdata = null;
 	
 	public $name;
 	public $model;
@@ -168,22 +169,29 @@ abstract class CoffeeBean extends Validatable
 		else return substr( get_class ($this), 0, - strlen('Bean'));
 	}
 
-
 	public function makeForm($renderer) {
 		return $renderer->renderForm($this);
 	}
-	
 	
 	public function makeList($renderer, $records) {
 		return $renderer->renderList($this, $records);
 	}
 	
-	public function setParent($bean) {
-		$this->parent = $bean;
+	public function setParent($field) {
+		$this->parent = $field;
 	}
 	
 	public function getParent() {
 		return $this->parent;
+	}
+	
+	public function setPostData($postdata = null) {
+		$this->postdata = $postdata;
+	}
+	
+	public function getPostData() {
+		if ($this->postdata !== null) return $this->postdata;
+		else return $_POST;
 	}
 	
 	public function getId() {

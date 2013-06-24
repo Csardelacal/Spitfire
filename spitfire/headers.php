@@ -17,6 +17,7 @@ class Headers
 		 401 => '401 Unauthorized',
 		 403 => '403 Forbidden',
 		 404 => '404 Not Found',
+		 410 => '410 Gone',
 		 500 => '500 Server Error'
 	);
 	

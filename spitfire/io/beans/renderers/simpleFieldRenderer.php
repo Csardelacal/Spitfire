@@ -81,7 +81,7 @@ class SimpleFieldRenderer {
 	public function renderChildBean($field) {
 		$childmodel = $field->getField()->getTarget();
 		$childbean  = clone $childmodel->getTable()->getBean();
-		$childbean->setParent($field->getBean());
+		$childbean->setParent($field);
 		
 		$fields = $childbean->getFields();
 		foreach($fields as &$f) {
