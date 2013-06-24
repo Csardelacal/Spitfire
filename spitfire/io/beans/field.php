@@ -43,10 +43,10 @@ abstract class Field
 			
 			if (!is_null($record)) {
 				$id = implode(':', $record->getPrimaryData());
-				return $this->getBean()->getName() . "[$id][$name]";
+				return $this->getBean()->getParent()->getName() . "[$id][$name]";
 			}
 			else {
-				return $this->getBean()->getName() . "[_new_{$this->getBean()->getId()}][$name]";
+				return $this->getBean()->getParent()->getName() . "[_new_{$this->getBean()->getId()}][$name]";
 			}
 		}
 		return $name;
@@ -85,8 +85,10 @@ abstract class Field
 	}
 	
 	public function getRequestValue() {
-		if     (!empty($_POST[$this->getName()])) return $_POST[$this->getName()];
-		elseif (!empty($_GET[$this->getName()]) ) return $_GET [$this->getName()];
+		$postdata = $this->getBean()->getPostData();
+		$name = ($this->name)? $this->name : $this->getField()->getName();
+		
+		if (!empty($postdata[$name])) return $postdata[$name];
 		else throw new privateException('Field ' . $this->name . ' was not sent with request');
 	}
 	

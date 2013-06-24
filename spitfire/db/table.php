@@ -207,12 +207,17 @@ abstract class Table extends Queriable
 	 * 
 	 * @return \CoffeeBean
 	 */
-	public function getBean() {
-		if ($this->bean) {
-			return $this->bean;
-		} else {
+	public function getBean($force_new = false) {
+		if (!$force_new)
+			if ($this->bean) {
+				return $this->bean;
+			} else {
+				$beanName = $this->model->getName() . 'Bean';
+				return $this->bean = new $beanName($this);
+			}
+		else {
 			$beanName = $this->model->getName() . 'Bean';
-			return $this->bean = new $beanName($this);
+			return new $beanName($this);
 		}
 	}
 	
