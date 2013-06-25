@@ -96,7 +96,7 @@ class ExceptionHandler {
 			case E_PARSE:
 				while(ob_get_clean());
 				echo getcwd();
-				get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r($scope, 1) );
+				get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r(debug_print_backtrace(), 1) );
 				return false;
 				break;
 			case E_DEPRECATED:
@@ -120,7 +120,7 @@ class ExceptionHandler {
 			case E_USER_ERROR:
 			case E_PARSE:
 			case E_RECOVERABLE_ERROR:
-				get_error_page(500, $last_error['message'] . "@$last_error[file] [$last_error[line]]");
+				get_error_page(500, $last_error['message'] . "@$last_error[file] [$last_error[line]]", print_r($last_error, 1) );
 		}
 	}
 

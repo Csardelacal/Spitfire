@@ -5,6 +5,7 @@ namespace spitfire;
 use Controller;
 use App;
 use Headers;
+use spitfire\path\PathParser;
 
 /**
  * The request class is a component that allows developers to retrieve information
@@ -18,12 +19,13 @@ class Request
 	private $app;
 	private $controller;
 	private $action;
-	private $object;
+	private $object = Array();
 	private $answerformat;
 	
 	private $headers;
 	
 	static  $instance;
+	private $parsers;
 	
 	protected function __construct($pathinfo = null) {
 		if (is_null($pathinfo)) $pathinfo = $_SERVER['PATH_INFO'];
@@ -37,7 +39,6 @@ class Request
 	}
 	
 	public function getApp() {
-		if (!$this->app) $this->init();
 		return $this->app;
 	}
 	
@@ -50,7 +51,6 @@ class Request
 	}
 	
 	public function getController() {
-		if (!$this->controller) $this->init();
 		return $this->controller;
 	}
 	
@@ -60,7 +60,6 @@ class Request
 	}
 	
 	public function getAction() {
-		if (!$this->action) $this->init();
 		return $this->action;
 	}
 	
@@ -69,7 +68,6 @@ class Request
 	}
 	
 	public function getObject() {
-		if (!$this->object) $this->init();
 		return $this->object;
 	}
 	
@@ -78,7 +76,6 @@ class Request
 	}
 
 	public function getExtension() {
-		if (!$this->answerformat) $this->init();
 		$allowed = environment::get('supported_view_extensions');
 		
 		if ( in_array($this->answerformat, $allowed) )
@@ -125,48 +122,29 @@ class Request
 		$info      = (count($last) > 1)? array_pop($last) : '';
 		$extension = (!empty($info))? $info : 'php';
 		array_push($path, implode('.', $last));
-			
-		/* Try to get the current namespace, if one is registered
-		 * we will redirect the request to another app.
-		 */
-		if (spitfire()->appExists(reset($path))) {
-			$namespace = array_shift($path);
-		}
-		else $namespace = '';
-
-		$app = spitfire()->getApp($namespace);
-		$this->setApp($app);
-
-		/* To get the controller and action of an element we 
-		 * keep checking if each element is a valid controller,
-		 * once it didn't find a valid controller it stops.
-		 */
-		if ($app->hasController(reset($path))){
-			$controllerName = array_shift($path);
-			$controller = $app->getController($controllerName);
-		}
-		else{
-			$controller = $app->getController(environment::get('default_controller'));
-			$controllerName = environment::get('default_controller');
-		}
-
-		if (is_callable(Array($controller, reset($path)))) {
-			$action = array_shift($path);
-		}
-		elseif (!reset($path)) {
-			$action = environment::get('default_action');
-		}
-		else {
-			throw new \publicException('Action not Found', 404);
-			$action = 'detail';
+		
+		
+		$handlers = $this->getHandlers();
+		foreach ($handlers as $handler) {
+			if ($handler->parseElement(reset($path))) {
+				array_shift($path);
+			}
 		}
 		
-		$this->setController($controller);
-		$this->setAction($action);
 		$this->setObject($path);
 		$this->setExtension($extension);
 	}
 	
+	public function addHandler(PathParser$parser) {
+		$parser->setRequest($this);
+		$this->parsers[] = $parser;
+	}
+	
+	public function getHandlers() {
+		return $this->parsers;
+	}
+
+
 	public static function get($path = null) {
 		if (self::$instance) return self::$instance;
 		else return self::$instance = new self($path);
