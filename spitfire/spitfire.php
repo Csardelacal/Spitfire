@@ -67,12 +67,14 @@ class SpitFire extends App
 		$request = $this->request = Request::get($path);
 		
 		#Import the apps
+		self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 
 		#Start debugging output
 		ob_start();
 		
 		#Select the app
+		$request->init();
 		$request->getApp()->runTask($request->getController(), $request->getAction(), $request->getObject());
 		
 		#End debugging output
