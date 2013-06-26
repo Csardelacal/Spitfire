@@ -3,7 +3,6 @@
 use spitfire\storage\database\Table;
 use spitfire\storage\database\DBField;
 use spitfire\storage\database\Query;
-use Reference;
 
 /**
  * This class allows to track changes on database data along the use of a program
@@ -126,6 +125,11 @@ class databaseRecord implements Serializable
 		$this->src    = $this->data;
 		$this->synced = true;
 		$this->new    = false;
+		
+		foreach($this->data as $value)
+			if (is_array($value)) {
+				foreach ($value as $record) $record->store();
+			}
 	}
 	
 	public function getErrors() {

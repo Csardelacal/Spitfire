@@ -74,6 +74,7 @@ AutoLoad::registerClass('spitfire\io\beans\TextField',                          
 AutoLoad::registerClass('spitfire\io\beans\LongTextField',                      $cur_dir.'/io/beans/long_text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
 AutoLoad::registerClass('spitfire\io\beans\FileField',                          $cur_dir.'/io/beans/file_field.php');
+AutoLoad::registerClass('spitfire\io\beans\DateTimeField',                      $cur_dir.'/io/beans/datetime_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ChildBean',                          $cur_dir.'/io/beans/childbean.php');
 AutoLoad::registerClass('spitfire\io\beans\renderers\Renderer',                 $cur_dir.'/io/beans/renderers/renderer.php');
 AutoLoad::registerClass('spitfire\io\beans\renderers\SimpleBeanRenderer',       $cur_dir.'/io/beans/renderers/simpleBeanRenderer.php');
@@ -85,6 +86,7 @@ AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLElement',                         $cur_dir.'/io/html/element.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLUnclosedElement',                 $cur_dir.'/io/html/unclosed.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLDiv',                             $cur_dir.'/io/html/div.php');
+AutoLoad::registerClass('spitfire\io\html\HTMLSpan',                            $cur_dir.'/io/html/span.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLInput',                           $cur_dir.'/io/html/input.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLTextArea',                        $cur_dir.'/io/html/textarea.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLSelect',                          $cur_dir.'/io/html/select.php');
@@ -93,6 +95,7 @@ AutoLoad::registerClass('spitfire\io\html\HTMLLabel',                           
 AutoLoad::registerClass('spitfire\io\html\HTMLForm',                            $cur_dir.'/io/html/form.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLTable',                           $cur_dir.'/io/html/table.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLTableRow',                        $cur_dir.'/io/html/table_row.php');
+AutoLoad::registerClass('spitfire\io\html\dateTimePicker',                      $cur_dir.'/io/html/date_picker.php');
 
 AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
 AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');

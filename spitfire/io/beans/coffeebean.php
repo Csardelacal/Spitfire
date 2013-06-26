@@ -8,6 +8,7 @@ use spitfire\io\beans\TextField;
 use spitfire\io\beans\LongTextField;
 use spitfire\io\beans\FileField;
 use spitfire\io\beans\ReferenceField;
+use spitfire\io\beans\DateTimeField;
 
 /**
  * A Bean is the equivalent to a Model for users. Instead of generating SQL and
@@ -92,11 +93,8 @@ abstract class CoffeeBean extends Validatable
 		if ($this->table) {
 			$fields = $this->fields;
 			foreach ($fields as $field) {
-				if ($field instanceof ChildBean) {
-					$field->store();
-				}
-				elseif ($field->getValue())
-					$record->{$field->getModelField()} = $field->getValue();
+				if (null != $value = $field->getValue())
+					$record->{$field->getFieldName()} = $value;
 			}
 		}
 	}
@@ -129,8 +127,10 @@ abstract class CoffeeBean extends Validatable
 			case model\Field::TYPE_STRING:
 			case model\Field::TYPE_INTEGER:
 			case model\Field::TYPE_LONG:
-			case model\Field::TYPE_DATETIME:
 				return $this->fields[$field] = new TextField($this, $logical, $caption);
+				break;
+			case model\Field::TYPE_DATETIME:
+				return $this->fields[$field] = new DateTimeField($this, $logical, $caption);
 				break;
 			case model\Field::TYPE_TEXT:
 				return $this->fields[$field] = new LongTextField($this, $logical, $caption);
@@ -205,7 +205,10 @@ abstract class CoffeeBean extends Validatable
 	 * @return boolean
 	 */
 	public function validate($data = null) {
-		foreach ($this->fields as $field => $content) $data[$field] = $content->getValue(); 
+		foreach ($this->fields as $field => $content) {
+			if (!($content instanceof ChildBean))
+			$data[$field] = $content->getValue(); 
+		}
 		return parent::validate($data);
 	}
 

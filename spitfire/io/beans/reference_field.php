@@ -15,11 +15,20 @@ class ReferenceField extends BasicField
 		$v = parent::getValue();
 		
 		
-		if ($v instanceof databaseRecord) {
+		if     ($v instanceof databaseRecord) {
 			return $v;
 		}
 		elseif ($v instanceof Query) {
 			return $v->fetch();
+		}
+		elseif (is_null($v) && $this->getBean()->getParent()) {
+			
+			$parent_model = $this->getBean()->getParent()->getField()->getModel();
+			$this_model   = $this->getField()->getTarget();
+			if ($parent_model == $this_model) {
+				return $this->getBean()->getParent()->getBean()->getRecord();
+			}
+			
 		}
 		else {
 			$reference = $this->getField()->getTarget();
