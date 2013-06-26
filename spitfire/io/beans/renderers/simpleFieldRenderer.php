@@ -8,6 +8,7 @@ use spitfire\io\beans\BasicField;
 use spitfire\io\beans\ChildBean;
 use spitfire\io\beans\TextField;
 use spitfire\io\beans\LongTextField;
+use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\FileField;
 use spitfire\io\beans\ReferenceField;
 use spitfire\io\html\HTMLInput;
@@ -53,6 +54,12 @@ class SimpleFieldRenderer {
 			$label = new HTMLLabel($input, $field->getCaption());
 			$file  = '<small>' . $field->getValue() . '</small>';
 			return new HTMLDiv($label, $input, $file, Array('class' => 'field'));
+		}
+		elseif ($field instanceof DateTimeField) {
+			$input = new \spitfire\io\html\dateTimePicker($field->getValue());
+			$input->setInputName($field->getName());
+			$label = new HTMLLabel($input, $field->getCaption());
+			return new HTMLDiv($label, $input, Array('class' => 'field'));
 		}
 		//TODO: Add more options
 		else return $field;

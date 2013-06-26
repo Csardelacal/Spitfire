@@ -4,6 +4,7 @@ namespace spitfire\io\beans;
 
 use Model;
 use \CoffeeBean;
+use \privateException;
 
 /**
  * This class allows a bean to receive data that belongs to this but is handled
@@ -36,13 +37,52 @@ class ChildBean extends Field
 	 * @return mixed[]
 	 */
 	public function getRequestValue() {
+			
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
-		
+
 		$field = $this->getField();
 		/* @var $field \ChildrenField */
-		
-		$data = $_POST[$field->getName()];
-		return array_filter($data);
+
+		$data    = $_POST[$field->getName()];
+		$record  = $this->getBean()->getRecord();
+		$_return = Array();
+
+		foreach ($data as $pk => $post) {
+			$post = array_filter($post);
+			if (empty($post)) continue;
+
+			$table = $this->getField()->getTarget()->getTable();
+			$child = $table->getBean(true);
+
+			if (substr($pk, 0, 5) == '_new_') {
+				$r = $table->newRecord();
+			}
+			else {
+				$ref_fields = $this->getField()->getReferencedFields();
+				$query = $this->getField()->getTarget()->getTable()->getAll();
+				$group = $query->group();
+				foreach ($ref_fields as $f) $group->addRestriction($f->getName(), $record);
+
+				$primary = $table->getPrimaryKey();
+				$pk = explode(':', $pk);
+
+				foreach ($primary as $field => $meta) {
+					$query->addRestriction($field, array_shift($pk));
+				}
+
+				$r = $query->fetch();
+			}
+
+			$child->setParent($this);
+			$child->setDBRecord($r);
+			$child->setPostData($post);
+			$child->updateDBRecord();
+
+			$_return[] = $child->getRecord();
+
+		}
+
+		return $_return;
 	}
 	
 	public function getMinimumEntries() {
@@ -95,7 +135,7 @@ class ChildBean extends Field
 	
 	public function getDefaultValue() {
 		//TODO: Implement
-		return null;
+		return 'null';
 	}
 	
 	public function getVisibility() {
