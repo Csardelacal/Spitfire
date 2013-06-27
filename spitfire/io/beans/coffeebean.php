@@ -105,6 +105,12 @@ abstract class CoffeeBean extends Validatable
 		$this->record = $record;
 	}
 	
+	/**
+	 * Returns the current record this bean is representing. This will be used to
+	 * populate the form in case there is no data being sent to the form.
+	 * 
+	 * @return \databaseRecord
+	 */
 	public function getRecord() {
 		return $this->record;
 	}

@@ -113,8 +113,6 @@ class MysqlPDOTable extends stdSQLTable
 		$data = $record->getData();
 		$table = $record->getTable();
 		$db = $table->getDb();
-		
-		$defer = Array();
                 
 		foreach ($data as $field => $value) {
 			if ($value instanceof databaseRecord) {
@@ -125,7 +123,6 @@ class MysqlPDOTable extends stdSQLTable
 				unset($data[$field]);
 			}
 			elseif (is_array($value)) {
-				foreach ($value as $record) $defer[] = $record;
 				unset($data[$field]);
 			}
 		}
@@ -161,6 +158,9 @@ class MysqlPDOTable extends stdSQLTable
 				foreach ($primary as $key => $v) {
 					$data[$field . '_' . $key] = $v;
 				}
+				unset($data[$field]);
+			}
+			elseif (is_array($value)) {
 				unset($data[$field]);
 			}
 		}
