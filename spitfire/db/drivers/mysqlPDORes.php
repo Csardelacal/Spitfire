@@ -51,10 +51,18 @@ class mysqlPDOResultSet implements resultSetInterface
 			
 			if ($field instanceof Reference) {
 				$physical = $field->getPhysical();
-				$query    = $this->table->getDb()->table($field->getTarget())->getAll();
 				
-				foreach ($physical as $physical_field) {
-					$query->addRestriction($physical_field->getReferencedField()->getName(), $data[$physical_field->getName()]);
+				#If the primary key of the parent only has 1 field we pass it through
+				#a cachable query via getbyid
+				if (count($physical) == 1) {
+					$query = $this->table->getDb()->table($field->getTarget())->getById($data[reset($physical)->getName()]);
+				}
+				else {
+					$query    = $this->table->getDb()->table($field->getTarget())->getAll();
+
+					foreach ($physical as $physical_field) {
+						$query->addRestriction($physical_field->getReferencedField()->getName(), $data[$physical_field->getName()]);
+					}
 				}
 				
 				$_record[$field->getName()] = $query;

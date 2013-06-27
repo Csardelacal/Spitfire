@@ -61,6 +61,14 @@ abstract class Table extends Queriable
 	
 	protected $primaryK;
 	protected $auto_increment;
+	
+	/**
+	 * This variable holds a record cache for data accessed by id. This is useful
+	 * due to the big amount of queries that simply request an item by it's id
+	 * 
+	 * @var \databaseRecord[]
+	 */
+	protected $cache = Array();
 
 
 	protected $errors    = Array();
@@ -185,12 +193,22 @@ abstract class Table extends Queriable
 		$primary = $this->getPrimaryKey();
 		$query   = $this->getQueryInstance();
 		
+		#Check if it's cachable and get the name of the id field
+		$cachable = count($primary) == 1;
+		$cachekey = ($cachable)? reset($id) : null;
+		
+		#Detect if there is a cache hit
+		if (isset($this->cache[$cachekey])) return $this->cache[$cachekey];
+		
 		#Add the restrictions
 		while(count($primary))
 			$query->addRestriction (array_shift($primary), array_shift($id));
 		
 		#Return the result
-		return $query->fetch();
+		$_return = $query->fetch();
+		if ($cachable) $this->cache[$cachekey] = $_return;
+		
+		return $_return;
 	}
 	
 	/**

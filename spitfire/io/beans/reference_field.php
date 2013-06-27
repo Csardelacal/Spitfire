@@ -10,7 +10,38 @@ use Model;
 class ReferenceField extends BasicField 
 {
 	
-	public function getValue() {
+	public function getDefaultValue() {
+		return parent::getDefaultValue();
+	}
+	
+	public function getRequestValue() {
+		$v = parent::getRequestValue();
+		
+		if (is_null($v) && $this->getBean()->getParent()) {
+			
+			#Check if the model this references to is the parent.
+			#In that case the value of this is automatically set.
+			$parent_model = $this->getBean()->getParent()->getField()->getModel();
+			$this_model   = $this->getField()->getTarget();
+			if ($parent_model == $this_model) {
+				return $this->getBean()->getParent()->getBean()->getRecord();
+			}
+			
+		}
+		
+		elseif(empty ($v)) {
+			return null;
+		}
+		
+		else {
+			$reference = $this->getField()->getTarget();
+			$table     = $reference->getTable();
+			return $table->getById($v);
+		}
+		
+	}
+
+	/*public function getValue() {
 		
 		$v = parent::getValue();
 		
@@ -30,6 +61,9 @@ class ReferenceField extends BasicField
 			}
 			
 		}
+		elseif(empty($v)) {
+			return null;
+		}
 		else {
 			$reference = $this->getField()->getTarget();
 			$table     = $reference->getTable();
@@ -43,7 +77,7 @@ class ReferenceField extends BasicField
 			
 			return $query->fetch();
 		}
-	}
+	}*/
 	
 	public function setValue($value) {
 		

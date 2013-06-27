@@ -57,7 +57,7 @@ class Reference extends Field
 	 * Returns the target model (the parent model of the source). Which offers
 	 * it's primary keys to the target so it can reference them.
 	 * 
-	 * @return Model
+	 * @return \Model
 	 */
 	public function getTarget() {
 		#Check if the passed argument already is a model

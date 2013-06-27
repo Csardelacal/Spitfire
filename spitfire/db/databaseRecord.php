@@ -204,7 +204,7 @@ class databaseRecord implements Serializable
 	/**
 	 * Returns the table this record belongs to.
 	 * 
-	 * @return Table
+	 * @return spitfire\storage\database\Table
 	 */
 	public function getTable() {
 		return $this->table;
@@ -215,13 +215,19 @@ class databaseRecord implements Serializable
 		$field_info = $this->table->getModel()->getField($field);
 		
 		if ($field_info instanceof Reference) {
-			if (!$value instanceof databaseRecord) {
+			if (!$value instanceof databaseRecord) 
 				throw new privateException('Not a record');
-			}
-			else {
-				$this->data[$field] = $value;
-			}
+			
+			$this->data[$field] = $value;
 		}
+		
+		elseif ($field_info instanceof ChildrenField) {
+			if (!is_array($value)) 
+				throw new privateException('Children only accept arrays as data');
+			
+			$this->data[$field] = $value;
+		}
+		
 		elseif (!is_null($field_info)) {
 			$this->data[$field] = $value;
 		}
