@@ -4,6 +4,7 @@ class Image
 {
 	private $img;
 	private $meta;
+	private $compression = 0;
 	
 	public function __construct($file) {
 		$this->img = $this->readFile($file);
@@ -63,10 +64,18 @@ class Image
 		
 	}
 	
+	public function setCompression($compression) {
+		$this->compression = $compression;
+	}
+	
+	public function getCompression() {
+		return $this->compression;
+	}
+	
 	public function store ($file) {
 		if (file_exists($file)) unlink ($file);
 		
-		imagepng($this->img, $file, 0);
+		imagepng($this->img, $file, $this->compression);
 		return $file;
 	}
 }
