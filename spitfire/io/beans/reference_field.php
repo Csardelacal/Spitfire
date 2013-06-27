@@ -3,9 +3,8 @@
 namespace spitfire\io\beans;
 
 use \databaseRecord;
-use spitfire\storage\database\Query;
+use \privateException;
 use Exception;
-use Model;
 
 class ReferenceField extends BasicField 
 {
@@ -15,29 +14,32 @@ class ReferenceField extends BasicField
 	}
 	
 	public function getRequestValue() {
-		$v = parent::getRequestValue();
 		
-		if (is_null($v) && $this->getBean()->getParent()) {
-			
-			#Check if the model this references to is the parent.
-			#In that case the value of this is automatically set.
-			$parent_model = $this->getBean()->getParent()->getField()->getModel();
-			$this_model   = $this->getField()->getTarget();
-			if ($parent_model == $this_model) {
-				return $this->getBean()->getParent()->getBean()->getRecord();
+		try {
+			$v = parent::getRequestValue();
+		}
+		catch (privateException$e) {
+		
+			if ($this->getBean()->getParent()) {
+
+				#Check if the model this 'references to' is the parent.
+				#In that case the value of this is automatically set.
+				$parent_model = $this->getBean()->getParent()->getField()->getModel();
+				$this_model   = $this->getField()->getTarget();
+				if ($parent_model == $this_model) {
+					return $this->getBean()->getParent()->getBean()->getRecord();
+				}
+
 			}
-			
+
+			else {
+				throw $e;
+			}
 		}
 		
-		elseif(empty ($v)) {
-			return null;
-		}
-		
-		else {
-			$reference = $this->getField()->getTarget();
-			$table     = $reference->getTable();
-			return $table->getById($v);
-		}
+		$reference = $this->getField()->getTarget();
+		$table     = $reference->getTable();
+		return $table->getById($v);
 		
 	}
 
