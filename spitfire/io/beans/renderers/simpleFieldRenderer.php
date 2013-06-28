@@ -40,24 +40,24 @@ class SimpleFieldRenderer {
 	
 	public function renderBasicField($field) {
 		if ($field instanceof TextField) {
-			$input = new HTMLInput('text', $field->getName(), $field->getValue());
+			$input = new HTMLInput('text', $field->getPostId(), $field->getValue());
 			$label = new HTMLLabel($input, $field->getCaption());
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 		}
 		elseif ($field instanceof LongTextField) {
-			$input = new HTMLTextArea('text', $field->getName(), $field->getValue());
+			$input = new HTMLTextArea('text', $field->getPostId(), $field->getValue());
 			$label = new HTMLLabel($input, $field->getCaption());
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 		}
 		elseif ($field instanceof FileField) {
-			$input = new HTMLInput('file', $field->getName(), $field->getValue());
+			$input = new HTMLInput('file', $field->getPostId(), $field->getValue());
 			$label = new HTMLLabel($input, $field->getCaption());
 			$file  = '<small>' . $field->getValue() . '</small>';
 			return new HTMLDiv($label, $input, $file, Array('class' => 'field'));
 		}
 		elseif ($field instanceof DateTimeField) {
 			$input = new \spitfire\io\html\dateTimePicker($field->getValue());
-			$input->setInputName($field->getName());
+			$input->setInputName($field->getPostId());
 			$label = new HTMLLabel($input, $field->getCaption());
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 		}
@@ -68,7 +68,7 @@ class SimpleFieldRenderer {
 	public function renderReferencedField($field) {
 		$record = $field->getValue();
 		$selected = ($record)? implode('|',$record->getPrimaryData()) : '';
-		$select = new HTMLSelect($field->getName(), $selected);
+		$select = new HTMLSelect($field->getPostId(), $selected);
 		$label = new HTMLLabel($select, $field->getCaption());
 		
 		$reference = $field->getField()->getTarget();
@@ -98,7 +98,7 @@ class SimpleFieldRenderer {
 		}
 		
 		if ($field->getBean()->getRecord()) {
-			$children  = $field->getBean()->getRecord()->{$field->getName()};
+			$children  = $field->getBean()->getRecord()->{$field->getPostId()};
 		}
 		
 		$ret = new HTMLDiv();
