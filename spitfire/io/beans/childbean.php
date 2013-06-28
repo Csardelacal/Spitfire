@@ -4,7 +4,6 @@ namespace spitfire\io\beans;
 
 use Model;
 use \CoffeeBean;
-use \privateException;
 
 /**
  * This class allows a bean to receive data that belongs to this but is handled
@@ -37,129 +36,85 @@ class ChildBean extends Field
 	 * @return mixed[]
 	 */
 	public function getRequestValue() {
-			
+		
+		#Check if the request is done via POST. Otherwise return an empty array.
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
-
-		$field = $this->getField();
-		/* @var $field \ChildrenField */
-
-		$data    = $_POST[$field->getName()];
-		$record  = $this->getBean()->getRecord();
+		
+		#Post will contain an array of subforms for this element.
+		$data    = $_POST[$this->getName()];
 		$_return = Array();
-
+		
+		#Loop through the passed array and create the subforms to handle the data
 		foreach ($data as $pk => $post) {
 			$post = array_filter($post);
 			if (empty($post)) continue;
-
+			
 			$table = $this->getField()->getTarget()->getTable();
 			$child = $table->getBean(true);
-
-			if (substr($pk, 0, 5) == '_new_') {
+			
+			if (substr($pk, 0, 5) == '_new_')
 				$r = $table->newRecord();
+			else
+				$r = $table->getById($pk);
+			
+			if ($r !== null) {
+				$child->setParent($this);
+				$child->setDBRecord($r);
+				$child->setPostData($post);
+				$child->updateDBRecord();
+
+				$_return[] = $child->getRecord();
 			}
-			else {
-				$ref_fields = $this->getField()->getReferencedFields();
-				$query = $this->getField()->getTarget()->getTable()->getAll();
-				$group = $query->group();
-				foreach ($ref_fields as $f) $group->addRestriction($f->getName(), $record);
-
-				$primary = $table->getPrimaryKey();
-				$pk = explode(':', $pk);
-
-				foreach ($primary as $field => $meta) {
-					$query->addRestriction($field, array_shift($pk));
-				}
-
-				$r = $query->fetch();
-			}
-
-			$child->setParent($this);
-			$child->setDBRecord($r);
-			$child->setPostData($post);
-			$child->updateDBRecord();
-
-			$_return[] = $child->getRecord();
 
 		}
 
 		return $_return;
 	}
 	
+	/**
+	 * Returns the minimum amount of elements that the element holds. This allows
+	 * you to define the amount of empty forms displayed if no data has been set.
+	 * 
+	 * @return int
+	 */
 	public function getMinimumEntries() {
 		return $this->min_entries;
 	}
 	
+	/**
+	 * Defines the minimum amount of elements that the element holds. This allows
+	 * you to define the amount of empty forms displayed if no data has been set.
+	 * 
+	 * This method returns $this to allow method chaining.
+	 * 
+	 * @return spitfire\io\beans\ChildBean
+	 */
 	public function setMinimumEntries($amt) {
 		$this->min_entries = $amt;
 		return $this;
 	}
 	
-	public function store() {
-		$data   = $this->getRequestValue();
-		$record = $this->getBean()->getRecord();
-		
-		foreach ($data as $pk => $post) {
-			$post = array_filter($post);
-			if (empty($post)) continue;
-			
-			$table = $this->getField()->getTarget()->getTable();
-			$child = $table->getBean(true);
-			
-			if (substr($pk, 0, 5) == '_new_') {
-				$r = $table->newRecord();
-			}
-			else {
-				$ref_fields = $this->getField()->getReferencedFields();
-				$query = $this->getField()->getTarget()->getTable()->getAll();
-				$group = $query->group();
-				foreach ($ref_fields as $f) $group->addRestriction($f->getName(), $record);
-				
-				$primary = $table->getPrimaryKey();
-				$pk = explode(':', $pk);
-
-				foreach ($primary as $field => $meta) {
-					$query->addRestriction($field, array_shift($pk));
-				}
-
-				$r = $query->fetch();
-			}
-			
-			$child->setParent($this);
-			$child->setDBRecord($r);
-			$child->setPostData($post);
-			$child->updateDBRecord();
-			$child->getRecord()->store();
-			
-		}
-	}
-	
+	/**
+	 * Returns the array of records that this field contains.
+	 * 
+	 * @return \databaseRecord[]
+	 */
 	public function getDefaultValue() {
-		//TODO: Implement
-		return 'null';
+		if ( ($record = $this->getBean()->getRecord()) !== null)
+			return $record->{$this->getModelField()};
+		else
+			return null;
 	}
 	
+	/**
+	 * This method overrides the normal behavior of fields that allows to define
+	 * their visibility to match the user's needs. Childbeans enforce only being
+	 * displayed on the form and avoid being displayed on the listings.
+	 * 
+	 * @return int
+	 */
 	public function getVisibility() {
 		return CoffeeBean::VISIBILITY_FORM;
-	}
-
-
-	public function __toString() {
-		$target = Model::getInstance($this->getBean()->model);
-		$srcBean = CoffeeBean::getBean($this->getModelField());
-		$src    = Model::getInstance($srcBean->model);
-		
-		$relation = $src->getReference($target);
-		$fields   = $relation->getFields();
-		
-		
-		$query = db()->table($src)->getAll();
-		foreach ($fields as $field) {
-			$query->addRestriction($field->getName(), $this->getBean()->getField($field->getReferencedField()->getName())->getValue());
-		}
-		
-		$data = $query->fetchAll();
-		
-		return strval($srcBean->makeList($data));
 	}
 	
 }

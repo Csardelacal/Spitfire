@@ -35,8 +35,12 @@ abstract class Field
 	}
 	
 	public function getName() {
+		return (!$this->name)? $this->field->getName() : $this->name;
+	}
+	
+	public function getPostId() {
 		
-		$name = (!$this->name)? $this->field->getName() : $this->name;
+		$name = $this->getName();
 		
 		if ($this->getBean()->getParent()) {
 			$record = $this->getBean()->getRecord();

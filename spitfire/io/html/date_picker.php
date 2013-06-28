@@ -8,7 +8,7 @@ class dateTimePicker extends HTMLSpan
 	private $timestamp;
 	private $inputname;
 	
-	public static $months = Array('January', 'February', 'March', 'April', 'May', 'june', 'July', 'August', 'September', 'October', 'November', 'December');
+	public static $months = Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
 	
 	public function __construct($timestamp) {
 		
@@ -30,11 +30,10 @@ class dateTimePicker extends HTMLSpan
 	
 	public function getChildren() {
 		
-		#Years first
-		$years = new HTMLSelect($this->inputname . '[year]', date('Y', $this->timestamp));
-		$current_year = date('Y', time());
-		for ($i = 1970; $i < $current_year + 3; $i++) {
-			$years->addChild(new HTMLOption($i, $i));
+		#Days
+		$days = new HTMLSelect($this->inputname . '[day]', date('d', $this->timestamp));
+		for ($i = 0; $i < 31; $i++) {
+			$days->addChild(new HTMLOption($i+1, $i+1));
 		}
 		
 		#Months
@@ -43,17 +42,18 @@ class dateTimePicker extends HTMLSpan
 			$months->addChild(new HTMLOption($i+1, self::$months[$i]));
 		}
 		
-		#Days
-		$days = new HTMLSelect($this->inputname . '[day]', date('d', $this->timestamp));
-		for ($i = 0; $i < 31; $i++) {
-			$days->addChild(new HTMLOption($i+1, $i+1));
+		#Years
+		$years = new HTMLSelect($this->inputname . '[year]', date('Y', $this->timestamp));
+		$current_year = date('Y', time());
+		for ($i = 1970; $i < $current_year + 3; $i++) {
+			$years->addChild(new HTMLOption($i, $i));
 		}
 		
 		#Hours and minutes
-		$hours   = new HTMLInput('text', $this->inputname . '[hours]',   date('H', $this->timestamp));
-		$minutes = new HTMLInput('text', $this->inputname . '[minutes]', date('i', $this->timestamp));
+		$hours   = new HTMLInput('number', $this->inputname . '[hours]',   date('H', $this->timestamp));
+		$minutes = new HTMLInput('number', $this->inputname . '[minutes]', date('i', $this->timestamp));
 		
-		return Array($years, $months, $days, $hours, $minutes);
+		return Array($days, $months, $years, $hours, $minutes);
 	}
 	
 }
