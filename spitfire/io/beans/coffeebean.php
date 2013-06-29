@@ -77,7 +77,10 @@ abstract class CoffeeBean extends Validatable
 	public function getStatus() {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if ($this->validate())
-				return self::STATUS_SUBMITTED_OK;
+				if (null !== $record = $this->getRecord() && !$this->getTable()->validate($record))
+					return self::STATUS_SUBMITTED_ERR;
+				else
+					return self::STATUS_SUBMITTED_OK;
 			else
 				return self::STATUS_SUBMITTED_ERR;
 		}

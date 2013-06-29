@@ -6,6 +6,6 @@
  * @todo: Add minimum/(maximum) count to Childbeans
  * @todo: Add timestamp fields to beans
  * 
- * @todo: Add a response element for headers / client-libs
+ * @todo: Simplify apps
  * @todo: Check plugin functionality and allow integration w/ onboard logic
  */
