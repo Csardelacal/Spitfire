@@ -7,10 +7,10 @@ use Model;
 class userModel extends Model
 {
 	
-	public function definitions() {
-		$this->username = new \StringField(20);
-		$this->password = new \StringField(40);
-		$this->email    = new \StringField(40);
-		$this->admin    = new \IntegerField();
+	public static function definitions($lst) {
+		$lst->username = new \StringField(20);
+		$lst->password = new \StringField(40);
+		$lst->email    = new \StringField(40);
+		$lst->admin    = new \IntegerField();
 	}
 }

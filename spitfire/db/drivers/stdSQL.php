@@ -4,7 +4,7 @@ namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\DB;
 use spitfire\storage\database\Table;
-use databaseRecord;
+use Model;
 
 abstract class stdSQLDriver extends DB
 {
@@ -15,10 +15,10 @@ abstract class stdSQLDriver extends DB
 	 * 
 	 * 
 	 * @param  Table $table
-	 * @param  databaseRecord $record
+	 * @param  Model $record
 	 * @return type
 	 */
-	public function delete(Table $table, databaseRecord $record) {
+	public function delete(Table $table, Model $record) {
 		
 		#Prepare Vars
 		$deletestt    = 'DELETE FROM';
@@ -42,11 +42,11 @@ abstract class stdSQLDriver extends DB
 	 * causing that data to become inconsistent.
 	 * 
 	 * @param _SF_DBTable $table
-	 * @param databaseRecord $record
+	 * @param Model $record
 	 * @param string $field
 	 * @return string
 	 */
-	public function inc(Table $table, databaseRecord $record, $field, $diff) {
+	public function inc(Table $table, Model $record, $field, $diff) {
 		
 		#Prepare vars
 		$updatestt = 'UPDATE';
@@ -70,10 +70,10 @@ abstract class stdSQLDriver extends DB
 	 * use the data that is registered in the record.
 	 * 
 	 * @param _SF_DBTable $table
-	 * @param databaseRecord $record
+	 * @param Model $record
 	 * @return string
 	 */
-	public function insert(Table $table, databaseRecord $record) {
+	public function insert(Table $table, Model $record) {
 		
 		#Additional vars
 		$escapecb   = Array($table, 'getField');
@@ -121,10 +121,10 @@ abstract class stdSQLDriver extends DB
 	 * execute.
 	 * 
 	 * @param _SF_DBTable $table
-	 * @param databaseRecord $record
+	 * @param Model $record
 	 * @return string
 	 */
-	public function update(Table$table, databaseRecord$record) {
+	public function update(Table$table, Model$record) {
 		
 		#Prepare vars
 		$updatestt  = 'UPDATE';

@@ -6,7 +6,7 @@ use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
 use spitfire\storage\database\DBField;
 use spitfire\model\Field;
-use databaseRecord;
+use Model;
 use Exception;
 
 /**
@@ -67,10 +67,10 @@ class MysqlPDOTable extends stdSQLTable
 	 * undone. <b>[NOTICE]</b>Usually Spitfire will cascade all the data
 	 * related to this record. So be careful calling it deliberately.
 	 * 
-	 * @param databaseRecord $record Database record to be deleted from the DB.
+	 * @param Model $record Database record to be deleted from the DB.
 	 * 
 	 */
-	public function delete(databaseRecord$record) {
+	public function delete(Model$record) {
 		$table = $this;
 		$db    = $table->getDb();
 		$restrictions = $record->getUniqueRestrictions();
@@ -89,11 +89,11 @@ class MysqlPDOTable extends stdSQLTable
 	 * plays or any kind of transactions.
 	 * 
 	 * @throws privateException If the database couldn't handle the request.
-	 * @param databaseRecord $record Database record to be modified.
+	 * @param Model $record Database record to be modified.
 	 * @param string $key
 	 * @param int|float|double $diff
 	 */
-	public function increment(databaseRecord$record, $key, $diff = 1) {
+	public function increment(Model$record, $key, $diff = 1) {
 		
 		$table = $this;
 		$db = $table->getDb();
@@ -109,13 +109,13 @@ class MysqlPDOTable extends stdSQLTable
 		$db->execute($stt);
 	}
 
-	public function insert(databaseRecord$record) {
+	public function insert(Model$record) {
 		$data = $record->getData();
 		$table = $record->getTable();
 		$db = $table->getDb();
                 
 		foreach ($data as $field => $value) {
-			if ($value instanceof databaseRecord) {
+			if ($value instanceof Model) {
 				$primary = $value->getPrimaryData();
 				foreach ($primary as $key => $v) {
 					$data[$field . '_' . $key] = $v;
@@ -140,7 +140,7 @@ class MysqlPDOTable extends stdSQLTable
 		return $db->getConnection()->lastInsertId();
 	}
 
-	public function update(databaseRecord$record) {
+	public function update(Model$record) {
 		$data = $record->getData();
 		$table = $record->getTable();
 		$db = $table->getDb();
@@ -153,7 +153,7 @@ class MysqlPDOTable extends stdSQLTable
 					$value = $value->fetch();
 			}
 			
-			if ($value instanceof databaseRecord) {
+			if ($value instanceof Model) {
 				$primary = $value->getPrimaryData();
 				foreach ($primary as $key => $v) {
 					$data[$field . '_' . $key] = $v;

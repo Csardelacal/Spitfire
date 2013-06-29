@@ -25,7 +25,7 @@ class Reference extends Field
 	/**
 	 * Indicates which model is the target of the reference. If model A 
 	 * references model B, then B is the target.
-	 * @var Model
+	 * @var ModelMeta
 	 */
 	private $target;
 	
@@ -34,8 +34,8 @@ class Reference extends Field
 	 * data through the ORM, therefore not requiring additional user generated
 	 * queries to retrieve data.
 	 * 
-	 * @param Model  $source
-	 * @param Model  $target
+	 * @param ModelMeta  $source
+	 * @param ModelMeta  $target
 	 * @param string $alias
 	 */
 	public function __construct($target) {
@@ -47,9 +47,9 @@ class Reference extends Field
 	 * primary key to the source so source can reference it as a parent
 	 * model.
 	 * 
-	 * @param Model $target
+	 * @param ModelMeta $target
 	 */
-	public function setTarget(Model$target) {
+	public function setTarget(ModelMeta$target) {
 		$this->target = $target;
 	}
 	
@@ -57,11 +57,11 @@ class Reference extends Field
 	 * Returns the target model (the parent model of the source). Which offers
 	 * it's primary keys to the target so it can reference them.
 	 * 
-	 * @return \Model
+	 * @return \ModelMeta
 	 */
 	public function getTarget() {
 		#Check if the passed argument already is a model
-		if ($this->target instanceof Model) {
+		if ($this->target instanceof ModelMeta) {
 			return $this->target;
 		} 
 		elseif ($this->target === $this->getModel()->getName()) {

@@ -1,6 +1,6 @@
 <?php
 
-class OTFModel extends Model
+class OTFModel extends ModelMeta
 {
 	
 	private $name;

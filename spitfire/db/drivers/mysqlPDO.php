@@ -2,7 +2,7 @@
 
 namespace spitfire\storage\database\drivers;
 
-use Model;
+use ModelMeta;
 use spitfire\storage\database\DB;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
@@ -12,7 +12,7 @@ use spitfire\environment;
 use PDO;
 use PDOException;
 use privateException;
-use databaseRecord;
+use Model;
 
 /**
  * MySQL driver via PDO. This driver does <b>not</b> make use of prepared 
@@ -173,9 +173,9 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * 
 	 * @deprecated since version 0.1Dev
 	 * @param \spitfire\storage\database\Table $table
-	 * @param databaseRecord $data
+	 * @param Model $data
 	 */
-	public function delete(Table $table, databaseRecord $data) {
+	public function delete(Table $table, Model $data) {
 		#Get the SQL Statement
 		$statement = parent::delete($table, $data);
 		#Prepare values
@@ -188,11 +188,11 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * 
 	 * @deprecated since version 0.1Dev
 	 * @param \spitfire\storage\database\Table $table
-	 * @param databaseRecord $data
+	 * @param Model $data
 	 * @param type $field
 	 * @param type $value
 	 */
-	public function inc(Table $table, databaseRecord $data, $field, $value) {
+	public function inc(Table $table, Model $data, $field, $value) {
 		
 		$statement = parent::inc($table, $data, $field, $value);
 		
@@ -203,10 +203,10 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * 
 	 * @deprecated since version 0.1Dev
 	 * @param \spitfire\storage\database\Table $table
-	 * @param databaseRecord $data
+	 * @param Model $data
 	 * @return type
 	 */
-	public function insert(Table $table, databaseRecord $data) {
+	public function insert(Table $table, Model $data) {
 		$statement = parent::insert($table, $data);
 		$values    = $data->getData();
 		
@@ -221,10 +221,10 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * 
 	 * @deprecated since version 0.1Dev
 	 * @param \spitfire\storage\database\Table $table
-	 * @param databaseRecord $data
+	 * @param Model $data
 	 * @return type
 	 */
-	public function update(Table $table, databaseRecord$data) {
+	public function update(Table $table, Model$data) {
 		$statement = parent::update($table, $data);
 		$values = $data->getDiff();
 		
@@ -247,7 +247,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * 
 	 * @param spitfire.storage.database.DB $db
 	 * @param string $tablename
-	 * @param Model $model
+	 * @param ModelMeta $model
 	 * @return spitfire.storage.database.drivers.MysqlPDOTable
 	 */
 	public function getTableInstance(DB$db, $tablename) {

@@ -11,7 +11,7 @@ use spitfire\storage\database\Query;
  * @todo Make this class implement Iterator
  * @author César de la Cal <cesar@magic3w.com>
  */
-class databaseRecord implements Serializable
+class Model implements Serializable
 {
 	
 	/**
@@ -47,6 +47,15 @@ class databaseRecord implements Serializable
 		$this->src     = $data;
 		$this->new     = empty($data);
 	}
+	
+	/**
+	 * This method is used to generate the 'template' for the table that allows
+	 * spitfire to automatically generate tables and allows it to check the types
+	 * of data and fix tables.
+	 * 
+	 * @abstract
+	 */
+	//public static abstract function definitions();
 	
 	/**
 	 * Receives the data of an array and stores it into this record. This
@@ -187,7 +196,7 @@ class databaseRecord implements Serializable
 			else $value = $this->src[$primary->getName()];
 			
 			if ($value instanceof Query) $value = $value->fetch();
-			if ($value instanceof databaseRecord) {
+			if ($value instanceof Model) {
 				unset($value);
 				$value = $this->src[$ref->getTable()->getModel()->getName()]->{$ref->getName()};
 			}
@@ -215,7 +224,7 @@ class databaseRecord implements Serializable
 		$field_info = $this->table->getModel()->getField($field);
 		
 		if ($field_info instanceof Reference) {
-			if (!$value instanceof databaseRecord) 
+			if (!$value instanceof Model) 
 				throw new privateException('Not a record');
 			
 			$this->data[$field] = $value;

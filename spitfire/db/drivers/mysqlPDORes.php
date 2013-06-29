@@ -5,7 +5,7 @@ namespace spitfire\storage\database\drivers;
 use PDO;
 use Reference;
 use ChildrenField;
-use databaseRecord;
+use Model;
 
 /**
  * This class works as a traditional resultset. It acts as an adapter between the
@@ -91,7 +91,7 @@ class mysqlPDOResultSet implements resultSetInterface
 		return $record;
 	}
 
-	public function fetchAll(databaseRecord$parent = null) {
+	public function fetchAll(Model$parent = null) {
 		//TODO: Swap to fatch all
 		//$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
 		$_return = Array();

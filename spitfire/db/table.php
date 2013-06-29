@@ -2,8 +2,8 @@
 
 namespace spitfire\storage\database;
 
-use \databaseRecord;
-use Model;
+use \Model;
+use ModelMeta;
 use spitfire\model\Field;
 use spitfire\environment;
 
@@ -30,7 +30,7 @@ abstract class Table extends Queriable
 	 * one of the key components to Spitfire's ORM as it allows the DB engine to 
 	 * create the tables automatically and to discover the data relations.
 	 *
-	 * @var Model 
+	 * @var ModelMeta 
 	 */
 	protected $model;
 	
@@ -66,7 +66,7 @@ abstract class Table extends Queriable
 	 * This variable holds a record cache for data accessed by id. This is useful
 	 * due to the big amount of queries that simply request an item by it's id
 	 * 
-	 * @var \databaseRecord[]
+	 * @var \Model[]
 	 */
 	protected $cache = Array();
 
@@ -84,7 +84,10 @@ abstract class Table extends Queriable
 		$this->db = $db;
 		
 		$model = $tablename . 'Model';
-		$this->model = new $model($this);
+		$this->model = new ModelMeta($this, $tablename);
+		$model::definitions($this->model);
+		$this->model->makePhysical();
+		
 		$this->tablename = environment::get('db_table_prefix') . $this->model->getTableName();
 		
 		$fields   = $this->model->getFields();
@@ -213,7 +216,7 @@ abstract class Table extends Queriable
 	
 	/**
 	 * 
-	 * @return \Model
+	 * @return \ModelMeta
 	 */
 	public function getModel() {
 		return $this->model;
@@ -245,16 +248,16 @@ abstract class Table extends Queriable
 	/**
 	 * Creates a new record in this table
 	 * 
-	 * @return databaseRecord Record for the selected table
+	 * @return Model Record for the selected table
 	 */
 	public function newRecord($data = Array()) {
-		$classname = $this->getModel()->getName() . 'Record';
+		$classname = $this->getModel()->getName() . 'Model';
 		
 		if (class_exists($classname)) {
 			return new $classname($this, $data);
 		}
 		else {
-			return new databaseRecord($this, $data);
+			return new Model($this, $data);
 		}
 	}
 	
@@ -284,10 +287,10 @@ abstract class Table extends Queriable
 	 * contains is valid and can be stored to the database. This function
 	 * is automatically called by insert and update.
 	 *
-	 * @param databaseRecord $data Data to be validated
+	 * @param Model $data Data to be validated
 	 * @return boolean 
 	 */
-	public function validate(databaseRecord$data) {
+	public function validate(Model$data) {
 		
 		$this->errors = Array();
 		$ok = true;
@@ -340,11 +343,11 @@ abstract class Table extends Queriable
 	 * @param int|float $diff
 	 * @throws privateException
 	 */
-	public abstract function increment(DatabaseRecord$record, $key, $diff = 1);
+	public abstract function increment(Model$record, $key, $diff = 1);
 	
-	public abstract function delete(DatabaseRecord$record);
-	public abstract function insert(DatabaseRecord$record);
-	public abstract function update(DatabaseRecord$record);
+	public abstract function delete(Model$record);
+	public abstract function insert(Model$record);
+	public abstract function update(Model$record);
 	public abstract function restrictionInstance(DBField$field, $value, $operator = null);
 	public abstract function queryInstance($table);
 	public abstract function destroy();

@@ -17,7 +17,7 @@ use spitfire\storage\database\Query;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class Model
+class ModelMeta
 {
 
 	/**
@@ -40,6 +40,8 @@ abstract class Model
 	 */
 	private $table;
 	
+	private $name;
+	
 	/**
 	 * Creates a new instance of the Model. This allows Spitfire to create 
 	 * and manage data accordingly to your wishes on a DB engine without 
@@ -48,29 +50,23 @@ abstract class Model
 	 * 
 	 * @param Table $table
 	 */
-	public final function __construct(Table$table) {
+	public final function __construct(Table$table, $name) {
 		#Define the Model's table as the one just received
 		$this->table = $table;
+		$this->name  = $name;
 		#Create a field called ID that automatically identifies records 
 		$this->_id = new IntegerField(true);
 		#Define _id as primary key and auto_increment
 		$this->_id->setPrimary(true)->setAutoIncrement(true);
-		#Call definitions
-		$this->definitions();
+	}
+	
+	public function makePhysical() {
 		#Make the physical counterparts of the fields
 		foreach ($this->fields as $field) {
 			$field->makePhysical();
 		}
+		return $this;
 	}
-	
-	/**
-	 * This method is used to generate the 'template' for the table that allows
-	 * spitfire to automatically generate tables and allows it to check the types
-	 * of data and fix tables.
-	 * 
-	 * @abstract
-	 */
-	public abstract function definitions();
 
 	/**
 	 * Imports a set of fields. This allows to back them up in case they're 
@@ -167,12 +163,7 @@ abstract class Model
 	 * @return string
 	 */
 	public final function getName() {
-		static $name = null;
-		
-		if ($name !== null) 
-			return $name;
-		else
-			return $name = strtolower(substr(get_class($this), 0, 0 - strlen('Model')));
+		return $this->name;
 	}
 	
 	/**

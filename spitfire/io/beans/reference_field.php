@@ -2,7 +2,7 @@
 
 namespace spitfire\io\beans;
 
-use \databaseRecord;
+use \Model;
 use \privateException;
 use Exception;
 
@@ -83,7 +83,7 @@ class ReferenceField extends BasicField
 	
 	public function setValue($value) {
 		
-		if ($value instanceof databaseRecord) {
+		if ($value instanceof Model) {
 			$reference = $this->getField()->getTarget();
 			if ($value->getTable()->getModel() == $reference ) {
 				parent::setValue($value);
