@@ -99,7 +99,7 @@ abstract class Model
 	 * @return Field[]
 	 */
 	public function getDBFields() {
-		$fields = array_filter(array_merge($this->fields, $this->getReferencedFields()));
+		$fields = array_filter($this->fields);
 		#If the given type is a field return it.
 		foreach($fields as $name => $field) 
 			if (!$field instanceof Field) unset($fields[$name]);
