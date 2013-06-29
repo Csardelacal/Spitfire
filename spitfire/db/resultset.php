@@ -2,16 +2,16 @@
 
 namespace spitfire\storage\database\drivers;
 
-use databaseRecord;
+use Model;
 
 interface resultSetInterface
 {
 	/**
 	 * Fetches data from a driver's resultset.
 	 * 
-	 * @return databaseRecord A record of a database.
+	 * @return Model A record of a database.
 	 */
 	public function fetch();
 	public function fetchArray();
-	public function fetchAll(databaseRecord$parent = null);
+	public function fetchAll(Model$parent = null);
 }

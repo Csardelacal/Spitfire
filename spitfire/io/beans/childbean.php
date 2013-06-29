@@ -2,7 +2,7 @@
 
 namespace spitfire\io\beans;
 
-use Model;
+use ModelMeta;
 use \CoffeeBean;
 
 /**
@@ -97,7 +97,7 @@ class ChildBean extends Field
 	/**
 	 * Returns the array of records that this field contains.
 	 * 
-	 * @return \databaseRecord[]
+	 * @return \Model[]
 	 */
 	public function getDefaultValue() {
 		if ( ($record = $this->getBean()->getRecord()) !== null)

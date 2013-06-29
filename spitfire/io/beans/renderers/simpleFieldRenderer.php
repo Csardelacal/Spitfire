@@ -2,7 +2,7 @@
 
 namespace spitfire\io\beans\renderers;
 
-use Model;
+use ModelMeta;
 use CoffeeBean;
 use spitfire\io\beans\BasicField;
 use spitfire\io\beans\ChildBean;

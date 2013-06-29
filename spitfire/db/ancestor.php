@@ -3,7 +3,7 @@
 namespace spitfire\storage\database;
 
 use spitfire\model\Reference;
-use \databaseRecord;
+use \Model;
 
 /**
  * An ancestor is an element that defines a descending relation between two 
@@ -41,7 +41,7 @@ class Ancestor
 	/**
 	 * This object is the 'payload' it is the actual ancestor of the elements
 	 * related to this.
-	 * @var databaseRecord
+	 * @var Model
 	 */
 	private $parent;
 	
@@ -49,10 +49,10 @@ class Ancestor
 	 * Creates a new ancestor. This allows to create a descending connection
 	 * between database tables.
 	 * 
-	 * @param databaseRecord $parent
+	 * @param Model $parent
 	 * @param \spitfire\model\Reference|Reference $relation
 	 */
-	public function __construct(databaseRecord$parent, Reference$relation) {
+	public function __construct(Model$parent, Reference$relation) {
 		$this->parent   = $parent;
 		$this->relation = $relation;
 	}
@@ -82,7 +82,7 @@ class Ancestor
 	 * Get the parent element. This is the base of the ancestor itself, 
 	 * without any direct reference to it's child.
 	 * 
-	 * @return databaseRecord
+	 * @return Model
 	 */
 	public function getParent() {
 		return $this->parent;
@@ -91,9 +91,9 @@ class Ancestor
 	/**
 	 * Define the base element of the ancestor.
 	 * 
-	 * @param databaseRecord $parent
+	 * @param Model $parent
 	 */
-	public function setParent(databaseRecord$parent) {
+	public function setParent(Model$parent) {
 		$this->parent = $parent;
 	}
 }

@@ -4,7 +4,7 @@ namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
-use databaseRecord;
+use Model;
 
 interface Driver
 {
@@ -14,8 +14,8 @@ interface Driver
 	
 	#Query Specific functions
 	function query (Table $table, Query $query, $fields = false);
-	function insert(Table $table, databaseRecord $data );
-	function update(Table $table, databaseRecord $data );
-	function inc   (Table $table, databaseRecord $data, $field, $value ); //Stands for increment
-	function delete(Table $table, databaseRecord $id );
+	function insert(Table $table, Model $data );
+	function update(Table $table, Model $data );
+	function inc   (Table $table, Model $data, $field, $value ); //Stands for increment
+	function delete(Table $table, Model $id );
 }

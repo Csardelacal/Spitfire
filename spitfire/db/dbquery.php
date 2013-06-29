@@ -2,7 +2,7 @@
 
 namespace spitfire\storage\database;
 
-use databaseRecord;
+use Model;
 use privateException;
 
 abstract class Query
@@ -98,7 +98,7 @@ abstract class Query
 	/**
 	 * Returns a record from a databse that matches the query we sent.
 	 * 
-	 * @return databaseRecord
+	 * @return Model
 	 */
 	public function fetch() {
 		if (!$this->result) $this->query();

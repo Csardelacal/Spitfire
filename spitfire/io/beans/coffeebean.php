@@ -77,10 +77,7 @@ abstract class CoffeeBean extends Validatable
 	public function getStatus() {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if ($this->validate())
-				if (null !== $record = $this->getRecord() && !$this->getTable()->validate($record))
-					return self::STATUS_SUBMITTED_ERR;
-				else
-					return self::STATUS_SUBMITTED_OK;
+				return self::STATUS_SUBMITTED_OK;
 			else
 				return self::STATUS_SUBMITTED_ERR;
 		}
@@ -104,7 +101,7 @@ abstract class CoffeeBean extends Validatable
 	
 	public function setDBRecord($record) {
 		$this->id = self::$counter++;
-		if ($record instanceof databaseRecord || is_null($record))
+		if ($record instanceof \Model || is_null($record))
 		$this->record = $record;
 	}
 	
@@ -112,7 +109,7 @@ abstract class CoffeeBean extends Validatable
 	 * Returns the current record this bean is representing. This will be used to
 	 * populate the form in case there is no data being sent to the form.
 	 * 
-	 * @return \databaseRecord
+	 * @return \Model
 	 */
 	public function getRecord() {
 		return $this->record;
