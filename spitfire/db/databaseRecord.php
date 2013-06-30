@@ -140,10 +140,6 @@ class Model implements Serializable
 				foreach ($value as $record) $record->store();
 			}
 	}
-	
-	public function getErrors() {
-		return $this->table->getErrors();
-	}
 
 
 	/**
@@ -168,8 +164,8 @@ class Model implements Serializable
 	    
 		foreach ($primaryFields as $field) {
 			if (null != $ref = $field->getReferencedField()) {
-				$logical = $ref->getLogicalField();
-				$name    = $field->getReferencedField()->getName();
+				$logical = $field->getLogicalField();
+				$name    = $ref->getName();
 				$ret[$field->getName()] = $this->{$logical->getName()}->{$name};
 			}
 			else {
@@ -184,6 +180,7 @@ class Model implements Serializable
 	 * Creates a list of restrictions that identify this record inside it's
 	 * database table.
 	 * 
+	 * @todo Fix, still works the old way.
 	 * @return Restriction[]
 	 */
 	public function getUniqueRestrictions() {
