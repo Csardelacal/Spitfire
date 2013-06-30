@@ -14,7 +14,7 @@ class FileField extends BasicField
 		else return '';
 		
 		if (!is_dir('bin/usr/uploads/')) {
-			if (!mkdir('bin/usr/uploads/')) throw new privateException('Upload directory does not exist and could not be crated');
+			if (!mkdir('bin/usr/uploads/')) throw new privateException('Upload directory does not exist and could not be created');
 		}
 		elseif (!is_writable('bin/usr/uploads/')) {
 			throw new privateException('Upload directory is not writable');

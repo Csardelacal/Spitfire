@@ -2,8 +2,6 @@
 
 namespace spitfire\io\beans\renderers;
 
-use ModelMeta;
-use CoffeeBean;
 use spitfire\io\beans\BasicField;
 use spitfire\io\beans\ChildBean;
 use spitfire\io\beans\TextField;
@@ -21,6 +19,9 @@ use spitfire\io\html\HTMLSelect;
 class SimpleFieldRenderer {
 	
 	public function renderForm($field) {
+		
+		if ($field->getVisibility() < 2) return;
+		
 		if ($field instanceof ReferenceField) {
 			return $this->renderReferencedField($field);
 		}
@@ -87,18 +88,13 @@ class SimpleFieldRenderer {
 	
 	public function renderChildBean($field) {
 		$childmodel = $field->getField()->getTarget();
-		$childbean  = clone $childmodel->getTable()->getBean();
+		$childbean  = $childmodel->getTable()->getBean(true);
 		$childbean->setParent($field);
 		
 		$fields = $childbean->getFields();
-		foreach($fields as &$f) {
-			$f = clone $f;
-			$f->setBean($childbean);
-			unset($f);
-		}
 		
 		if ($field->getBean()->getRecord()) {
-			$children  = $field->getBean()->getRecord()->{$field->getPostId()};
+			$children  = $field->getBean()->getRecord()->{$field->getName()};
 		}
 		
 		$ret = new HTMLDiv();
@@ -109,7 +105,6 @@ class SimpleFieldRenderer {
 				$ret->addChild($subform = new HTMLDiv());
 				$subform->addChild('<h1>' . $record . '</h1>');
 				foreach ($fields as $f) 
-					if (!($f instanceof ReferenceField && $f->getField()->getTarget() == $field->getBean()->getTable()->getModel()))
 						$subform->addChild ($this->renderForm($f));
 			}
 		}
@@ -119,7 +114,6 @@ class SimpleFieldRenderer {
 			$childbean->setDBRecord(null);
 			$ret->addChild('<h1>New record</h1>');
 			foreach ($fields as $f) 
-					if (!($f instanceof ReferenceField && $f->getField()->getTarget() == $field->getBean()->getTable()->getModel()))
 						$ret->addChild ($this->renderForm($f));
 			$count++;
 		} while ($count < $field->getMinimumEntries());
