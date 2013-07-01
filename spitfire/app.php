@@ -1,7 +1,6 @@
 <?php
 
 use spitfire\View;
-use spitfire\SpitFire;
 
 /**
  * Spitfire Application Class. This class is the base of every other 'app', an 
