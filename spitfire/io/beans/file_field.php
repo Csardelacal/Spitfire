@@ -7,25 +7,12 @@ class FileField extends BasicField
 	
 	private $upload = null;
 	
-	public function getValue() {
-		if     ($this->upload) return $this->upload;
-		elseif (!empty($_FILES[$this->getName()]) && $_FILES[$this->getName()]['error'] == 0) $file = $_FILES[$this->getName()]['tmp_name'];
-		elseif (parent::getValue()) return parent::getValue();
-		else return '';
+	public function getRequestValue() {
+		$file = parent::getRequestValue();
 		
-		if (!is_dir('bin/usr/uploads/')) {
-			if (!mkdir('bin/usr/uploads/')) throw new privateException('Upload directory does not exist and could not be created');
-		}
-		elseif (!is_writable('bin/usr/uploads/')) {
-			throw new privateException('Upload directory is not writable');
-		}
-		
-		$filename = 'bin/usr/uploads/' . base_convert(time(), 10, 32) . '_' . base_convert(rand(), 10, 32) . '_' . $_FILES[$this->getName()]['name'];
-		
-		move_uploaded_file($file, $filename);
-		return $this->upload = $filename;
+		if ($file instanceof \spitfire\io\Upload) return $file->store();
+		else throw new privateException('Not an upload');
 	}
-	
 	
 	public function __toString() {
 		$id = "field_{$this->getName()}";

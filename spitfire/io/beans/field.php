@@ -5,9 +5,25 @@ namespace spitfire\io\beans;
 use CoffeeBean;
 use privateException;
 
+/**
+ * A bean field is an object that allows the bean to retrieve the data it needs
+ * from a POST request. Additionally it provides the renderer classes with 
+ * valuable data about the contents this field expects and how it should name
+ * the fields of the form.
+ * 
+ * @author César de la Cal <cesar@magic3w.com>
+ * @since  0.1
+ * @last-revision 2013-07-01
+ */
 abstract class Field
 {
-	
+	/**
+	 * The bean this field currently belongs to. This is used by the Field to 
+	 * retrieve the data from the eban's current record, and information about it's
+	 * parent.
+	 * 
+	 * @var \CoffeeBean
+	 */
 	private $bean;
 	private $name;
 	private $field;

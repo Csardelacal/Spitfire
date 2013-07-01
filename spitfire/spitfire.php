@@ -50,6 +50,9 @@ class SpitFire extends App
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
 		
+		#If there are uploads to be handled copy them into _POST
+		if(!empty($_FILES)) io\Upload::init();
+		
 		#Define the current timezone
 		date_default_timezone_set(environment::get('timezone'));
                 

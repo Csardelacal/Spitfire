@@ -103,7 +103,7 @@ class SimpleFieldRenderer {
 			foreach ($children as $record) {
 				$childbean->setDBRecord($record);
 				$ret->addChild($subform = new HTMLDiv());
-				$subform->addChild('<h1>' . $record . '</h1>');
+				$subform->addChild('<h1>' . $record->getTable()->getModel()->getName() . ' - ' . $record . '</h1>');
 				foreach ($fields as $f) 
 						$subform->addChild ($this->renderForm($f));
 			}
@@ -112,7 +112,7 @@ class SimpleFieldRenderer {
 		$count = (empty($children))? 0 : count($children);
 		do {
 			$childbean->setDBRecord(null);
-			$ret->addChild('<h1>New record</h1>');
+			$ret->addChild('<h1>' . $childbean->getTable()->getModel()->getName() . ' - ' . 'New record</h1>');
 			foreach ($fields as $f) 
 						$ret->addChild ($this->renderForm($f));
 			$count++;

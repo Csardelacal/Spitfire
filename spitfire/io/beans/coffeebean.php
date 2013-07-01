@@ -38,6 +38,7 @@ abstract class CoffeeBean extends Validatable
 	private $parent;
 	private $table;
 	private $postdata = null;
+	private $session  = null;
 	
 	public $name;
 	public $model;
@@ -75,7 +76,12 @@ abstract class CoffeeBean extends Validatable
 	 * @return int Status code of the submission
 	 */
 	public function getStatus() {
+		
+		
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+			if ($_POST['_XSS_'] != $this->getXSSToken())
+				throw new publicException('XSS Attack', 403);
+			
 			if ($this->validate())
 				return self::STATUS_SUBMITTED_OK;
 			else
@@ -216,6 +222,19 @@ abstract class CoffeeBean extends Validatable
 			$data[$field] = $content->getValue(); 
 		}
 		return parent::validate($data);
+	}
+	
+	public function getXSSToken() {
+		if ($this->session === null) $this->session = new session();
+		
+		$session = $this->session;
+		/* @var $session session*/
+		if (false == $xss_token = $session->get('_XSS_')) {
+			$xss_token = base64_encode(rand());
+			$session->set('_XSS_', $xss_token);
+		}
+		
+		return $xss_token;
 	}
 
 	
