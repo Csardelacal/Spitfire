@@ -190,7 +190,7 @@ abstract class Table extends Queriable
 	 */
 	public function getById($id) {
 		#If the data is a string separate by colons
-		if (is_string($id)) $id = explode(':', $id);
+		if (!is_array($id)) $id = explode(':', $id);
 		
 		#Create a query
 		$primary = $this->getPrimaryKey();

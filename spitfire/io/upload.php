@@ -33,7 +33,10 @@ class Upload
 	
 	public function getData() {
 		
-		if (!is_array($this->meta['name'])) return $this;
+		if (!is_array($this->meta['name'])) {
+			if ($this->meta['size'] == 0) return null;
+			return $this;
+		}
 		
 		$_return = Array();
 		foreach ($this->meta['name'] as $name => $ignore) {
@@ -65,7 +68,7 @@ class Upload
 			unset($file);
 		}
 		
-		$_POST = array_merge_recursive ($_POST, $files);
+		$_POST = array_replace_recursive ($_POST, $files);
 		
 	}
 	

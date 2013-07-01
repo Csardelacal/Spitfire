@@ -230,7 +230,7 @@ abstract class Field
 	 * @return boolean
 	 */
 	public function isUnique() {
-		if ($this->primary) return true;
+		//TODO: BUG, requires revision for multi field primaries if ($this->primary) return true;
 		return $this->unique;
 	}
 	

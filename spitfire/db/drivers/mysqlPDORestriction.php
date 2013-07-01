@@ -10,16 +10,16 @@ class MysqlPDORestriction extends Restriction
 {
 	public function __toString() {
 		try {
-			if(is_a($this->getValue(), 'databaseRecord')) {
+			if(is_a($this->getValue(), 'Model')) {
 				$fields = $this->getField()->getPhysical();
 				$data = $this->getValue()->getPrimaryData();
 				
-				$str = '';
+				$restrictions = Array();
 				
 				while (null != $field = array_shift($fields)) {
-					$str.= new MysqlPDORestriction($field, array_shift($data), $this->getOperator());
+					$restrictions[] = new MysqlPDORestriction($field, array_shift($data), $this->getOperator());
 				}
-				return $str;
+				return implode(' AND ', $restrictions);
 			}
 			elseif($this->getValue() instanceof Query) {
 				return implode(' AND ', $this->getValue()->getRestrictions());
