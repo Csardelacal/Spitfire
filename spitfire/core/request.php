@@ -43,7 +43,7 @@ class Request
 	}
 	
 	public function getControllerURI() {
-		return explode('\\', substr(get_class($this->getController()), strlen($this->app->getClassNameSpace()), 0-strlen('Controller')));
+		return explode('\\', substr(get_class($this->getController()), strlen($this->app->getNameSpace()), 0-strlen('Controller')));
 	}
 	
 	public function setController(Controller$controller) {
@@ -144,7 +144,14 @@ class Request
 		return $this->parsers;
 	}
 
-
+	/**
+	 * This function allows to use a singleton pattern on the request. We don't 
+	 * need more than one request at a time, so we can use this function to avoid
+	 * storing it in several places.
+	 * 
+	 * @param string $path
+	 * @return \Request
+	 */
 	public static function get($path = null) {
 		if (self::$instance) return self::$instance;
 		else return self::$instance = new self($path);

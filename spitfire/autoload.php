@@ -47,7 +47,14 @@ class AutoLoad
 	}
 
 	public function retrieveClass($className) {
-
+		
+		#If there is a request, retrieve the app which is handling it
+		if (null != $request = $this->spitfire->getRequest()) 
+			$app = $request->getApp();
+		
+		if (!isset($app) || $app === $this->spitfire || strpos($className, $app->getNameSpace()) !== 0) 
+			$app = $this->spitfire;
+		
 		if (in_array($className, $this->imported_classes)) return;
 		$this->imported_classes[] = $className;
 		$this->spitfire->log("Imported class $className");
@@ -55,8 +62,8 @@ class AutoLoad
 		if (isset($this->registered_classes[$className]))
 			return include $this->registered_classes[$className];
 		
-		$class = new ClassInfo($className);
-		$dir   = $this->directories[$class->getType()];
+		$class = new ClassInfo($className, $app);
+		$dir   = $app->getDirectory($class->getType());
 		
 		if ($class->getType() == ClassInfo::TYPE_APP) {
 			

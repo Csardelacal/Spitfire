@@ -3,6 +3,7 @@
 namespace spitfire\locales;
 
 use spitfire\Request;
+use \privateException;
 
 class langInfo
 {
@@ -30,12 +31,16 @@ class langInfo
 	}
 	
 	public function getLocaleClass() {
-		$classname = Request::get()->getApp()->getLocaleClassName($this->langcode);
-		if (!empty($this->langcode) && class_exists($classname)) return new $classname();
-		
-		$classname = Request::get()->getApp()->getLocaleClassName(substr($this->localecode, 0, 2));
-		if (!empty($this->localecode) && class_exists($classname)) return new $classname();
-		
-		else return new \enLocale();
+		try {
+			return Request::get()->getApp()->getLocale($this->langcode);
+		}
+		catch(privateException $e) {
+			try {
+				return Request::get()->getApp()->getLocale(substr($this->localecode, 0, 2));
+			}
+			catch(privateException $e) {
+				return new \enLocale();
+			}
+		}
 	}
 }
