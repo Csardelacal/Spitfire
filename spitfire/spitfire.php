@@ -149,29 +149,13 @@ class SpitFire extends App
 	public function getRequest() {
 		return $this->request;
 	}
-
-	public function getControllerClassName($controller) {
-		if (is_array($controller)) $c = implode('\\', $controller). 'Controller';
-		elseif(is_object($controller)) {print_r (\debug_backtrace());ob_flush();die();}
-		else $c = $controller . 'Controller';
-		return $c;
-	}
-
-	public function hasController($controller) {
-		if (empty($controller)) return false;
-		return class_exists($this->getControllerClassName($controller));
-	}
-
-	public function getViewClassName($controller) {
-		return implode('\\', $controller) . 'View';
-	}
-
-	public function getLocaleClassName($locale) {
-		return "{$locale}Locale";
+	
+	public function getNameSpace() {
+		return '';
 	}
 	
-	public function getClassNameSpace() {
-		return '';
+	public function getBaseDir() {
+		return 'bin/';
 	}
 
 }

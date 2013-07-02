@@ -33,7 +33,10 @@ class ClassInfo
 	    self::TYPE_STDCLASS
 	);
 	
-	public function __construct($className) {
+	public function __construct($className, $app = null) {
+		
+		if ($app) $className = substr ($className, strlen($app->getNameSpace()));
+		
 		$this->fullName  = $className;
 		
 		$this->namespace = explode (self::NAMESPACE_SEPARATOR, $className);
