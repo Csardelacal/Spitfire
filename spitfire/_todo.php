@@ -7,5 +7,6 @@
  * @todo: Add timestamp fields to beans
  * 
  * @todo: Simplify apps
+ * @todo: Add DBProcedure class
  * @todo: Check plugin functionality and allow integration w/ onboard logic
  */
