@@ -6,6 +6,8 @@
  * @todo: Add minimum/(maximum) count to Childbeans
  * @todo: Add timestamp fields to beans
  * 
+ * @todo: Add form reader
+ * @todo: Add Settings editor element
  * @todo: Simplify apps
  * @todo: Check plugin functionality and allow integration w/ onboard logic
  */
