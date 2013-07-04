@@ -25,12 +25,52 @@ abstract class Field
 	 * @var \CoffeeBean
 	 */
 	private $bean;
-	private $name;
-	private $field;
-	private $caption;
-	private $visibility = 3;
 	
-	public function __construct(CoffeeBean$bean, $field, $caption) {
+	/**
+	 * The name that identifies this field. This is used to alias a field and hide
+	 * it's database column name, this is mainly useful if you're paranoic about
+	 * people knowing the structure of your database. Otherwise it is pretty 
+	 * useless.
+	 *
+	 * @var string
+	 */
+	private $name;
+	
+	/**
+	 * This is the field this bean represents on the current Model, it allows the 
+	 * field to retrieve information about the data-type it contains. It also
+	 * tells the bean field where the data for the form is.
+	 *
+	 * @var \spitfire\model\Field
+	 */
+	private $field;
+	
+	/**
+	 * The string that is displayed on the label next to the input for this field.
+	 * Only intended to make the name more user-friendly for users.
+	 *
+	 * @var string
+	 */
+	private $caption;
+	
+	/**
+	 * Sets the visibility of a field. By default the visibility of each field is
+	 * to be visibile everywhere, this means you will se this field displayed on
+	 * the listing and the form.
+	 *
+	 * @var int
+	 */
+	private $visibility = CoffeeBean::VISIBILITY_ALL;
+	
+	/**
+	 * Creates a new Bean Field, this is a connector between the bean and a model's
+	 * field meant to ease the creation of Forms or POST input sanitization.
+	 * 
+	 * @param CoffeeBean $bean
+	 * @param \spitfire\model\Field $field
+	 * @param string $caption
+	 */
+	public function __construct(CoffeeBean$bean, \spitfire\model\Field$field, $caption) {
 		$this->bean = $bean;
 		$this->field = $field;
 		$this->caption = $caption;

@@ -49,7 +49,7 @@ abstract class CoffeeBean extends Validatable
 	 * 
 	 * @param \spitfire\storage\database\Table $table
 	 */
-	public final function __construct(Table$table) {
+	public final function __construct(Table$table = null) {
 		$this->table = $table;
 		$this->definitions();
 	}
