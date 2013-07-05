@@ -50,7 +50,7 @@ class ModelMeta
 	 * 
 	 * @param Table $table
 	 */
-	public final function __construct(Table$table, $name) {
+	public final function __construct($name, Table$table = null) {
 		#Define the Model's table as the one just received
 		$this->table = $table;
 		$this->name  = $name;
@@ -185,6 +185,10 @@ class ModelMeta
 		return $this->table;
 	}
 	
+	public function setTable($table) {
+		$this->table = $table;
+	}
+	
 	/**
 	 * Extending this function on models allows you to add restrictions to a 
 	 * query when this is made for this model. This way you can generate a 
@@ -234,6 +238,7 @@ class ModelMeta
 		if ($value instanceof Field) {
 			$value->setName($name);
 			$value->setModel($this);
+			$value->ready();
 			$this->fields[$name] = $value;
 		}
 		

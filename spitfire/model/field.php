@@ -171,7 +171,7 @@ abstract class Field
 	 * deliver data about which fields it's a sibling to and which fields
 	 * it refers too.
 	 * 
-	 * @return Model
+	 * @return ModelMeta
 	 */
 	public function getModel() {
 		return $this->model;
@@ -261,6 +261,10 @@ abstract class Field
 	 */
 	public function isIndexed() {
 		return ($this->primary || $this->unique);
+	}
+	
+	public function ready() {
+		
 	}
 	
 	/**

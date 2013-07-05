@@ -68,7 +68,7 @@ class SimpleFieldRenderer {
 	
 	public function renderReferencedField($field) {
 		$record = $field->getValue();
-		$selected = ($record)? implode('|',$record->getPrimaryData()) : '';
+		$selected = ($record)? implode(':',$record->getPrimaryData()) : '';
 		$select = new HTMLSelect($field->getPostId(), $selected);
 		$label = new HTMLLabel($select, $field->getCaption());
 		

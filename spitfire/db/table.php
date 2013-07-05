@@ -83,12 +83,26 @@ abstract class Table extends Queriable
 	public function __construct (DB$db, $tablename) {
 		$this->db = $db;
 		
-		$model = $tablename . 'Model';
-		$this->model = new ModelMeta($this, $tablename);
-		$model::definitions($this->model);
-		$this->model->makePhysical();
+		if ($tablename instanceof ModelMeta) {
+			$this->model = $tablename;
+			$this->model->setTable($this);
+		}
+		else {
+			$model = $tablename . 'Model';
+			$this->model = new ModelMeta($tablename, $this);
+
+			if (class_exists($model)) {
+				$model::definitions($this->model);
+				$this->model->makePhysical();
+			}
+		}
 		
 		$this->tablename = environment::get('db_table_prefix') . $this->model->getTableName();
+		
+		$this->makeFields();
+	}
+	
+	public function makeFields() {
 		
 		$fields   = $this->model->getFields();
 		$dbfields = Array();
