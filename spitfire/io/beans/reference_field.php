@@ -24,15 +24,13 @@ class ReferenceField extends BasicField
 				#In that case the value of this is automatically set.
 				$parent_model = $this->getBean()->getParent()->getField()->getModel();
 				$this_model   = $this->getField()->getTarget();
-				if ($parent_model == $this_model) {
+				if ($parent_model === $this_model) {
 					return $this->getBean()->getParent()->getBean()->getRecord();
 				}
 
 			}
 
-			else {
-				throw $e;
-			}
+			throw $e;
 		}
 		
 		$reference = $this->getField()->getTarget();
@@ -44,7 +42,7 @@ class ReferenceField extends BasicField
 	public function getVisibility() {
 		$visibility = parent::getVisibility();
 		
-		if ($this->getBean()->getParent() && $this->getField()->getTarget() == $this->getBean()->getParent()->getField()->getModel())
+		if ($this->getBean()->getParent() && $this->getField()->getTarget() === $this->getBean()->getParent()->getField()->getModel())
 			return $visibility - \CoffeeBean::VISIBILITY_FORM;
 		else 
 			return $visibility;

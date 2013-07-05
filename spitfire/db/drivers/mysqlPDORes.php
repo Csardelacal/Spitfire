@@ -100,7 +100,7 @@ class mysqlPDOResultSet implements resultSetInterface
 		
 		if ($parent)
 		foreach ($fields as $field) {
-			if ($field instanceof Reference && $field->getTarget() == $parent->getTable()->getModel())
+			if ($field instanceof Reference && ($field->getTarget()) === $parent->getTable()->getModel())
 				$parentConnector[] = $field;
 		}
 		

@@ -107,26 +107,44 @@ abstract class DB extends _SF_MVC
 	 *                 If you pass a model to this function it will automatically
 	 *                 read the name from the model and use it to find the 
 	 *                 table.
+	 * 
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
 		#If the parameter is a Model, we get it's name
-		if ($tablename instanceof ModelMeta) $tablename = $tablename->getName();
-		elseif (is_string($tablename)) {}
+		if ($tablename instanceof ModelMeta) {
+			
+			if (isset($this->tables[$tablename->getName()]))
+				return $this->tables[$tablename->getName()];
+			
+			elseif (!class_exists($tablename->getName().'Model')) {
+				return $this->tables[$tablename->getName()] = $this->getTableInstance($this, $tablename);
+			}
+			
+			else {
+				$tablename = $tablename->getName();
+			}
+		}
+		
+		if (is_string($tablename)) {
+			
+			#If the table has already been imported continue
+			if (isset($this->tables[$tablename])) return $this->tables[$tablename];
+
+			$modelName = $tablename.'Model';
+
+			if (class_exists($modelName)) {
+				return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
+			}
+			/*else {
+				$model = $this->getOTFModel($tablename);
+				return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
+			}*/
+			
+		}
+		
 		else throw new privateException('Invalid type');
 		
-		#If the table has already been imported continue
-		if (isset($this->tables[$tablename])) return $this->tables[$tablename];
-		
-		$modelName = $tablename.'Model';
-
-		if (class_exists($modelName)) {
-			return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
-		}
-		else {
-			$model = $this->getOTFModel($tablename);
-			return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
-		}
 	}
 
 	/**

@@ -133,7 +133,7 @@ abstract class CoffeeBean extends Validatable
 	public function field($field, $caption) {
 		$logical = $this->table->getModel()->getField($field);
 		
-		if (!$logical) throw new privateException('No field ' . $field);
+		if (!$logical) throw new privateException('No field ' . $field . ' in ' . $this->table->getModel()->getName());
 		
 		switch($logical->getDataType()) {
 			case model\Field::TYPE_STRING:

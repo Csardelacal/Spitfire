@@ -48,6 +48,7 @@ AutoLoad::registerClass('FileField',                                            
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
+AutoLoad::registerClass('MultiReference',                                       $cur_dir.'/model/fields/multireference.php');
 AutoLoad::registerClass('Reference',                                            $cur_dir.'/model/reference.php');
 AutoLoad::registerClass('ChildrenField',                                        $cur_dir.'/model/children.php');
 
