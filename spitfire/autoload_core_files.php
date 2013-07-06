@@ -74,6 +74,7 @@ AutoLoad::registerClass('spitfire\io\beans\BasicField',                         
 AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\LongTextField',                      $cur_dir.'/io/beans/long_text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
+AutoLoad::registerClass('spitfire\io\beans\MultiReferenceField',                $cur_dir.'/io/beans/multireference_field.php');
 AutoLoad::registerClass('spitfire\io\beans\FileField',                          $cur_dir.'/io/beans/file_field.php');
 AutoLoad::registerClass('spitfire\io\beans\DateTimeField',                      $cur_dir.'/io/beans/datetime_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ChildBean',                          $cur_dir.'/io/beans/childbean.php');

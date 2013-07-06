@@ -15,7 +15,7 @@ use \CoffeeBean;
  * @author César de la Cal <cesar@magic3w.com>
  * @since 0.1
  */
-class ChildBean extends Field 
+class MultiReferenceField extends Field 
 {
 	
 	/**
@@ -37,33 +37,20 @@ class ChildBean extends Field
 	public function getRequestValue() {
 		
 		#Check if the request is done via POST. Otherwise return an empty array.
-		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \privateException("Nothing posted");
 		
 		#Post will contain an array of subforms for this element.
-		$data    = $_POST[$this->getName()];
+		$postdata= $this->getBean()->getPostData();
+		$data    = $postdata[$this->getName()];
 		$_return = Array();
 		
 		#Loop through the passed array and create the subforms to handle the data
-		foreach ($data as $pk => $post) {
-			$post = array_filter($post);
-			if (empty($post)) continue;
+		foreach ($data as $pk) {
 			
-			$table = $this->getField()->getTarget()->getTable();
-			$child = $table->getBean(true);
+			$table  = $this->getField()->getTable()->getDb()->table($this->getField()->getTarget());
+			$record = $table->getById($pk);
 			
-			if (substr($pk, 0, 5) == '_new_')
-				$r = $table->newRecord();
-			else
-				$r = $table->getById($pk);
-			
-			if ($r !== null) {
-				$child->setParent($this);
-				$child->setDBRecord($r);
-				$child->setPostData($post);
-				$child->updateDBRecord();
-
-				$_return[] = $child->getRecord();
-			}
+			if ($record) $_return[] = $record;
 
 		}
 
@@ -100,7 +87,7 @@ class ChildBean extends Field
 	 */
 	public function getDefaultValue() {
 		if ( ($record = $this->getBean()->getRecord()) !== null)
-			return $record->{$this->getModelField()};
+			return $record->{$this->getField()->getName()};
 		else
 			return null;
 	}

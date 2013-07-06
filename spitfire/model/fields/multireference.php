@@ -12,17 +12,13 @@ class MultiReference extends ChildrenField
 		$this->target = $model;
 	}
 	
-	public function ready() {
-		
-	}
-	
 	public function getRole() {
 		return parent::getModel()->getName();
 	}
 
 	public function getTarget() {
 		
-		if($this->meta) return $this->meta;
+		if($this->meta) return $this->target; //$this->meta;
 		
 		$src    = $this->getModel()->getName();
 		$target = $this->target;
@@ -43,11 +39,15 @@ class MultiReference extends ChildrenField
 		$model->{$target}->setPrimary(true);
 		
 		$this->getModel()->getTable()->getDb()->table($model)->makeFields();
+		return $this->target = $this->getModel()->getTable()->getDb()->table($target)->getModel();//$this->meta;
+	}
+	
+	public function getBridge() {
 		return $this->meta;
 	}
 
 	public function getDataType() {
-		return Field::TYPE_CHILDREN;
+		return Field::TYPE_BRIDGED;
 	}
 	
 }

@@ -238,7 +238,6 @@ class ModelMeta
 		if ($value instanceof Field) {
 			$value->setName($name);
 			$value->setModel($this);
-			$value->ready();
 			$this->fields[$name] = $value;
 		}
 		

@@ -135,10 +135,27 @@ class Model implements Serializable
 		$this->synced = true;
 		$this->new    = false;
 		
-		foreach($this->data as $value)
-			if (is_array($value)) {
-				foreach ($value as $record) $record->store();
+		foreach($this->data as $field => $value) {
+			
+			$field_info = $this->table->getModel()->getField($field);
+			
+			if ($field_info instanceof MultiReference) {
+				$bridge_records = $field_info->getBridge()->getTable()->get($field_info->getModel()->getName(), $this)->fetchAll();
+				foreach($bridge_records as $r) $r->delete();
+				
+				foreach($value as $child) {
+					$insert = $field_info->getBridge()->getTable()->newRecord();
+					$insert->{$field_info->getModel()->getName()} = $this;
+					$insert->{$field_info->getTarget()->getName()} = $child;
+					$insert->store();
+				}
 			}
+			elseif ($field_info instanceof ChildrenField) {
+				if (is_array($value)) {
+					foreach ($value as $record) $record->store();
+				}
+			}
+		}
 	}
 
 
@@ -250,6 +267,24 @@ class Model implements Serializable
 		if ($field_info instanceof Reference) {
 			if ($this->data[$field] instanceof Query) {
 				return $this->data[$field] = $this->data[$field]->fetch();
+			} else {
+				return $this->data[$field];
+			}
+		}
+		
+		elseif ($field_info instanceof MultiReference) {
+			if (!isset($this->data[$field])) {
+				
+				$query       = $field_info->getTarget()->getTable()->getAll();
+				$bridgequery = $field_info->getBridge()->getTable()->get($this->table->getModel()->getName(), $this);
+				
+				$query->addRestriction($field_info->getBridge()->getField($field_info->getTarget()->getName()),$bridgequery);
+				
+				$this->data[$field] = $query;
+			}
+			
+			if ($this->data[$field] instanceof Query) {
+				return $this->data[$field] = $this->data[$field]->fetchAll($this);
 			} else {
 				return $this->data[$field];
 			}

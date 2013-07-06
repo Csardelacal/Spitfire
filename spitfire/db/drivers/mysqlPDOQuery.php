@@ -56,8 +56,16 @@ class MysqlPDOQuery extends Query
 		if (!empty($restrictions)) {
 			foreach ($restrictions as $restriction) {
 				if ( $restriction instanceof Restriction && ($value = $restriction->getValue()) instanceof Query) {
-					$rem_table = $value->getTable();
-					$remote_f  = $restriction->getField()->getReferencedFields();
+					
+					if ($restriction->getField()->getModel()->getTable() !== $this->table) {
+						$rem_table = $restriction->getField()->getModel()->getTable();
+						$remote_f  = Array($restriction->getField());
+					}
+					else {
+						$rem_table = $value->getTable();
+						$remote_f  = $restriction->getField()->getReferencedFields();
+					}
+					
 					$remote_p  = Array();
 					
 					foreach($remote_f as $field) {
