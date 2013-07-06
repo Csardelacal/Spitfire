@@ -39,7 +39,14 @@ abstract class Query
 		} catch (\Exception $e) {
 			$field = $this->table->getModel()->getField($fieldname);
 		}
-		if ($field == null) throw new privateException("No field '$fieldname'");
+		if ($field == null) {
+			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel()) {
+				$field = $fieldname;
+			}
+			else {
+				throw new privateException("No field '$fieldname'");
+			}
+		}
 		$restriction = $this->restrictionInstance($field, $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;

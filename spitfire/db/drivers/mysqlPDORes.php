@@ -68,6 +68,10 @@ class mysqlPDOResultSet implements resultSetInterface
 				$_record[$field->getName()] = $query;
 			}
 			
+			elseif ($field instanceof \MultiReference) {
+				
+			}
+			
 			elseif ($field instanceof ChildrenField) {
 				if ($field->getTarget()->getField($field->getRole()) instanceof Reference) {
 					$query = $field->getTarget()->getTable()->getAll();

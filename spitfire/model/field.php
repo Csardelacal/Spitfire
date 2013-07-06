@@ -23,6 +23,7 @@ abstract class Field
 	const TYPE_DATETIME  = 'datetime';
 	const TYPE_REFERENCE = 'reference';
 	const TYPE_CHILDREN  = 'children';
+	const TYPE_BRIDGED   = 'bridged';
 	
 	/**
 	 * Contains a reference to the parent model. This allows this field to 
@@ -261,10 +262,6 @@ abstract class Field
 	 */
 	public function isIndexed() {
 		return ($this->primary || $this->unique);
-	}
-	
-	public function ready() {
-		
 	}
 	
 	/**

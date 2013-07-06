@@ -9,6 +9,7 @@ use spitfire\io\beans\LongTextField;
 use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\FileField;
 use spitfire\io\beans\ReferenceField;
+use spitfire\io\beans\MultiReferenceField;
 use spitfire\io\html\HTMLInput;
 use spitfire\io\html\HTMLTextArea;
 use spitfire\io\html\HTMLLabel;
@@ -24,6 +25,9 @@ class SimpleFieldRenderer {
 		
 		if ($field instanceof ReferenceField) {
 			return $this->renderReferencedField($field);
+		}
+		elseif ($field instanceof MultiReferenceField) {
+			return $this->renderMultiReferencedField($field);
 		}
 		elseif ($field instanceof ChildBean) {
 			return $this->renderChildBean($field);
@@ -80,10 +84,52 @@ class SimpleFieldRenderer {
 		$select->addChild(new HTMLOption(null, 'Pick'));
 		
 		foreach ($possibilities as $possibility) {
-			$select->addChild(new HTMLOption(implode('|', $possibility->getPrimaryData()), strval($possibility)));
+			$select->addChild(new HTMLOption(implode(':', $possibility->getPrimaryData()), strval($possibility)));
 		}
 		
 		return new HTMLDiv($label, $select, Array('class' => 'field'));
+	}
+	
+	public function renderMultiReferencedField($field) {
+		$records = $field->getValue();
+		
+		$reference = $field->getField()->getTarget();
+		$query = db()->table($reference)->getAll();
+		$query->setPage(-1);
+		$possibilities = $query->fetchAll();
+		
+		$_return = Array();
+		
+		foreach ($records as $record) {
+			$selected = ($record)? implode(':',$record->getPrimaryData()) : '';
+			$select = new HTMLSelect($field->getPostId() . '[]', $selected);
+			$label = new HTMLLabel($select, $field->getCaption());
+
+			$select->addChild(new HTMLOption(null, 'Pick'));
+
+			foreach ($possibilities as $possibility) {
+				$select->addChild(new HTMLOption(implode(':', $possibility->getPrimaryData()), strval($possibility)));
+			}
+			
+			$_return[] = new HTMLDiv($label, $select, Array('class' => 'field'));
+		}
+		
+		#Empty additional one
+		//todo: Stop cpying code
+		$selected = '';
+		$select = new HTMLSelect($field->getPostId() . '[]', $selected);
+		$label  = new HTMLLabel($select, $field->getCaption());
+
+		$select->addChild(new HTMLOption(null, 'Pick'));
+
+		foreach ($possibilities as $possibility) {
+			$select->addChild(new HTMLOption(implode(':', $possibility->getPrimaryData()), strval($possibility)));
+		}
+
+		$_return[] = new HTMLDiv($label, $select, Array('class' => 'field'));
+		
+		return implode('', $_return);
+		
 	}
 	
 	public function renderChildBean($field) {
