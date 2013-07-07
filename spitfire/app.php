@@ -12,6 +12,13 @@ use spitfire\ClassInfo;
  */
 abstract class App
 {
+	/**
+	 * Holds the view the app uses to handle the current request. This view is in 
+	 * charge of renderring the page once the controller has finished processing
+	 * it.
+	 * 
+	 * @var \spitfire\View
+	 */
 	public $view;
 	public $controller;
 
