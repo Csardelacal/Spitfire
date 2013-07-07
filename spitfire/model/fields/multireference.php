@@ -26,7 +26,7 @@ class MultiReference extends ChildrenField
 		$first  = ($src > $target)? $target : $src;
 		$second = ($first == $src)? $target : $src;
 		
-		if (db()->table("{$first}_{$second}")) 
+		if (db()->hasTable("{$first}_{$second}")) 
 			return $this->meta = db()->table("{$first}_{$second}")->getModel();
 		
 		$model = $this->meta = db()->table(new ModelMeta("{$first}_{$second}"))->getModel();
