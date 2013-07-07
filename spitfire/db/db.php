@@ -146,6 +146,10 @@ abstract class DB extends _SF_MVC
 		else throw new privateException('Invalid type');
 		
 	}
+	
+	public function hasTable($name) {
+		return isset($this->tables[$name]);
+	}
 
 	/**
 	 * Allows short-hand access to tables by using: $db->tablename
