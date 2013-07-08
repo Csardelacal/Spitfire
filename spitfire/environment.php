@@ -48,6 +48,7 @@ class environment
 		#Memcached settings
 		'memcached_enabled'        => false,
 		'memcached_servers'        => Array('localhost'),
+		'memcached_port'           => '11211',
 	    
 		#Timezone settings
 		'timezone'                 => 'Europe/Berlin'

@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\MemcachedAdapter;
+
 abstract class Controller extends _SF_MVC
 {
 	
@@ -10,7 +12,7 @@ abstract class Controller extends _SF_MVC
 
 		parent::__construct($app);
 
-		$this->memcached = new _SF_Memcached();
+		$this->memcached = MemcachedAdapter::getInstance();
 		$this->call      = new _SF_Invoke();
 		$this->post      = new _SF_InputSanitizer($_POST);
 		$this->get       = new _SF_InputSanitizer($_GET);

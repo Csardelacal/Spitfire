@@ -15,7 +15,7 @@ use \CoffeeBean;
  * @author César de la Cal <cesar@magic3w.com>
  * @since 0.1
  */
-class MultiReferenceField extends Field 
+class ManyToManyField extends Field 
 {
 	
 	/**

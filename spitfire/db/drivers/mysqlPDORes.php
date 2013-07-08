@@ -68,7 +68,7 @@ class mysqlPDOResultSet implements resultSetInterface
 				$_record[$field->getName()] = $query;
 			}
 			
-			elseif ($field instanceof \MultiReference) {
+			elseif ($field instanceof \ManyToManyField) {
 				
 			}
 			

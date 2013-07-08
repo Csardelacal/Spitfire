@@ -20,7 +20,7 @@ AutoLoad::registerClass('Controller',            $cur_dir.'/mvc/controller.php')
 AutoLoad::registerClass('spitfire\View',                                        $cur_dir.'/mvc/view.php');
 AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php');
 
-AutoLoad::registerClass('_SF_Memcached',         $cur_dir.'/storage.php');
+AutoLoad::registerClass('spitfire\MemcachedAdapter',                            $cur_dir.'/cache/memcached.php');
 AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 AutoLoad::registerClass('browser',               $cur_dir.'/security.php');
 
@@ -48,7 +48,7 @@ AutoLoad::registerClass('FileField',                                            
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
-AutoLoad::registerClass('MultiReference',                                       $cur_dir.'/model/fields/multireference.php');
+AutoLoad::registerClass('ManyToManyField',                                      $cur_dir.'/model/fields/manytomany.php');
 AutoLoad::registerClass('Reference',                                            $cur_dir.'/model/reference.php');
 AutoLoad::registerClass('ChildrenField',                                        $cur_dir.'/model/children.php');
 
@@ -74,7 +74,7 @@ AutoLoad::registerClass('spitfire\io\beans\BasicField',                         
 AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\LongTextField',                      $cur_dir.'/io/beans/long_text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
-AutoLoad::registerClass('spitfire\io\beans\MultiReferenceField',                $cur_dir.'/io/beans/multireference_field.php');
+AutoLoad::registerClass('spitfire\io\beans\ManyToManyField',                    $cur_dir.'/io/beans/manytomany_field.php');
 AutoLoad::registerClass('spitfire\io\beans\FileField',                          $cur_dir.'/io/beans/file_field.php');
 AutoLoad::registerClass('spitfire\io\beans\DateTimeField',                      $cur_dir.'/io/beans/datetime_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ChildBean',                          $cur_dir.'/io/beans/childbean.php');

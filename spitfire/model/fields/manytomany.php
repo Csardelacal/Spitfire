@@ -2,7 +2,7 @@
 
 use spitfire\model\Field;
 
-class MultiReference extends ChildrenField
+class ManyToManyField extends ChildrenField
 {
 	
 	private $meta;
