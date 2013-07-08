@@ -23,4 +23,22 @@ class Strings
 		return str_replace(Array('  ', ' '), Array(' ', '-'), $str);
 	}
 	
+	public static function endsWith($haystack, $needle) {
+		return strcmp(substr($haystack, 0 - strlen($needle)), $needle) === 0;
+	}
+	
+	public static function startsWith($haystack, $needle) {
+		return strcmp(substr($haystack, 0, strlen($needle)), $needle) === 0;
+	}
+	
+	public static function plural($string) {
+		if (Strings::endsWith($string, 'y')) return substr($string, 0, -1) .'ies';
+		else return $string . 's';
+	}
+	
+	public static function singular($string) {
+		if (Strings::endsWith($string, 'ies'))   return substr($string, 0, -3) .'y';
+		elseif (Strings::endsWith($string, 's')) return substr($string, 0, -1);
+	}
+	
 }

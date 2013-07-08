@@ -8,7 +8,7 @@ use spitfire\io\beans\TextField;
 use spitfire\io\beans\LongTextField;
 use spitfire\io\beans\FileField;
 use spitfire\io\beans\ReferenceField;
-use spitfire\io\beans\MultiReferenceField;
+use spitfire\io\beans\ManyToManyField;
 use spitfire\io\beans\DateTimeField;
 
 /**
@@ -158,7 +158,7 @@ abstract class CoffeeBean extends Validatable
 				return $this->fields[$field] = new ChildBean($this, $logical, $caption);
 				break;
 			case model\Field::TYPE_BRIDGED:
-				return $this->fields[$field] = new MultiReferenceField($this, $logical, $caption);
+				return $this->fields[$field] = new ManyToManyField($this, $logical, $caption);
 				break;
 		}
 	}

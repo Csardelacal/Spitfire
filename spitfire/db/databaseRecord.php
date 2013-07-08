@@ -139,7 +139,7 @@ class Model implements Serializable
 			
 			$field_info = $this->table->getModel()->getField($field);
 			
-			if ($field_info instanceof MultiReference) {
+			if ($field_info instanceof ManyToManyField) {
 				$bridge_records = $field_info->getBridge()->getTable()->get($field_info->getModel()->getName(), $this)->fetchAll();
 				foreach($bridge_records as $r) $r->delete();
 				
@@ -272,7 +272,7 @@ class Model implements Serializable
 			}
 		}
 		
-		elseif ($field_info instanceof MultiReference) {
+		elseif ($field_info instanceof ManyToManyField) {
 			if (!isset($this->data[$field])) {
 				
 				$query       = $field_info->getTarget()->getTable()->getAll();

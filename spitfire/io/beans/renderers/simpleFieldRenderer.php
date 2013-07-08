@@ -9,7 +9,7 @@ use spitfire\io\beans\LongTextField;
 use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\FileField;
 use spitfire\io\beans\ReferenceField;
-use spitfire\io\beans\MultiReferenceField;
+use spitfire\io\beans\ManyToManyField;
 use spitfire\io\html\HTMLInput;
 use spitfire\io\html\HTMLTextArea;
 use spitfire\io\html\HTMLLabel;
@@ -26,7 +26,7 @@ class SimpleFieldRenderer {
 		if ($field instanceof ReferenceField) {
 			return $this->renderReferencedField($field);
 		}
-		elseif ($field instanceof MultiReferenceField) {
+		elseif ($field instanceof ManyToManyField) {
 			return $this->renderMultiReferencedField($field);
 		}
 		elseif ($field instanceof ChildBean) {

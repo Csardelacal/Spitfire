@@ -111,7 +111,6 @@ class ExceptionHandler {
 	
 	public function shutdownHook () {
 		$last_error = error_get_last();
-		while(ob_get_clean()); 
 		
 		switch($last_error['type']){
 			case E_ERROR:
@@ -120,8 +119,11 @@ class ExceptionHandler {
 			case E_USER_ERROR:
 			case E_PARSE:
 			case E_RECOVERABLE_ERROR:
+				while(ob_get_clean()); 
 				get_error_page(500, $last_error['message'] . "@$last_error[file] [$last_error[line]]", print_r($last_error, 1) );
 		}
+		
+		while ($ob = ob_get_clean()) echo $ob;
 	}
 
 	public function log ($msg) {
