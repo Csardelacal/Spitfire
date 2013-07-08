@@ -2,7 +2,7 @@
 
 namespace spitfire\storage\database\drivers;
 
-use ModelMeta;
+use Schema;
 use spitfire\storage\database\DB;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
@@ -247,7 +247,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * 
 	 * @param spitfire.storage.database.DB $db
 	 * @param string $tablename
-	 * @param ModelMeta $model
+	 * @param Schema $model
 	 * @return spitfire.storage.database.drivers.MysqlPDOTable
 	 */
 	public function getTableInstance(DB$db, $tablename) {

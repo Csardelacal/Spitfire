@@ -21,6 +21,8 @@ class MemcachedAdapter
 	
 	public static $instance = null;
 	
+	public $cache = Array();
+	
 	protected $timeout    = self::DEFAULT_TIMEOUT;
 	protected $connection = false;
 	
@@ -62,11 +64,18 @@ class MemcachedAdapter
 		}
 	}
 	
+	public function deleteKey($key) {
+		if ($this->connection) {
+			return $this->connection->delete($key);
+		}
+	}
+	
 	public function setTimeout($timeout) {
 		$this->timeout = $timeout;
 	}
 	
 	public function __get($var) {
+		if (isset($this->cache[$var])) return $this->cache[$var];
 		return $this->getKey($var);
 	}
 	
@@ -77,16 +86,17 @@ class MemcachedAdapter
 	 * @param mixed  $val Data to write to the key
 	 */
 	public function __set($var, $val) {
-		return $this->$var = $val;
+		return $this->cache[$var] = $val;
+	}
+	
+	public function __unset($name) {
+		unset($this->cache[$name]);
+		$this->deleteKey($name);
 	}
 	
 	public function __destruct() {
-		$data = get_object_vars($this);
-		
-		unset($data['timeout']);
-		unset($data['connection']);
-		
-		foreach ($data as $key => $value) $this->setKey($key, $value);
+		foreach ($this->cache as $key => $value) 
+			$this->setKey($key, $value);
 	}
 	
 	public static function getInstance() {

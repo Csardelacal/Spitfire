@@ -17,7 +17,7 @@ use spitfire\storage\database\Query;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-class ModelMeta
+class Schema
 {
 
 	/**
