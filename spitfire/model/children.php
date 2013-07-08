@@ -16,11 +16,11 @@ class ChildrenField extends Field
 	 * Returns the model this fields is pointing to, the child model. It is referred
 	 * as target due to the fact that this field is pointing at it.
 	 * 
-	 * @return ModelMeta
+	 * @return Schema
 	 */
 	public function getTarget() {
 		#Check if the passed argument already is a model
-		if ($this->target instanceof ModelMeta) {
+		if ($this->target instanceof Schema) {
 			return $this->target;
 		} 
 		elseif ($this->target === $this->getModel()->getName()) {

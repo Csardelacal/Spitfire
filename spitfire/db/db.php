@@ -9,7 +9,7 @@
 namespace spitfire\storage\database;
 
 use _SF_MVC;
-use ModelMeta;
+use Schema;
 use privateException;
 use spitfire\environment;
 
@@ -103,7 +103,7 @@ abstract class DB extends _SF_MVC
 	 * Returns a table adapter for the database table with said name to allow
 	 * querying and data-manipulation..
 	 * 
-	 * @param string|ModelMeta $tablename Name of the table that should be used.
+	 * @param string|Schema $tablename Name of the table that should be used.
 	 *                 If you pass a model to this function it will automatically
 	 *                 read the name from the model and use it to find the 
 	 *                 table.
@@ -112,7 +112,7 @@ abstract class DB extends _SF_MVC
 	 */
 	public function table($tablename) {
 		#If the parameter is a Model, we get it's name
-		if ($tablename instanceof ModelMeta) {
+		if ($tablename instanceof Schema) {
 			
 			if (isset($this->tables[$tablename->getName()]))
 				return $this->tables[$tablename->getName()];

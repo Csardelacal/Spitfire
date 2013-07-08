@@ -29,7 +29,7 @@ class ManyToManyField extends ChildrenField
 		if (db()->hasTable("{$first}_{$second}")) 
 			return $this->meta = db()->table("{$first}_{$second}")->getModel();
 		
-		$model = $this->meta = db()->table(new ModelMeta("{$first}_{$second}"))->getModel();
+		$model = $this->meta = db()->table(new Schema("{$first}_{$second}"))->getModel();
 		unset($model->_id);
 		
 		$model->{$src}    = new Reference($src);

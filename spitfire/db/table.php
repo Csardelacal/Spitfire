@@ -3,7 +3,7 @@
 namespace spitfire\storage\database;
 
 use \Model;
-use ModelMeta;
+use Schema;
 use spitfire\model\Field;
 use spitfire\environment;
 
@@ -30,7 +30,7 @@ abstract class Table extends Queriable
 	 * one of the key components to Spitfire's ORM as it allows the DB engine to 
 	 * create the tables automatically and to discover the data relations.
 	 *
-	 * @var ModelMeta 
+	 * @var Schema 
 	 */
 	protected $model;
 	
@@ -83,13 +83,13 @@ abstract class Table extends Queriable
 	public function __construct (DB$db, $tablename) {
 		$this->db = $db;
 		
-		if ($tablename instanceof ModelMeta) {
+		if ($tablename instanceof Schema) {
 			$this->model = $tablename;
 			$this->model->setTable($this);
 		}
 		else {
 			$model = $tablename . 'Model';
-			$this->model = new ModelMeta($tablename, $this);
+			$this->model = new Schema($tablename, $this);
 
 			if (class_exists($model)) {
 				$model::definitions($this->model);
@@ -230,7 +230,7 @@ abstract class Table extends Queriable
 	
 	/**
 	 * 
-	 * @return \ModelMeta
+	 * @return \Schema
 	 */
 	public function getModel() {
 		return $this->model;
