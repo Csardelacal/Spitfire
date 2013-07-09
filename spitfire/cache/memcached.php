@@ -14,17 +14,35 @@ use \Memcached;
  * it a recommended behavior to use just one instance of the class, to allow 
  * overriding and save memory.
  * 
+ * Yes, this class uses __get to retrieve data, for two obvious reasons.
+ * <ul>
+ * <li>It's really comfortable to retrieve the data like <code>$mc->cached_key</code></li>
+ * <li>Performance. Magic gets are still way faster than reading from memcached</li>
+ * </ul>
+ * 
  */
 class MemcachedAdapter
 {
+	/**
+	 * Defines the amount of time keys are stored before being deleted by default.
+	 * As keys are usually stored for quite a while (in computer terms) but get
+	 * old quickly (in human terms). So an average value of four hours is usually
+	 * best.
+	 */
 	const DEFAULT_TIMEOUT = 14400; //4Hours
 	
-	public static $instance = null;
+	/**
+	 * The current instance of Memcached (instead of using several instances, to 
+	 * avoid memory waste or conflicts when writing). This variable is only used
+	 * on the static getInstance call.
+	 * 
+	 * @var \spitfire\MemcachedAdapter
+	 */
+	private static $instance = null;
 	
-	public $cache = Array();
-	
-	protected $timeout    = self::DEFAULT_TIMEOUT;
-	protected $connection = false;
+	private $cache      = Array();
+	private $timeout    = self::DEFAULT_TIMEOUT;
+	private $connection = false;
 	
 	/**
 	 * Creates a connection to the memcached servers.

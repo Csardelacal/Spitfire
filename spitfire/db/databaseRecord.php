@@ -205,14 +205,12 @@ class Model implements Serializable
 		$restrictions = Array();
 		
 		foreach($primaries as $primary) {
-			$ref = $primary->getReferencedField();
-			if ($ref) $value =& $this->src[$ref->getTable()->getModel()->getName()];
-			else $value = $this->src[$primary->getName()];
+			$ref   = $primary->getReferencedField();
+			$value = $this->src[$primary->getLogicalField()->getName()];
 			
 			if ($value instanceof Query) $value = $value->fetch();
 			if ($value instanceof Model) {
-				unset($value);
-				$value = $this->src[$ref->getTable()->getModel()->getName()]->{$ref->getName()};
+				$value = $value->{$ref->getName()};
 			}
 			
 			$r = $this->restrictionInstance($primary, $value);
