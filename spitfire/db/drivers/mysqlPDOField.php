@@ -27,6 +27,8 @@ class mysqlPDOField extends DBField
 				return "TEXT";
 			case Field::TYPE_DATETIME:
 				return "DATETIME";
+			case Field::TYPE_BOOLEAN:
+				return "TINYINT(4)";
 		}
 	}
 	

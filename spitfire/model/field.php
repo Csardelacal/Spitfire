@@ -17,6 +17,7 @@ abstract class Field
 	 */
 	const TYPE_INTEGER   = 'int';
 	const TYPE_LONG      = 'long';
+	const TYPE_BOOLEAN   = 'boolean';
 	const TYPE_STRING    = 'string';
 	const TYPE_FILE      = 'file';
 	const TYPE_TEXT      = 'txt';

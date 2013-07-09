@@ -10,6 +10,8 @@ use spitfire\io\beans\FileField;
 use spitfire\io\beans\ReferenceField;
 use spitfire\io\beans\ManyToManyField;
 use spitfire\io\beans\DateTimeField;
+use spitfire\io\beans\EnumField;
+use spitfire\io\beans\BooleanField;
 
 /**
  * A Bean is the equivalent to a Model for users. Instead of generating SQL and
@@ -100,8 +102,8 @@ abstract class CoffeeBean extends Validatable
 		if ($this->table) {
 			$fields = $this->fields;
 			foreach ($fields as $field) {
-				if (null != $value = $field->getValue())
-					$record->{$field->getFieldName()} = $value;
+				$value = $field->getValue();
+				$record->{$field->getFieldName()} = $value;
 			}
 		}
 	}
@@ -140,7 +142,10 @@ abstract class CoffeeBean extends Validatable
 			case model\Field::TYPE_STRING:
 			case model\Field::TYPE_INTEGER:
 			case model\Field::TYPE_LONG:
-				return $this->fields[$field] = new TextField($this, $logical, $caption);
+				if ($logical instanceof \EnumField)
+					return $this->fields[$field] = new EnumField($this, $logical, $caption);
+				else
+					return $this->fields[$field] = new TextField($this, $logical, $caption);
 				break;
 			case model\Field::TYPE_DATETIME:
 				return $this->fields[$field] = new DateTimeField($this, $logical, $caption);
@@ -159,6 +164,9 @@ abstract class CoffeeBean extends Validatable
 				break;
 			case model\Field::TYPE_BRIDGED:
 				return $this->fields[$field] = new ManyToManyField($this, $logical, $caption);
+				break;
+			case model\Field::TYPE_BOOLEAN:
+				return $this->fields[$field] = new BooleanField($this, $logical, $caption);
 				break;
 		}
 	}

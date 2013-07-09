@@ -47,6 +47,8 @@ AutoLoad::registerClass('IntegerField',                                         
 AutoLoad::registerClass('FileField',                                            $cur_dir.'/model/fields/file.php');
 AutoLoad::registerClass('TextField',                                            $cur_dir.'/model/fields/text.php');
 AutoLoad::registerClass('StringField',                                          $cur_dir.'/model/fields/string.php');
+AutoLoad::registerClass('EnumField',                                            $cur_dir.'/model/fields/enum.php');
+AutoLoad::registerClass('BooleanField',                                         $cur_dir.'/model/fields/boolean.php');
 AutoLoad::registerClass('DatetimeField',                                        $cur_dir.'/model/fields/datetime.php');
 AutoLoad::registerClass('ManyToManyField',                                      $cur_dir.'/model/fields/manytomany.php');
 AutoLoad::registerClass('Reference',                                            $cur_dir.'/model/reference.php');
@@ -73,6 +75,8 @@ AutoLoad::registerClass('spitfire\io\beans\Field',                              
 AutoLoad::registerClass('spitfire\io\beans\BasicField',                         $cur_dir.'/io/beans/basic_field.php');
 AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\LongTextField',                      $cur_dir.'/io/beans/long_text_field.php');
+AutoLoad::registerClass('spitfire\io\beans\EnumField',                          $cur_dir.'/io/beans/enum_field.php');
+AutoLoad::registerClass('spitfire\io\beans\BooleanField',                       $cur_dir.'/io/beans/boolean_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ReferenceField',                     $cur_dir.'/io/beans/reference_field.php');
 AutoLoad::registerClass('spitfire\io\beans\ManyToManyField',                    $cur_dir.'/io/beans/manytomany_field.php');
 AutoLoad::registerClass('spitfire\io\beans\FileField',                          $cur_dir.'/io/beans/file_field.php');
