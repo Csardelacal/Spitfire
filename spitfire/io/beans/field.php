@@ -148,8 +148,8 @@ abstract class Field
 		$postdata = $this->getBean()->getPostData();
 		$name = ($this->name)? $this->name : $this->getField()->getName();
 		
-		if (!empty($postdata[$name])) return $postdata[$name];
-		else throw new privateException('Field ' . $this->name . ' was not sent with request');
+		if (isset($postdata[$name])) return $postdata[$name];
+		else throw new privateException(spitfire()->log ('Field ' . $this->getName() . ' was not sent with request'));
 	}
 	
 	abstract public function getDefaultValue();

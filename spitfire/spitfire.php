@@ -119,6 +119,7 @@ class SpitFire extends App
 	
 	public function log($msg) {
 		if ($this->debug) $this->debug->log ($msg);
+		return $msg;
 	}
 	
 	public function getMessages() {

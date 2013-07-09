@@ -4,6 +4,7 @@ namespace spitfire\io\beans\renderers;
 
 use spitfire\io\beans\BasicField;
 use spitfire\io\beans\ChildBean;
+use spitfire\io\beans\EnumField;
 use spitfire\io\beans\TextField;
 use spitfire\io\beans\LongTextField;
 use spitfire\io\beans\DateTimeField;
@@ -12,6 +13,7 @@ use spitfire\io\beans\ReferenceField;
 use spitfire\io\beans\ManyToManyField;
 use spitfire\io\html\HTMLInput;
 use spitfire\io\html\HTMLTextArea;
+use spitfire\io\beans\BooleanField;
 use spitfire\io\html\HTMLLabel;
 use spitfire\io\html\HTMLDiv;
 use spitfire\io\html\HTMLOption;
@@ -31,6 +33,9 @@ class SimpleFieldRenderer {
 		}
 		elseif ($field instanceof ChildBean) {
 			return $this->renderChildBean($field);
+		}
+		elseif ($field instanceof EnumField) {
+			return $this->renderEnumField($field);
 		}
 		elseif ($field instanceof BasicField) {
 			return $this->renderBasicField($field);
@@ -66,8 +71,30 @@ class SimpleFieldRenderer {
 			$label = new HTMLLabel($input, $field->getCaption());
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 		}
+		elseif ($field instanceof BooleanField) {
+			$input = new HTMLInput('checkbox', $field->getPostId(), 'true');
+			if ($field->getValue()) $input->setParameter('checked', 'checked');
+			$label = new HTMLLabel($input, $field->getCaption());
+			return new HTMLDiv($label, $input, Array('class' => 'field'));
+		}
 		//TODO: Add more options
 		else return $field;
+	}
+	
+	public function renderEnumField(EnumField$field) {
+		$value   = $field->getValue();
+		$options = $field->getField()->getOptions();
+		
+		$select  = new HTMLSelect($field->getPostId(), $value);
+		$label   = new HTMLLabel($select, $field->getCaption());
+		
+		$select->addChild(new HTMLOption(null, 'Pick'));
+		
+		foreach ($options as $possibility) {
+			$select->addChild(new HTMLOption($possibility, strval($possibility)));
+		}
+		
+		return new HTMLDiv($label, $select, Array('class' => 'field'));
 	}
 	
 	public function renderReferencedField($field) {
