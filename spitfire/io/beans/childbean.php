@@ -37,7 +37,7 @@ class ChildBean extends Field
 	public function getRequestValue() {
 		
 		#Check if the request is done via POST. Otherwise return an empty array.
-		if ($_SERVER['REQUEST_METHOD'] != 'POST') return Array();
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \privateException("Invalid request method. Requires POST");
 		
 		#Post will contain an array of subforms for this element.
 		$data    = $_POST[$this->getName()];
@@ -100,7 +100,7 @@ class ChildBean extends Field
 	 */
 	public function getDefaultValue() {
 		if ( ($record = $this->getBean()->getRecord()) !== null)
-			return $record->{$this->getModelField()};
+			return $record->{$this->getField()->getName()};
 		else
 			return null;
 	}
