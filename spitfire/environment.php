@@ -49,6 +49,9 @@ class environment
 		'memcached_enabled'        => false,
 		'memcached_servers'        => Array('localhost'),
 		'memcached_port'           => '11211',
+		 
+		 #CacheFile settings
+		 'cachefile.directory'     => 'bin/usr/cache/',
 	    
 		#Timezone settings
 		'timezone'                 => 'Europe/Berlin'
