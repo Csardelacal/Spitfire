@@ -26,19 +26,24 @@ class ManyToManyField extends ChildrenField
 		$first  = ($src > $target)? $target : $src;
 		$second = ($first == $src)? $target : $src;
 		
-		if (db()->hasTable("{$first}_{$second}")) 
-			return $this->meta = db()->table("{$first}_{$second}")->getModel();
+		if (!$this->getTable()->getDb()->hasTable("{$first}_{$second}")) {
+			
+			$model = $this->meta = new Schema("{$first}_{$second}");
+			unset($model->_id);
+
+			$model->{$src}    = new Reference($src);
+			$model->{$target} = new Reference($target);
+
+			$model->{$src}->setPrimary(true);
+			$model->{$target}->setPrimary(true);
+
+			#Register the table
+			$this->getModel()->getTable()->getDb()->table($model);
+		}
+		else {
+			$this->meta = $this->getTable()->getDb()->table("{$first}_{$second}");
+		}
 		
-		$model = $this->meta = db()->table(new Schema("{$first}_{$second}"))->getModel();
-		unset($model->_id);
-		
-		$model->{$src}    = new Reference($src);
-		$model->{$target} = new Reference($target);
-		
-		$model->{$src}->setPrimary(true);
-		$model->{$target}->setPrimary(true);
-		
-		$this->getModel()->getTable()->getDb()->table($model)->makeFields();
 		return $this->target = $this->getModel()->getTable()->getDb()->table($target)->getModel();//$this->meta;
 	}
 	
