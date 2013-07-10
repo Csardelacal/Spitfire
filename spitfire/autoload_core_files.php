@@ -21,6 +21,8 @@ AutoLoad::registerClass('spitfire\View',                                        
 AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php');
 
 AutoLoad::registerClass('spitfire\MemcachedAdapter',                            $cur_dir.'/cache/memcached.php');
+AutoLoad::registerClass('FileCache',                                            $cur_dir.'/cache/filecache.php');
+AutoLoad::registerClass('SimpleFileCache',                                      $cur_dir.'/cache/filecachesimple.php');
 AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 AutoLoad::registerClass('browser',               $cur_dir.'/security.php');
 
