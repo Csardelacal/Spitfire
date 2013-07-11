@@ -2,8 +2,6 @@
 
 namespace spitfire\storage\database;
 
-use spitfire\storage\database\DBField;
-
 abstract class Restriction
 {
 	private $field;

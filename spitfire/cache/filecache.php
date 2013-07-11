@@ -2,12 +2,43 @@
 
 use spitfire\environment;
 
+/**
+ * The filecache class allows a user to create inheriting classes that contain
+ * a onMiss method which's result will be cached to file in order to avoid
+ * repeated calls to a function which may cause big delays due to high network
+ * delays or due to high CPU / IO cost.
+ * 
+ * @author César de la cal <cesar@magic3w.com>
+ * @last-revision 2013.07.11
+ */
 abstract class FileCache
 {
+	
+	/**
+	 * Defines the amount of time keys are stored before being deleted by default.
+	 * As keys are usually stored for quite a while (in computer terms) but get
+	 * old quickly (in human terms). So an average value of four hours is usually
+	 * best.
+	 */
 	const DEFAULT_TIMEOUT = 14400;
 	
+	/**
+	 * This is where the cached data is stored while executing to avoid having to 
+	 * retrieve it from the file everytime getData() is called. On _destruct
+	 * (and if the file did not exist) this data is written to a file.
+	 *
+	 * @var mixed
+	 */
 	protected $cached;
 	
+	/**
+	 * The name of the file used to store the cached data. This file will later 
+	 * hold a serialized version of an array called 'envelope'. The envelope will
+	 * be composed of an expiry timestamp when the data is to be considered out
+	 * of date and the data itself.
+	 *
+	 * @var string 
+	 */
 	private $filename;
 	private $cache_dir;
 	private $path;
