@@ -21,9 +21,11 @@ class MysqlPDORestriction extends Restriction
 				}
 				return implode(' AND ', $restrictions);
 			}
+			
 			elseif($this->getValue() instanceof Query) {
 				return implode(' AND ', $this->getValue()->getRestrictions());
 			}
+			
 			elseif (is_array($this->getValue())) {
 				$values = $this->getValue();
 				foreach ($values as &$value) {
@@ -32,10 +34,12 @@ class MysqlPDORestriction extends Restriction
 				$quoted = implode(',', $values);
 				return "{$this->getField()} {$this->getOperator()} ({$quoted})";
 			}
+			
 			else {
 				$quoted = $this->getTable()->getDb()->quote($this->getValue());
 				return "{$this->getField()} {$this->getOperator()} {$quoted}";
 			}
+			
 		}catch (Exception $e) {
 			error_log($e->getMessage());
 			error_log($e->getTraceAsString());

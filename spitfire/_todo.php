@@ -14,5 +14,8 @@
  * @todo: Add DBProcedure class
  * @todo: Check plugin functionality and allow integration w/ onboard logic
  * 
+ * @todo: Add table aliases to avoid query collissions
+ * @todo: Clean query code
+ * 
  * @todo: Add xmlrpcController for remote calls
  */
