@@ -40,6 +40,14 @@ abstract class FileCache
 	 * @var string 
 	 */
 	private $filename;
+	
+	/**
+	 * The directory where the cache is located. This variable helps avoiding the 
+	 * object having problems locating the file if the environment changes during 
+	 * runtime.
+	 *
+	 * @var string
+	 */
 	private $cache_dir;
 	private $path;
 	private $expires;
