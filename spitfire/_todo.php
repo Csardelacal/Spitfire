@@ -1,6 +1,7 @@
 <?php
 /*
  * 
+ * @todo: Clean the code of queries, so it is more insightful and supports aliases.
  * @todo: Add captions to the Beans. So they can display relevant titles in admins and stuff.
  * @todo: Add new element creators to ChildBeans
  * @todo: Add minimum/(maximum) count to Childbeans
@@ -18,4 +19,7 @@
  * @todo: Clean query code
  * 
  * @todo: Add xmlrpcController for remote calls
+ * 
+ * @todo: Fix error that causes creash when requesting /index.php
+ * @todo: Fix bug that causes foreach error in beans @ /Applications/MAMP/htdocs/Magic3W/spitfire/io/beans/renderers/simpleFieldRenderer.php on line 130
  */
