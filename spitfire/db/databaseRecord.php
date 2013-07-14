@@ -213,7 +213,7 @@ class Model implements Serializable
 				$value = $value->{$ref->getName()};
 			}
 			
-			$r = $this->restrictionInstance($primary, $value);
+			$r = $this->restrictionInstance(null, $primary, $value);
 			$restrictions[] = $r;
 			
 			unset($value);
@@ -236,7 +236,7 @@ class Model implements Serializable
 		$field_info = $this->table->getModel()->getField($field);
 		
 		if ($field_info instanceof Reference) {
-			if (!$value instanceof Model) 
+			if (!$value instanceof Model && !is_null($value)) 
 				throw new privateException('Not a record');
 			
 			$this->data[$field] = $value;
@@ -337,8 +337,8 @@ class Model implements Serializable
 		$this->table->update($this);
 	}
 	
-	public function restrictionInstance(DBField$field, $value, $operator = null) {
-		return $this->table->restrictionInstance($field, $value, $operator);
+	public function restrictionInstance($query, DBField$field, $value, $operator = null) {
+		return $this->table->restrictionInstance($query, $field, $value, $operator);
 	}
 	
 	/**

@@ -4,17 +4,21 @@ namespace spitfire\storage\database;
 
 abstract class Restriction
 {
+	private $query;
 	private $field;
 	private $value;
 	private $operator;
-	
-	private $stringifyCallback;
 
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
-	public function __construct($field, $value, $operator = '=') {
+	public function __construct($query, $field, $value, $operator = '=') {
 		if (is_null($operator)) $operator = self::EQUAL_OPERATOR;
+		
+		if (!$query instanceof Query && $query !== null)
+			throw new \privateException("Valid field or null required");
+		
+		$this->query    = $query;
 		$this->field    = $field;
 		$this->value    = $value;
 		$this->operator = trim($operator);
@@ -32,8 +36,14 @@ abstract class Restriction
 		return $this->field;
 	}
 	
-	public function getRID() {
-		return $this->rid;
+	/**
+	 * Returns the query this restriction belongs to. This allows a query to 
+	 * define an alias for the table in order to avoid collissions.
+	 * 
+	 * @return spitfire\storage\database\Query
+	 */
+	public function getQuery() {
+		return $this->query;
 	}
 	
 	public function getOperator() {
@@ -43,18 +53,6 @@ abstract class Restriction
 
 	public function getValue() {
 		return $this->value;
-	}
-	
-	public function getQueryStr($pattern = ':f :o ?') {
-		
-		$search  = Array(':f', ':o', ':r', ':v');
-		$replace = Array(&$this->field, &$this->operator, &$this->rid, &$this->value);
-		
-		return str_replace($search, $replace, $pattern);
-	}
-	
-	public function setStringify($callback) {
-		$this->stringifyCallback = $callback;
 	}
 	
 	abstract public function __toString();

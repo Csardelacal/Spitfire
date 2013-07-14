@@ -7,6 +7,7 @@
  * @todo: Add minimum/(maximum) count to Childbeans
  * @todo: Add timestamp fields to beans
  * @todo: Add n-m relations to database
+ * @todo: Fix beans to avoid memory overflow when creating childbeans of the same type as parent
  * 
  * @todo: Add cachable class to allow users to define data
  * @todo: Add form reader

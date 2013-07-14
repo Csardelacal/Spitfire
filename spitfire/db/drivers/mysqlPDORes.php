@@ -86,7 +86,8 @@ class mysqlPDOResultSet implements resultSetInterface
 			}
 			
 			else {
-				$_record[$field->getName()] = $data[array_shift($field->getPhysical())->getName()];
+				$phys = $field->getPhysical();
+				$_record[$field->getName()] = $data[array_shift($phys)->getName()];
 			}
 			
 		}

@@ -49,8 +49,31 @@ abstract class FileCache
 	 * @var string
 	 */
 	private $cache_dir;
+	
+	/**
+	 * Full path to the cache file. This variable just simplifies writing
+	 * code as it will no require to concat the directory and filename
+	 * every time.
+	 *
+	 * @var string
+	 */
 	private $path;
+	
+	/**
+	 * Contains the unix timestamp this cached resource expires. Please note
+	 * that the cache will be taken as valid once before being destroyed in 
+	 * order to reduce wait time for cached operations.
+	 *
+	 * @var int
+	 */
 	private $expires;
+	
+	/**
+	 * Contains the amount of seconds this resource will be set to expire. In case
+	 * the timeout is not altered it will default to 14400 (4 hours)
+	 *
+	 * @var int
+	 */
 	private $timeout = self::DEFAULT_TIMEOUT;
 	
 	public function __construct($filename) {

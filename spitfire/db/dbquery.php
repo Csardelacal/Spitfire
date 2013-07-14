@@ -19,7 +19,13 @@ abstract class Query
 	protected $rpp = 20;
 	protected $order;
 	
+	private static $counter = 1;
+	private $id;
+	private $aliased = false;
+
+
 	public function __construct($table) {
+		$this->id = self::$counter++;
 		$this->table = $table;
 		$this->restrictions = Array();
 	}
@@ -51,6 +57,21 @@ abstract class Query
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
+	}
+	
+	public function setAliased($aliased) {
+		$this->aliased = $aliased;
+	}
+	
+	public function getAliased() {
+		return $this->aliased;
+	}
+	
+	public function getAlias() {
+		if ($this->aliased)
+			return $this->table->getTablename() . '_' . $this->id;
+		else
+			return $this->table->getTablename();
 	}
 	
 	/**
@@ -159,4 +180,5 @@ abstract class Query
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance($field, $value, $operator);
 	public abstract function restrictionGroupInstance();
+	public abstract function aliasedTableName();
 }
