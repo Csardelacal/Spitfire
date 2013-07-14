@@ -17,7 +17,7 @@ class MysqlPDORestriction extends Restriction
 				$restrictions = Array();
 				
 				while (null != $field = array_shift($fields)) {
-					$restrictions[] = new MysqlPDORestriction($field, array_shift($data), $this->getOperator());
+					$restrictions[] = new MysqlPDORestriction($this->getQuery(), $field, array_shift($data), $this->getOperator());
 				}
 				return implode(' AND ', $restrictions);
 			}
@@ -32,12 +32,12 @@ class MysqlPDORestriction extends Restriction
 					$value = $this->getTable()->getDb()->quote($value);
 				}
 				$quoted = implode(',', $values);
-				return "{$this->getField()} {$this->getOperator()} ({$quoted})";
+				return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} ({$quoted})";
 			}
 			
 			else {
 				$quoted = $this->getTable()->getDb()->quote($this->getValue());
-				return "{$this->getField()} {$this->getOperator()} {$quoted}";
+				return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} {$quoted}";
 			}
 			
 		}catch (Exception $e) {
@@ -45,5 +45,10 @@ class MysqlPDORestriction extends Restriction
 			error_log($e->getTraceAsString());
 			return '';
 		}
+	}
+	
+	public function getTableName() {
+		if ($this->getQuery()) return $this->getQuery()->getAlias();
+		else return $this->getTable()->getName();
 	}
 }

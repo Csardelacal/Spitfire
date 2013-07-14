@@ -178,8 +178,8 @@ class MysqlPDOTable extends stdSQLTable
 		
 	}
 
-	public function restrictionInstance(DBField$field, $value, $operator = null) {
-		return new MysqlPDORestriction($field, $value, $operator);
+	public function restrictionInstance($query, DBField$field, $value, $operator = null) {
+		return new MysqlPDORestriction($query,	$field, $value, $operator);
 	}
 
 	public function queryInstance($table) {
