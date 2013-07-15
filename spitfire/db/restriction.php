@@ -46,6 +46,10 @@ abstract class Restriction
 		return $this->query;
 	}
 	
+	public function setQuery($query) {
+		$this->query = $query;
+	}
+	
 	public function getOperator() {
 		if (is_array($this->value) && $this->operator != 'IN' && $this->operator != 'NOT IN') return 'IN';
 		return $this->operator;

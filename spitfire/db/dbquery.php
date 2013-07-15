@@ -14,9 +14,8 @@ abstract class Query
 	
 	protected $restrictions;
 	protected $restrictionGroups;
-	protected $parent;
 	protected $page = 1;
-	protected $rpp = 20;
+	protected $rpp = -1;
 	protected $order;
 	
 	private static $counter = 1;
@@ -159,14 +158,6 @@ abstract class Query
 	
 	public function getOrder() {
 		return $this->order;
-	}
-	
-	public function setParent(Ancestor$record) {
-		$this->parent = $record;
-	}
-	
-	public function getParent() {
-		return $this->parent;
 	}
 	
 	public function getTable() {

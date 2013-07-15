@@ -13,5 +13,5 @@ interface resultSetInterface
 	 */
 	public function fetch();
 	public function fetchArray();
-	public function fetchAll(Model$parent = null);
+	public function fetchAll();
 }

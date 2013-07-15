@@ -5,39 +5,84 @@ namespace spitfire\storage\database\drivers;
 use \spitfire\storage\database\Restriction;
 use \spitfire\storage\database\Query;
 use \Exception;
+use \Model;
+use \privateException;
 
 class MysqlPDORestriction extends Restriction
 {
 	public function __toString() {
 		try {
-			if(is_a($this->getValue(), 'Model')) {
-				$fields = $this->getField()->getPhysical();
-				$data = $this->getValue()->getPrimaryData();
+			$value = $this->getValue();
+			$field = $this->getField();
+			
+			if ($field instanceof \Reference) {
 				
-				$restrictions = Array();
-				
-				while (null != $field = array_shift($fields)) {
-					$restrictions[] = new MysqlPDORestriction($this->getQuery(), $field, array_shift($data), $this->getOperator());
+				if ($value instanceof Model) {
+					$primarykey    = $value->getPrimaryData();
+					$fields        = $this->getField()->getPhysical();
+					$_restrictions = Array();
+
+					while (!empty($fields)) {
+						$_restrictions[] = new MysqlPDORestriction($this->getQuery(), array_shift($fields), array_shift($primarykey));
+					}
+
+					return implode(' AND ', $_restrictions);
 				}
-				return implode(' AND ', $restrictions);
+				
+				elseif ($value instanceof Query) {
+					return implode(' AND ', $this->getValue()->getRestrictions());
+				}
+				
+				elseif ($value === null) {
+					return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} null}";
+				}
+				
+				else {
+					throw new privateException("References do not accept values other than Model");
+				}
+				
 			}
 			
-			elseif($this->getValue() instanceof Query) {
-				return implode(' AND ', $this->getValue()->getRestrictions());
+			elseif ($field instanceof \ManyToManyField) {
+				if ($value instanceof Model) {
+					$primarykey    = $value->getPrimaryData();
+					$fields        = $this->getField()->getPhysical();
+					$_restrictions = Array();
+
+					while (!empty($fields)) {
+						$_restrictions[] = new MysqlPDORestriction($this->getQuery(), array_shift($fields), array_shift($primarykey));
+					}
+
+					return implode(' AND ', $_restrictions);
+				}
+				
+				elseif ($value instanceof Query) {
+					return implode(' AND ', $this->getValue()->getRestrictions());
+				}
 			}
 			
-			elseif (is_array($this->getValue())) {
-				$values = $this->getValue();
-				foreach ($values as &$value) {
-					$value = $this->getTable()->getDb()->quote($value);
+			elseif ($field instanceof \ChildrenField) {
+				
+				if ($value instanceof Query) {
+					return implode(' AND ', $this->getValue()->getRestrictions());
 				}
-				$quoted = implode(',', $values);
-				return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} ({$quoted})";
+				
 			}
 			
 			else {
-				$quoted = $this->getTable()->getDb()->quote($this->getValue());
-				return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} {$quoted}";
+			
+				if (is_array($value)) {
+					foreach ($value as &$v)
+						$v = $this->getTable()->getDb()->quote($value);
+
+					$quoted = implode(',', $value);
+					return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} ({$quoted})";
+				}
+
+				else {
+					$quoted = $this->getTable()->getDb()->quote($this->getValue());
+					return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} {$quoted}";
+				}
 			}
 			
 		}catch (Exception $e) {

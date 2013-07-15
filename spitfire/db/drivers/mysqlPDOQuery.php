@@ -4,6 +4,7 @@ namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Restriction;
+use spitfire\storage\database\RestrictionGroup;
 
 class MysqlPDOQuery extends Query
 {
@@ -15,7 +16,6 @@ class MysqlPDOQuery extends Query
 		#Declare vars
 		$rpp          = $this->getResultsPerPage();
 		$offset       = ($this->getPage() - 1) * $rpp;
-		$_join        = $this->getParent();
 		
 		$selectstt    = 'SELECT';
 		$fields       = ($fields)? $fields : $this->table->getFields();
@@ -37,65 +37,56 @@ class MysqlPDOQuery extends Query
 			$fields = implode(', ', $fields);
 		}
 		
-		#Join specific tasks
-		if ($_join) {
-			$rem_table = $_join->getParent()->getTable();
-			$remotef   = $_join->getParent()->getUniqueFields();
-			$_remotef  = Array();
+		#Import tables for restrictions from remote queries
+		if (!empty($restrictions)) {
 			
-			if (in_array($rem_table, $used_tables)) $rem_table->setAliased(true);
-			else $used_tables[] = $rem_table;
-			
-			foreach ($remotef as $f) {
-				$model = $rem_table->getModel();
-				$local_field = $this->table->getField("{$_join->getRelation()->getRole()}_{$f->getName()}");
-				if ($local_field)
-					$_remotef[] = "$f = $local_field";
+			$restriction_list = Array();
+			foreach ($restrictions as $restriction) {
+				if ($restriction instanceof Restriction && $restriction->getValue() instanceof Query)
+					$restriction_list[] = $restriction;
+				
+				elseif ($restriction instanceof RestrictionGroup)
+					foreach($r = $restriction->getRestrictions() as $restr) {
+						if ($restr instanceof Restriction && $restr->getValue() instanceof Query)
+							$restriction_list[] = $restr;
+					}
 			}
 			
-			$join = 'LEFT JOIN ' . $_join->aliasedTablename();
-			$join.= ' ON (' . implode(' AND ', $_remotef) . ')';
-			$restrictions = array_merge($restrictions, $_join->getParent()->getUniqueRestrictions());
-		}
-		
-		#Import tables for restrictions
-		if (!empty($restrictions)) {
-			foreach ($restrictions as $restriction) {
-				if ( $restriction instanceof Restriction && ($value = $restriction->getValue()) instanceof Query) {
+			foreach ($restriction_list as $restriction) {
+				$value = $restriction->getValue();
+				#Check if the table needs to be aliased
+				if (in_array($value->getTable(), $used_tables)) $value->setAliased(true);
+				else $used_tables[] = $value->getTable();
+				
+				#
+				if ($restriction->getField()->getTable() === $this->getTable() ) {
+					$local_f      = $restriction->getField()->getPhysical();
+					$local_alias  = $restriction->getQuery()->getAlias();
+					$remote_alias = $restriction->getValue()->getAlias();
 					
-					if (in_array($value->getTable(), $used_tables)) $value->setAliased(true);
-					else $used_tables[] = $value->getTable();
-					
-					if ($restriction->getField() instanceof \Reference) {
-						$remote_f  = Array($restriction->getField());
-					}
-					else {
-						$remote_f  = $restriction->getField()->getReferencedFields();
-					}
-					
-					$remote_p  = Array();
-					
-					foreach($remote_f as $field) {
-						$physical = $field->getPhysical();
-						foreach ($physical as $phys) {
-							if ($restriction->getField() instanceof \Reference)
-								$remote_p[] = "{$phys} = {$value->getAlias()}.{$phys->getReferencedField()->getName()}";
-							else
-								$remote_p[] = "{$value->getAlias()}.{$phys->getName()} = {$phys->getReferencedField()}";
-						} 
-					}
-					
-					$join.= 'LEFT JOIN ' . $value->aliasedTableName();
-					$join.= ' ON (' . implode(' AND ', $remote_p) . ')';
+					foreach($local_f as $field)
+						$remote_f[]  = $field->getReferencedField();
 				}
+				else {
+					$local_f      = $restriction->getField()->getPhysical();
+					$local_alias  = $restriction->getValue()->getAlias();
+					$remote_alias = $restriction->getQuery()->getAlias();
+					
+					foreach($local_f as $field)
+						$remote_f[]  = $field->getReferencedField();
+				}
+
+				$remote_p  = Array();
+				
+				foreach($local_f as $index => $field) 
+						$remote_p[] = "{$local_alias}.{$field->getName()} = {$remote_alias}.{$remote_f[$index]->getName()}";
+
+				$join.= 'LEFT JOIN ' . $value->aliasedTableName();
+				$join.= ' ON (' . implode(' AND ', $remote_p) . ') ';
 			}
 		}
 		
 		#Restrictions
-		if ( null != ($p = $this->getParent()) ) {
-			$restrictions = array_merge($restrictions, $p->getParent()->getUniqueRestrictions());
-		}
-		
 		if (empty($restrictions)) {
 			$restrictions = '1';
 		}
@@ -118,6 +109,7 @@ class MysqlPDOQuery extends Query
 		
 		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $tablename, $join, 
 		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));
+		
 		
 		return new mysqlPDOResultSet($this->getTable(), $this->getTable()->getDb()->execute(implode(' ', $stt)));
 		
