@@ -16,6 +16,7 @@ class Pagination
 	private $param   = 'page';
 	
 	public function __construct(Query $query) {
+		$query->setResultsPerPage(20);
 		$this->query = $query;
 	}
 	

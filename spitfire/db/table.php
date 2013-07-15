@@ -211,11 +211,11 @@ abstract class Table extends Queriable
 		$query   = $this->getQueryInstance();
 		
 		#Check if it's cachable and get the name of the id field
-		$cachable = count($primary) == 1;
-		$cachekey = ($cachable)? reset($id) : null;
+		//$cachable = count($primary) == 1;
+		//$cachekey = ($cachable)? reset($id) : null;
 		
 		#Detect if there is a cache hit
-		if (isset($this->cache[$cachekey])) return $this->cache[$cachekey];
+		//if (isset($this->cache[$cachekey])) return $this->cache[$cachekey];
 		
 		#Add the restrictions
 		while(count($primary))
@@ -223,9 +223,21 @@ abstract class Table extends Queriable
 		
 		#Return the result
 		$_return = $query->fetch();
-		if ($cachable) $this->cache[$cachekey] = $_return;
+		//if ($cachable) $this->cache[$cachekey] = $_return;
 		
 		return $_return;
+	}
+	
+	public function cache(Model$model) {
+		$pk = $model->getPrimaryData();
+		if (count($pk) === 1) {
+			$this->cache[reset($pk)] = $model; 
+		}
+	}
+	
+	public function hitCache($id) {
+		if (isset($this->cache[$id])) return $this->cache[$id];
+		else return null;
 	}
 	
 	/**

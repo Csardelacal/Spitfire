@@ -40,7 +40,7 @@ class ChildBean extends Field
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \privateException("Invalid request method. Requires POST");
 		
 		#Post will contain an array of subforms for this element.
-		$data    = $_POST[$this->getName()];
+		$data    = $this->getBean()->getPostData(); $data = $data[$this->getName()];
 		$_return = Array();
 		
 		#Loop through the passed array and create the subforms to handle the data
@@ -113,6 +113,7 @@ class ChildBean extends Field
 	 * @return int
 	 */
 	public function getVisibility() {
+		if ($this->getBean()->getParent()) return CoffeeBean::VISIBILITY_HIDDEN;
 		return CoffeeBean::VISIBILITY_FORM;
 	}
 	

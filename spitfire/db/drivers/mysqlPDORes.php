@@ -55,9 +55,10 @@ class mysqlPDOResultSet implements resultSetInterface
 				#If the primary key of the parent only has 1 field we pass it through
 				#a cachable query via getbyid
 				if (count($physical) == 1) {
-					$query = $this->table->getDb()->table($field->getTarget())->getById($data[reset($physical)->getName()]);
+					$query = $this->table->hitCache($data[reset($physical)->getName()]);
 				}
-				else {
+				
+				if ($query == null) {
 					$query    = $this->table->getDb()->table($field->getTarget())->getAll();
 
 					foreach ($physical as $physical_field) {
@@ -93,27 +94,16 @@ class mysqlPDOResultSet implements resultSetInterface
 		}
 		
 		$record = $this->table->newRecord($_record);
+		$this->table->cache($record);
 		return $record;
 	}
 
-	public function fetchAll(Model$parent = null) {
+	public function fetchAll() {
 		//TODO: Swap to fatch all
 		//$data = $this->result->fetchAll(PDO::FETCH_ASSOC);
 		$_return = Array();
-		$fields  = $this->table->getModel()->getFields();
-		$parentConnector = Array();
-		
-		if ($parent)
-		foreach ($fields as $field) {
-			if ($field instanceof Reference && ($field->getTarget()) === $parent->getTable()->getModel())
-				$parentConnector[] = $field;
-		}
 		
 		while ($data = $this->fetch()) {
-			foreach ($parentConnector as $field) {
-				$data->{$field->getName()} = $parent;
-			}
-			
 			$_return[] = $data;
 		}
 		return $_return;

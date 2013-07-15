@@ -153,10 +153,12 @@ class MysqlPDOTable extends stdSQLTable
 					$value = $value->fetch();
 			}
 			
-			if ($value instanceof Model) {
-				$primary = $value->getPrimaryData();
-				foreach ($primary as $key => $v) {
-					$data[$field . '_' . $key] = $v;
+			if ($this->getModel()->getField($field) instanceof \Reference) {
+				if ($value instanceof Model) {
+					$primary = $value->getPrimaryData();
+					foreach ($primary as $key => $v) {
+						$data[$field . '_' . $key] = $v;
+					}
 				}
 				unset($data[$field]);
 			}
