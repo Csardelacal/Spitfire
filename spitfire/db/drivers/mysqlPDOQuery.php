@@ -40,49 +40,45 @@ class MysqlPDOQuery extends Query
 		#Import tables for restrictions from remote queries
 		if (!empty($restrictions)) {
 			
-			$restriction_list = Array();
-			foreach ($restrictions as $restriction) {
-				if ($restriction instanceof Restriction && $restriction->getValue() instanceof Query)
-					$restriction_list[] = $restriction;
-				
-				elseif ($restriction instanceof RestrictionGroup)
-					foreach($r = $restriction->getRestrictions() as $restr) {
-						if ($restr instanceof Restriction && $restr->getValue() instanceof Query)
-							$restriction_list[] = $restr;
-					}
-			}
+			$joins = $this->getJoins();
 			
-			foreach ($restriction_list as $restriction) {
-				$value = $restriction->getValue();
-				#Check if the table needs to be aliased
-				if (in_array($value->getTable(), $used_tables)) $value->setAliased(true);
-				else $used_tables[] = $value->getTable();
+			foreach ($joins as $_join) {
+				/* @var $_join \spitfire\storage\database\QueryJoin */
 				
-				#
-				if ($restriction->getField()->getTable() === $this->getTable() ) {
-					$local_f      = $restriction->getField()->getPhysical();
-					$local_alias  = $restriction->getQuery()->getAlias();
-					$remote_alias = $restriction->getValue()->getAlias();
+				if ($_join->getField() instanceof \ManyToManyField) {
+					$bridge = $_join->getBridge();
+					$br_fields = $bridge->getModel()->getFields();
+					$_physicstts = Array();
+					$bridgealias = 'table_'. rand();
 					
-					foreach($local_f as $field)
-						$remote_f[]  = $field->getReferencedField();
+					$_fields = array_shift($br_fields);
+					
+					foreach ($_array = $_fields->getPhysical() as $_field)
+						$_physicstts[0][] = $bridgealias . '.' . $_field->getName() . ' = ' . 
+							  $_join->getTargetQuery ()->getAlias() . '.' . $_field->getReferencedField()->getName();
+					
+					$_fields = array_shift($br_fields);
+					
+					foreach ($_array = $_fields->getPhysical() as $_field)
+						$_physicstts[1][] = $_join->getSrcQuery()->getAlias() . '.' . $_field->getReferencedField()->getName() . ' = ' . 
+							  $bridgealias . '.' . $_field->getName();
+					
+					$joinstt    = sprintf(' LEFT JOIN %s AS %s ON(%s) LEFT JOIN %s ON (%s) ', 
+							  $bridge, $bridgealias, implode(' AND ', $_physicstts[0]), 
+							  $_join->getSrcQuery()->aliasedTableName(), implode(' AND ', $_physicstts[1]));
+					
 				}
 				else {
-					$local_f      = $restriction->getField()->getPhysical();
-					$local_alias  = $restriction->getValue()->getAlias();
-					$remote_alias = $restriction->getQuery()->getAlias();
+					$_physic    = $_join->getField()->getPhysical();
 					
-					foreach($local_f as $field)
-						$remote_f[]  = $field->getReferencedField();
+					foreach ($_physic as $_field)
+						$_physicstt[] = $_join->getSrcQuery()->getAlias() . '.' . $_field->getName() . ' = ' . 
+							  $_join->getTargetQuery ()->getAlias() . '.' . $_field->getReferencedField()->getName();
+					
+					$joinstt    = sprintf(' LEFT JOIN %s ON(%s) ', $_join->getSrcQuery()->aliasedTableName(), implode(' AND ', $_physicstt));
 				}
-
-				$remote_p  = Array();
 				
-				foreach($local_f as $index => $field) 
-						$remote_p[] = "{$local_alias}.{$field->getName()} = {$remote_alias}.{$remote_f[$index]->getName()}";
-
-				$join.= 'LEFT JOIN ' . $value->aliasedTableName();
-				$join.= ' ON (' . implode(' AND ', $remote_p) . ') ';
+				$join.= $joinstt;
 			}
 		}
 		
@@ -109,7 +105,6 @@ class MysqlPDOQuery extends Query
 		
 		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $tablename, $join, 
 		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));
-		
 		
 		return new mysqlPDOResultSet($this->getTable(), $this->getTable()->getDb()->execute(implode(' ', $stt)));
 		

@@ -36,6 +36,7 @@ AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.
 AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
 AutoLoad::registerClass('spitfire\storage\database\Ancestor',                   $cur_dir.'/db/ancestor.php');
+AutoLoad::registerClass('spitfire\storage\database\QueryJoin',                  $cur_dir.'/db/join.php');
 AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
 AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface', $cur_dir.'/db/resultset.php');
