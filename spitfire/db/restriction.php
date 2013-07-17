@@ -8,6 +8,8 @@ abstract class Restriction
 	private $field;
 	private $value;
 	private $operator;
+	
+	private $joins;
 
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
@@ -22,6 +24,39 @@ abstract class Restriction
 		$this->field    = $field;
 		$this->value    = $value;
 		$this->operator = trim($operator);
+	}
+	
+	public function makeJoins() {
+		
+		$_joins = Array();
+		
+		if ($this->value instanceof Query) {
+			$this->value->setAliased(true);
+		}
+		
+		if ($this->field instanceof \Reference && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
+			$_joins[] = new QueryJoin($this->value, $this->query, $this->field);
+		}
+		
+		if ($this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
+			$_joins[] = new QueryJoin($this->value, $this->query, $this->field);
+		}
+		
+		if ($this->field instanceof \ManyToManyField && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
+			$join = new QueryJoin($this->value, $this->query, $this->field);
+			$join->setBridge($this->field->getBridge()->getTable());
+			$_joins[] = $join;
+		}
+		
+		$this->joins = $_joins;
+		
+	}
+	
+	public function getJoins() {
+		if (!$this->joins) $this->makeJoins();
+		
+		if ($this->value instanceof Query) return array_merge ($this->joins, $this->value->getJoins());
+		else return $this->joins;
 	}
 	
 	public function getTable(){

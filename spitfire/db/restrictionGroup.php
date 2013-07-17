@@ -49,5 +49,15 @@ abstract class RestrictionGroup
 		foreach ($this->restrictions as $r) $r->setStringify($callback);
 	}
 	
+	public function getJoins() {
+		$_joins = Array();
+		
+		foreach($this->restrictions as $restriction) {
+			$_joins = array_merge($_joins, $restriction->getJoins());
+		}
+		
+		return $_joins;
+	}
+	
 	abstract public function __toString();
 }

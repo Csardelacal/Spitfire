@@ -48,6 +48,9 @@ class ManyToManyField extends ChildrenField
 	}
 	
 	public function getBridge() {
+		if ($this->meta) return $this->meta;
+		
+		$this->getTarget();
 		return $this->meta;
 	}
 
