@@ -6,7 +6,7 @@ use spitfire\storage\database\Query;
 use spitfire\storage\database\Table;
 use spitfire\model\Field;
 
-class QueryJoin
+abstract class QueryJoin
 {
 	/**
 	 * The query that is referencing the target.
@@ -72,9 +72,7 @@ class QueryJoin
 		$this->bridge = $bridge;
 	}
 	
-	public function __toString() {
-		return "{$this->getSrcQuery()} -> {$this->getField()->getName()} -> {$this->getTargetQuery()}";
-	}
+	abstract public function __toString();
 
 	
 }

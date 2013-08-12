@@ -67,6 +67,7 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',     
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOTable',      $cur_dir.'/db/drivers/mysqlPDOTable.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOField',      $cur_dir.'/db/drivers/mysqlPDOField.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOQuery',      $cur_dir.'/db/drivers/mysqlPDOQuery.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOJoin',       $cur_dir.'/db/drivers/mysqlPDOJoin.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORecord',     $cur_dir.'/db/drivers/mysqlPDORecord.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestriction',$cur_dir.'/db/drivers/mysqlPDORestriction.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestrictionGroup',$cur_dir.'/db/drivers/mysqlPDORestrictionGroup.php');
@@ -119,6 +120,8 @@ AutoLoad::registerClass('Component',                                            
 AutoLoad::registerClass('spitfire\registry\Registry',                           $cur_dir.'/io/registry/registry.php');
 AutoLoad::registerClass('spitfire\registry\JSRegistry',                         $cur_dir.'/io/registry/jsregistry.php');
 AutoLoad::registerClass('spitfire\registry\CSSRegistry',                        $cur_dir.'/io/registry/cssregistry.php');
+
+AutoLoad::registerClass('Pluggable',                                            $cur_dir.'/plugins/pluggable.php');
 
 AutoLoad::registerClass('URL',                                                  $cur_dir.'/url.php');
 AutoLoad::registerClass('absoluteURL',                                          $cur_dir.'/absoluteURL.php');
