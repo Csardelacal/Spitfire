@@ -41,7 +41,7 @@ class ManyToManyField extends ChildrenField
 			$this->getModel()->getTable()->getDb()->table($model);
 		}
 		else {
-			$this->meta = $this->getTable()->getDb()->table("{$first}_{$second}");
+			$this->meta = $this->getTable()->getDb()->table("{$first}_{$second}")->getModel();
 		}
 		
 		return $this->target = $this->getModel()->getTable()->getDb()->table($target)->getModel();//$this->meta;
