@@ -44,6 +44,7 @@ abstract class Restriction
 		
 		if ($this->field instanceof \ManyToManyField && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
 			$join = new QueryJoin($this->value, $this->query, $this->field);
+			if (!$this->field->getBridge() instanceof \Schema) throw new \privateException("$this->field has no valid bridge received a " . get_class($this->field->getBridge()));
 			$join->setBridge($this->field->getBridge()->getTable());
 			$_joins[] = $join;
 		}
