@@ -92,6 +92,10 @@ class MysqlPDORestriction extends Restriction
 		}
 	}
 	
+	public function queryJoin($value, $query, $field) {
+		return new MysqlPDOJoin($value, $query, $field);
+	}
+	
 	public function getTableName() {
 		if ($this->getQuery()) return $this->getQuery()->getAlias();
 		else return $this->getTable()->getName();

@@ -76,6 +76,14 @@ abstract class FileCache
 	 */
 	private $timeout = self::DEFAULT_TIMEOUT;
 	
+	/**
+	 * Creates a new cache file. This allows you to store data to the disk that
+	 * takes longer to generate / read from network / read from the DB. By doing
+	 * so you reduce server load.
+	 * 
+	 * @param string $filename
+	 * @throws privateException
+	 */
 	public function __construct($filename) {
 		$this->filename  = $filename;
 		$this->cache_dir = environment::get('cachefile.directory');
@@ -91,7 +99,8 @@ abstract class FileCache
 	}
 	
 	public function setCachedData($data) {
-		$this->cached = $data;
+		$this->expires = null;
+		$this->cached  = $data;
 	}
 	
 	public function getCachedData() {

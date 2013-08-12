@@ -31,17 +31,15 @@ class ChildrenField extends Field
 		}
 	}
 	
-	public function getReferencedFields() {
-		$_return = Array();
-		if (is_array($this->role))
-		foreach ($this->role as $role) {
-			$_return[] = $this->getTarget()->getField($role);
+	public function getReferencedField() {
+		if (!empty($this->role)) {
+			return $this->getTarget()->getField($this->role);
+		} else {
+			$fields = $this->getTarget()->getFields();
+			foreach ($fields as $field)
+				if ($field instanceof \Reference && $field->getTarget() === $this)
+					return $field;
 		}
-		else {
-			$_return[] = $this->getTarget()->getField($this->role);
-		}
-		
-		return $_return;
 	}
 	
 	public function getRole() {

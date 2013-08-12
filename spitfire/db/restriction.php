@@ -35,15 +35,19 @@ abstract class Restriction
 		}
 		
 		if ($this->field instanceof \Reference && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
-			$_joins[] = new QueryJoin($this->value, $this->query, $this->field);
+			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field);
 		}
 		
 		if ($this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
-			$_joins[] = new QueryJoin($this->value, $this->query, $this->field);
+			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field);
+		}
+		
+		if ($this->field instanceof \ChildrenField && !$this->field instanceof \ManyToManyField && $this->field->getTable() === $this->getQuery()->getTable()) {
+			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field->getReferencedField());
 		}
 		
 		if ($this->field instanceof \ManyToManyField && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
-			$join = new QueryJoin($this->value, $this->query, $this->field);
+			$join = $this->queryJoin($this->value, $this->query, $this->field);
 			if (!$this->field->getBridge() instanceof \Schema) throw new \privateException("$this->field has no valid bridge received a " . get_class($this->field->getBridge()));
 			$join->setBridge($this->field->getBridge()->getTable());
 			$_joins[] = $join;
@@ -94,6 +98,8 @@ abstract class Restriction
 	public function getValue() {
 		return $this->value;
 	}
+	
+	abstract public function queryJoin($value, $query, $field);
 	
 	abstract public function __toString();
 }

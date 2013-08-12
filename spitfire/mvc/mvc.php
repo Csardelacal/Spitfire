@@ -13,7 +13,7 @@ use spitfire\SpitFire;
  * 
  */
 
-class _SF_MVC
+class _SF_MVC extends Pluggable
 {
 	protected $app;
 	

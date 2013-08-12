@@ -47,6 +47,10 @@ class ManyToManyField extends ChildrenField
 		return $this->target = $this->getModel()->getTable()->getDb()->table($target)->getModel();//$this->meta;
 	}
 	
+	public function getModelField($schema) {
+		return $this->meta->getField($schema->getName());
+	}
+	
 	public function getBridge() {
 		if ($this->meta) return $this->meta;
 		
