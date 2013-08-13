@@ -15,6 +15,7 @@
  * @todo: Simplify apps
  * @todo: Add DBProcedure class
  * @todo: Check plugin functionality and allow integration w/ onboard logic
+ * @todo: Add class to manage n/m related data on the DB
  * 
  * @todo: Add table aliases to avoid query collissions
  * @todo: Clean query code

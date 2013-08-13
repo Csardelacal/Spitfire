@@ -98,19 +98,46 @@ abstract class FileCache
 			$this->cached  = $this->onMiss();
 	}
 	
+	/**
+	 * Replaces the currently cached data with anything the user defines for it.
+	 * This is just meant for data that is cached and should change slightly over 
+	 * time or be disposed.
+	 * 
+	 * @param mixed $data
+	 */
 	public function setCachedData($data) {
 		$this->expires = null;
 		$this->cached  = $data;
 	}
 	
+	/**
+	 * Returns the data contained by this cache file. This can be any kind of data 
+	 * that can be serialized. If there was a problem serializing it will return 
+	 * null.
+	 * 
+	 * @return mixed
+	 */
 	public function getCachedData() {
 		return $this->cached;
 	}
 	
+	/**
+	 * Time in seconds the cache file should take to expire, after that amount of 
+	 * seconds the next cache hit will delete it. The default value is 14400 which 
+	 * corresponds to 4 hours.
+	 * 
+	 * @param int $timeout
+	 */
 	public function setTimeout($timeout) {
 		$this->timeout = $timeout;
 	}
 	
+	/**
+	 * Writes the cached data to disk. This generates an envelope with the expiry
+	 * timestamp and the mixed data the file holds and serializes it to disk.
+	 * 
+	 * @throws privateException If the lock for the file could not be acquired.
+	 */
 	public function writeToDisk() {
 		$envelope = Array($this->expires, $this->cached);
 		$fh = fopen($this->path, 'w+');
@@ -126,8 +153,22 @@ abstract class FileCache
 		}
 	}
 
+	/**
+	 * This method needs to be implemented by child classes in order to tell the
+	 * cache how to generate the data it requires. The return value of this method 
+	 * will be stored into the file.
+	 * 
+	 * Please note that the returned value of this class needs to be serializable.
+	 * Otherwise it will fail.
+	 */
 	public abstract function onMiss();
 	
+	/**
+	 * This method is in charge of handling the destruction of the class. This 
+	 * usually allows to defer the writing on the file to the end of the execution
+	 * of the script, therefore not creating any delay on te users end due to 
+	 * disk IO.
+	 */
 	public function __destruct() {
 		if ($this->expires == null) {
 			$this->expires = time() + $this->timeout;

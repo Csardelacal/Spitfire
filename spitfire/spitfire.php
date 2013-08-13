@@ -3,7 +3,6 @@
 namespace spitfire;
 
 use App;
-use Headers;
 use router;
 
 require_once 'spitfire/app.php';
