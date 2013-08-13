@@ -3,8 +3,6 @@
 namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Query;
-use spitfire\storage\database\Restriction;
-use spitfire\storage\database\RestrictionGroup;
 
 class MysqlPDOQuery extends Query
 {
@@ -38,7 +36,6 @@ class MysqlPDOQuery extends Query
 		
 		#Import tables for restrictions from remote queries
 		if (!empty($restrictions)) {
-			
 			$joins = $this->getJoins();
 			$join  = implode($joins, ' ');
 		}

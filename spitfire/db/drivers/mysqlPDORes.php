@@ -5,7 +5,6 @@ namespace spitfire\storage\database\drivers;
 use PDO;
 use Reference;
 use ChildrenField;
-use Model;
 
 /**
  * This class works as a traditional resultset. It acts as an adapter between the
