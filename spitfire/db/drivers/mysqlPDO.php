@@ -121,8 +121,8 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$con = $this->getConnection();
 		
 		try {
-			$stt = $con->query($statement);
 			spitfire()->log("DB: " . $statement);
+			$stt = $con->query($statement);
 			#Execute the query
 		}
 		catch(PDOException $e) {
