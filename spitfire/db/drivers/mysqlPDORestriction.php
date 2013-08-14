@@ -93,6 +93,8 @@ class MysqlPDORestriction extends Restriction
 	}
 	
 	public function queryJoin($value, $query, $field) {
+		if (!$query instanceof Query) throw new \privateException("oops");
+		if (!$value instanceof Query) throw new \privateException("oops");
 		return new MysqlPDOJoin($value, $query, $field);
 	}
 	

@@ -222,6 +222,18 @@ class Model implements Serializable
 		return $restrictions;
 	}
 	
+	public function getQuery() {
+		$query     = $this->getTable()->queryInstance($this->getTable());
+		$primaries = $this->table->getModel()->getPrimary();
+		
+		foreach ($primaries as $primary) {
+			$name = $primary->getName();
+			$query->addRestriction($name, $this->$name);
+		}
+		
+		return $query;
+	}
+	
 	/**
 	 * Returns the table this record belongs to.
 	 * 
@@ -271,21 +283,7 @@ class Model implements Serializable
 		}
 		
 		elseif ($field_info instanceof ManyToManyField) {
-			if (!isset($this->data[$field])) {
-				
-				$query       = $field_info->getTarget()->getTable()->getAll();
-				$bridgequery = $field_info->getBridge()->getTable()->get($this->table->getModel()->getName(), $this);
-				
-				$query->addRestriction($field_info->getBridge()->getField($field_info->getTarget()->getName()),$bridgequery);
-				
-				$this->data[$field] = $query;
-			}
-			
-			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field] = $this->data[$field]->fetchAll($this);
-			} else {
-				return $this->data[$field];
-			}
+			return $this->data[$field] = new spitfire\model\adapters\ManyToManyAdapter($field_info, $this);
 		}
 		
 		elseif ($field_info instanceof ChildrenField) {

@@ -57,6 +57,7 @@ AutoLoad::registerClass('ManyToManyField',                                      
 AutoLoad::registerClass('Reference',                                            $cur_dir.'/model/reference.php');
 AutoLoad::registerClass('ChildrenField',                                        $cur_dir.'/model/children.php');
 
+AutoLoad::registerClass('spitfire\model\adapters\ManyToManyAdapter',            $cur_dir.'/model/adapters/m2madapter.php');
 
 AutoLoad::registerClass('spitfire\model\defaults\userModel',                    $cur_dir.'/model/defaults/usermodel_default.php');
 
