@@ -254,6 +254,13 @@ class Model implements Serializable
 			$this->data[$field] = $value;
 		}
 		
+		elseif ($field_info instanceof ManyToManyField) {
+			if (!$value instanceof \spitfire\model\adapters\ManyToManyAdapter)
+				throw new privateException('Children only accept adapters as value');
+			
+			$this->data[$field] = $value;
+		}
+		
 		elseif ($field_info instanceof ChildrenField) {
 			if (!is_array($value)) 
 				throw new privateException('Children only accept arrays as data');

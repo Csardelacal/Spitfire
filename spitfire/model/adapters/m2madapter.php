@@ -24,7 +24,7 @@ class ManyToManyAdapter
 	public function toArray() {
 		$table = $this->field->getTarget()->getTable();
 		
-		$fields = $this->field->getBridge()->getField($table->getModel()->getName())->getTarget()->getFields();
+		$fields = $table->getModel()->getFields();
 		$found  = null;
 		
 		foreach ($fields as $field) {
