@@ -127,6 +127,9 @@ class SimpleFieldRenderer {
 		
 		$_return = Array();
 		
+		//@todo Replace this when better ways are found.
+		if ($records instanceof \spitfire\model\adapters\ManyToManyAdapter) $records = $records->toArray();
+		
 		foreach ($records as $record) {
 			$selected = ($record)? implode(':',$record->getPrimaryData()) : '';
 			$select = new HTMLSelect($field->getPostId() . '[]', $selected);
