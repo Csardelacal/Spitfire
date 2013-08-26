@@ -100,6 +100,6 @@ class MysqlPDORestriction extends Restriction
 	
 	public function getTableName() {
 		if ($this->getQuery()) return $this->getQuery()->getAlias();
-		else return $this->getTable()->getName();
+		else return $this->getTable()->getTableName();
 	}
 }

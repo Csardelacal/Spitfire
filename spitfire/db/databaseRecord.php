@@ -143,6 +143,8 @@ class Model implements Serializable
 				$bridge_records = $field_info->getBridge()->getTable()->get($field_info->getModel()->getName(), $this)->fetchAll();
 				foreach($bridge_records as $r) $r->delete();
 				
+				//@todo: Change for definitive.
+				$value = $value->toArray();
 				foreach($value as $child) {
 					$insert = $field_info->getBridge()->getTable()->newRecord();
 					$insert->{$field_info->getModel()->getName()} = $this;
@@ -206,7 +208,7 @@ class Model implements Serializable
 		
 		foreach($primaries as $primary) {
 			$ref   = $primary->getReferencedField();
-			$value = $this->src[$primary->getLogicalField()->getName()];
+			$value = &$this->src[$primary->getLogicalField()->getName()];
 			
 			if ($value instanceof Query) $value = $value->fetch();
 			if ($value instanceof Model) {
@@ -255,6 +257,9 @@ class Model implements Serializable
 		}
 		
 		elseif ($field_info instanceof ManyToManyField) {
+			if (is_array($value))
+				$value = new spitfire\model\adapters\ManyToManyAdapter($field_info, $this, $value);
+				
 			if (!$value instanceof \spitfire\model\adapters\ManyToManyAdapter)
 				throw new privateException('Children only accept adapters as value');
 			
@@ -283,7 +288,7 @@ class Model implements Serializable
 		
 		if ($field_info instanceof Reference) {
 			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field] = $this->data[$field]->fetch();
+				return $this->data[$field] = $this->src[$field] = $this->data[$field]->fetch();
 			} else {
 				return $this->data[$field];
 			}

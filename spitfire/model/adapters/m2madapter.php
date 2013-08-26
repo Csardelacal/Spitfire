@@ -16,12 +16,17 @@ class ManyToManyAdapter
 	private $parent;
 	private $children;
 	
-	public function __construct(ManyToManyField$field, Model$model) {
+	public function __construct(ManyToManyField$field, Model$model, $data = null) {
 		$this->field  = $field;
 		$this->parent = $model;
+		
+		if ($data !== null) $this->children = $data;
 	}
 	
 	public function toArray() {
+		
+		if ($this->children) return $this->children;
+		
 		$table = $this->field->getTarget()->getTable();
 		
 		$fields = $table->getModel()->getFields();

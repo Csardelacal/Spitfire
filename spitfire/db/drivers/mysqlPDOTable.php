@@ -146,8 +146,10 @@ class MysqlPDOTable extends stdSQLTable
 		$db = $table->getDb();
 		
 		foreach ($data as $field => $value) {
-			if ($value instanceof Query) {
+			if ($value instanceof Query || is_array($value) || $value instanceof \spitfire\model\adapters\ManyToManyAdapter) {
 				if ($this->getModel()->getField($field) instanceof \ChildrenField) 
+					unset($data[$field]);
+				elseif ($this->getModel()->getField($field) instanceof \ManyToManyField) 
 					unset($data[$field]);
 				else 
 					$value = $value->fetch();
