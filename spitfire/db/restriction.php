@@ -2,6 +2,8 @@
 
 namespace spitfire\storage\database;
 
+use Model;
+
 abstract class Restriction
 {
 	private $query;
@@ -20,6 +22,9 @@ abstract class Restriction
 		if (!$query instanceof Query && $query !== null)
 			throw new \privateException("Valid field or null required");
 		
+		if ($value instanceof Model)
+			$value = $value->getQuery();
+		
 		$this->query    = $query;
 		$this->field    = $field;
 		$this->value    = $value;
@@ -34,8 +39,8 @@ abstract class Restriction
 			$this->value->setAliased(true);
 		}
 		
-		if ($this->field instanceof \Reference && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
-			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field);
+		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
+			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field, QueryJoin::RIGHT_JOIN);
 		}
 		
 		if ($this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
@@ -99,7 +104,7 @@ abstract class Restriction
 		return $this->value;
 	}
 	
-	abstract public function queryJoin($value, $query, $field);
+	abstract public function queryJoin($value, $query, $field, $type = null);
 	
 	abstract public function __toString();
 }

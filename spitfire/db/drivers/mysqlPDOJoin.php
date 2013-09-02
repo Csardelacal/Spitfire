@@ -3,7 +3,6 @@
 namespace spitfire\storage\database\drivers;
 
 use \spitfire\storage\database\QueryJoin;
-use \Exception;
 
 class MysqlPDOJoin extends QueryJoin
 {
@@ -14,7 +13,6 @@ class MysqlPDOJoin extends QueryJoin
 		if ($bridge) {
 			$bridge      = $this->getBridge();
 			$br_fields   = $bridge->getModel()->getFields();
-			foreach ($br_fields as $f) echo $f->getName() . '<br>';
 			$_physicstts = Array();
 			$bridgealias = 'table_'. rand();
 
@@ -36,12 +34,20 @@ class MysqlPDOJoin extends QueryJoin
 		}
 		else {
 			$_physic    = $this->getField()->getPhysical();
-
-			foreach ($_physic as $_field)
-				$_physicstt[] = $this->getSrcQuery()->getAlias() . '.' . $_field->getName() . ' = ' . 
-					  $this->getTargetQuery ()->getAlias() . '.' . $_field->getReferencedField()->getName();
-
-			return sprintf(' LEFT JOIN %s ON(%s) ', $this->getSrcQuery()->aliasedTableName(), implode(' AND ', $_physicstt));
+			
+			if ($this->getType() == QueryJoin::LEFT_JOIN) {
+				foreach ($_physic as $_field)
+					$_physicstt[] = $this->getSrcQuery()->getAlias() . '.' . $_field->getName() . ' = ' . 
+						  $this->getTargetQuery ()->getAlias() . '.' . $_field->getReferencedField()->getName();
+			
+				return sprintf(' LEFT JOIN %s ON(%s) ', $this->getSrcQuery()->aliasedTableName(), implode(' AND ', $_physicstt));
+			}
+			else {
+				foreach ($_physic as $_field)
+					$_physicstt[] = $this->getTargetQuery()->getAlias() . '.' . $_field->getName() . ' = ' . 
+						  $this->getSrcQuery()->getAlias() . '.' . $_field->getReferencedField()->getName();
+				return sprintf(' RIGHT JOIN %s ON(%s) ', $this->getSrcQuery()->aliasedTableName(), implode(' AND ', $_physicstt));
+			}
 		}
 	}
 	

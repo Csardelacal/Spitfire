@@ -51,6 +51,12 @@ class ManyToManyField extends ChildrenField
 		return $this->meta->getField($schema->getName());
 	}
 	
+	/**
+	 * Returns the table that connects the two tables to form a many to many 
+	 * relationship
+	 * 
+	 * @return spitfire\storage\database\Table
+	 */
 	public function getBridge() {
 		if ($this->meta) return $this->meta;
 		

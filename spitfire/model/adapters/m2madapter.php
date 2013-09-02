@@ -23,12 +23,9 @@ class ManyToManyAdapter
 		if ($data !== null) $this->children = $data;
 	}
 	
-	public function toArray() {
+	public function getQuery() {
 		
-		if ($this->children) return $this->children;
-		
-		$table = $this->field->getTarget()->getTable();
-		
+		$table  = $this->field->getTarget()->getTable();
 		$fields = $table->getModel()->getFields();
 		$found  = null;
 		
@@ -36,9 +33,13 @@ class ManyToManyAdapter
 			if ($field instanceof ManyToManyField && $field->getTarget() === $this->field->getModel()) $found = $field;
 		}
 		
-		$this->children = $table->getAll()->addRestriction($found->getName(), $this->parent->getQuery())
-				  ->fetchAll();
+		return $table->getAll()->addRestriction($found->getName(), $this->parent->getQuery());
 		
+	}
+	
+	public function toArray() {
+		if ($this->children) return $this->children;
+		$this->children = $this->getQuery()->fetchAll();
 		return $this->children;
 	}
 	
