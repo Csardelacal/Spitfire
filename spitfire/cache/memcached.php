@@ -63,7 +63,7 @@ class MemcachedAdapter
 	 * this to send the data once the destruct hook is called and to retrieve
 	 * data from the Memcached server.
 	 *
-	 * @var Memcached
+	 * @var \Memcached
 	 */
 	private $connection = false;
 	
@@ -71,7 +71,7 @@ class MemcachedAdapter
 	 * Creates a connection to the memcached servers.
 	 * 
 	 * @throws privateException
-	 * @return memcache 
+	 * @return \memcache 
 	 */
 	public function connect () {
 		#First we retrieve the list of Memcached servers
@@ -121,7 +121,7 @@ class MemcachedAdapter
 	 * result, if you require caching use object access.
 	 * 
 	 * @param string $key
-	 * @return true
+	 * @return boolean
 	 */
 	public function get($key) {
 		if ($this->connection) {
@@ -231,7 +231,7 @@ class MemcachedAdapter
 	 * several Memcached instances and cache collissions when writing to the 
 	 * tool.
 	 * 
-	 * @return type
+	 * @return MemcachedAdapter
 	 */
 	public static function getInstance() {
 		if (self::$instance === null) self::$instance = new \spitfire\MemcachedAdapter();

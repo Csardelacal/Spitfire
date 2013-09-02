@@ -47,7 +47,6 @@ class SpitFire extends App
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
-		self::includeIfPossible(CONFIG_DIRECTORY . 'components.php');
 		
 		#If there are uploads to be handled copy them into _POST
 		if(!empty($_FILES)) io\Upload::init();

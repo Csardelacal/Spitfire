@@ -8,6 +8,9 @@ use spitfire\model\Field;
 
 abstract class QueryJoin
 {
+	const RIGHT_JOIN = 'right';
+	const LEFT_JOIN  = 'left';
+	
 	/**
 	 * The query that is referencing the target.
 	 *
@@ -33,11 +36,14 @@ abstract class QueryJoin
 	 * @var spitfire\storage\database\Table 
 	 */
 	private $bridge;
+	private $type;
 
-	function __construct(Query $srcQuery, Query$targetQuery, Field $field) {
+	function __construct(Query $srcQuery, Query$targetQuery, Field $field, $type = null) {
+		if ($type === null) $type = self::LEFT_JOIN;
 		$this->srcQuery = $srcQuery;
 		$this->targetQuery = $targetQuery;
 		$this->field = $field;
+		$this->type  = $type;
 	}
 	
 	public function getSrcQuery() {
@@ -70,6 +76,10 @@ abstract class QueryJoin
 
 	public function setBridge(Table $bridge) {
 		$this->bridge = $bridge;
+	}
+	
+	public function getType() {
+		return $this->type;
 	}
 	
 	abstract public function __toString();
