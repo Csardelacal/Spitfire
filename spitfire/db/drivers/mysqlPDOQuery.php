@@ -3,6 +3,7 @@
 namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Query;
+use spitfire\storage\database\QueryField;
 
 class MysqlPDOQuery extends Query
 {
@@ -72,12 +73,20 @@ class MysqlPDOQuery extends Query
 		return new MysqlPDORestrictionGroup($this);
 	}
 
-	public function restrictionInstance($field, $value, $operator) {
+	public function restrictionInstance(QueryField$field, $value, $operator) {
 		return new MysqlPDORestriction($this, $field, $value, $operator);
 	}
 
 	public function aliasedTableName() {
 		if ($this->getAliased()) return $this->getTable() . ' AS ' . $this->getAlias();
 		else return $this->getTable();
+	}
+
+	public function queryFieldInstance(\spitfire\storage\database\Field $field) {
+		return new MysqlPDOQueryField($this, $field);
+	}
+
+	public function queryTableInstance(\spitfire\storage\database\Table $table) {
+		return new MysqlPDOQueryTable($this, $table);
 	}
 }

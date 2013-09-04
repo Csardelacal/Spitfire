@@ -26,6 +26,7 @@ use \Model;
  * one who pays the insurance and the driver are not always the same person.
  * 
  * @author César de la Cal <cesar@magic3w.com>
+ * @deprecated since version 0.1
  * @last-revision 2013-05-17
  */
 class Ancestor
