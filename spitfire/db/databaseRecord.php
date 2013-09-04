@@ -200,6 +200,7 @@ class Model implements Serializable
 	 * database table.
 	 * 
 	 * @todo Fix, still works the old way.
+	 * @deprecated since version 0.1
 	 * @return Restriction[]
 	 */
 	public function getUniqueRestrictions() {

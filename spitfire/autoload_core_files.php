@@ -32,6 +32,8 @@ AutoLoad::registerClass('spitfire\storage\database\Queriable',         $cur_dir.
 AutoLoad::registerClass('spitfire\storage\database\Table',             $cur_dir.'/db/table.php');
 AutoLoad::registerClass('spitfire\storage\database\DBField',           $cur_dir.'/db/field.php');
 AutoLoad::registerClass('spitfire\storage\database\Query',             $cur_dir.'/db/dbquery.php');
+AutoLoad::registerClass('spitfire\storage\database\QueryTable',                 $cur_dir.'/db/querytable.php');
+AutoLoad::registerClass('spitfire\storage\database\QueryField',                 $cur_dir.'/db/queryfield.php');
 AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
@@ -68,6 +70,8 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDODriver',     
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOTable',      $cur_dir.'/db/drivers/mysqlPDOTable.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOField',      $cur_dir.'/db/drivers/mysqlPDOField.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOQuery',      $cur_dir.'/db/drivers/mysqlPDOQuery.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOQueryTable', $cur_dir.'/db/drivers/mysqlPDOQueryTable.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOQueryField', $cur_dir.'/db/drivers/mysqlPDOQueryField.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOJoin',       $cur_dir.'/db/drivers/mysqlPDOJoin.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORecord',     $cur_dir.'/db/drivers/mysqlPDORecord.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestriction',$cur_dir.'/db/drivers/mysqlPDORestriction.php');

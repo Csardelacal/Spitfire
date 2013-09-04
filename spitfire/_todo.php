@@ -1,6 +1,7 @@
 <?php
 /*
  * 
+ * @todo: Fix bug that renders inserting records impossible when manytomany fields are present
  * @todo: Clean the code of queries, so it is more insightful and supports aliases.
  * @todo: Add captions to the Beans. So they can display relevant titles in admins and stuff.
  * @todo: Add new element creators to ChildBeans

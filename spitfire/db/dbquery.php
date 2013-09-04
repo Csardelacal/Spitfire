@@ -25,7 +25,7 @@ abstract class Query
 
 	public function __construct($table) {
 		$this->id = self::$counter++;
-		$this->table = $table;
+		$this->table = $this->queryTableInstance($table);
 		$this->restrictions = Array();
 	}
 	
@@ -52,7 +52,7 @@ abstract class Query
 				throw new privateException("No field '$fieldname'");
 			}
 		}
-		$restriction = $this->restrictionInstance($field, $value, $operator);
+		$restriction = $this->restrictionInstance($this->queryFieldInstance($field), $value, $operator);
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
@@ -179,7 +179,13 @@ abstract class Query
 	}
 	
 	public abstract function execute($fields = null);
-	public abstract function restrictionInstance($field, $value, $operator);
+	public abstract function restrictionInstance(QueryField$field, $value, $operator);
 	public abstract function restrictionGroupInstance();
+	public abstract function queryFieldInstance(Field$field);
+	public abstract function queryTableInstance(Table$table);
+	
+	/**
+	 * @deprecated since version 0.1
+	 */
 	public abstract function aliasedTableName();
 }
