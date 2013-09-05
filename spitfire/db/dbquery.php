@@ -9,7 +9,7 @@ abstract class Query
 {
 	/** @var spitfire\storage\database\drivers\ResultSetInterface */
 	protected $result;
-	/** @var \spitfire\storage\database\Table  */
+	/** @var \spitfire\storage\database\QueryTable  */
 	protected $table;
 	
 	protected $restrictions;
@@ -40,9 +40,9 @@ abstract class Query
 	 */
 	public function addRestriction($fieldname, $value, $operator = '=') {
 		try {
-			$field = $this->table->getField($fieldname);
+			$field = $this->table->getTable()->getField($fieldname);
 		} catch (\Exception $e) {
-			$field = $this->table->getModel()->getField($fieldname);
+			$field = $this->table->getTable()->getModel()->getField($fieldname);
 		}
 		if ($field == null) {
 			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel()) {
@@ -68,9 +68,9 @@ abstract class Query
 	
 	public function getAlias() {
 		if ($this->aliased)
-			return $this->table->getTablename() . '_' . $this->id;
+			return $this->table->getTable()->getTablename() . '_' . $this->id;
 		else
-			return $this->table->getTablename();
+			return $this->table->getTable()->getTablename();
 	}
 	
 	public function getJoins() {
@@ -162,7 +162,7 @@ abstract class Query
 	}
 	
 	public function getRestrictions() {
-		$this->table->getModel()->getBaseRestrictions($this);
+		$this->table->getTable()->getModel()->getBaseRestrictions($this);
 		return $this->restrictions;
 	}
 	
@@ -170,8 +170,12 @@ abstract class Query
 		return $this->order;
 	}
 	
-	public function getTable() {
+	public function getQueryTable() {
 		return $this->table;
+	}
+	
+	public function getTable() {
+		return $this->table->getTable();
 	}
 	
 	public function __toString() {
@@ -181,7 +185,7 @@ abstract class Query
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance(QueryField$field, $value, $operator);
 	public abstract function restrictionGroupInstance();
-	public abstract function queryFieldInstance(Field$field);
+	public abstract function queryFieldInstance($field);
 	public abstract function queryTableInstance(Table$table);
 	
 	/**

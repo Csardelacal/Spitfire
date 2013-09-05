@@ -16,7 +16,7 @@ class MysqlPDOQuery extends Query
 		$offset       = ($this->getPage() - 1) * $rpp;
 		
 		$selectstt    = 'SELECT';
-		$fields       = ($fields)? $fields : $this->table->getFields();
+		$fields       = ($fields)? $fields : $this->table->getTable()->getFields();
 		$fromstt      = 'FROM';
 		$tablename    = $this->aliasedTableName();
 		$join         = '';
@@ -82,7 +82,7 @@ class MysqlPDOQuery extends Query
 		else return $this->getTable();
 	}
 
-	public function queryFieldInstance(\spitfire\storage\database\Field $field) {
+	public function queryFieldInstance($field) {
 		return new MysqlPDOQueryField($this, $field);
 	}
 

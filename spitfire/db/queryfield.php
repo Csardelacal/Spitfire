@@ -7,7 +7,7 @@ abstract class QueryField
 	private $field;
 	private $query;
 	
-	public function __construct(Query$query, DBField$field) {
+	public function __construct(Query$query, $field) {
 		$this->query = $query;
 		$this->field = $field;
 	}
@@ -18,6 +18,19 @@ abstract class QueryField
 	
 	public function getField() {
 		return $this->field;
+	}
+	
+	public function isLogical() {
+		return $this->field instanceof \spitfire\model\Field;
+	}
+	
+	public function getPhysical() {
+		if ($this->isLogical()) {
+			$fields = $this->field->getPhysical();
+			foreach ($fields as &$field) $field = $this->query->queryFieldInstance($field);
+			unset($field);
+			return $fields;
+		}
 	}
 	
 	abstract public function __toString();

@@ -39,22 +39,22 @@ abstract class Restriction
 			$this->value->setAliased(true);
 		}
 		
-		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
+		if ($this->field->getField() instanceof \Reference && $this->field->getField()->getTable() === $this->getQuery()->getTable()) {
 			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field, QueryJoin::RIGHT_JOIN);
 		}
 		
-		if ($this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
+		if ($this->field->getField() instanceof \Reference && $this->field->getField()->getTable() !== $this->getQuery()->getTable()) {
 			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field);
 		}
 		
-		if ($this->field instanceof \ChildrenField && !$this->field instanceof \ManyToManyField && $this->field->getTable() === $this->getQuery()->getTable()) {
+		if ($this->field->getField() instanceof \ChildrenField && !$this->field->getField() instanceof \ManyToManyField && $this->field->getField()->getTable() === $this->getQuery()->getTable()) {
 			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field->getReferencedField());
 		}
 		
-		if ($this->field instanceof \ManyToManyField && $this->value instanceof Query && $this->field->getTable() === $this->getQuery()->getTable()) {
+		if ($this->field->getField() instanceof \ManyToManyField && $this->value instanceof Query && $this->field->getField()->getTable() === $this->getQuery()->getTable()) {
 			$join = $this->queryJoin($this->value, $this->query, $this->field);
-			if (!$this->field->getBridge() instanceof \Schema) throw new \privateException("$this->field has no valid bridge received a " . get_class($this->field->getBridge()));
-			$join->setBridge($this->field->getBridge()->getTable());
+			if (!$this->field->getField()->getBridge() instanceof \Schema) throw new \privateException("$this->field has no valid bridge received a " . get_class($this->field->getBridge()));
+			$join->setBridge($this->field->getField()->getBridge()->getTable());
 			$_joins[] = $join;
 		}
 		
@@ -70,7 +70,7 @@ abstract class Restriction
 	}
 	
 	public function getTable(){
-		return $this->field->getTable();
+		return $this->field->getField()->getTable();
 	}
 	
 	public function setTable() {
