@@ -25,7 +25,7 @@ abstract class QueryTable
 	 * @return \spitfire\storage\database\Table
 	 */
 	public function getTable() {
-		return $this->field;
+		return $this->table;
 	}
 	
 	abstract public function definition();

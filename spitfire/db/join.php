@@ -4,7 +4,6 @@ namespace spitfire\storage\database;
 
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Table;
-use spitfire\model\Field;
 
 abstract class QueryJoin
 {
@@ -38,7 +37,7 @@ abstract class QueryJoin
 	private $bridge;
 	private $type;
 
-	function __construct(Query $srcQuery, Query$targetQuery, Field $field, $type = null) {
+	function __construct(Query $srcQuery, Query$targetQuery, QueryField$field, $type = null) {
 		if ($type === null) $type = self::LEFT_JOIN;
 		$this->srcQuery = $srcQuery;
 		$this->targetQuery = $targetQuery;

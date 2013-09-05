@@ -13,9 +13,9 @@ class MysqlPDORestriction extends Restriction
 	public function __toString() {
 		try {
 			$value = $this->getValue();
-			$field = $this->getField();
+			$field = $this->getField()->getField();
 			
-			if ($field instanceof \Reference) {
+			if ($field instanceof \Reference || $field instanceof \ManyToManyField || $field instanceof \ChildrenField) {
 				
 				if ($value instanceof Model) {
 					return implode(' AND ', $value->getQuery()->getRestrictions());
@@ -30,33 +30,7 @@ class MysqlPDORestriction extends Restriction
 				}
 				
 				else {
-					throw new privateException("References do not accept values other than Model");
-				}
-				
-			}
-			
-			elseif ($field instanceof \ManyToManyField) {
-				if ($value instanceof Model) {
-					$primarykey    = $value->getPrimaryData();
-					$fields        = $this->getField()->getPhysical();
-					$_restrictions = Array();
-
-					while (!empty($fields)) {
-						$_restrictions[] = new MysqlPDORestriction($this->getQuery(), array_shift($fields), array_shift($primarykey));
-					}
-
-					return implode(' AND ', $_restrictions);
-				}
-				
-				elseif ($value instanceof Query) {
-					return implode(' AND ', $this->getValue()->getRestrictions());
-				}
-			}
-			
-			elseif ($field instanceof \ChildrenField) {
-				
-				if ($value instanceof Query) {
-					return implode(' AND ', $this->getValue()->getRestrictions());
+					throw new privateException("Invalid data");
 				}
 				
 			}
@@ -68,12 +42,12 @@ class MysqlPDORestriction extends Restriction
 						$v = $this->getTable()->getDb()->quote($value);
 
 					$quoted = implode(',', $value);
-					return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} ({$quoted})";
+					return "`{$this->getField()}` {$this->getOperator()} ({$quoted})";
 				}
 
 				else {
 					$quoted = $this->getTable()->getDb()->quote($this->getValue());
-					return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} {$quoted}";
+					return "{$this->getField()} {$this->getOperator()} {$quoted}";
 				}
 			}
 			
