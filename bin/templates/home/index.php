@@ -1,19 +1,10 @@
 <html>
 	<head>
-		<title>Test Results</title>
+		<title><?= $message ?></title>
 	</head>
 	<body>
 		<div class="wrapper">
-			<div class="results performed"><?= $result['performed'] ?> tests performed</div>
-			<div class="results failed"><?= $result['failed'] ?> test failed</div>
-			<div class="errors">
-				<h1>Errors</h1>
-				<ul>
-					<?php foreach ($result['errors'] as $error): ?>
-					<li><?= $error ?></li>
-					<?php endforeach;?>
-				</ul>
-			</div>
+			<h1><?= $message ?></h1>
 		</div>
 	</body>
 </html>
