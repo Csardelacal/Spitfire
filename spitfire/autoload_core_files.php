@@ -36,6 +36,7 @@ AutoLoad::registerClass('spitfire\storage\database\QueryTable',                 
 AutoLoad::registerClass('spitfire\storage\database\QueryField',                 $cur_dir.'/db/queryfield.php');
 AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
+AutoLoad::registerClass('spitfire\storage\database\CompositeRestriction',       $cur_dir.'/db/restrictionComposite.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
 AutoLoad::registerClass('spitfire\storage\database\Ancestor',                   $cur_dir.'/db/ancestor.php');
 AutoLoad::registerClass('spitfire\storage\database\QueryJoin',                  $cur_dir.'/db/join.php');
@@ -75,6 +76,7 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOQueryField', 
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOJoin',       $cur_dir.'/db/drivers/mysqlPDOJoin.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORecord',     $cur_dir.'/db/drivers/mysqlPDORecord.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestriction',$cur_dir.'/db/drivers/mysqlPDORestriction.php');
+AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOCompositeRestriction',$cur_dir.'/db/drivers/mysqlPDORestrictionComposite.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestrictionGroup',$cur_dir.'/db/drivers/mysqlPDORestrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet',  $cur_dir.'/db/drivers/mysqlPDORes.php');
 

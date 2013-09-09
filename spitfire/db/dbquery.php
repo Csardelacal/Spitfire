@@ -4,6 +4,7 @@ namespace spitfire\storage\database;
 
 use Model;
 use privateException;
+use \spitfire\model\Field;
 
 abstract class Query
 {
@@ -40,19 +41,23 @@ abstract class Query
 	 */
 	public function addRestriction($fieldname, $value, $operator = '=') {
 		try {
+			#If the name of the field passed is a physical field we just use it to 
+			#get a queryField
 			$field = $this->table->getTable()->getField($fieldname);
+			$restriction = $this->restrictionInstance($this->queryFieldInstance($field), $value, $operator);
+			
 		} catch (\Exception $e) {
+			#Otherwise we create a complex restriction for a logical field.
 			$field = $this->table->getTable()->getModel()->getField($fieldname);
-		}
-		if ($field == null) {
-			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel()) {
+			
+			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
 				$field = $fieldname;
-			}
-			else {
+			if ($field == null)
 				throw new privateException("No field '$fieldname'");
-			}
+			
+			$restriction = $this->compositeRestrictionInstance($field, $value, $operator);
 		}
-		$restriction = $this->restrictionInstance($this->queryFieldInstance($field), $value, $operator);
+		
 		$this->restrictions[] = $restriction;
 		$this->result = false;
 		return $this;
@@ -184,6 +189,7 @@ abstract class Query
 	
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance(QueryField$field, $value, $operator);
+	public abstract function compositeRestrictionInstance(Field$field, $value, $operator);
 	public abstract function restrictionGroupInstance();
 	public abstract function queryFieldInstance($field);
 	public abstract function queryTableInstance(Table$table);
