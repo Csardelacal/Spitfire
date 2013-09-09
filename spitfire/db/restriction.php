@@ -48,7 +48,7 @@ abstract class Restriction
 		}
 		
 		if ($this->field->getField() instanceof \ChildrenField && !$this->field->getField() instanceof \ManyToManyField && $this->field->getField()->getTable() === $this->getQuery()->getTable()) {
-			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field->getReferencedField());
+			$_joins[] = $this->queryJoin($this->value, $this->query, $this->field->getField()->getReferencedField());
 		}
 		
 		if ($this->field->getField() instanceof \ManyToManyField && $this->value instanceof Query && $this->field->getField()->getTable() === $this->getQuery()->getTable()) {

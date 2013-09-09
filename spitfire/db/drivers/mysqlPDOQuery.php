@@ -36,10 +36,10 @@ class MysqlPDOQuery extends Query
 		}
 		
 		#Import tables for restrictions from remote queries
-		if (!empty($restrictions)) {
+		/*if (!empty($restrictions)) {
 			$joins = $this->getJoins();
 			$join  = implode($joins, ' ');
-		}
+		}/**/
 		
 		#Restrictions
 		if (empty($restrictions)) {
@@ -88,5 +88,9 @@ class MysqlPDOQuery extends Query
 
 	public function queryTableInstance(\spitfire\storage\database\Table $table) {
 		return new MysqlPDOQueryTable($this, $table);
+	}
+
+	public function compositeRestrictionInstance(\spitfire\model\Field $field, $value, $operator) {
+		return new MysqlPDOCompositeRestriction($this, $field, $value, $operator);
 	}
 }
