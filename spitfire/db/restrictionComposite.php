@@ -3,6 +3,7 @@
 namespace spitfire\storage\database;
 
 use spitfire\model\Field;
+use \Model;
 
 class CompositeRestriction
 {
@@ -22,6 +23,12 @@ class CompositeRestriction
 		$this->field = $field;
 		$this->value = $value;
 		$this->operator = $operator;
+		
+		if ($this->value instanceof Model)
+			$this->value = $this->value->getQuery();
+		
+		if ($this->value instanceof Query)
+			$this->value->setAliased(true);
 	}
 	
 	/**
@@ -69,17 +76,62 @@ class CompositeRestriction
 	}
 	
 	public function getConnectingRestrictions() {
-		$physical     = $this->field->getPhysical();
+		
 		$restrictions = Array();
 		
-		foreach($physical as $field) {
-			$this->getQuery()->restrictionInstance(
-					  $this->query->queryFieldInstance($field), 
-					  $this->value->queryFieldInstance($field->getReferencedField()), 
-					  $this->operator);
+		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
+			$physical     = $this->field->getPhysical();
+
+			foreach($physical as $field) {
+				$restrictions[] = $this->getQuery()->restrictionInstance(//Refers to MySQL
+						  $this->query->queryFieldInstance($field), //This two can be put in any order
+						  $this->value->queryFieldInstance($field->getReferencedField()), 
+						  $this->operator);
+			}
+
+			return $restrictions;
 		}
 		
-		return $restrictions;
+		elseif ($this->field instanceof \ManyToManyField) {
+			$subquery     = $this->field->getBridge()->getTable()->getQueryInstance();
+			$subquery->setAliased(true);
+			$fields       = $this->field->getBridge()->getFields();
+			
+			foreach ($fields as $field) {
+				$physical = $field->getPhysical();
+				foreach ($physical as $ph) {
+					if ($field->getTarget() === $this->getQuery()->getTable()->getModel()) {
+						$restrictions[] = $this->getQuery()->restrictionInstance(
+								  $this->query->queryFieldInstance($ph->getReferencedField()),
+								  $subquery->queryFieldInstance($ph),
+								  $this->operator);
+					}
+					else {
+						$restrictions[] = $this->getQuery()->restrictionInstance(
+								  $this->value->queryFieldInstance($ph->getReferencedField()),
+								  $subquery->queryFieldInstance($ph),
+								  $this->operator);
+					}
+				}
+			}
+			
+			return $restrictions;
+			
+		}
+		
+		elseif ($this->field instanceof \ChildrenField ||
+				  $this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
+			$physical     = $this->field->findReference()->getPhysical();
+
+			foreach($physical as $field) {
+				$restrictions[] = $this->getQuery()->restrictionInstance(//Refers to MySQL
+						  $this->query->queryFieldInstance($field->getReferencedField()), //This two can be put in any order
+						  $this->value->queryFieldInstance($field), 
+						  $this->operator);
+			}
+
+			return $restrictions;
+		}
 	}
 
 }

@@ -5,9 +5,44 @@ namespace spitfire\storage\database\drivers;
 use \spitfire\storage\database\QueryJoin;
 use \spitfire\storage\database\Table;
 use \spitfire\storage\database\DBField;
+use \spitfire\storage\database\CompositeRestriction;
 
-class MysqlPDOJoin extends QueryJoin
+class MysqlPDOJoin
 {
+	private $restriction;
+	
+	public function __construct(CompositeRestriction$restriction) {
+		$this->restriction = $restriction;
+	}
+	
+	public function __toString() {
+		
+		if ($this->restriction->getField() instanceof \ManyToManyField) {
+			$restrictions = $this->restriction->getConnectingRestrictions();
+			$table        = $this->restriction->getField()->getTable();
+			$bridge_restr = Array();
+			
+			foreach ($restrictions as $index => $r) {
+				if ($r->getField()->getField()->getTable() === $table ||
+					 $r->getValue()->getField()->getTable() === $table) {
+					$bridge_restr[] = $r;
+					unset($restrictions[$index]);
+				}
+			}
+			
+			return sprintf("LEFT JOIN %s ON (%s) LEFT JOIN %s ON (%s)", 
+					  reset($bridge_restr)->getValue()->getQuery()->getQueryTable()->definition(),
+					  implode(' AND ', $bridge_restr),
+					  $this->restriction->getValue()->getQueryTable()->definition(),
+					  implode(' AND ', $restrictions));
+		}
+		else {
+			return sprintf("LEFT JOIN %s ON (%s)", 
+					  $this->restriction->getValue()->getQueryTable()->definition(),
+					  implode(' AND ', $this->restriction->getConnectingRestrictions()));
+		}
+		
+	}
 	
 	public function aliasedTableDefinition(Table$table, $alias) {
 		return sprintf('%s AS `%s`', $table , $alias);
@@ -17,7 +52,7 @@ class MysqlPDOJoin extends QueryJoin
 		return sprintf('`%s`.`%s`', $tableAlias, $field->getName());
 	}
 	
-	public function __toString() {
+	public function __2toString() {
 		$bridge = $this->getBridge();
 		
 		if ($bridge) {

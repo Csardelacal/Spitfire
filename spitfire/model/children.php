@@ -54,4 +54,17 @@ class ChildrenField extends Field
 		return Field::TYPE_CHILDREN;
 	}
 	
+	public function findReference() {
+		$model = $this->getTarget();
+		
+		if ($model->getField($this->getRole())) return $model->getField($this->getRole());
+		else {
+			$fields = $model->getFields();
+			foreach ($fields as $field) {
+				if ($field instanceof Reference && $field->getTarget() === $this->getModel()) 
+					return $field;
+			}
+		}
+	}
+	
 }

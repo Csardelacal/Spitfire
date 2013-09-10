@@ -36,10 +36,13 @@ class MysqlPDOQuery extends Query
 		}
 		
 		#Import tables for restrictions from remote queries
-		/*if (!empty($restrictions)) {
-			$joins = $this->getJoins();
-			$join  = implode($joins, ' ');
-		}/**/
+		if (!empty($restrictions)) {
+			$joins = Array();
+			foreach ($restrictions as $v)
+				if ($v instanceof \spitfire\storage\database\CompositeRestriction)
+					$joins[] = new MysqlPDOJoin($v);
+			$join = implode(' ', $joins);
+		}
 		
 		#Restrictions
 		if (empty($restrictions)) {
