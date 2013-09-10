@@ -44,6 +44,10 @@ class MysqlPDORestriction extends Restriction
 					$quoted = implode(',', $value);
 					return "`{$this->getField()}` {$this->getOperator()} ({$quoted})";
 				}
+				
+				elseif ($value instanceof MysqlPDOQueryField) {
+					return "{$this->getField()} {$this->getOperator()} {$this->getValue()}";
+				}
 
 				else {
 					$quoted = $this->getTable()->getDb()->quote($this->getValue());
