@@ -16,13 +16,24 @@ abstract class RestrictionGroup
 	
 	public function addRestriction($fieldname, $value, $operator = null) {
 		try {
+			#If the name of the field passed is a physical field we just use it to 
+			#get a queryField
 			$field = $this->belongsto->getTable()->getField($fieldname);
+			$restriction = $this->belongsto->restrictionInstance($this->belongsto->queryFieldInstance($field), $value, $operator);
+			
 		} catch (\Exception $e) {
-			$field = $this->belongsto->getTable()->getModel()->getField($fieldname);
+			#Otherwise we create a complex restriction for a logical field.
+			$field = $this->belongsto->getTable()->getTable()->getModel()->getField($fieldname);
+			
+			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
+				$field = $fieldname;
+			if ($field == null)
+				throw new privateException("No field '$fieldname'");
+			
+			$restriction = $this->belongsto->compositeRestrictionInstance($field, $value, $operator);
 		}
 		
-		if (!$field) throw new \privateException('Field ' . $fieldname . ' not found');
-		$this->restrictions[] = $this->belongsto->restrictionInstance($field, $value, $operator);
+		$this->restrictions[] = $restriction;
 		return $this;
 	}
 	
