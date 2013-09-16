@@ -25,6 +25,9 @@ abstract class Restriction
 		if ($value instanceof Model)
 			$value = $value->getQuery();
 		
+		if (!$field instanceof QueryField)
+			throw new \privateException("Invalid field");
+		
 		$this->query    = $query;
 		$this->field    = $field;
 		$this->value    = $value;

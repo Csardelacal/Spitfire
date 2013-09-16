@@ -206,6 +206,7 @@ class Model implements Serializable
 	public function getUniqueRestrictions() {
 		$primaries    = $this->table->getPrimaryKey();
 		$restrictions = Array();
+		$query        = $this->table->getQueryInstance();
 		
 		foreach($primaries as $primary) {
 			$ref   = $primary->getReferencedField();
@@ -216,7 +217,7 @@ class Model implements Serializable
 				$value = $value->{$ref->getName()};
 			}
 			
-			$r = $this->restrictionInstance(null, $primary, $value);
+			$r = $query->restrictionInstance($query->queryFieldInstance($primary), $value, '=');
 			$restrictions[] = $r;
 			
 			unset($value);

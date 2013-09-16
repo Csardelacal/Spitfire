@@ -11,7 +11,12 @@ use \privateException;
 class MysqlPDORestriction extends Restriction
 {
 	public function __toString() {
+		
 		try {
+			
+			if (!$this->getField() instanceof \spitfire\storage\database\QueryField)
+				throw new \privateException();
+			
 			$value = $this->getValue();
 			$field = $this->getField()->getField();
 			
