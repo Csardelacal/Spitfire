@@ -16,6 +16,7 @@ class MysqlPDOJoin
 	}
 	
 	public function __toString() {
+		if ($this->restriction->getValue() === null) return '';
 		
 		if ($this->restriction->getField() instanceof \ManyToManyField) {
 			$restrictions = $this->restriction->getConnectingRestrictions();

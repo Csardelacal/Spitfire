@@ -115,10 +115,23 @@ class MysqlPDOTable extends stdSQLTable
 		$db = $table->getDb();
                 
 		foreach ($data as $field => $value) {
-			if ($value instanceof Model) {
-				$primary = $value->getPrimaryData();
-				foreach ($primary as $key => $v) {
-					$data[$field . '_' . $key] = $v;
+			try {
+				$logical = $this->getField($field)->getLogicalField();
+			} catch (\privateException $e) {
+				$logical = $this->getModel()->getField($field);
+			}
+			
+			if ($logical instanceof \Reference) {
+				if ($value === null) {
+					$phys = $logical->getPhysical();
+					foreach ($phys as $f) {
+						$data[$f->getName()] = null;
+					}
+				} else {
+					$primary = $value->getPrimaryData();
+					foreach ($primary as $key => $v) {
+						$data[$field . '_' . $key] = $v;
+					}
 				}
 				unset($data[$field]);
 			}
@@ -128,6 +141,8 @@ class MysqlPDOTable extends stdSQLTable
 		}
 		
 		$fields = array_keys($data);
+		foreach ($fields as &$field) $field = '`' . $field . '`';
+		unset($field);
 		
 		$quoted = array_map(Array($db, 'quote'), $data);
 		

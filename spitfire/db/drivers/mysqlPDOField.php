@@ -34,8 +34,8 @@ class mysqlPDOField extends DBField
 	
 	public function columnDefinition() {
 		$definition = $this->columnType();
-		$definition.= " NOT NULL ";
 		
+		if (!$this->getLogicalField()->getNullable())    $definition.= " NOT NULL ";
 		if ($this->getLogicalField()->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
 		if ($this->getLogicalField()->isUnique())        $definition.= "UNIQUE ";
 		

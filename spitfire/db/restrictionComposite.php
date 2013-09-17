@@ -68,6 +68,18 @@ class CompositeRestriction
 	}
 	
 	public function getSimpleRestrictions() {
+		if ($this->value === null) {
+			$restrictions = Array();
+			foreach ($fields = $this->getField()->getPhysical() as $field) {
+				$f = $this->getQuery()->queryFieldInstance($field);
+				$v = null;
+				$r = $this->getQuery()->restrictionInstance($f, $v, 'IS');
+				$restrictions[] = $r;
+			}
+			return $restrictions;
+		}
+			
+			
 		if ($this->value instanceof Model) 
 			$this->value = $this->value->getQuery();
 		

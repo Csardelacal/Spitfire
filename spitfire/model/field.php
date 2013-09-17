@@ -55,6 +55,14 @@ abstract class Field
 	private $unique = false;
 	
 	/**
+	 * Defines whether the field's value can be set to null or not. In case this 
+	 * happens the database will allow null values for this field.
+	 *
+	 * @var boolean
+	 */
+	private $nullable = true;
+	
+	/**
 	 * This property indicates whether the field belongs or not to the model
 	 * 's primary Key. This key is the one used to identify records uniquely.
 	 *
@@ -167,6 +175,16 @@ abstract class Field
 		return $this;
 	}
 	
+	#@TODO: Document
+	public function setNullable($nullable) {
+		$this->nullable = $nullable;
+	}
+	
+	public function getNullable() {
+		return $this->nullable;
+	}
+
+
 	
 	/**
 	 * Gets the parent model for this field. This allows the field to 
