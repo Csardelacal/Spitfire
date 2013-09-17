@@ -68,7 +68,11 @@ function __($str, $maxlength = false) {
 	#Check if the string is numeric to return a formatted number
 	if (is_numeric($str)) return number_format ($str, 2);
 	
-	$str = htmlentities($str, ENT_HTML5, environment::get('system_encoding'));
+	if (defined('ENT_HTML5')) 
+		$str = htmlentities($str, ENT_HTML5, environment::get('system_encoding'));
+	else
+		$str = htmlentities($str, ENT_COMPAT, environment::get('system_encoding'));
+	
 	if ($maxlength) return Strings::ellipsis ($str, $maxlength);
 	else return $str;
 }
