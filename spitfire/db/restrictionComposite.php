@@ -118,7 +118,7 @@ class CompositeRestriction
 								  $subquery->queryFieldInstance($ph),
 								  $this->operator);
 					}
-					else {
+					if ($this->value->getTable()->getModel() === $this->getQuery()->getTable()->getModel()) {
 						$restrictions[] = $this->getQuery()->restrictionInstance(
 								  $this->value->queryFieldInstance($ph->getReferencedField()),
 								  $subquery->queryFieldInstance($ph),

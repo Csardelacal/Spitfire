@@ -135,6 +135,9 @@ class MysqlPDOTable extends stdSQLTable
 				}
 				unset($data[$field]);
 			}
+			if ($logical instanceof \ChildrenField) {
+				unset($data[$field]);
+			}
 			elseif (is_array($value)) {
 				unset($data[$field]);
 			}
