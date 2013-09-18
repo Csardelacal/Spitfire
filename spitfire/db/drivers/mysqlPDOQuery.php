@@ -39,6 +39,11 @@ class MysqlPDOQuery extends Query
 		if (!empty($restrictions)) {
 			$joins = Array();
 			foreach ($restrictions as $v)
+				if ($v instanceof \spitfire\storage\database\RestrictionGroup)
+					foreach ($rs = $v->getRestrictions() as $r) {
+						if ($r instanceof \spitfire\storage\database\CompositeRestriction)
+							$joins[] = new MysqlPDOJoin($r);
+					}
 				if ($v instanceof \spitfire\storage\database\CompositeRestriction)
 					$joins[] = new MysqlPDOJoin($v);
 			$join = implode(' ', $joins);

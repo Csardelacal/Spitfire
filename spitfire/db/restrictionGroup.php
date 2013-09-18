@@ -23,12 +23,12 @@ abstract class RestrictionGroup
 			
 		} catch (\Exception $e) {
 			#Otherwise we create a complex restriction for a logical field.
-			$field = $this->belongsto->getTable()->getTable()->getModel()->getField($fieldname);
+			$field = $this->belongsto->getTable()->getModel()->getField($fieldname);
 			
-			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
+			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->belongsto->getTable()->getModel())
 				$field = $fieldname;
 			if ($field == null)
-				throw new privateException("No field '$fieldname'");
+				throw new \privateException("No field '$fieldname'");
 			
 			$restriction = $this->belongsto->compositeRestrictionInstance($field, $value, $operator);
 		}

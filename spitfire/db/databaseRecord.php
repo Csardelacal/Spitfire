@@ -140,16 +140,44 @@ class Model implements Serializable
 			$field_info = $this->table->getModel()->getField($field);
 			
 			if ($field_info instanceof ManyToManyField) {
-				$bridge_records = $field_info->getBridge()->getTable()->get($field_info->getModel()->getName(), $this)->fetchAll();
+				if ($field_info->getModel() === $field_info->getTarget()) {
+					$bridge_fields = $field_info->getBridge()->getFields();
+					$query = $field_info->getBridge()->getTable()->getAll();
+					$group = $query->group();
+					foreach($bridge_fields as $f) {
+						if ($f->getTarget() === $field_info->getModel()) {
+							$group->addRestriction($f->getName(), $this);
+						}
+					}
+					$bridge_records = $query->fetchAll();
+				}
+				else {
+					$bridge_records = $field_info->getBridge()->getTable()->get($field_info->getModel()->getName(), $this)->fetchAll();
+				}
+				
 				foreach($bridge_records as $r) $r->delete();
 				
 				//@todo: Change for definitive.
 				$value = $value->toArray();
 				foreach($value as $child) {
 					$insert = $field_info->getBridge()->getTable()->newRecord();
-					$insert->{$field_info->getModel()->getName()} = $this;
-					$insert->{$field_info->getTarget()->getName()} = $child;
-					$insert->store();
+					
+					if ($field_info->getModel() === $field_info->getTarget()) {
+						$pk = reset($field_info->getTable()->getPrimaryKey())->getName();
+						$fields = $field_info->getBridge()->getFields();
+						
+						$first  = ($this->{$pk} < $child->{$pk})? $this : $child;
+						$second = ($this->{$pk} > $child->{$pk})? $this : $child;
+						
+						$insert->{reset($fields)->getName()} = $first;
+						$insert->{end  ($fields)->getName()} = $second;
+						$insert->store();
+					}
+					else {
+						$insert->{$field_info->getModel()->getName()} = $this;
+						$insert->{$field_info->getTarget()->getName()} = $child;
+						$insert->store();
+					}
 				}
 			}
 			elseif ($field_info instanceof ChildrenField) {

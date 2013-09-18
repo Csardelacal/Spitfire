@@ -20,12 +20,13 @@ class MysqlPDOJoin
 		
 		if ($this->restriction->getField() instanceof \ManyToManyField) {
 			$restrictions = $this->restriction->getConnectingRestrictions();
-			$table        = $this->restriction->getField()->getTable();
+			$query        = $this->restriction->getQuery();
 			$bridge_restr = Array();
 			
 			foreach ($restrictions as $index => $r) {
-				if ($r->getField()->getField()->getTable() === $table ||
-					 $r->getValue()->getField()->getTable() === $table) {
+				
+				if ($r->getField()->getQuery() === $query ||
+					 $r->getValue()->getQuery() === $query) {
 					$bridge_restr[] = $r;
 					unset($restrictions[$index]);
 				}

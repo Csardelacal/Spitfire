@@ -26,16 +26,19 @@ class ManyToManyField extends ChildrenField
 		$first  = ($src > $target)? $target : $src;
 		$second = ($first == $src)? $target : $src;
 		
+		if ($src == $target) $targetalias = $target . '_1';
+		else                 $targetalias = $target;
+		
 		if (!$this->getTable()->getDb()->hasTable("{$first}_{$second}")) {
 			
 			$model = $this->meta = new Schema("{$first}_{$second}");
 			unset($model->_id);
 
-			$model->{$src}    = new Reference($src);
-			$model->{$target} = new Reference($target);
+			$model->{$src}         = new Reference($src);
+			$model->{$targetalias} = new Reference($target);
 
 			$model->{$src}->setPrimary(true);
-			$model->{$target}->setPrimary(true);
+			$model->{$targetalias}->setPrimary(true);
 
 			#Register the table
 			$this->getModel()->getTable()->getDb()->table($model);
