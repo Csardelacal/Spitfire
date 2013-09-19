@@ -95,13 +95,65 @@ class CompositeRestriction
 			$physical     = $this->field->getPhysical();
 
 			foreach($physical as $field) {
-				$restrictions[] = $this->getQuery()->restrictionInstance(//Refers to MySQL
+				$restrictions[0][] = $this->getQuery()->restrictionInstance(//Refers to MySQL
 						  $this->query->queryFieldInstance($field), //This two can be put in any order
 						  $this->value->queryFieldInstance($field->getReferencedField()), 
 						  $this->operator);
 			}
 
 			return $restrictions;
+		}
+		
+		elseif ($this->field instanceof \ManyToManyField && $this->field->getTable() === $this->value->getTable()) {
+			$route1       = $this->field->getBridge()->getTable()->getQueryInstance();
+			$route1->setAliased(true);
+			$route2       = $this->field->getBridge()->getTable()->getQueryInstance();
+			$route2->setAliased(true);
+			$fields       = $this->field->getBridge()->getFields();
+			
+			$left = true;
+			
+			foreach ($fields as $field) {
+				$physical = $field->getPhysical();
+				foreach ($physical as $ph) {
+					if ($left)
+						$restrictions[0][] = $this->getQuery()->restrictionInstance(
+								  $this->query->queryFieldInstance($ph->getReferencedField()),
+								  $route1->queryFieldInstance($ph),
+								  $this->operator);
+					else
+						$restrictions[1][] = $this->getQuery()->restrictionInstance(
+								  $this->query->queryFieldInstance($ph->getReferencedField()),
+								  $route2->queryFieldInstance($ph),
+								  $this->operator);
+					
+					$left = false;
+				}
+			}
+			
+			$left              = true;
+			$restrictions[2][] = $group = $this->getValue()->restrictionGroupInstance();
+			
+			foreach ($fields as $field) {
+				$physical = $field->getPhysical();
+				foreach ($physical as $ph) {
+					if ($left)
+						$group->addRestriction(
+								  $ph->getReferencedField(),
+								  $route2->queryFieldInstance($ph),
+								  $this->operator);
+					else
+						$group->addRestriction(
+								  $ph->getReferencedField(),
+								  $route1->queryFieldInstance($ph),
+								  $this->operator);
+					
+					$left = false;
+				}
+			}
+			
+			return $restrictions;
+			
 		}
 		
 		elseif ($this->field instanceof \ManyToManyField) {
@@ -113,13 +165,13 @@ class CompositeRestriction
 				$physical = $field->getPhysical();
 				foreach ($physical as $ph) {
 					if ($field->getTarget() === $this->getQuery()->getTable()->getModel()) {
-						$restrictions[] = $this->getQuery()->restrictionInstance(
+						$restrictions[0][] = $this->getQuery()->restrictionInstance(
 								  $this->query->queryFieldInstance($ph->getReferencedField()),
 								  $subquery->queryFieldInstance($ph),
 								  $this->operator);
 					}
 					if ($this->value->getTable()->getModel() === $this->getQuery()->getTable()->getModel()) {
-						$restrictions[] = $this->getQuery()->restrictionInstance(
+						$restrictions[1][] = $this->getQuery()->restrictionInstance(
 								  $this->value->queryFieldInstance($ph->getReferencedField()),
 								  $subquery->queryFieldInstance($ph),
 								  $this->operator);
