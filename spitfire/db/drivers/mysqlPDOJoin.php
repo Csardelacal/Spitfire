@@ -2,6 +2,8 @@
 
 namespace spitfire\storage\database\drivers;
 
+use \Exception;
+use spitfire\storage\database\Restriction;
 use \spitfire\storage\database\QueryJoin;
 use \spitfire\storage\database\Table;
 use \spitfire\storage\database\DBField;
@@ -18,10 +20,34 @@ class MysqlPDOJoin
 	public function __toString() {
 		if ($this->restriction->getValue() === null) return '';
 		
+		try {
+			$restrictions = $this->restriction->getConnectingRestrictions();
+			$_return      = '';
+
+			foreach ($restrictions as $simple_restrictions) {
+				$table = (reset($simple_restrictions) instanceof Restriction)? 
+						  reset($simple_restrictions)->getValue()->getQuery()->getQueryTable() : 
+							reset($simple_restrictions)->getRestriction(0)->getField()->getQuery()->getQueryTable();
+				
+				$_return.= sprintf("LEFT JOIN %s ON (%s)", 
+						  $table->definition(),
+						  implode(' AND ', $simple_restrictions));
+			}
+
+			return $_return;
+		}
+		catch(Exception $e) {
+			echo $e->getMessage() . "\n";
+			echo $e->getTraceAsString();
+			die();
+		}
+		
+		/*
 		if ($this->restriction->getField() instanceof \ManyToManyField) {
 			$restrictions = $this->restriction->getConnectingRestrictions();
 			$query        = $this->restriction->getQuery();
 			$bridge_restr = Array();
+			
 			
 			foreach ($restrictions as $index => $r) {
 				
@@ -42,7 +68,7 @@ class MysqlPDOJoin
 			return sprintf("LEFT JOIN %s ON (%s)", 
 					  $this->restriction->getValue()->getQueryTable()->definition(),
 					  implode(' AND ', $this->restriction->getConnectingRestrictions()));
-		}
+		}/**/
 		
 	}
 	

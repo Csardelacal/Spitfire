@@ -70,5 +70,9 @@ abstract class RestrictionGroup
 		return $_joins;
 	}
 	
+	public function getQuery() {
+		return $this->belongsto;
+	}
+	
 	abstract public function __toString();
 }
