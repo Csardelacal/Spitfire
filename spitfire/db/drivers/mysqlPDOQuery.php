@@ -38,7 +38,7 @@ class MysqlPDOQuery extends Query
 		#Import tables for restrictions from remote queries
 		if (!empty($restrictions)) {
 			$joins = Array();
-			foreach ($restrictions as $v)
+			foreach ($restrictions as $v) {
 				if ($v instanceof \spitfire\storage\database\RestrictionGroup)
 					foreach ($rs = $v->getRestrictions() as $r) {
 						if ($r instanceof \spitfire\storage\database\CompositeRestriction)
@@ -46,6 +46,7 @@ class MysqlPDOQuery extends Query
 					}
 				if ($v instanceof \spitfire\storage\database\CompositeRestriction)
 					$joins[] = new MysqlPDOJoin($v);
+			}
 			$join = implode(' ', $joins);
 		}
 		
