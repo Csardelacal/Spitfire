@@ -14,6 +14,9 @@ class Image
 		
 		$this->meta = $meta = getimagesize($file);
 		
+		if (!function_exists('imagecreatefrompng'))
+			throw new privateException("GD is not installed.");
+		
 		switch($meta[2]) {
 			case IMAGETYPE_PNG: 
 				return imagecreatefrompng($file);

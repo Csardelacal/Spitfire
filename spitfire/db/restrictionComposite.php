@@ -188,7 +188,7 @@ class CompositeRestriction
 			$physical     = $this->field->findReference()->getPhysical();
 
 			foreach($physical as $field) {
-				$restrictions[] = $this->getQuery()->restrictionInstance(//Refers to MySQL
+				$restrictions[0][] = $this->getQuery()->restrictionInstance(//Refers to MySQL
 						  $this->query->queryFieldInstance($field->getReferencedField()), //This two can be put in any order
 						  $this->value->queryFieldInstance($field), 
 						  $this->operator);
