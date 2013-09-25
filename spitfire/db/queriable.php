@@ -82,7 +82,7 @@ abstract class Queriable {
 	 * @return _SF_DBQuery
 	 */
 	public function isNull($field) {
-		
+		//@todo: Fix, is broken
 		$query = $this->getQueryInstance();
 		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
 		return $query;
