@@ -73,16 +73,7 @@ class mysqlPDOResultSet implements resultSetInterface
 			}
 			
 			elseif ($field instanceof ChildrenField) {
-				if ($field->getTarget()->getField($field->getRole()) instanceof Reference) {
-					$query = $field->getTarget()->getTable()->getAll();
-					$remote = $field->getTarget()->getField($field->getRole())->getPhysical();
-					foreach ($remote as $f) {
-						$name = $f->getName();
-						$value = $data[$f->getReferencedField()->getName()];
-						$query->addRestriction($name, $value);
-					}
-					$_record[$field->getName()] = $query;
-				}
+				
 			}
 			
 			else {

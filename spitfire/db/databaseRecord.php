@@ -324,22 +324,19 @@ class Model implements Serializable
 			}
 		}
 		
+		elseif (isset($this->data[$field]))  {
+			return $this->data[$field];
+		}
+		
 		elseif ($field_info instanceof ManyToManyField) {
 			return $this->data[$field] = new spitfire\model\adapters\ManyToManyAdapter($field_info, $this);
 		}
 		
 		elseif ($field_info instanceof ChildrenField) {
-			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field] = $this->data[$field]->fetchAll($this);
-			} else {
-				return $this->data[$field];
-			}
+			return $this->data[$field] = new spitfire\model\adapters\ChildrenAdapter($field_info, $this);
 		}
 		
-		else {
-			if (isset($this->data[$field])) return $this->data[$field];
-			else return null;
-		}
+		else return null;
 	}
 	
 	public function serialize() {
