@@ -181,7 +181,7 @@ class Model implements Serializable
 				}
 			}
 			elseif ($field_info instanceof ChildrenField) {
-				if (is_array($value)) {
+				if (is_array($value) || $value instanceof \spitfire\model\adapters\ChildrenAdapter) {
 					foreach ($value as $record) $record->store();
 				}
 			}
@@ -291,14 +291,17 @@ class Model implements Serializable
 				$value = new spitfire\model\adapters\ManyToManyAdapter($field_info, $this, $value);
 				
 			if (!$value instanceof \spitfire\model\adapters\ManyToManyAdapter)
-				throw new privateException('Children only accept adapters as value');
+				throw new privateException('Many to many only accept adapters as value');
 			
 			$this->data[$field] = $value;
 		}
 		
 		elseif ($field_info instanceof ChildrenField) {
-			if (!is_array($value)) 
-				throw new privateException('Children only accept arrays as data');
+			if (is_array($value))
+				$value = new spitfire\model\adapters\ChildrenAdapter($field_info, $this, $value);
+				
+			if (!$value instanceof \spitfire\model\adapters\ChildrenAdapter)
+				throw new privateException('Children only accept adapters as value');
 			
 			$this->data[$field] = $value;
 		}

@@ -82,20 +82,33 @@ abstract class FileCache
 	 * so you reduce server load.
 	 * 
 	 * @param string $filename
-	 * @throws privateException
+	 * @throws filePermissionsException
 	 */
 	public function __construct($filename) {
 		$this->filename  = $filename;
 		$this->cache_dir = environment::get('cachefile.directory');
 		$this->path      = spitfire()->getCWD() . '/' . rtrim($this->cache_dir, '/') . '/' . ltrim($this->filename, '/');
 		
-		if (!file_exists($this->cache_dir) && !mkdir($this->cache_dir, 0777, true) && !is_writable($this->cache_dir))
-			throw  new privateException("Cache directory is not writable");
+		$this->initialize();
+	}
+	
+	/**
+	 * This method performs the initial checks to make sure everything is ready 
+	 * for use. It starts checking if the cache directory is writable and then 
+	 * will try to read the content's of the cache file.
+	 * 
+	 * @throws filePermissionsException
+	 */
+	public function initialize() {
+		if (!file_exists($this->cache_dir) && !mkdir($this->cache_dir, 0777, true) && !is_writable($this->cache_dir)) {
+			throw  new filePermissionsException("Cache directory is not writable");
+		}
 		
-		if (file_exists($this->path))
+		if (file_exists($this->path)) {
 			list($this->expires, $this->cached) = unserialize (file_get_contents ($this->path));
-		else
+		} else {
 			$this->cached  = $this->onMiss();
+		}
 	}
 	
 	/**

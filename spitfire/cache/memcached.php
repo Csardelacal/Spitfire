@@ -78,15 +78,16 @@ class MemcachedAdapter
 		$memcached_servers = environment::get('memcached_servers');
 		
 		#If memcached is enabled we check if it is available
-		if (!environment::get('memcached_enabled')) return;
-		if (!class_exists('\Memcached') ) throw new privateException('Memcached is enabled but not installed');
+		if (!environment::get('memcached_enabled')) { return; }
+		if (!class_exists('\Memcached') ) { throw new privateException('Memcached is enabled but not installed'); }
 		
 		#Instance a new memcached connection
 		$this->connection = new Memcached();
 		
 		#Add the array of servers we want to use
-		foreach ($memcached_servers as $server) 
+		foreach ($memcached_servers as $server) {
 			$this->connection->addServer($server, environment::get('memcached_port'));
+		}
 		
 		#Return the connection.
 		return $this->connection;
