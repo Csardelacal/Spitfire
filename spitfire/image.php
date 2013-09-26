@@ -19,7 +19,10 @@ class Image
 		
 		switch($meta[2]) {
 			case IMAGETYPE_PNG: 
-				return imagecreatefrompng($file);
+				$img = imagecreatefrompng($file);
+				imagealphablending($img, false);
+				imagesavealpha($img, true);
+				return $img;
 				break;
 			case IMAGETYPE_JPEG: 
 				return imagecreatefromjpeg($file);
@@ -59,6 +62,9 @@ class Image
 		}
 		
 		$img = imagecreatetruecolor($width, $height);
+		imagecolortransparent($img , imagecolorallocatealpha($new_image , 0, 0, 0, 127));
+		imagealphablending($img, false);
+		imagesavealpha($img, true);
 		imagecopyresampled($img, $this->img, 0, 0, $offset_x, $offset_y, $width, $height, $this->meta[0]-2*$offset_x, $this->meta[1]-2*$offset_y);
 		$this->img = $img;
 		

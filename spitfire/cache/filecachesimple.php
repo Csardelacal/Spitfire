@@ -43,9 +43,10 @@ class SimpleFileCache extends FileCache
 	public function onMiss() {
 		$callback = $this->callback;
 		
-		if (is_callable($callback))
+		if (is_callable($callback)) {
 			return $callback();
-		else
+		} else {
 			throw new privateException("No valid callback supplied");
+		}
 	}	
 }
