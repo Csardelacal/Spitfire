@@ -23,15 +23,25 @@ class MysqlPDOJoin
 		try {
 			$restrictions = $this->restriction->getConnectingRestrictions();
 			$_return      = '';
+			
 
 			foreach ($restrictions as $simple_restrictions) {
-				$table = (reset($simple_restrictions) instanceof Restriction)? 
-						  reset($simple_restrictions)->getValue()->getQuery()->getQueryTable() : 
-							reset($simple_restrictions)->getRestriction(0)->getField()->getQuery()->getQueryTable();
 				
-				$_return.= sprintf("LEFT JOIN %s ON (%s)", 
-						  $table->definition(),
-						  implode(' AND ', $simple_restrictions));
+				if ($simple_restrictions instanceof \spitfire\storage\database\RestrictionGroup) {
+			
+					$table = $simple_restrictions->getQuery()->getQueryTable();
+					
+					$_return.= sprintf("LEFT JOIN %s ON %s", $table->definition(), $simple_restrictions);
+				}
+				else {
+					$table = (reset($simple_restrictions) instanceof Restriction)? 
+							  reset($simple_restrictions)->getValue()->getQuery()->getQueryTable() : 
+								reset($simple_restrictions)->getRestriction(0)->getField()->getQuery()->getQueryTable();
+
+					$_return.= sprintf("LEFT JOIN %s ON (%s)", 
+							  $table->definition(),
+							  implode(' AND ', $simple_restrictions));
+				}
 			}
 
 			return $_return;

@@ -2,15 +2,33 @@
 
 namespace spitfire\storage\database;
 
+/**
+ * A restriction group contains a set of restrictions (or restriction groups)
+ * that can be used by the database to generate more complex queries.
+ * 
+ * This groups can be diferent of two different types, they can be 'OR' or 'AND',
+ * changing the behavior of the group by making it more or less restrictive. This
+ * OR and AND types are known from most DBMS.
+ */
 abstract class RestrictionGroup
 {
+	const TYPE_OR  = 'OR';
+	const TYPE_AND = 'AND';
+	
 	private $restrictions;
 	private $belongsto;
-	
-	private $strigifyCallback;
+	private $type = self::TYPE_OR;
 	
 	public function __construct(Query$belongsto = null, $restrictions = Array() ) {
 		$this->belongsto    = $belongsto;
+		$this->restrictions = $restrictions;
+	}
+	
+	public function putRestriction($restriction) {
+		$this->restrictions[] = $restriction;
+	}
+	
+	public function setRestrictions($restrictions) {
 		$this->restrictions = $restrictions;
 	}
 	
@@ -51,13 +69,12 @@ abstract class RestrictionGroup
 		return $values;
 	}
 	
-	public function endGroup() {
-		return $this->belongsto;
+	public function group() {
+		return $this->restrictions[] = $this->belongsto->restrictionGroupInstance();
 	}
 	
-	public function setStringify($callback) {
-		$this->strigifyCallback = $callback;
-		foreach ($this->restrictions as $r) $r->setStringify($callback);
+	public function endGroup() {
+		return $this->belongsto;
 	}
 	
 	public function getJoins() {
@@ -74,5 +91,19 @@ abstract class RestrictionGroup
 		return $this->belongsto;
 	}
 	
+	public function setType($type) {
+		if ($type === self::TYPE_AND || $type === self::TYPE_OR) {
+			$this->type = $type;
+			return $this;
+		}
+		else {
+			throw new \InvalidArgumentException("Restriction groups can only be of type AND or OR");
+		}
+	}
+	
+	public function getType() {
+		return $this->type;
+	}
+
 	abstract public function __toString();
 }
