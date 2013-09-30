@@ -89,19 +89,9 @@ class CompositeRestriction
 	
 	public function getConnectingRestrictions() {
 		
-		$restrictions = Array();
-		
 		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
-			$physical     = $this->field->getPhysical();
-
-			foreach($physical as $field) {
-				$restrictions[0][] = $this->getQuery()->restrictionInstance(//Refers to MySQL
-						  $this->query->queryFieldInstance($field), //This two can be put in any order
-						  $this->value->queryFieldInstance($field->getReferencedField()), 
-						  $this->operator);
-			}
-
-			return $restrictions;
+			$uplink = new Uplink($this->getQuery(), $this->getValue(), $this->field);
+			return [$uplink->getRestrictions()];
 		}
 		
 		elseif ($this->field instanceof \ManyToManyField && $this->field->getTable() === $this->value->getTable()) {
@@ -111,48 +101,25 @@ class CompositeRestriction
 			$route2->setAliased(true);
 			$fields       = $this->field->getBridge()->getFields();
 			
-			$left = true;
+			$restrictions = [];
 			
-			foreach ($fields as $field) {
-				$physical = $field->getPhysical();
-				foreach ($physical as $ph) {
-					if ($left)
-						$restrictions[0][] = $this->getQuery()->restrictionInstance(
-								  $this->query->queryFieldInstance($ph->getReferencedField()),
-								  $route1->queryFieldInstance($ph),
-								  $this->operator);
-					else
-						$restrictions[1][] = $this->getQuery()->restrictionInstance(
-								  $this->query->queryFieldInstance($ph->getReferencedField()),
-								  $route2->queryFieldInstance($ph),
-								  $this->operator);
-					
-					$left = false;
-				}
-			}
+			//Route #1
+			$uplink1 = new Downlink($route1, $this->getQuery(), reset($fields));
+			$restrictions[0] = $uplink1->getRestrictions();
 			
-			$left              = true;
-			$restrictions[2][] = $group = $this->getValue()->restrictionGroupInstance();
+			//Route2
+			$uplink2 = new Downlink($route2, $this->getQuery(), end($fields));
+			$restrictions[1] = $uplink2->getRestrictions();
 			
-			foreach ($fields as $field) {
-				$physical = $field->getPhysical();
-				foreach ($physical as $ph) {
-					if ($left)
-						$group->addRestriction(
-								  $ph->getReferencedField(),
-								  $route2->queryFieldInstance($ph),
-								  $this->operator);
-					else
-						$group->addRestriction(
-								  $ph->getReferencedField(),
-								  $route1->queryFieldInstance($ph),
-								  $this->operator);
-					
-					$left = false;
-				}
-			}
+			//Merge
+			$uplink3 = new Uplink($route1, $this->getValue(), end($fields));
+			$uplink4 = new Uplink($route2, $this->getValue(), reset($fields));
+			$restrictions[2] = $this->getValue()->restrictionGroupInstance();
+			$restrictions[2]->putRestriction($uplink3->getRestrictions());
+			$restrictions[2]->putRestriction($uplink4->getRestrictions());
 			
 			return $restrictions;
+			
 			
 		}
 		
@@ -162,21 +129,16 @@ class CompositeRestriction
 			$fields       = $this->field->getBridge()->getFields();
 			
 			foreach ($fields as $field) {
-				$physical = $field->getPhysical();
-				foreach ($physical as $ph) {
-					if ($field->getTarget() === $this->getQuery()->getTable()->getModel()) {
-						$restrictions[0][] = $this->getQuery()->restrictionInstance(
-								  $this->query->queryFieldInstance($ph->getReferencedField()),
-								  $subquery->queryFieldInstance($ph),
-								  $this->operator);
-					}
-					if ($this->value->getTable()->getModel() === $this->getQuery()->getTable()->getModel()) {
-						$restrictions[1][] = $this->getQuery()->restrictionInstance(
-								  $this->value->queryFieldInstance($ph->getReferencedField()),
-								  $subquery->queryFieldInstance($ph),
-								  $this->operator);
-					}
+				
+				if ($field->getTarget() === $this->getQuery()->getTable()->getModel()) {
+					$link2 = new Downlink($subquery, $this->getQuery(), $field);
+					$restrictions[0] = $link2->getRestrictions();
 				}
+				if ($this->value->getTable()->getModel() === $this->getQuery()->getTable()->getModel()) {
+					$link2 = new Uplink($subquery, $this->getQuery(), $field);
+					$restrictions[1] = $link2->getRestrictions();
+				}
+					
 			}
 			
 			return $restrictions;
@@ -185,16 +147,16 @@ class CompositeRestriction
 		
 		elseif ($this->field instanceof \ChildrenField ||
 				  $this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
-			$physical     = $this->field->findReference()->getPhysical();
 
-			foreach($physical as $field) {
-				$restrictions[0][] = $this->getQuery()->restrictionInstance(//Refers to MySQL
-						  $this->query->queryFieldInstance($field->getReferencedField()), //This two can be put in any order
-						  $this->value->queryFieldInstance($field), 
-						  $this->operator);
+			if ($this->field instanceof \ChildrenField) {
+				$field = $this->field->findReference();
 			}
-
-			return $restrictions;
+			else {
+				$field = $this->field;
+			}
+			
+			$uplink = new Downlink($this->getValue(), $this->getQuery(), $field);
+			return [$uplink->getRestrictions()];
 		}
 	}
 

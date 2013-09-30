@@ -190,6 +190,16 @@ abstract class Query
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance(QueryField$field, $value, $operator);
 	public abstract function compositeRestrictionInstance(Field$field, $value, $operator);
+	
+	/**
+	 * Creates a new instance of a restriction group for this query. The instance
+	 * is already created with a reference to this element. This is just used in 
+	 * a set of cases, when creatinbg a restriction (so it keeps the reference to
+	 * the query) and when "ending the group" which basically returns the call flow
+	 * over to the query.
+	 * 
+	 * @return spitfire\storage\database\RestrictionGroup
+	 */
 	public abstract function restrictionGroupInstance();
 	public abstract function queryFieldInstance($field);
 	public abstract function queryTableInstance(Table$table);

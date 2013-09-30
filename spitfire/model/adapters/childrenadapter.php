@@ -21,10 +21,7 @@ class ChildrenAdapter implements ArrayAccess, Iterator
 	public function __construct(ChildrenField$field, Model$model, $data = null) {
 		$this->field  = $field;
 		$this->parent = $model;
-		
-		if ($data !== null) {
-			$this->children = $data;
-		}
+		$this->children = $data;
 	}
 	
 	public function getQuery() {
@@ -36,54 +33,54 @@ class ChildrenAdapter implements ArrayAccess, Iterator
 	}
 	
 	public function toArray() {
-		if ($this->children) return $this->children;
+		if ($this->children !== null) return $this->children;
 		$this->children = $this->getQuery()->fetchAll();
 		return $this->children;
 	}
 
 	public function current() {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return current($this->children);
 	}
 
 	public function key() {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return key($this->children);
 	}
 
 	public function next() {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return next($this->children);
 	}
 
 	public function rewind() {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return reset($this->children);
 	}
 
 	public function valid() {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return !!current($this->children);
 	}
 
 	public function offsetExists($offset) {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return isset($this->children[$offset]);
 		
 	}
 
 	public function offsetGet($offset) {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		return $this->children[$offset];
 	}
 
 	public function offsetSet($offset, $value) {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		$this->children[$offset] = $value;
 	}
 
 	public function offsetUnset($offset) {
-		if (!$this->children) $this->toArray();
+		if ($this->children === null) $this->toArray();
 		unset($this->children[$offset]);
 	}
 	
