@@ -43,11 +43,12 @@ class MysqlPDORestriction extends Restriction
 			else {
 			
 				if (is_array($value)) {
-					foreach ($value as &$v)
-						$v = $this->getTable()->getDb()->quote($value);
+					foreach ($value as &$v) {
+						$v = $this->getTable()->getDb()->quote($v);
+					}
 
 					$quoted = implode(',', $value);
-					return "`{$this->getField()}` {$this->getOperator()} ({$quoted})";
+					return "{$this->getField()} {$this->getOperator()} ({$quoted})";
 				}
 				
 				elseif ($value instanceof MysqlPDOQueryField) {

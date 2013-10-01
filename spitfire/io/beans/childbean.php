@@ -45,8 +45,7 @@ class ChildBean extends Field
 		
 		#Loop through the passed array and create the subforms to handle the data
 		foreach ($data as $pk => $post) {
-			$post = array_filter($post);
-			if (empty($post)) continue;
+			if (!count(array_filter($post))) continue;
 			
 			$table = $this->getField()->getTarget()->getTable();
 			$child = $table->getBean(true);
