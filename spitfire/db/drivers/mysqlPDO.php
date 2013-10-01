@@ -263,6 +263,8 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 */
 	public function quote($text) {
 		if ($text === null) return 'null';
+		if ($text ===    0) return "'0'";
+		
 		$str = $this->convertOut(strval($text));
 		return $this->getConnection()->quote( $str );
 	}
