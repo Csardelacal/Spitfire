@@ -15,8 +15,11 @@ abstract class HTMLUnclosedElement extends HTMLElement
 	
 	public function __toString() {
 		$tag = $this->getTag();
-		$params = $this->getParams();
-		foreach ($params as $name => &$p) $p = "$name=\"$p\"";
+		$params = array_filter($this->getParams());
+		foreach ($params as $name => &$p) {
+			if ($p === true) $p = $name;
+			else $p = "$name=\"$p\"";
+		}
 		unset($p);
 		
 		return sprintf('<%s %s>', 
