@@ -21,7 +21,7 @@ class MysqlPDOQuery extends Query
 		$tablename    = $this->aliasedTableName();
 		$join         = '';
 		$wherestt     = 'WHERE';
-		$restrictions = $this->getRestrictions();
+		$restrictions = array_filter($this->getRestrictions(), ['spitfire\storage\database\Query', 'restrictionFilter']);
 		$orderstt     = 'ORDER BY';
 		$order        = $this->getOrder();
 		$limitstt     = 'LIMIT';
