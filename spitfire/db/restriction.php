@@ -34,6 +34,10 @@ abstract class Restriction
 		$this->operator = trim($operator);
 	}
 	
+	/**
+	 * @deprecated since 0.1dev
+	 * @throws \privateException
+	 */
 	public function makeJoins() {
 		
 		$_joins = Array();
@@ -65,6 +69,10 @@ abstract class Restriction
 		
 	}
 	
+	/**
+	 * 
+	 * @deprecated since version 0.1dev
+	 */
 	public function getJoins() {
 		if (!$this->joins) $this->makeJoins();
 		
@@ -107,6 +115,9 @@ abstract class Restriction
 		return $this->value;
 	}
 	
+	/**
+	 * @deprecated since version 0.1dev
+	 */
 	abstract public function queryJoin($value, $query, $field, $type = null);
 	
 	abstract public function __toString();

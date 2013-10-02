@@ -187,6 +187,51 @@ abstract class Query
 		return $this->getTable() . implode(',', $this->getRestrictions());
 	}
 	
+	/**
+	 * This method is used to clean empty restriction groups and restrictions from
+	 * a query. This allows to 'optimize' the speed of SQL due to removing potentially
+	 * unnecessary joins and subqueries.
+	 * 
+	 * [Notice] This generates a special 'quirk' of the database engine built into SF,
+	 * when you create a query with an empty subquery the database won't return
+	 * the expected result from an SQL database (aka. all the elements who have
+	 * a parent - including duplicates) but will ignore the subquery and return 
+	 * all the data that matches the parent query.
+	 * 
+	 * @param Restriction|CompositeRestriction|RestrictionGroup $restriction
+	 * @return boolean
+	 */
+	public static function restrictionFilter($restriction) {
+		#In case the data contained is a restriction we consider it valid.
+		#Restrictions can by default not be empty (they always have a field attached)
+		if ($restriction instanceof Restriction) {
+			return true;
+		}
+		
+		#Composite restrictions are the most common source of possible empty elements
+		#If they contain a query and it is empty it will not add any value to the query
+		if ($restriction instanceof CompositeRestriction) {
+			if ( ($query = $restriction->getValue()) instanceof Query && !count($query->getRestrictions())) {
+				return false;
+			}
+			return true;
+		}
+		
+		#Restriction groups that are empty will not do anything useful and maybe 
+		#even generate invalid SQL like '() AND' so we clean them beforehand.
+		if ($restriction instanceof RestrictionGroup) {
+			$restrictions = array_filter($restriction->getRestrictions(), [self, __METHOD__]);
+			
+			if (empty($restrictions)) {
+				return false;
+			}
+			else {
+				$restriction->setRestrictions($restrictions);
+				return true;
+			}
+		}
+	}
+	
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance(QueryField$field, $value, $operator);
 	public abstract function compositeRestrictionInstance(Field$field, $value, $operator);
