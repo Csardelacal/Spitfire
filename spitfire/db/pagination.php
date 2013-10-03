@@ -1,22 +1,22 @@
 <?php
 
-use spitfire\SpitFire;
 use spitfire\storage\database\Query;
 
 class Pagination
 {
-	/**
-	 *
-	 * @var _SF_DBQuery Query to be paginated. 
-	 */
 	private $query;
 	private $maxJump = 3;
 	
-	private $url     = false;
-	private $param   = 'page';
+	private $url       = false;
+	private $param     = 'page';
+	private $pages     = [];
+	private $pageCount = null;
 	
-	public function __construct(Query $query) {
-		$query->setResultsPerPage(20);
+	public function __construct(Query $query = null, $name = null) {
+		if ($query !== null && $query->getResultsPerPage() < 1) {
+			$query->setResultsPerPage(20);
+		}
+		
 		$this->query = $query;
 	}
 	
@@ -25,43 +25,63 @@ class Pagination
 	}
 	
 	public function getPageCount() {
-		$rpp     = $this->query->getResultsPerPage();
+		if ($this->pageCount !== null) return $this->pageCount;
 		
+		$rpp     = $this->query->getResultsPerPage();
 		$this->query->setResultsPerPage(-1);
 		$results = $this->query->count();
 		$this->query->setResultsPerPage($rpp);
-		return ceil($results/$rpp);
+		
+		return $this->pageCount = ceil($results/$rpp);
 	}
 	
+	/**
+	 * This function calculates the pages to be displayed in the pagination. It 
+	 * calculates the ideal amount of pages to be displayed (based on the max you want)
+	 * and generates an array with the numbers for those pages.
+	 * 
+	 * @return array
+	 */
 	public function getPageNumbers() {
-		$max   = $this->max = $this->getPageCount();
-		$pages = Array();
-		$pages[] = $this->getCurrentPage();
-		if (!in_array(1, $pages)) $pages[] = 1;
-		if (!in_array($max, $pages)) $pages[] = $max;
+		//Adds the maxjump up with the special pages (first, last, current)
+		$iterationLimit = $slots = $this->maxJump * 2 + 3;
+		$current = $this->getCurrentPage();
 		
-		$slots = $this->maxJump * 2;
-		$up    = $this->getCurrentPage()+1;
-		$down  = $this->getCurrentPage()-1;
+		if ($this->addPage($current)) $slots--;
+		if ($this->addPage(1)) $slots--;
+		if ($this->addPage($this->getPageCount())) $slots--;
 		
-		for ($i = 0; $i < $this->maxJump * 2; $i++) {
-			
-			if (!in_array($up, $pages) && $up < $max && $slots) {
-				$pages[] = $up;
-				$up++;
-				$slots--;
-			}
-			
-			if (!in_array($down, $pages) && $down > 0 && $slots) {
-				$pages[] = $down;
-				$down--;
-				$slots--;
-			}
+		for ($i = 0; $i < $iterationLimit; $i++) {
+			if ($slots > 0) if ($this->addPage ($current + $i)) $slots--;
+			if ($slots > 0) if ($this->addPage ($current - $i)) $slots--;
 		}
 		
-		sort($pages);
+		sort($this->pages);
 		
-		return $pages;
+		return $this->pages;
+	}
+	
+	/**
+	 * Adds a page to the pagination. This function checks whether the page is a 
+	 * good candidate for being added. Therefore performing three checks before 
+	 * adding it:
+	 * <ul>
+	 * <li>If the page already exists</li>
+	 * <li>If the page is lower than one</li>
+	 * <li>If the page number is higher than the highest</li>
+	 * </ul>
+	 * If any of those fails the page won't be added to the set.
+	 * 
+	 * @param int $number The page number we wanted to add to the query.
+	 * @return boolean If the page was added to the pagination
+	 */
+	public function addPage($number) {
+		if (in_array($number, $this->pages)) return false;
+		if ($number < 1)                     return false;
+		if ($number > $this->getPageCount()) return false;
+		
+		$this->pages[] = $number;
+		return true;
 	}
 	
 	/**
@@ -80,10 +100,10 @@ class Pagination
 		
 		if ($number < 1 || $number > $this->max || $disabled ) {
 			$this->url->setParam($this->param, 1);
-			return '<li class="disabled"><a href="' . $this->url . '">' . $caption . '</a>';
+			return '<li class="disabled unavailable"><a href="' . $this->url . '">' . $caption . '</a>';
 		}
 		if ($number == $this->getCurrentPage()) {
-			return '<li class="active"><a href="' . $this->url . '">' . $caption . '</a>';
+			return '<li class="active current"><a href="' . $this->url . '">' . $caption . '</a>';
 		}
 		else {
 			return '<li><a href="' . $this->url . '">' . $caption . '</a>';
@@ -111,7 +131,7 @@ class Pagination
 		//Next
 		$pages_html[] = $this->makePage($this->getCurrentPage() + 1, '&raquo;');
 		
-		return '<ul>' . implode('', $pages_html) . '</ul>';
+		return '<ul class="pagination">' . implode('', $pages_html) . '</ul>';
 	}
 	
 }

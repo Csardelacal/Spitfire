@@ -22,6 +22,7 @@ abstract class Query
 	private static $counter = 1;
 	private $id;
 	private $aliased = false;
+	private $count = null;
 
 
 	public function __construct($table) {
@@ -161,9 +162,10 @@ abstract class Query
 	}
 	
 	public function count() {
+		if ($this->count !== null) return $this->count;
 		$query = $this->query(Array('count(*)'), true)->fetchArray();
 		$count = $query['count(*)'];//end($query);
-		return $count;
+		return $this->count = $count;
 	}
 	
 	public function getRestrictions() {
