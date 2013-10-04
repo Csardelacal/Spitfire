@@ -121,6 +121,33 @@ class URL implements ArrayAccess
 	}
 	
 	/**
+	 * Returns the value of a parameter set in the current URL.
+	 * 
+	 * @param string $parameter
+	 * @return mixed
+	 */
+	public function getParameter($parameter) {
+		if (isset($this->params[$parameter])) {
+			return $this->params[$parameter];
+		} else {
+			return null;
+		}
+	}
+	
+	public function appendParameter($param, $value) {
+		if ( isset($this->params[$param]) ) {
+			if ( is_array($this->params[$param]) ){
+				$this->params[$param][] = $value;
+			} else {
+				$this->params[$param] = [$this->params[$param], $value];
+			}
+		}
+		else {
+			$this->params[$param] = [$value];
+		}
+	}
+	
+	/**
 	 * __toString()
 	 * This function generates a URL for any page that nLive handles,
 	 * it's output depends on if pretty / rewritten urls are active.
@@ -139,9 +166,8 @@ class URL implements ArrayAccess
 		if ($this->extension != 'php') $str.= ".$this->extension";
 		
 		$first = true;
-		foreach ($this->params as $k => $v) {
-			$str.= (($first)?'?':'&').urlencode($k).'='.urlencode($v);
-			$first = false; 
+		if (!empty($this->params)) {
+			$str.= '?' . http_build_query($this->params);
 		}
 		
 		return $str;
