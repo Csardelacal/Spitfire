@@ -54,7 +54,7 @@ class mysqlPDOResultSet implements resultSetInterface
 				#If the primary key of the parent only has 1 field we pass it through
 				#a cachable query via getbyid
 				if (count($physical) == 1) {
-					$query = $this->table->hitCache($data[reset($physical)->getName()]);
+					$query = $field->getTarget()->getTable()->hitCache($data[reset($physical)->getName()]);
 				}
 				
 				if ($query == null) {
@@ -66,10 +66,6 @@ class mysqlPDOResultSet implements resultSetInterface
 				}
 				
 				$_record[$field->getName()] = $query;
-			}
-			
-			elseif ($field instanceof \ManyToManyField) {
-				
 			}
 			
 			elseif ($field instanceof ChildrenField) {
