@@ -13,6 +13,12 @@ AutoLoad::registerClass('spitfire\exceptions\ExceptionHandler',  $cur_dir.'/exce
 //AutoLoad::registerClass('spitfire\Path',         $cur_dir.'/core/path.php');
 
 AutoLoad::registerClass('router',                $cur_dir.'/router.php');
+AutoLoad::registerClass('spitfire\router\Router',                               $cur_dir.'/core/router/router.php');
+AutoLoad::registerClass('spitfire\router\Server',                               $cur_dir.'/core/router/server.php');
+AutoLoad::registerClass('spitfire\router\Route',                                $cur_dir.'/core/router/route.php');
+AutoLoad::registerClass('spitfire\router\Routable',                             $cur_dir.'/core/router/routable.php');
+AutoLoad::registerClass('spitfire\router\Pattern',                              $cur_dir.'/core/router/routeparser.php');
+AutoLoad::registerClass('spitfire\router\RouteMismatchException',               $cur_dir.'/core/router/mismatchexception.php');
 AutoLoad::registerClass('spitfire\environment',  $cur_dir.'/environment.php');
 
 AutoLoad::registerClass('_SF_MVC',               $cur_dir.'/mvc/mvc.php');
