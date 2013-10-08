@@ -102,7 +102,7 @@ function lang($set = null) {
 	if ($lang == null) {
 		try {
 			if(environment::get('system_language'))
-				return $lang = Request::get()->getApp()->getLocale(environment::get('system_language'));
+				return $lang = Request::get()->getIntent()->getApp()->getLocale(environment::get('system_language'));
 		}
 		catch (Exception $e) {/*Ignore*/}
 		

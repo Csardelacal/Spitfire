@@ -38,17 +38,17 @@ class absoluteURL extends URL
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
 		
-		$path   = $r->getControllerURI();
+		$path   = $r->getIntent()->getApp()->getControllerURI($r->getIntent()->getController());
 		if (count($path) == 1 && reset($path) == $default_controller) {
 			$path = Array();
 		}
 		
-		$action = $r->getAction();
+		$action = $r->getIntent()->getAction();
 		if ($action != $default_action) {
 			$path[] = $action;
 		}
 		
-		array_merge($path, $r->getObject());
+		array_merge($path, $r->getIntent()->getObject());
 		
 		$canonical->setPath($path);
 		$canonical->setExtension($r->getExtension());

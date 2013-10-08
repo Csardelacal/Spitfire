@@ -3,7 +3,7 @@
 namespace spitfire;
 
 use App;
-use router;
+use spitfire\router\Router;
 
 require_once 'spitfire/app.php';
 require_once 'spitfire/core/functions.php';
@@ -64,8 +64,8 @@ class SpitFire extends App
 	public function fire() {
 		
 		#Get the current path...
-		$path = router::rewrite($_SERVER['PATH_INFO']);
-		$request = $this->request = Request::get($path);
+		$path = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $_SERVER['PATH_INFO']);
+		$request = $this->request = Request::get()->setPath($path);
 		
 		#Import the apps
 		self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
@@ -76,15 +76,14 @@ class SpitFire extends App
 		
 		#Select the app
 		$request->init();
-		$request->getApp()->runTask($request->getController(), $request->getAction(), $request->getObject());
+		$request->handle();
 		
 		#End debugging output
-		$request->getApp()->view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
+		$request->getIntent()->getView()->set('_SF_DEBUG_OUTPUT', ob_get_clean());
 
-		ob_start();
-		$request->getApp()->view->render();
-		$request->getHeaders()->send();
-		ob_flush();
+		#Send the response
+		$request->getResponse()->send();
+		
 	}
 	
 	public function registerApp($app, $namespace) {

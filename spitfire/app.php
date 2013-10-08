@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\ClassInfo;
+use spitfire\Intent;
 
 /**
  * Spitfire Application Class. This class is the base of every other 'app', an 
@@ -12,17 +13,7 @@ use spitfire\ClassInfo;
  */
 abstract class App
 {
-	/**
-	 * Holds the view the app uses to handle the current request. This view is in 
-	 * charge of renderring the page once the controller has finished processing
-	 * it.
-	 * 
-	 * @var \spitfire\View
-	 */
-	public $view;
-	public $controller;
-
-
+	
 	private $basedir;
 	private $URISpace;
 	
@@ -76,24 +67,27 @@ abstract class App
 		}
 	}
 	
-	public function getController($controller) {
+	public function getController($controller, Intent$intent) {
 		if (is_array($controller)) $controller = implode ('\\', $controller);
 		$c = $this->getNameSpace() . $controller . 'Controller';
 		$reflection = new ReflectionClass($c);
 		if ($reflection->isAbstract()) 
 			throw new publicException("Page not found", 404, new privateException("Abstract Controller", 0) );
-		return new $c($this);
+		return new $c($intent);
 	}
 	
-	public function getView($controller = null) {
+	public function getControllerURI($controller) {
+		return explode('\\', substr(get_class($controller), strlen($this->getNameSpace()), 0-strlen('Controller')));
+	}
+	
+	public function getView(Controller$controller) {
 		
-		if ($controller === null)  return $this->view;
-		if (is_array($controller)) $controller = implode ('\\', $controller);
+		$name = implode('\\', $this->getControllerURI($controller));
 		
-		$c = $this->getNameSpace() . $controller . 'View';
+		$c = $this->getNameSpace() . $name . 'View';
 		if (!class_exists($c)) $c = 'spitfire\View';
 		
-		return new $c($this);
+		return new $c($controller->intent);
 	}
 	
 	public function getControllerDirectory() {
@@ -115,31 +109,17 @@ abstract class App
 		return new $c();
 	}
 	
+	public function runTask() {
+		//TODO: remove
+		throw new privateException("Deprecated");
+	}
+	
 	abstract public function enable();
 	abstract public function getNameSpace();
 	abstract public function getAssetsDirectory();
 	
 	public function getTemplateDirectory() {
 		return $this->getBaseDir() . 'templates/';
-	}
-	
-	
-	public function runTask($controller, $action, $object) {
-		#Create a controller
-		$this->controller = $controller;
-		
-		#Create a view
-		$controllerName = spitfire()->getRequest()->getControllerURI();
-		$this->view = $this->getView($controllerName);
-		
-		#Run the onload
-		if (method_exists($this->controller, 'onload') ) 
-			call_user_func_array(Array($this->controller, 'onload'), Array($action));
-		
-		#Check if the controller can handle the request
-		$request = Array($this->controller, $action);
-		if (is_callable($request)) call_user_func_array($request, $object);
-		else throw new publicException('Page not found', 404, new privateException('Action not found', 0));
 	}
 	
 }

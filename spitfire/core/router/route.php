@@ -1,5 +1,7 @@
 <?php namespace spitfire\router;
 
+use Closure;
+
 /**
  * A route is a class that rewrites a URL path (route) that matches a
  * route or pattern (old_route) into a new route that the system can 
@@ -52,7 +54,55 @@ class Route
 		}
 	}
 	
-	public function getParameters() {
-		return $this->parameters;
+	protected function rewriteString() {
+		$parameters = $this->getParameters();
+		$route      = $this->new_route;
+		
+		foreach ($parameters as $k => $v) {
+			$route = str_replace (':' . $k, $v, $route);
+		}
+		
+		return $route;
+	}
+	
+	protected function rewriteArray() {
+		$request = \spitfire\Request::get();
+		$route   = $this->new_route;
+		if (isset($route['controller'])) {
+			$controller = str_replace($this->getParameters(true), $this->getParameters(), $route['controller']) . 'Controller';
+			$instance  = new $controller;
+			$request->setController($instance);
+		}
+		
+		if (isset($route['action'])) {
+			$action = str_replace($this->getParameters(true), $this->getParameters(), $action);
+			$request->setAction($action);
+		}
+		
+		if (isset($route['obect'])) {
+			foreach ($route['object'] as &$o) {
+				$o = str_replace($this->getParameters(true), $this->getParameters(), $action);
+			}
+			$request->setObject($object);
+		}
+		
+		return true;
+	}
+	
+	public function rewrite($URI) {
+		if ($this->test($URI)) {
+			if (is_string($this->new_route))         {return $this->rewriteString();}
+			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, $this->parameters);}
+			if (is_array($this->new_route))          {return $this->rewriteArray(); }
+		}
+		return false;
+	}
+	
+	public function getParameters($keys = false) {
+		if (!$keys) return $this->parameters;
+		
+		$array = array_keys($this->parameters);
+		array_walk($array, function(&$e) {$e = ':' . $e;});
+		return $array;
 	}
 }

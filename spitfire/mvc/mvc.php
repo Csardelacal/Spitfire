@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\SpitFire;
+use spitfire\Intent;
 
 /**
  * This class handles components common to Views, Controllers and model. Functions
@@ -15,10 +16,10 @@ use spitfire\SpitFire;
 
 class _SF_MVC extends Pluggable
 {
-	protected $app;
+	public $intent;
 	
-	function __construct($app) {
-		$this->app = $app;
+	function __construct(Intent$intent) {
+		$this->intent = $intent;
 	}
 	
 	function getApp() {
@@ -37,10 +38,13 @@ class _SF_MVC extends Pluggable
 				return $this->controller = $this->app->controller;
 				break;
 			case 'view':
-				return $this->view = $this->app->view;
+				return $this->view = $this->intent->getView();
 				break;
 			case 'model':
 				return $this->model = SpitFire::$model;
+				break;
+			case 'app':
+				return $this->model = $this->intent->getApp();
 				break;
 			case 'current_url':
 				return $this->current_url = spitfire()->getRequest();
