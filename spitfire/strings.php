@@ -46,4 +46,22 @@ class Strings
 		elseif (Strings::endsWith($string, 's')) return substr($string, 0, -1);
 	}
 	
+	public static function splitExtension($filename, $default = '') {
+		/* To fetch the extension we do the following:
+		 * * We get the last element of the path.
+		 * * Split it by the .
+		 * * Keep the first part as filename
+		 * * And the rest as extension.
+		 */
+		$data = explode('.', $filename);
+		
+		if (count($data) > 1) {
+			$extension = array_pop($data);
+		} else {
+			$extension = $default;
+		}
+		
+		return [implode('.', $data), $extension];
+	}
+	
 }

@@ -5,7 +5,7 @@ namespace spitfire;
 use Controller;
 use App;
 use Headers;
-use spitfire\path\PathParser;
+use Strings;
 
 /**
  * The request class is a component that allows developers to retrieve information
@@ -15,60 +15,20 @@ use spitfire\path\PathParser;
 class Request
 {
 	private $path;
-	
-	private $app;
-	private $controller;
-	private $action;
-	private $object = Array();
 	private $answerformat;
 	
-	private $headers;
+	private $intent;
+	private $response;
 	
 	static  $instance;
 	private $parsers;
+	private $parameters;
 	
-	protected function __construct($pathinfo = null) {
-		if (is_null($pathinfo)) $pathinfo = $_SERVER['PATH_INFO'];
-		$this->headers = new Headers();
-		$this->path = $pathinfo;
+	protected function __construct() {
+		$this->path     = $_SERVER['PATH_INFO'];
+		$this->response = new Response(null);
+		$this->intent   = new Intent();
 		self::$instance = $this;
-	}
-	
-	public function setApp(App$app) {
-		$this->app = $app;
-	}
-	
-	public function getApp() {
-		return $this->app;
-	}
-	
-	public function getControllerURI() {
-		return explode('\\', substr(get_class($this->getController()), strlen($this->app->getNameSpace()), 0-strlen('Controller')));
-	}
-	
-	public function setController(Controller$controller) {
-		$this->controller = $controller;
-	}
-	
-	public function getController() {
-		return $this->controller;
-	}
-	
-	public function setAction($action) {
-		if (!$action) $this->action = environment::get('default_action');
-		else $this->action = $action;
-	}
-	
-	public function getAction() {
-		return $this->action;
-	}
-	
-	public function setObject($object) {
-		$this->object = $object;
-	}
-	
-	public function getObject() {
-		return $this->object;
 	}
 	
 	public function setExtension($extension) {
@@ -83,60 +43,74 @@ class Request
 		else return $allowed[0];
 	}
 	
-	/**
-	 * Returns the headers object. This allows to manipulate the answer 
-	 * headers for the current request.
-	 * 
-	 * @return Headers
-	 */
-	public function getHeaders() {
-		return $this->headers;
+	public function getIntent() {
+		return $this->intent;
+	}
+	
+	public function setIntent($intent) {
+		$this->intent = $intent;
+	}
+	
+	public function getResponse() {
+		return $this->response;
 	}
 	
 	public function handle() {
-		$this->app->runTask($this->controller, $this->action, $this->object);
+		if ($this->path instanceof Response) {return;}
+		$this->getIntent()->run();
 	}
 	
+	public function setParameters($parameters) {
+		$this->parameters = $parameters;
+	}
+	
+	public function getParameter($name) {
+		if (isset($this->parameters[$name])) {
+			return $this->parameters[$name];
+		}
+	}
+	
+	public function setPath($path) {
+		$this->path = $path;
+		return $this;
+	}
+	
+	public function init() {
+		if ($this->path instanceof Response) return;
+		if ($this->path === true)            return;
+		
+		$this->readPath();
+	}
+
+
 	/**
-	 * getPath()
 	 * Reads the current path the user has selected and tries to detect
 	 * Controllers, actions and objects from it.
 	 * 
-	 * [NOTICE] getPath does not guarantee safe input, you will have to
+	 * [NOTICE] readPath does not guarantee safe input, you will have to
 	 * manually check whether the input it received is valid.
 	 * 
 	 * @throws \publicException In case a controller with no callable action
 	 *            has been found.
 	 */
-	public function init() {
+	public function readPath() {
 		$path = array_filter(explode('/', $this->path));
 		
-		/* To fetch the extension requested by the user we do the
-		 * following:
-		 * * We get the last element of the path.
-		 * * Split it by the .
-		 * * Keep the first part as filename
-		 * * And the rest as extension.
-		 */
-		$last      = explode('.', array_pop($path));
-		$info      = (count($last) > 1)? array_pop($last) : '';
-		$extension = (!empty($info))? $info : 'php';
-		array_push($path, implode('.', $last));
-		
+		list($last, $extension) = Strings::splitExtension(array_pop($path), 'php');
+		array_push($path, $last);
 		
 		$handlers = $this->getHandlers();
 		foreach ($handlers as $handler) {
-			if ($handler->parseElement(reset($path))) {
+			if ($handler($this, reset($path))) {
 				array_shift($path);
 			}
 		}
 		
-		$this->setObject($path);
+		$this->getIntent()->setObject($path);
 		$this->setExtension($extension);
 	}
 	
-	public function addHandler(PathParser$parser) {
-		$parser->setRequest($this);
+	public function addHandler($parser) {
 		$this->parsers[] = $parser;
 	}
 	

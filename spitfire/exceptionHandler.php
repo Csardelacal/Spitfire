@@ -65,16 +65,16 @@ class ExceptionHandler {
 				$previous = $e->getPrevious();
 				$trace    = $e->getTraceAsString();
 				$prevmsg  = ($previous)? '###' . $previous->getMessage() . "###\n" : '';
-				spitfire()->getRequest()->getHeaders()->status($e->getCode());
+				spitfire()->getRequest()->getResponse()->getHeaders()->status($e->getCode());
 				get_error_page($e->getCode(), $e->getMessage(),  $prevmsg . $trace);
 			} else { 
 				error_log($e->getMessage());
 				$trace = $e->getTraceAsString();
-				spitfire()->getRequest()->getHeaders()->status(500);
+				spitfire()->getRequest()->getResponse()->getHeaders()->status(500);
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
-			spitfire()->getRequest()->getHeaders()->send();
+			spitfire()->getRequest()->getResponse()->getHeaders()->send();
 			if(ob_get_length()) ob_flush();
 			die();
 

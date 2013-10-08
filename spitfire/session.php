@@ -64,7 +64,7 @@ class session
 				$this->isSafe();
 				return $started;
 			}
-			else throw new fileNotFoundException("Session path couldn't be created");
+			else throw new fileNotFoundException("Session path ".session_save_path()." couldn't be created");
 
 		else throw new filePermissionsException("Session path is not writable");
 	}

@@ -32,11 +32,11 @@ class langInfo
 	
 	public function getLocaleClass() {
 		try {
-			return Request::get()->getApp()->getLocale($this->langcode);
+			return Request::get()->getIntent()->getApp()->getLocale($this->langcode);
 		}
 		catch(privateException $e) {
 			try {
-				return Request::get()->getApp()->getLocale(substr($this->localecode, 0, 2));
+				return Request::get()->getIntent()->getApp()->getLocale(substr($this->localecode, 0, 2));
 			}
 			catch(privateException $e) {
 				return new \enLocale();

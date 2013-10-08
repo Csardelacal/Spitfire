@@ -24,9 +24,9 @@ class View extends _SF_MVC
 	 * 
 	 * @param App $app
 	 */
-	public function __construct($app) {
+	public function __construct(Intent$intent) {
 		
-		parent::__construct($app);
+		parent::__construct($intent);
 		
 		#Create registries
 		$this->js  = new JSRegistry();
@@ -37,14 +37,13 @@ class View extends _SF_MVC
 		 * the basedir for elements.
 		 */
 		
-		$basedir    = $app->getTemplateDirectory();
+		$basedir    = $intent->getApp()->getTemplateDirectory();
 		
-		$url        = $this->current_url;
-		$controller = implode(DIRECTORY_SEPARATOR, $url->getControllerURI());
-		$action     = $url->getAction();
-		$extension  = $url->getExtension();
+		$controller = implode('\\', $intent->getApp()->getControllerURI($intent->getController()));
+		$action     = $intent->getAction();
+		$extension  = Request::get()->getExtension();
 		
-		spitfire()->getRequest()->getHeaders()->contentType($extension);
+		spitfire()->getRequest()->getResponse()->getHeaders()->contentType($extension);
 		
 		
 		if     ( file_exists("$basedir$controller/$action.$extension"))

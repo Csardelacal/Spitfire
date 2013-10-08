@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\MemcachedAdapter;
+use spitfire\Intent;
 
 abstract class Controller extends _SF_MVC
 {
@@ -8,9 +9,9 @@ abstract class Controller extends _SF_MVC
 	//abstract public function index ($object, $params);
 	//abstract public function detail ($object, $params);
 	
-	public function __construct($app) {
+	public function __construct(Intent$intent) {
 
-		parent::__construct($app);
+		parent::__construct($intent);
 
 		$this->memcached = MemcachedAdapter::getInstance();
 		$this->call      = new _SF_Invoke();
