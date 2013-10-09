@@ -1,22 +1,21 @@
 <?php
 
 use spitfire\MemcachedAdapter;
-use spitfire\Intent;
+use spitfire\Context;
+use spitfire\MVC;
 
-abstract class Controller extends _SF_MVC
+abstract class Controller extends MVC
 {
 	
 	//abstract public function index ($object, $params);
 	//abstract public function detail ($object, $params);
 	
-	public function __construct(Intent$intent) {
+	public function __construct(Context$intent) {
 
 		parent::__construct($intent);
 
 		$this->memcached = MemcachedAdapter::getInstance();
 		$this->call      = new _SF_Invoke();
-		$this->post      = new _SF_InputSanitizer($_POST);
-		$this->get       = new _SF_InputSanitizer($_GET);
 	}
 	
 	public function __call($name, $arguments) {

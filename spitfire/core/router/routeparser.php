@@ -9,8 +9,15 @@ class Pattern
 	
 	private $type;
 	private $pattern;
+	private $optional = false;
 	
 	public function __construct($pattern) {
+		
+		if (substr($pattern, -1) === '?') {
+			$this->optional = true;
+			$pattern        = substr($pattern, 0, -1);
+		}
+		
 		switch ( substr($pattern, 0, 1) ) {
 			case ':':
 				$this->type    = self::WILDCARD_STRING;
@@ -22,12 +29,17 @@ class Pattern
 				break;
 			default:
 				$this->type     = self::WILDCARD_NONE;
-				$this->pattern  = $pattern;
+				$this->pattern  = explode('|', $pattern);
 				break;
 		}
 	}
 	
 	public function test($str) {
+		if ($this->optional && empty($str)) {
+			if ($this->type === self::WILDCARD_NONE) {return [];}
+			else { return [$this->pattern => null];}
+		}
+		
 		switch ($this->type) {
 			case self::WILDCARD_NUMERIC:
 				if (((int)$str) !== 0) { return [$this->pattern => $str]; }
@@ -36,7 +48,7 @@ class Pattern
 				if (is_string($str)) { return [$this->pattern => filter_var($str, FILTER_SANITIZE_STRING)]; }
 				break;
 			default:
-				if ($str === $this->pattern) { return []; }
+				if (in_array($str, $this->pattern)) { return []; }
 				break;
 		}
 		

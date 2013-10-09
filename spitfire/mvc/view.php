@@ -2,12 +2,12 @@
 
 namespace spitfire;
 
-use _SF_MVC;
+use spitfire\MVC;
 use \_SF_ViewElement;
 use spitfire\registry\JSRegistry;
 use spitfire\registry\CSSRegistry;
 
-class View extends _SF_MVC
+class View extends MVC
 {
 	private $file = '';
 	private $data = Array();
@@ -24,7 +24,7 @@ class View extends _SF_MVC
 	 * 
 	 * @param App $app
 	 */
-	public function __construct(Intent$intent) {
+	public function __construct(Context$intent) {
 		
 		parent::__construct($intent);
 		
@@ -37,10 +37,10 @@ class View extends _SF_MVC
 		 * the basedir for elements.
 		 */
 		
-		$basedir    = $intent->getApp()->getTemplateDirectory();
+		$basedir    = $this->app->getTemplateDirectory();
 		
-		$controller = implode('\\', $intent->getApp()->getControllerURI($intent->getController()));
-		$action     = $intent->getAction();
+		$controller = implode('\\', $this->app->getControllerURI($this->controller));
+		$action     = $this->action;
 		$extension  = Request::get()->getExtension();
 		
 		spitfire()->getRequest()->getResponse()->getHeaders()->contentType($extension);

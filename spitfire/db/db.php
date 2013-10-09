@@ -8,7 +8,7 @@
  */
 namespace spitfire\storage\database;
 
-use _SF_MVC;
+use spitfire\MVC;
 use Schema;
 use privateException;
 use spitfire\environment;
@@ -20,7 +20,7 @@ use spitfire\environment;
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class DB extends _SF_MVC
+abstract class DB extends MVC
 {
 	
 	const MYSQL_PDO_DRIVER = 'mysqlPDO';
@@ -155,7 +155,7 @@ abstract class DB extends _SF_MVC
 	 * Allows short-hand access to tables by using: $db->tablename
 	 * 
 	 * @param String $table Name of the table
-	 * @return Table|_SF_MVC
+	 * @return Table|MVC
 	 */
 	public function __get($table) {
 		#In case we request a model, view or controller
