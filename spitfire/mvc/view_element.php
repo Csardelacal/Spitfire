@@ -1,6 +1,8 @@
 <?php
 
-class _SF_ViewElement extends _SF_MVC
+use spitfire\MVC;
+
+class _SF_ViewElement extends MVC
 {
 	private $file;
 	private $data;

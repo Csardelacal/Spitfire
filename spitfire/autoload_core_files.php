@@ -21,7 +21,7 @@ AutoLoad::registerClass('spitfire\router\Pattern',                              
 AutoLoad::registerClass('spitfire\router\RouteMismatchException',               $cur_dir.'/core/router/mismatchexception.php');
 AutoLoad::registerClass('spitfire\environment',  $cur_dir.'/environment.php');
 
-AutoLoad::registerClass('_SF_MVC',               $cur_dir.'/mvc/mvc.php');
+AutoLoad::registerClass('spitfire\MVC',                                         $cur_dir.'/mvc/mvc.php');
 AutoLoad::registerClass('Controller',            $cur_dir.'/mvc/controller.php');
 AutoLoad::registerClass('spitfire\View',                                        $cur_dir.'/mvc/view.php');
 AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php');
@@ -89,7 +89,7 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDOCompositeRest
 AutoLoad::registerClass('spitfire\storage\database\drivers\MysqlPDORestrictionGroup',$cur_dir.'/db/drivers/mysqlPDORestrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\mysqlPDOResultSet',  $cur_dir.'/db/drivers/mysqlPDORes.php');
 
-AutoLoad::registerClass('_SF_InputSanitizer',    $cur_dir.'/security_io_sanitization.php');
+AutoLoad::registerClass('spitfire\InputSanitizer',                              $cur_dir.'/security_io_sanitization.php');
 AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/io/beans/coffeebean.php');
 AutoLoad::registerClass('spitfire\io\beans\Field',                              $cur_dir.'/io/beans/field.php');
 AutoLoad::registerClass('spitfire\io\beans\BasicField',                         $cur_dir.'/io/beans/basic_field.php');
@@ -142,7 +142,7 @@ AutoLoad::registerClass('Pluggable',                                            
 AutoLoad::registerClass('URL',                                                  $cur_dir.'/url.php');
 AutoLoad::registerClass('absoluteURL',                                          $cur_dir.'/absoluteURL.php');
 AutoLoad::registerClass('spitfire\Request',                                     $cur_dir.'/core/request.php');
-AutoLoad::registerClass('spitfire\Intent',                                      $cur_dir.'/core/intent.php');
+AutoLoad::registerClass('spitfire\Context',                                     $cur_dir.'/core/context.php');
 AutoLoad::registerClass('spitfire\Response',                                    $cur_dir.'/core/response.php');
 AutoLoad::registerClass('spitfire\path\PathParser',                             $cur_dir.'/core/path/PathParser.php');
 AutoLoad::registerClass('spitfire\path\AppParser',                              $cur_dir.'/core/path/AppParser.php');

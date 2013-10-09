@@ -2,9 +2,6 @@
 
 namespace spitfire;
 
-use Controller;
-use App;
-use Headers;
 use Strings;
 
 /**
@@ -17,7 +14,6 @@ class Request
 	private $path;
 	private $answerformat;
 	
-	private $intent;
 	private $response;
 	
 	static  $instance;
@@ -27,7 +23,6 @@ class Request
 	protected function __construct() {
 		$this->path     = $_SERVER['PATH_INFO'];
 		$this->response = new Response(null);
-		$this->intent   = new Intent();
 		self::$instance = $this;
 	}
 	
@@ -43,25 +38,17 @@ class Request
 		else return $allowed[0];
 	}
 	
-	public function getIntent() {
-		return $this->intent;
-	}
-	
-	public function setIntent($intent) {
-		$this->intent = $intent;
-	}
-	
 	public function getResponse() {
 		return $this->response;
 	}
 	
-	public function handle() {
-		if ($this->path instanceof Response) {return;}
-		$this->getIntent()->run();
-	}
 	
 	public function setParameters($parameters) {
 		$this->parameters = $parameters;
+	}
+	
+	public function getParameters() {
+		return $this->parameters;
 	}
 	
 	public function getParameter($name) {
@@ -70,16 +57,10 @@ class Request
 		}
 	}
 	
-	public function setPath($path) {
-		$this->path = $path;
-		return $this;
-	}
-	
-	public function init() {
-		if ($this->path instanceof Response) return;
-		if ($this->path === true)            return;
-		
-		$this->readPath();
+	public function makeContext($path) {
+		$context = $this->readPath(Context::create());
+		$context->view = $context->app->getView($context->controller);
+		return $context;
 	}
 
 
@@ -93,7 +74,7 @@ class Request
 	 * @throws \publicException In case a controller with no callable action
 	 *            has been found.
 	 */
-	public function readPath() {
+	public function readPath($context) {
 		$path = array_filter(explode('/', $this->path));
 		
 		list($last, $extension) = Strings::splitExtension(array_pop($path), 'php');
@@ -101,13 +82,14 @@ class Request
 		
 		$handlers = $this->getHandlers();
 		foreach ($handlers as $handler) {
-			if ($handler($this, reset($path))) {
+			if ($handler($context, reset($path))) {
 				array_shift($path);
 			}
 		}
 		
-		$this->getIntent()->setObject($path);
-		$this->setExtension($extension);
+		$context->object = $path;
+		$context->extension = $extension;
+		return $context;
 	}
 	
 	public function addHandler($parser) {

@@ -5,6 +5,7 @@ namespace spitfire;
 use App;
 use spitfire\router\Router;
 
+require_once 'spitfire/strings.php';
 require_once 'spitfire/app.php';
 require_once 'spitfire/core/functions.php';
 
@@ -17,7 +18,7 @@ require_once 'spitfire/core/functions.php';
 class SpitFire extends App
 {
 	
-	static  $started         = false;
+	static  $started = false;
 	
 	private $cwd;
 	private $autoload;
@@ -65,24 +66,35 @@ class SpitFire extends App
 		
 		#Get the current path...
 		$path = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $_SERVER['PATH_INFO']);
-		$request = $this->request = Request::get()->setPath($path);
 		
-		#Import the apps
-		self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
-		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
+		#If the user responded to the current route with a response we do not need 
+		#to handle the request
+		if (!$path instanceof Response) {
+			$request = $this->request = Request::get();
 
-		#Start debugging output
-		ob_start();
-		
-		#Select the app
-		$request->init();
-		$request->handle();
-		
-		#End debugging output
-		$request->getIntent()->getView()->set('_SF_DEBUG_OUTPUT', ob_get_clean());
+			#Import the apps
+			self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
+			self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 
-		#Send the response
-		$request->getResponse()->send();
+			#Start debugging output
+			ob_start();
+
+			#If the request has no defined controller, action and object it will define
+			#those now.
+			$context = ($path instanceof Context)? $path : $request->makeContext($path);
+			#Define te context for the helper function lang()
+			lang($context);
+			$context = $context->run();
+
+			#End debugging output
+			$context->view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
+
+			#Send the response
+			$context->response->send();
+		}
+		else {
+			$path->send();
+		}
 		
 	}
 	
@@ -92,6 +104,17 @@ class SpitFire extends App
 	
 	public function appExists($namespace) {
 		return isset($this->apps[$namespace]);
+	}
+	
+	public function findAppForClass($name) {
+		if (empty($this->apps)) return $this;
+		
+		foreach($this->apps as $app) {
+			if (\Strings::startsWith($name, $app->getNameSpace())) {
+				return $app;
+			}
+		}
+		return $this;
 	}
 	
 	/**

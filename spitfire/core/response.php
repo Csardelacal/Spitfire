@@ -35,7 +35,7 @@ class Response
 	}
 
 	public function getBody() {
-		if (empty($this->body)) return Request::get()->getIntent()->getView()->render();
+		if ($this->body instanceof Context) {return $this->body->view->render();}
 		return $this->body;
 	}
 
@@ -55,7 +55,7 @@ class Response
 	
 	public function send() {
 		ob_start();
-		$this->getBody();
+		echo $this->getBody();
 		$this->headers->send();
 		ob_flush();
 	}

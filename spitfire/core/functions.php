@@ -67,14 +67,14 @@ function db($options = null) {
 function __($str, $maxlength = false) {
 	#Check if the string is numeric to return a formatted number
 	if (is_numeric($str)) return number_format ($str, 2);
+	if ($maxlength) $str = Strings::ellipsis ($str, $maxlength);
 	
 	if (defined('ENT_HTML5')) 
 		$str = htmlentities($str, ENT_HTML5, environment::get('system_encoding'));
 	else
 		$str = htmlentities($str, ENT_COMPAT, environment::get('system_encoding'));
 	
-	if ($maxlength) return Strings::ellipsis ($str, $maxlength);
-	else return $str;
+	return $str;
 }
 
 function _c($amt) {
@@ -92,10 +92,17 @@ function _c($amt) {
  */
 function lang($set = null) {
 	static $lang = null;
+	static $context = null;
+	
+	# If we have chosen one retrieve it 
+	if ($set instanceof \spitfire\Context) {
+		$context = $set;
+		return;
+	}
 	
 	# If we have chosen one retrieve it 
 	if ($set != null) {
-		$lang = Request::get()->getApp()->getLocale($set);
+		$lang = $context->app->getLocale($set);
 	}
 	
 	#Else try to set one
@@ -113,7 +120,7 @@ function lang($set = null) {
 			if ($l->isUnderstood())	break;
 		}
 		
-		$lang = $l->getLocaleClass();
+		$lang = $l->getLocaleClass($context);
 		
 	}
 	

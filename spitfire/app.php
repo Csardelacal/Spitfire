@@ -1,7 +1,7 @@
 <?php
 
 use spitfire\ClassInfo;
-use spitfire\Intent;
+use spitfire\Context;
 
 /**
  * Spitfire Application Class. This class is the base of every other 'app', an 
@@ -67,7 +67,7 @@ abstract class App
 		}
 	}
 	
-	public function getController($controller, Intent$intent) {
+	public function getController($controller, Context$intent) {
 		if (is_array($controller)) $controller = implode ('\\', $controller);
 		$c = $this->getNameSpace() . $controller . 'Controller';
 		$reflection = new ReflectionClass($c);
@@ -87,7 +87,7 @@ abstract class App
 		$c = $this->getNameSpace() . $name . 'View';
 		if (!class_exists($c)) $c = 'spitfire\View';
 		
-		return new $c($controller->intent);
+		return new $c($controller->context);
 	}
 	
 	public function getControllerDirectory() {

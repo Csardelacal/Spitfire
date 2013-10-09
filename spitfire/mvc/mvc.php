@@ -1,7 +1,6 @@
-<?php
+<?php namespace spitfire;
 
-use spitfire\SpitFire;
-use spitfire\Intent;
+use Pluggable;
 
 /**
  * This class handles components common to Views, Controllers and model. Functions
@@ -14,12 +13,12 @@ use spitfire\Intent;
  * 
  */
 
-class _SF_MVC extends Pluggable
+class MVC extends Pluggable
 {
-	public $intent;
+	public $context;
 	
-	function __construct(Intent$intent) {
-		$this->intent = $intent;
+	function __construct(Context$context) {
+		$this->context = $context;
 	}
 	
 	function getApp() {
@@ -32,26 +31,10 @@ class _SF_MVC extends Pluggable
 	 * @return controller|view|DBInterface|URL|boolean
 	 */
 	function __get($variable) {
-		
-		switch ($variable) {
-			case 'controller':
-				return $this->controller = $this->app->controller;
-				break;
-			case 'view':
-				return $this->view = $this->intent->getView();
-				break;
-			case 'model':
-				return $this->model = SpitFire::$model;
-				break;
-			case 'app':
-				return $this->model = $this->intent->getApp();
-				break;
-			case 'current_url':
-				return $this->current_url = spitfire()->getRequest();
-			default:
-				return false;
-				break;
+		if (isset($this->context->$variable)) {
+			return $this->context->$variable;
 		}
+		return false;
 	}
 	
 	/**

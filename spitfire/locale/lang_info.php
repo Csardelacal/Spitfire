@@ -2,7 +2,6 @@
 
 namespace spitfire\locales;
 
-use spitfire\Request;
 use \privateException;
 
 class langInfo
@@ -30,13 +29,13 @@ class langInfo
 		if (class_exists($classname)) return true;
 	}
 	
-	public function getLocaleClass() {
+	public function getLocaleClass($context) {
 		try {
-			return Request::get()->getIntent()->getApp()->getLocale($this->langcode);
+			return $context->app->getLocale($this->langcode);
 		}
 		catch(privateException $e) {
 			try {
-				return Request::get()->getIntent()->getApp()->getLocale(substr($this->localecode, 0, 2));
+				return $context->app->getLocale(substr($this->localecode, 0, 2));
 			}
 			catch(privateException $e) {
 				return new \enLocale();

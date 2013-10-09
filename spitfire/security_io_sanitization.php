@@ -1,4 +1,4 @@
-<?php
+<?php namespace spitfire;
 
 /**
  * This class reads data and stores into a Object, additionally the data
@@ -7,7 +7,7 @@
  * @author  César de la Cal <cesar@magic3w.com>
  */
 
-class _SF_InputSanitizer
+class InputSanitizer
 {
 	private $data = false;
 	private $isset;
@@ -18,15 +18,16 @@ class _SF_InputSanitizer
 
 		if (is_array($data)) {
 			$this->data = Array();
-			foreach ($data as $field=>$value)
-				$this->data[$field] = $this->$field = new _SF_InputSanitizer($value);
+			foreach ($data as $field=>$value) {
+				$this->data[$field] = $this->$field = new InputSanitizer($value);
+			}
 		}
-		else $this->data = trim($data);
+		else { $this->data = $data; }
 
 	}
 	
 	public function value() {
-		return $this->data;
+		return is_string($this->data)? filter_var($this->data, FILTER_SANITIZE_STRING) : $this->data;
 	}
 	
 	public function toInt() {
@@ -58,7 +59,7 @@ class _SF_InputSanitizer
 	}
 	
 	public function __get($value) {
-		return $this->$value = new _SF_InputSanitizer(false, false);
+		return $this->$value = new InputSanitizer(false, false);
 	}
 	
 	public function __isset($name) {
