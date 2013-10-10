@@ -54,8 +54,8 @@ class View extends MVC
 			$this->file = $basedir . self::default_view;
 		
 		
-		if     ( file_exists("{$basedir}layout.$extension"))
-			$this->layout = "{$basedir}layout.$extension";
+		if     ( file_exists("{$basedir}layout$extension.php"))
+			$this->layout = "{$basedir}layout$extension.php";
 	}
 	
 	/**
