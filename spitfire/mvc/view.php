@@ -41,15 +41,15 @@ class View extends MVC
 		
 		$controller = implode('\\', $this->app->getControllerURI($this->controller));
 		$action     = $this->action;
-		$extension  = Request::get()->getExtension();
+		$extension  = $this->extension === 'php'? '' : '.' . $this->extension;
 		
 		spitfire()->getRequest()->getResponse()->getHeaders()->contentType($extension);
 		
 		
-		if     ( file_exists("$basedir$controller/$action.$extension"))
-			$this->file = "$basedir$controller/$action.$extension";
-		elseif ( file_exists("$basedir$controller.$extension"))
-			$this->file = "$basedir$controller.$extension";
+		if     ( file_exists("$basedir$controller/$action$extension.php"))
+			$this->file = "$basedir$controller/$action$extension.php";
+		elseif ( file_exists("$basedir$controller$extension.php"))
+			$this->file = "$basedir$controller$extension.php";
 		else
 			$this->file = $basedir . self::default_view;
 		

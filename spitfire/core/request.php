@@ -88,7 +88,7 @@ class Request
 		}
 		
 		$context->object = $path;
-		$context->extension = $extension;
+		$this->setExtension($context->extension = $extension);
 		return $context;
 	}
 	
