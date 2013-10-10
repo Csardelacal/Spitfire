@@ -92,6 +92,7 @@ class CompositeRestriction
 		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
 			$uplink = new Uplink($this->getQuery(), $this->getValue(), $this->field);
 			return [$uplink->getRestrictions()];
+			
 		}
 		
 		elseif ($this->field instanceof \ManyToManyField && $this->field->getTable() === $this->value->getTable()) {
@@ -134,14 +135,14 @@ class CompositeRestriction
 					$link2 = new Downlink($subquery, $this->getQuery(), $field);
 					$restrictions[0] = $link2->getRestrictions();
 				}
-				if ($this->value->getTable()->getModel() === $this->getQuery()->getTable()->getModel()) {
-					$link2 = new Uplink($subquery, $this->getQuery(), $field);
+				if ($field->getTarget() === $this->value->getTable()->getModel()) {
+					$link2 = new Uplink($subquery, $this->value, $field);
 					$restrictions[1] = $link2->getRestrictions();
 				}
 					
 			}
 			
-			return $restrictions;
+			return [$restrictions[0], $restrictions[1]];
 			
 		}
 		
