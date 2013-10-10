@@ -83,7 +83,7 @@ class SpitFire extends App
 			#those now.
 			$context = ($path instanceof Context)? $path : $request->makeContext($path);
 			#Define te context for the helper function lang()
-			lang($context);
+			lang(current_context($context));
 			$context = $context->run();
 
 			#End debugging output

@@ -1,26 +1,19 @@
 <?php
 
-use spitfire\MemcachedAdapter;
 use spitfire\Context;
 use spitfire\MVC;
 
 abstract class Controller extends MVC
 {
 	
-	//abstract public function index ($object, $params);
-	//abstract public function detail ($object, $params);
 	
 	public function __construct(Context$intent) {
-
 		parent::__construct($intent);
-
-		$this->memcached = MemcachedAdapter::getInstance();
-		$this->call      = new _SF_Invoke();
+		$this->call = new _SF_Invoke();
 	}
 	
 	public function __call($name, $arguments) {
-		$request = spitfire()->getRequest();
-		$controller = $request->getControllerURI();
+		$controller = $this->app->getControllerURI($this);
 		$action = $name;
 		$object = $arguments;
 		
@@ -29,10 +22,13 @@ abstract class Controller extends MVC
 			$action     = array_shift($object);
 			
 			$controllerName = implode('\\', $controller) . 'Controller';
-			$request->setController(new $controllerName($request->getApp()));
-			$request->setAction($action);
-			$request->setObject($object);
-			$request->handle();
+			$context = clone $this->context;
+			$context->controller = new $controllerName($context);
+			$context->action = $action;
+			$request->object = $object;
+			$request->view   = $this->app->getView($context->controller);
+			current_context($context)->run();
+			return $context;
 		}
 		else {
 			throw new publicException("Page not found", 404, new privateException('Action not found', 0));

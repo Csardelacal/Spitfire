@@ -32,23 +32,26 @@ class absoluteURL extends URL
 	}
 	
 	public static function canonical() {
+		$context = current_context();
 		$r = Request::get();
+		if (!$context) throw new privateException("No context for URL generation");
+		//TODO: Replace with sanitizer
 		$canonical = new self($_GET);
 		
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
 		
-		$path   = $r->getIntent()->getApp()->getControllerURI($r->getIntent()->getController());
+		$path   = $context->app->getControllerURI($context->controller);
 		if (count($path) == 1 && reset($path) == $default_controller) {
 			$path = Array();
 		}
 		
-		$action = $r->getIntent()->getAction();
+		$action = $context->action;
 		if ($action != $default_action) {
 			$path[] = $action;
 		}
 		
-		array_merge($path, $r->getIntent()->getObject());
+		array_merge($path, $context->object);
 		
 		$canonical->setPath($path);
 		$canonical->setExtension($r->getExtension());

@@ -2,7 +2,7 @@
 
 use spitfire\SpitFire;
 use spitfire\environment;
-use spitfire\Request;
+use spitfire\Context;
 use spitfire\locales\langInfo;
 use spitfire\storage\database\DB;
 
@@ -108,8 +108,8 @@ function lang($set = null) {
 	#Else try to set one
 	if ($lang == null) {
 		try {
-			if(environment::get('system_language'))
-				return $lang = Request::get()->getIntent()->getApp()->getLocale(environment::get('system_language'));
+			if(environment::get('system_language') && $context)
+				return $lang = $context->app->getLocale(environment::get('system_language'));
 		}
 		catch (Exception $e) {/*Ignore*/}
 		
@@ -136,4 +136,10 @@ function lang($set = null) {
  */
 function _t() {
 	return call_user_func_array(Array(lang(), 'say'), func_get_args());
+}
+
+function current_context(Context$set = null) {
+	static $context = null;
+	if ($set!==null) {$context = $set;}
+	return $context;
 }
