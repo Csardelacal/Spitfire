@@ -104,6 +104,7 @@ abstract class Query
 	 */
 	public function setResultsPerPage($amt) {
 		$this->rpp = $amt;
+		return $this;
 	}
 	
 	/**

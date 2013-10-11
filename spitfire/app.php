@@ -10,10 +10,22 @@ use spitfire\Context;
  * 
  * Every app resides inside of a namespace, this externally defined variable
  * defines what calls Spitfire redirects to the app.
+ * 
+ * @author César de la Cal<cesar@magic3w.com>
+ * @last-revision 2013-10-11
  */
 abstract class App
 {
-	
+	/**
+	 * The basedir is the root directory of an application. For spitfire this is 
+	 * usually the /bin directory. This directory contains all the app specific
+	 * data. Including controllers, views and models.
+	 * 
+	 * In the specific case of Spitfire this folder also contains the 'child apps'
+	 * that can be added to it.
+	 *
+	 * @var string
+	 */
 	private $basedir;
 	private $URISpace;
 	
@@ -107,11 +119,6 @@ abstract class App
 		$reflection = new ReflectionClass($c);
 		if ($reflection->isAbstract()) throw new publicException("Page not found", 404, new privateException("Abstract Locale", 0) );
 		return new $c();
-	}
-	
-	public function runTask() {
-		//TODO: remove
-		throw new privateException("Deprecated");
 	}
 	
 	abstract public function enable();

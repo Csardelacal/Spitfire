@@ -33,10 +33,10 @@ abstract class Queriable {
 	 * @param String $value
 	 * @return Query
 	 */
-	public function get($field, $value) {
+	public function get($field, $value, $operator = null) {
 		#Create the query
 		$query = $this->getQueryInstance();
-		$query->addRestriction($field, $value);
+		$query->addRestriction($field, $value, $operator);
 		#Return it
 		return $query;
 	}
