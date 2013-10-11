@@ -9,7 +9,7 @@ class JSRegistry extends Registry
 		$str  = '';
 		
 		foreach ($data as $script) {
-			$str.= "<script type=\"text/javascript\" src=\"$script\" />";
+			$str.= "<script type=\"text/javascript\" src=\"$script\" ></script>";
 		}
 		
 		return $str;
