@@ -12,6 +12,18 @@ abstract class Controller extends MVC
 		$this->call = new _SF_Invoke();
 	}
 	
+	/**
+	 * The __call method of controllers is responsible for finding 'nested controllers'
+	 * capable of handling a request. If such a controller is found Spitfire
+	 * will modify the current context and handle that separately.
+	 * 
+	 * @link http://www.spitfirephp.com/wiki/index.php/Nested_controllers For informtion about nested controllers
+	 * 
+	 * @param string $name
+	 * @param mixed $arguments
+	 * @return Context The context that has finally solved the request.
+	 * @throws publicException If there is no inhertiable controller found
+	 */
 	public function __call($name, $arguments) {
 		$controller = $this->app->getControllerURI($this);
 		$action = $name;
@@ -27,8 +39,7 @@ abstract class Controller extends MVC
 			$context->action = $action;
 			$request->object = $object;
 			$request->view   = $this->app->getView($context->controller);
-			current_context($context)->run();
-			return $context;
+			return current_context($context)->run();
 		}
 		else {
 			throw new publicException("Page not found", 404, new privateException('Action not found', 0));

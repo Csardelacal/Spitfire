@@ -8,9 +8,9 @@ class Router extends Routable
 	private $servers = Array();
 	private $greedy  = true;
 	
-	public function rewrite ($server, $route) {
+	public function rewrite ($server, $route, $method) {
 		foreach ($this->servers as $rule)
-			if (false !== $t = $rule->rewrite($server, $route)) return $t;
+			if (false !== $t = $rule->rewrite($server, $route, $method)) return $t;
 		#Implicit else.
 		return $route;
 	}
