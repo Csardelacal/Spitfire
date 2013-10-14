@@ -12,6 +12,8 @@ use spitfire\storage\database\Query;
  * perform actions that aren't strictly related to their task. But the improvement
  * on readability gained in Views is worth the change.
  * 
+ * @link http://www.spitfirephp.com/wiki/index.php/Database/pagination Related data and tutorials
+ * 
  * @todo Somehow this class should cache the counts, so the database doesn't need to read the data every time.
  * @todo This class should help paginating without the use of LIMIT
  */
@@ -150,21 +152,6 @@ class Pagination
 	public function setURL(URL $url, $param) {
 		$this->url   = $url;
 		$this->param = $param;
-	}
-	
-	protected function makePage($number, $caption, $disabled = false) {
-		$this->url->setParam($this->param, $number);
-		
-		if ($number < 1 || $number > $this->max || $disabled ) {
-			$this->url->setParam($this->param, 1);
-			return '<li class="disabled unavailable"><a href="' . $this->url . '">' . $caption . '</a>';
-		}
-		if ($number == $this->getCurrentPage()) {
-			return '<li class="active current"><a href="' . $this->url . '">' . $caption . '</a>';
-		}
-		else {
-			return '<li><a href="' . $this->url . '">' . $caption . '</a>';
-		}
 	}
 	
 	/**

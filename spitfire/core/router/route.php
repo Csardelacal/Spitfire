@@ -42,7 +42,28 @@ class Route
 		}
 	}
 	
-	public function test($URI) {
+	/**
+	 * Checks whether a certain method applies to this route. The route can accept
+	 * as many protocols as it wants. The protocols are converted to hex integers
+	 * and are AND'd to check whether the selected protocol is included in the 
+	 * list of admitted ones.
+	 * 
+	 * @param string|int $method
+	 * @return boolean
+	 */
+	public function testMethod($method) {
+		if (!is_numeric($method)) {
+			switch ($method){
+				case 'GET' :   $method = self::METHOD_GET; break;
+				case 'POST':   $method = self::METHOD_POST; break;
+				case 'PUT' :   $method = self::METHOD_PUT; break;
+				case 'DELETE': $method = self::METHOD_DELETE; break;
+			}
+		}
+		return $this->method & $method;
+	}
+	
+	public function testURI($URI) {
 		$array = array_filter(explode('/', $URI));
 		$this->parameters = $this->server->getParameters();
 		
@@ -52,6 +73,10 @@ class Route
 		} catch(RouteMismatchException $e) {
 			return false;
 		}
+	}
+	
+	public function test($URI, $method) {
+		return $this->testURI($URI) && $this->testMethod($method);
 	}
 	
 	protected function rewriteString() {
@@ -89,8 +114,8 @@ class Route
 		return true;
 	}
 	
-	public function rewrite($URI) {
-		if ($this->test($URI)) {
+	public function rewrite($URI, $method) {
+		if ($this->test($URI, $method)) {
 			if (is_string($this->new_route))         {return $this->rewriteString();}
 			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, $this->parameters);}
 			if (is_array($this->new_route))          {return $this->rewriteArray(); }

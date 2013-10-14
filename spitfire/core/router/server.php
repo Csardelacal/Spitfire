@@ -8,12 +8,14 @@ class Server extends Routable
 	
 	private $pattern;
 	private $parameters;
+	private $protocol;
 	private $routes = Array();
 	
-	public function __construct($pattern) {
+	public function __construct($pattern, $proto = Route::PROTO_HTTP) {
 		$array = explode('.', $pattern);
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
+		$this->protocol = $proto;
 	}
 	
 	/**
@@ -41,11 +43,11 @@ class Server extends Routable
 		}
 	}
 	
-	public function rewrite($server, $url) {
+	public function rewrite($server, $url, $method) {
 		
 		if ($this->test($server)) {
 			foreach ($this->routes as $route) {
-				if (false != $rewrite = $route->rewrite($url)) {
+				if (false != $rewrite = $route->rewrite($url, $method)) {
 					Request::get()->setParameters($route->getParameters());
 					return $rewrite;
 				}
