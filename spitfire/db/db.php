@@ -10,6 +10,7 @@ namespace spitfire\storage\database;
 
 use spitfire\MVC;
 use Schema;
+use Strings;
 use privateException;
 use spitfire\environment;
 
@@ -134,6 +135,10 @@ abstract class DB extends MVC
 			$modelName = $tablename.'Model';
 
 			if (class_exists($modelName)) {
+				return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
+			}
+			elseif (class_exists(Strings::singular($tablename).'Model')) {
+				$tablename = Strings::singular($tablename);
 				return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
 			}
 			/*else {

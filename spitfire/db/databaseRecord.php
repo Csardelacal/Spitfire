@@ -167,7 +167,7 @@ class Model implements Serializable
 						$fields = $field_info->getBridge()->getFields();
 						
 						$first  = ($this->{$pk} < $child->{$pk})? $this : $child;
-						$second = ($child->{$pk} < $this->{$pk})? $child : $this;
+						$second = ($child->{$pk} < $this->{$pk})? $this : $child;
 						
 						$insert->{reset($fields)->getName()} = $first;
 						$insert->{end  ($fields)->getName()} = $second;

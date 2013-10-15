@@ -62,7 +62,7 @@ class Image
 		}
 		
 		$img = imagecreatetruecolor($width, $height);
-		imagecolortransparent($img , imagecolorallocatealpha($new_image , 0, 0, 0, 127));
+		imagecolortransparent($img , imagecolorallocatealpha($img , 0, 0, 0, 127));
 		imagealphablending($img, false);
 		imagesavealpha($img, true);
 		imagecopyresampled($img, $this->img, 0, 0, $offset_x, $offset_y, $width, $height, $this->meta[0]-2*$offset_x, $this->meta[1]-2*$offset_y);

@@ -64,4 +64,15 @@ class Strings
 		return [implode('.', $data), $extension];
 	}
 	
+	public static function strToHTML($str) {
+		
+		$str = nl2br($str);
+		
+		return preg_replace_callback('/(http|https):\/\/([a-zA-z0-9\%\&\?\/\.]+)/', function($e) {
+			$url = $e[0];
+			$pretty = (strlen($e[2]) > 27)? substr($e[2], 0, 15) . '...' . substr($e[2], -10): $e[2];
+			return sprintf('<a href="%s">%s</a>', $url, $pretty);
+		},$str);
+	}
+	
 }

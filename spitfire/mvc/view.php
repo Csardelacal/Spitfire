@@ -31,7 +31,9 @@ class View extends MVC
 		#Create registries
 		$this->js  = new JSRegistry();
 		$this->css = new CSSRegistry();
-		
+	}
+	
+	public function getFiles() {
 		/*
 		 * Set default files. This includes the view's file, layout and
 		 * the basedir for elements.
@@ -82,6 +84,7 @@ class View extends MVC
 	}
 
 	public function render () {
+		$this->getFiles();
 		ob_start();
 		foreach ($this->data as $data_var => $data_content) {
 			$$data_var = $data_content;
