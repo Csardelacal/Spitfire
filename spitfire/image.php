@@ -27,8 +27,18 @@ class Image
 			case IMAGETYPE_JPEG: 
 				return imagecreatefromjpeg($file);
 				break;
+			case IMAGETYPE_PSD:
+				if (class_exists("Imagick")) {
+					set_time_limit(480);
+					$img = new Imagick();
+					$img->readimage($file . '[0]');
+					$img->setImageIndex(0);
+					return $img;
+				}
+				throw new privateException('Spitfire requires Imagemagick to handle PSD files');
+				break;
 			default:
-				throw new privateException('Not supported image type');
+				throw new privateException('Not supported image type: ' . $meta[2]);
 		}
 		
 	}
@@ -47,6 +57,11 @@ class Image
 	}
 	
 	public function fitInto ($width, $height) {
+		
+		if ($this->img instanceof Imagick) {
+			$this->img->cropthumbnailimage($width, $height);
+			return $this;
+		}
 		
 		$wider = ($this->meta[0] / $width) > ($this->meta[1] / $height);
 		
@@ -82,9 +97,14 @@ class Image
 	}
 	
 	public function store ($file) {
-		if (file_exists($file)) unlink ($file);
-		
-		imagepng($this->img, $file, $this->compression);
+		if ($this->img instanceof Imagick) {
+			if (file_exists($file)) unlink ($file);
+			$this->img->setImageFormat('png');
+			$this->img->writeimage(getcwd() . '/' . $file);
+		} else {
+			if (file_exists($file)) unlink ($file);
+			imagepng($this->img, $file, $this->compression);
+		}
 		return $file;
 	}
 }

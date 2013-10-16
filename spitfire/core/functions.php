@@ -72,7 +72,7 @@ function __($str, $maxlength = false) {
 	if (defined('ENT_HTML5')) 
 		$str = htmlspecialchars($str, ENT_HTML5, environment::get('system_encoding'));
 	else
-		$str = htmlspecialchars($str, ENT_COMPAT | ENT_HTML401, environment::get('system_encoding'));
+		$str = htmlspecialchars($str, ENT_COMPAT, environment::get('system_encoding'));
 	
 	return $str;
 }

@@ -21,8 +21,8 @@ class Strings
 	public static function slug($string) {
 		$str = preg_replace(
 				  /*http://stackoverflow.com/questions/10444885/php-replace-foreign-characters-in-a-string*/
-				  ['/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i','/[[:^print:]]/'], 
-				  ['$1',''], 
+				  Array('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i','/[[:^print:]]/'), 
+				  Array('$1',''), 
 				  htmlentities($string, ENT_QUOTES, 'UTF-8'));
 		
 		return strtolower(str_replace(Array(' ', '--'), Array('-', '-'), $str));
@@ -61,7 +61,7 @@ class Strings
 			$extension = $default;
 		}
 		
-		return [implode('.', $data), $extension];
+		return Array(implode('.', $data), $extension);
 	}
 	
 	public static function strToHTML($str) {

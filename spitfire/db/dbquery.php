@@ -223,7 +223,7 @@ abstract class Query
 		#Restriction groups that are empty will not do anything useful and maybe 
 		#even generate invalid SQL like '() AND' so we clean them beforehand.
 		if ($restriction instanceof RestrictionGroup) {
-			$restrictions = array_filter($restriction->getRestrictions(), [self, __METHOD__]);
+			$restrictions = array_filter($restriction->getRestrictions(), Array(self, __METHOD__));
 			
 			if (empty($restrictions)) {
 				return false;

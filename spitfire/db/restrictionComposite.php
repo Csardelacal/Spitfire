@@ -91,7 +91,7 @@ class CompositeRestriction
 		
 		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
 			$uplink = new Uplink($this->getQuery(), $this->getValue(), $this->field);
-			return [$uplink->getRestrictions()];
+			return Array($uplink->getRestrictions());
 			
 		}
 		
@@ -102,7 +102,7 @@ class CompositeRestriction
 			$route2->setAliased(true);
 			$fields       = $this->field->getBridge()->getFields();
 			
-			$restrictions = [];
+			$restrictions = Array();
 			
 			//Route #1
 			$uplink1 = new Downlink($route1, $this->getQuery(), reset($fields));
@@ -142,7 +142,7 @@ class CompositeRestriction
 					
 			}
 			
-			return [$restrictions[0], $restrictions[1]];
+			return Array($restrictions[0], $restrictions[1]);
 			
 		}
 		
@@ -157,7 +157,7 @@ class CompositeRestriction
 			}
 			
 			$uplink = new Downlink($this->getValue(), $this->getQuery(), $field);
-			return [$uplink->getRestrictions()];
+			return Array($uplink->getRestrictions());
 		}
 	}
 
