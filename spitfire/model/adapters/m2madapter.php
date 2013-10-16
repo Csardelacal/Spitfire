@@ -39,6 +39,37 @@ class ManyToManyAdapter implements ArrayAccess, Iterator
 		
 	}
 	
+	public function getBridgeRecordsQuery() {
+		if ($this->field->getModel() === $this->field->getTarget()) {
+			$bridge_fields = $this->field->getBridge()->getFields();
+			$query = $this->field->getBridge()->getTable()->getAll();
+			$group = $query->group();
+			foreach($bridge_fields as $f) {
+				if ($f->getTarget() === $this->field->getModel()) {
+					$group->addRestriction($f->getName(), $this->parent);
+				}
+			}
+			$bridge_records = $query;
+		}
+		else {
+			$bridge_records = $this->field->getBridge()->getTable()->get($this->field->getModel()->getName(), $this->parent);
+		}
+		return $bridge_records;
+	}
+	
+	public function store() {
+		$bridge_records = $this->getBridgeRecordsQuery()->fetchAll();
+
+		foreach($bridge_records as $r) $r->delete();
+
+		//@todo: Change for definitive.
+		$value = $this->toArray();
+		foreach($value as $child) {
+			$insert = new BridgeAdapter($this->field, $this->parent, $child);
+			return $insert->makeRecord()->store();
+		}
+	}
+	
 	public function toArray() {
 		if ($this->children) return $this->children;
 		$this->children = $this->getQuery()->fetchAll();

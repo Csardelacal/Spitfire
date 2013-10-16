@@ -24,7 +24,7 @@ class Pagination
 	
 	private $url       = false;
 	private $param     = 'page';
-	private $pages     = [];
+	private $pages     = Array();
 	private $pageCount = null;
 	
 	public function __construct(Query $query = null, $name = null) {
@@ -73,7 +73,7 @@ class Pagination
 		$pages = $url->getParameter($this->param);
 		$name  = $this->getName();
 		
-		if (!is_array($pages)) $pages = [];
+		if (!is_array($pages)) $pages = Array();
 		$pages[$name] = $page;
 		$url->setParam($this->param, $pages);
 		return $url;

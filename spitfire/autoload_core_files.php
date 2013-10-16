@@ -69,6 +69,7 @@ AutoLoad::registerClass('Reference',                                            
 AutoLoad::registerClass('ChildrenField',                                        $cur_dir.'/model/children.php');
 
 AutoLoad::registerClass('spitfire\model\adapters\ManyToManyAdapter',            $cur_dir.'/model/adapters/m2madapter.php');
+AutoLoad::registerClass('spitfire\model\adapters\BridgeAdapter',                $cur_dir.'/model/adapters/bridgeadapter.php');
 AutoLoad::registerClass('spitfire\model\adapters\ChildrenAdapter',              $cur_dir.'/model/adapters/childrenadapter.php');
 
 AutoLoad::registerClass('spitfire\model\defaults\userModel',                    $cur_dir.'/model/defaults/usermodel_default.php');

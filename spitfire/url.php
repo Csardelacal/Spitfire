@@ -139,11 +139,11 @@ class URL implements ArrayAccess
 			if ( is_array($this->params[$param]) ){
 				$this->params[$param][] = $value;
 			} else {
-				$this->params[$param] = [$this->params[$param], $value];
+				$this->params[$param] = Array($this->params[$param], $value);
 			}
 		}
 		else {
-			$this->params[$param] = [$value];
+			$this->params[$param] = Array($value);
 		}
 	}
 	
