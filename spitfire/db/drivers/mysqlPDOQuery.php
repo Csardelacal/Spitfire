@@ -4,6 +4,7 @@ namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Query;
 use spitfire\storage\database\QueryField;
+use spitfire\storage\database\CompositeRestriction;
 
 class MysqlPDOQuery extends Query
 {
@@ -16,7 +17,7 @@ class MysqlPDOQuery extends Query
 		$offset       = ($this->getPage() - 1) * $rpp;
 		
 		$selectstt    = 'SELECT';
-		$fields       = ($fields)? $fields : $this->table->getTable()->getFields();
+		$fields       = implode(', ', ($fields)? $fields : $this->table->getTable()->getFields());
 		$fromstt      = 'FROM';
 		$tablename    = $this->aliasedTableName();
 		$join         = '';
@@ -28,25 +29,13 @@ class MysqlPDOQuery extends Query
 		$limitstt     = 'LIMIT';
 		$limit        = $offset . ', ' . $rpp;
 		
-		#Unset unneeded data & prepare for writing
-		if (empty($fields)) {
-			$fields = '*';
-		}
-		else {
-			$fields = implode(', ', $fields);
-		}
 		
 		#Import tables for restrictions from remote queries
 		if (!empty($restrictions)) {
 			$joins = Array();
-			foreach ($restrictions as $v) {
-				if ($v instanceof \spitfire\storage\database\RestrictionGroup)
-					foreach ($rs = $v->getRestrictions() as $r) {
-						if ($r instanceof \spitfire\storage\database\CompositeRestriction)
-							$joins[] = new MysqlPDOJoin($r);
-					}
-				if ($v instanceof \spitfire\storage\database\CompositeRestriction)
-					$joins[] = new MysqlPDOJoin($v);
+			$composites = $this->getCompositeRestrictions();
+			foreach ($composites as $v) {
+				$joins[] = new MysqlPDOJoin($v);
 			}
 			$join = implode(' ', $joins);
 		}
@@ -102,5 +91,54 @@ class MysqlPDOQuery extends Query
 
 	public function compositeRestrictionInstance(\spitfire\model\Field $field, $value, $operator) {
 		return new MysqlPDOCompositeRestriction($this, $field, $value, $operator);
+	}
+
+	public function delete() {
+		
+		
+		$this->setAliased(false);
+		
+		$selectstt    = 'DELETE';
+		$target       = $this->aliasedTableName();
+		$fromstt      = 'FROM';
+		$tables       = Array($this->getQueryTable());
+		$wherestt     = 'WHERE';
+		/** @link http://www.spitfirephp.com/wiki/index.php/Database/subqueries Information about the filter*/
+		$restrictions = array_filter($this->getRestrictions(), Array('spitfire\storage\database\Query', 'restrictionFilter'));
+		
+		
+		#Import tables for restrictions from remote queries
+		if (!empty($restrictions)) {
+			$composites = $this->getCompositeRestrictions();
+			foreach ($composites as $v) {
+				$restrictions = array_merge($restrictions, $v->getConnectingRestrictions());
+			}
+			foreach ($restrictions as $restriction) {
+				if ($restriction instanceof \spitfire\storage\database\Restriction && !in_array($restriction->getField()->getQuery()->getQueryTable(), $tables)) {
+					$tables[] = $restriction->getField()->getQuery()->getQueryTable();
+				}
+				if ($restriction instanceof CompositeRestriction) {
+					foreach ($restriction->getSimpleRestrictions() as $r)
+						if (!in_array($r->getField()->getQuery()->getQueryTable(), $tables))
+							$tables[] = $r->getField()->getQuery()->getQueryTable();
+				}
+			}
+		}
+		
+		foreach ($tables as &$table) $table = $table->definition();
+		$tables = implode(', ', $tables);
+		
+		#Restrictions
+		if (empty($restrictions)) {
+			$restrictions = '1';
+		}
+		else {
+			$restrictions = implode(' AND ', $restrictions);
+		}
+		
+		$stt = array_filter(Array( $selectstt, $target, $fromstt, $tables, 
+		    $wherestt, $restrictions));
+		
+		$this->getTable()->getDb()->execute(implode(' ', $stt));
 	}
 }

@@ -63,6 +63,20 @@ abstract class RestrictionGroup
 		return $this->restrictions[$index];
 	}
 	
+	public function getCompositeRestrictions() {
+		$_return = Array();
+		foreach ($this->restrictions as $restriction) {
+			if ($restriction instanceof CompositeRestriction) {
+				$_return[] = $restriction;
+				$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
+			} 
+			if ($restriction instanceof RestrictionGroup) {
+				$_return = array_merge($_return, $restriction->getCompositeRestrictions());
+			}
+		}
+		return $_return;
+	}
+	
 	public function getValues() {
 		$values = Array();
 		foreach ($this->restrictions as $r) $values[] = $r->getValue();
