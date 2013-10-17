@@ -161,6 +161,15 @@ abstract class Query
 		else $this->result = $result;
 		return $this;
 	}
+
+	/**
+	 * Deletes the records matching this query. This will not retrieve the data and
+	 * therefore is more efficient than fetching and later deleting.
+	 * 
+	 * @todo Currently does not support deleting of complex queries.
+	 * @return int Number of affected records
+	 */
+	public abstract function delete();
 	
 	public function count() {
 		if ($this->count !== null) return $this->count;
@@ -172,6 +181,20 @@ abstract class Query
 	public function getRestrictions() {
 		$this->table->getTable()->getModel()->getBaseRestrictions($this);
 		return $this->restrictions;
+	}
+	
+	public function getCompositeRestrictions() {
+		$_return = Array();
+		foreach ($this->restrictions as $restriction) {
+			if ($restriction instanceof CompositeRestriction) {
+				$_return[] = $restriction;
+				$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
+			} 
+			if ($restriction instanceof RestrictionGroup) {
+				$_return = array_merge($_return, $restriction->getCompositeRestrictions());
+			}
+		}
+		return $_return;
 	}
 	
 	public function getOrder() {
