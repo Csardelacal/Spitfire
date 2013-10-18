@@ -6,7 +6,11 @@ use Pluggable;
  * This class handles components common to Views, Controllers and model. Functions
  * and variables declared in this files will be accessible by any of them.
  * 
- * @property spitfire\View $view The current view
+ * @property-read \spitfire\View $view The current view
+ * @property-read \spitfire\Context $context The context within this is located
+ * @property-read \spitfire\Request $request The request the context is answering to
+ * @property-read \spitfire\Response $response Contains the response body and headers
+ * @property-read \Controller $controller The controller used ot handle this context
  * 
  * @author César de la Cal <cesar@magic3w.com>
  * @package Spitfire.spitfire
@@ -15,7 +19,12 @@ use Pluggable;
 
 class MVC extends Pluggable
 {
-	public $context;
+	/**
+	 * The context this element belongs to.
+	 *
+	 * @var \spitfire\Context 
+	 */
+	private $context;
 	
 	function __construct(Context$context) {
 		$this->context = $context;
