@@ -5,19 +5,36 @@ use Closure;
 /**
  * A route is a class that rewrites a URL path (route) that matches a
  * route or pattern (old_route) into a new route that the system can 
- * use (new_route)
- * @author  César de la Cal <cesar@magic3w.com>
+ * use (new_route) to handle the current request.
+ * 
+ * 
+ * @todo The route needs to test for the current protocol.
+ * @author César de la Cal <cesar@magic3w.com>
  */
 class Route
 {
-	const PROTO_HTTP    = 0x01;
-	const PROTO_HTTPS   = 0x02;
+	/* These constants are meant for evaluating if a request should be answered 
+	 * depending on if the request is done via HTTP(S). This is especially useful
+	 * when your application wants to enforce HTTPS for certain requests.
+	 */
+	const PROTO_HTTP    = false;
+	const PROTO_HTTPS   = true;
 	
+	/* These constants are intended to allow routes to react differently depending
+	 * on the METHOD used to issue the request the server is receiving. Spitfire
+	 * accepts any of the standard GET, POST, PUT or DELETE methods.
+	 */
 	const METHOD_GET    = 0x01;
 	const METHOD_POST   = 0x02;
 	const METHOD_PUT    = 0x04;
 	const METHOD_DELETE = 0x08;
 	
+	/**
+	 * This var holds a reference to a route server (an object containing a pattern
+	 * to match virtualhosts) that isolates this route from the others.
+	 * 
+	 * @var \spitfire\router\Server 
+	 */
 	private $server;
 	private $pattern;
 	private $new_route;
@@ -25,8 +42,15 @@ class Route
 	private $method;
 	private $protocol;
 	
-	#PUBLIC METHODS
-	public function __construct($server, $pattern, $new_route, $method) {
+	/**
+	 * 
+	 * @param \spitfire\router\Server $server The server this route belongs to
+	 * @param string $pattern
+	 * @param string $new_route
+	 * @param string $method
+	 * @param string $pattern
+	 */
+	public function __construct(Server$server, $pattern, $new_route, $method) {
 		$this->server    = $server;
 		$this->new_route = $new_route;
 		$this->method    = $method;
@@ -104,11 +128,11 @@ class Route
 			$request->setAction($action);
 		}
 		
-		if (isset($route['obect'])) {
+		if (isset($route['object'])) {
 			foreach ($route['object'] as &$o) {
 				$o = str_replace($this->getParameters(true), $this->getParameters(), $action);
 			}
-			$request->setObject($object);
+			$request->setObject($route['object']);
 		}
 		
 		return true;
