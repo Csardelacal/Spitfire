@@ -52,6 +52,7 @@ class CompositeRestriction
 	}
 
 	public function getValue() {
+		if ($this->value instanceof Model) $this->value = $this->value->getQuery();
 		return $this->value;
 	}
 

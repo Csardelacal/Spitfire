@@ -188,7 +188,9 @@ abstract class Query
 		foreach ($this->restrictions as $restriction) {
 			if ($restriction instanceof CompositeRestriction) {
 				$_return[] = $restriction;
-				$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
+				if ($restriction->getValue() !== null) {
+					$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
+				}
 			} 
 			if ($restriction instanceof RestrictionGroup) {
 				$_return = array_merge($_return, $restriction->getCompositeRestrictions());
