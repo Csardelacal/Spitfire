@@ -27,6 +27,12 @@ class langInfo
 		
 		$classname = substr($this->localecode, 0, 2) . 'Locale';
 		if (class_exists($classname)) return true;
+		
+		$classname = 'system\\' . $this->langcode . 'Locale';
+		if (class_exists($classname)) return true;
+		
+		$classname = 'system\\' . substr($this->localecode, 0, 2) . 'Locale';
+		if (class_exists($classname)) return true;
 	}
 	
 	public function getLocaleClass($context) {
@@ -38,7 +44,9 @@ class langInfo
 				return $context->app->getLocale(substr($this->localecode, 0, 2));
 			}
 			catch(privateException $e) {
-				return new \enLocale();
+				if (class_exists($t = 'system\\' . $this->langcode . 'Locale')) { return new $t();}
+				if (class_exists($t = 'system\\' . substr($this->localecode, 0, 2) . 'Locale')) { return new $t();}
+				return new system\enLocale();
 			}
 		}
 	}

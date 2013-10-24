@@ -2,7 +2,6 @@
 
 class Locale
 {
-	public $comment_count   = Array('No comments', 'One comment', '%s comments');
 	
 	private $_current_output;
 	
