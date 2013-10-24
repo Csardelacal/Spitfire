@@ -112,6 +112,21 @@ class AutoLoad
 		
 		if (file_exists($filename)) return include $filename;
 		
+		if ($class->getType() == ClassInfo::TYPE_LOCALE) {
+			
+			$filename = 'spitfire/locale/' .
+					(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') . '/' .
+					$class->getClassName() .
+					self::CLASS_EXTENSION;
+			if (file_exists($filename)) return include $filename;
+
+			$filename = 'spitfire/locale/' .
+					(($class->getNameSpace())?implode(DIRECTORY_SEPARATOR, $class->getNameSpace()):'') . '/' .
+					strtolower($class->getClassName()) .
+					self::CLASS_EXTENSION;
+			if (file_exists($filename)) return include $filename;
+		}
+		
 		$this->spitfire->log(".... failed! No class $className");
 
 	}
