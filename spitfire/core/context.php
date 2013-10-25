@@ -4,6 +4,14 @@ use publicException;
 use privateException;
 use spitfire\InputSanitizer;
 
+/**
+ * The context is a wrapper for an application that 'does stuff' it basically
+ * gathers a basic set of MVC tools and executes them to let things happen.
+ * 
+ * @link http://www.spitfirephp.com/wiki/index.php/Class:Context
+ * @author César de la Cal <cesar@magic3w.com>
+ * @last-revision 2013-10-25
+ */
 class Context
 {
 	public $context;

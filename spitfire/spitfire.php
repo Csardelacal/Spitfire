@@ -37,6 +37,8 @@ class SpitFire extends App
 		#Try to start autoload
 		self::includeIfPossible($cur_dir.'/class.php');
 		self::includeIfPossible($cur_dir.'/autoload.php');
+		self::includeIfPossible($cur_dir.'/autoload/classlocator.php');
+		self::includeIfPossible($cur_dir.'/autoload/systemclasslocator.php');
 		$this->autoload = new AutoLoad($this);
 
 		#Include file to define the location of core components
