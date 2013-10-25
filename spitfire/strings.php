@@ -29,6 +29,7 @@ class Strings
 	}
 	
 	public static function endsWith($haystack, $needle) {
+		if (!$needle) return true;
 		return strcmp(substr($haystack, 0 - strlen($needle)), $needle) === 0;
 	}
 	
@@ -44,6 +45,7 @@ class Strings
 	public static function singular($string) {
 		if (Strings::endsWith($string, 'ies'))   return substr($string, 0, -3) .'y';
 		elseif (Strings::endsWith($string, 's')) return substr($string, 0, -1);
+		else                                     return $string;
 	}
 	
 	public static function splitExtension($filename, $default = '') {

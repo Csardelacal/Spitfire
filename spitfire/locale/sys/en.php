@@ -1,14 +1,14 @@
-<?php namespace system;
+<?php namespace spitfire\locale\sys;
 
 use Locale;
 
-class enLocale extends Locale
+class En extends Locale
 {
 	
 	public $comment_count   = Array('No comments', 'One comment', '%s comments');
 	
 	public $secondsago      = Array('Right now', 'One second ago', '%s seconds ago');
-	public $minutessago     = Array('Less than a minute ago', 'One minute ago', '%s minutes ago');
+	public $minutesago      = Array('Less than a minute ago', 'One minute ago', '%s minutes ago');
 	public $hoursago        = Array('Less than an hour ago', 'One hour ago', '%s hours ago');
 	public $daysago         = Array('Less than a day ago', 'One day ago', '%s days ago');
 	public $weeksago        = Array('Less than a week ago', 'One week ago', '%s weeks ago');
