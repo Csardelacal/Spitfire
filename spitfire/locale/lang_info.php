@@ -25,13 +25,16 @@ class langInfo
 		$classname = $this->langcode . 'Locale';
 		if (class_exists($classname)) return true;
 		
+		$classname = str_replace('-', '\\', $this->localecode) . 'Locale';
+		if (class_exists($classname)) return true;
+		
 		$classname = substr($this->localecode, 0, 2) . 'Locale';
 		if (class_exists($classname)) return true;
 		
-		$classname = 'system\\' . $this->langcode . 'Locale';
+		$classname = 'spitfire\system\\' . $this->langcode . 'Locale';
 		if (class_exists($classname)) return true;
 		
-		$classname = 'system\\' . substr($this->localecode, 0, 2) . 'Locale';
+		$classname = 'spitfire\system\\' . str_replace('-', '\\', $this->localecode) . 'Locale';
 		if (class_exists($classname)) return true;
 	}
 	
