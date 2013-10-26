@@ -183,7 +183,8 @@ class URL implements ArrayAccess
 	}
 	
 	public static function current() {
-		return new self($_SERVER['PATH_INFO'], $_GET);
+		$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
+		return new self($path, $_GET);
 	}
 	
 	public static function canonical() {
