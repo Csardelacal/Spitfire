@@ -83,15 +83,40 @@ function _c($amt) {
 }
 
 /**
+ * This function retrieves the best locale based on the system confirguration or 
+ * 
+ * @return Locale
+ */
+function find_locale() {
+	try {
+		if(environment::get('system_language') && $context)
+			return $context->app->getLocale(environment::get('system_language'));
+	}
+	catch (Exception $e) {/*Ignore*/}
+
+	$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+
+	foreach($langs as $l) {
+		$l = new langInfo($l);
+		if ($l->isUnderstood())	return $l->getLocaleClass($context);
+	}
+	return new \spitfire\locale\sys\En;
+}
+
+/**
  * Returns the current system language.
  * 
  * @staticvar Locale $lang
  * @param String $set Used to change the system language. Otherwise it will be
  *               default-ed to Accept-Language header
- * @return Locale
+ * @return Locale The locale being used in the application. This allows to localize
+ *               your applications with quite ease.
  */
 function lang($set = null) {
+	/*@var $lang Locale*/
 	static $lang = null;
+	
+	/*@var $context Context*/
 	static $context = null;
 	
 	# If we have chosen one retrieve it 
@@ -107,21 +132,7 @@ function lang($set = null) {
 	
 	#Else try to set one
 	if ($lang == null) {
-		try {
-			if(environment::get('system_language') && $context)
-				return $lang = $context->app->getLocale(environment::get('system_language'));
-		}
-		catch (Exception $e) {/*Ignore*/}
-		
-		$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-		
-		foreach($langs as $l) {
-			$l = new langInfo($l);
-			if ($l->isUnderstood())	break;
-		}
-		
-		$lang = $l->getLocaleClass($context);
-		
+		$lang = find_locale();
 	}
 	
 	return $lang;
