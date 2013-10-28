@@ -19,22 +19,21 @@ class langInfo
 			if (strlen($e) == 5) $this->localecode = $e;
 			else $this->quality = (float)substr($e, 0, 3);
 		}
+		
+		if (!$this->langcode) $this->langcode = substr($this->localecode, 0, 2);
 	}
 	
 	public function isUnderstood() {
-		$classname = $this->langcode . 'Locale';
-		if (class_exists($classname)) return true;
-		
 		$classname = str_replace('-', '\\', $this->localecode) . 'Locale';
 		if (class_exists($classname)) return true;
 		
-		$classname = substr($this->localecode, 0, 2) . 'Locale';
-		if (class_exists($classname)) return true;
-		
-		$classname = 'spitfire\system\\' . $this->langcode . 'Locale';
+		$classname = $this->langcode . 'Locale';
 		if (class_exists($classname)) return true;
 		
 		$classname = 'spitfire\system\\' . str_replace('-', '\\', $this->localecode) . 'Locale';
+		if (class_exists($classname)) return true;
+		
+		$classname = 'spitfire\system\\' . $this->langcode . 'Locale';
 		if (class_exists($classname)) return true;
 	}
 	
