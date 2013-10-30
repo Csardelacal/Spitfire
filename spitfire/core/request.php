@@ -21,7 +21,9 @@ class Request
 	private $parameters;
 	
 	protected function __construct() {
-		$this->path     = $_SERVER['PATH_INFO'];
+		$pinfo = isset($_SERVER['PATH_INFO']) && is_string($_SERVER['PATH_INFO'])? $_SERVER['PATH_INFO'] : '/';
+		
+		$this->path     = $pinfo;
 		$this->response = new Response(null);
 		self::$instance = $this;
 	}
