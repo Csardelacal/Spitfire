@@ -4,6 +4,7 @@ use spitfire\io\beans\ChildBean;
 use spitfire\storage\database\Table;
 use spitfire\model;
 
+use spitfire\io\beans\Field;
 use spitfire\io\beans\TextField;
 use spitfire\io\beans\LongTextField;
 use spitfire\io\beans\FileField;
@@ -247,6 +248,14 @@ abstract class CoffeeBean extends Validatable
 		}
 		
 		return $xss_token;
+	}
+	
+	public function __set($name, $field) {
+		if ($field instanceof Field) {
+			$this->fields[$name] = $field;
+			return;
+		}
+		throw new privateException("Invalid data");
 	}
 
 	
