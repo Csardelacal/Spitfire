@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\io\renderers;
+<?php namespace spitfire\io\renderers;
 
 abstract class Renderer
 {
