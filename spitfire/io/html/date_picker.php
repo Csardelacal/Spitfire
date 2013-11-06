@@ -14,6 +14,7 @@ class dateTimePicker extends HTMLSpan
 		
 		if     (!$timestamp)            $this->timestamp = time();
 		elseif (is_numeric($timestamp)) $this->timestamp = $timestamp;
+		elseif (is_array($timestamp))   $this->timestamp = $this->readPostData($timestamp);
 		else                            $this->timestamp = strtotime($timestamp);
 		
 		$this->setParameter('class', "dateTimePicker");

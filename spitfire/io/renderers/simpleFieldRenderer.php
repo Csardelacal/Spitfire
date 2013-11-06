@@ -1,6 +1,6 @@
 <?php
 
-namespace spitfire\io\beans\renderers;
+namespace spitfire\io\renderers;
 
 use spitfire\io\beans\BasicField;
 use spitfire\io\beans\ChildBean;
