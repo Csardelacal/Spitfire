@@ -7,6 +7,9 @@
  * 
  * Renderables can also be translated into an entire form. As forms are also form 
  * controls somewhow.
+ * 
+ * @see http://www.spitfirephp.com/wiki/index.php/Renderers
+ * @author César de la Cal <cesar@magic3w.com>
  */
 Interface Renderable
 {
