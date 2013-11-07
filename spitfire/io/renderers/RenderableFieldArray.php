@@ -16,5 +16,5 @@ Interface RenderableFieldArray extends RenderableField
 	 * 
 	 * @return mixed[]
 	 */
-	abstract public function getValue();
+	function getValue();
 }

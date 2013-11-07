@@ -9,9 +9,9 @@ interface RenderableForm extends Renderable
 	/**
 	 * Returns the endpoint this should be sent to. This value is usually returned
 	 * as '' or as a value set previously as many controls are unable to tell 
-	 * where they should be submitted to.
-	 */
-	public abstract function getAction();
+	 * where they should be submitted to.	
+ */
+	function getAction();
 	
 	/**
 	 * Returns the list of fields that the form should contain. The elements of 
@@ -20,5 +20,5 @@ interface RenderableForm extends Renderable
 	 * 
 	 * @return RenderableField[] The fields.
 	 */	
-	public abstract function getFields();
+	function getFields($form);
 }

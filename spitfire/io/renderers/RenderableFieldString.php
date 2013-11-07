@@ -17,5 +17,5 @@ interface RenderableFieldString extends RenderableField
 	 * @return int|boolean Returns the max length or a boolean false in case there
 	 *		is no maximum length
 	 */
-	abstract public function getMaxLength();
+	function getMaxLength();
 }

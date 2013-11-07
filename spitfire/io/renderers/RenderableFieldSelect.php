@@ -14,7 +14,7 @@ interface RenderableFieldSelect extends RenderableField
 	 * 
 	 * @return mixed[]
 	 */
-	public function getOptions();
+	function getOptions();
 	
 	/**
 	 * Fetches only a certain part of the list. This allows you to retrieve data
@@ -24,17 +24,17 @@ interface RenderableFieldSelect extends RenderableField
 	 *		control you can use AJAX/JSONP calls to retrieve that data.
 	 * @return mixed[]
 	 */
-	public function getPartial($str);
+	function getPartial($str);
 	
 	
 	/**
 	 * Gets the caption for a certain ID. This is especially useful when the data 
 	 * is fragmented and the value(s) are not in the option list.
 	 */
-	public function getCaption($id);
+	function getCaption($id);
 	
 	/**
 	 * Gets the id for a certain caption.
 	 */
-	public function getId($caption);
+	function getId($caption);
 }

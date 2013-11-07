@@ -17,5 +17,5 @@ interface RenderableField extends Renderable
 	 * present the data the way you want (including the requested value) when returning
 	 * this.
 	 */
-	abstract public function getValue();
+	function getValue();
 }

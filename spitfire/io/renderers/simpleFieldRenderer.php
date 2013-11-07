@@ -1,47 +1,28 @@
-<?php
-
-namespace spitfire\io\renderers;
-
-use spitfire\io\beans\BasicField;
-use spitfire\io\beans\ChildBean;
-use spitfire\io\beans\EnumField;
-use spitfire\io\beans\TextField;
-use spitfire\io\beans\LongTextField;
-use spitfire\io\beans\DateTimeField;
-use spitfire\io\beans\FileField;
-use spitfire\io\beans\ReferenceField;
-use spitfire\io\beans\ManyToManyField;
-use spitfire\io\html\HTMLInput;
-use spitfire\io\html\HTMLTextArea;
-use spitfire\io\beans\BooleanField;
-use spitfire\io\html\HTMLLabel;
-use spitfire\io\html\HTMLDiv;
-use spitfire\io\html\HTMLOption;
-use spitfire\io\html\HTMLSelect;
+<?php namespace spitfire\io\renderers;
 
 class SimpleFieldRenderer {
 	
-	public function renderForm($field) {
+	public function renderForm(RenderableField$field) {
 		
-		if ($field->getVisibility() < 2) return;
+		$array = $field instanceof RenderableFieldArray;
+		$type  = null;
 		
-		if ($field instanceof ReferenceField) {
-			return $this->renderReferencedField($field);
+		if ($field instanceof RenderableFieldDateTime) { $type = 'DateTime'; }
+		if ($field instanceof RenderableFieldDouble)   { $type = 'Double'; }
+		if ($field instanceof RenderableFieldFile)     { $type = 'File'; }
+		if ($field instanceof RenderableFieldGroup)    { $type = 'Group'; }
+		if ($field instanceof RenderableFieldInteger)  { $type = 'Integer'; }
+		if ($field instanceof RenderableFieldRTF)      { $type = 'RTF'; }
+		if ($field instanceof RenderableFieldString)   { $type = 'String'; }
+		if ($field instanceof RenderableFieldText)     { $type = 'Text'; }
+		
+		$method = 'renderForm' . $type . ($array?'Array':'');
+		
+		if (!method_exists($this, $method) || !$type) {
+			throw new \privateException('Renderer does not support this kind of field');
 		}
-		elseif ($field instanceof ManyToManyField) {
-			return $this->renderMultiReferencedField($field);
-		}
-		elseif ($field instanceof ChildBean) {
-			return $this->renderChildBean($field);
-		}
-		elseif ($field instanceof EnumField) {
-			return $this->renderEnumField($field);
-		}
-		elseif ($field instanceof BasicField) {
-			return $this->renderBasicField($field);
-		}
-		else return $field;
-		//TODO: Do something real here
+		
+		return $this->method($field);
 	}
 	
 	public function renderList($field) {

@@ -14,6 +14,8 @@ use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\EnumField;
 use spitfire\io\beans\BooleanField;
 
+use spitfire\io\renderers\RenderableForm;
+
 /**
  * A Bean is the equivalent to a Model for users. Instead of generating SQL and
  * reading resultsets a Bean generates forms and reads the POST data they 
@@ -22,13 +24,8 @@ use spitfire\io\beans\BooleanField;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class CoffeeBean extends Validatable
+abstract class CoffeeBean extends Validatable implements RenderableForm
 {
-	
-	const VISIBILITY_HIDDEN = 0;
-	const VISIBILITY_LIST   = 1;
-	const VISIBILITY_FORM   = 2;
-	const VISIBILITY_ALL    = 3;
 	
 	const STATUS_SUBMITTED_OK  = 2;
 	const STATUS_SUBMITTED_ERR = 1;
@@ -221,6 +218,10 @@ abstract class CoffeeBean extends Validatable
 	
 	public function getId() {
 		return $this->id;
+	}
+	
+	public function getAction() {
+		return '';
 	}
 	
 	/**

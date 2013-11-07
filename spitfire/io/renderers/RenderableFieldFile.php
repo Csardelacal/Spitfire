@@ -19,7 +19,7 @@ interface RenderableFieldFile extends RenderableField
 	 * @return string[]|boolean Returns an array of strings with the supported formats
 	 *		or returns boolean false if any filetype is admitted.
 	 */
-	public abstract function getSupportedFileFormats();
+	function getSupportedFileFormats();
 	
 	/**
 	 * The maximum filesize an upload should be (in bytes). Your webserver may enforce
@@ -29,5 +29,5 @@ interface RenderableFieldFile extends RenderableField
 	 * @return int|boolean Returns the filesize in bytes or a boolean false if this
 	 *		is not restricted.
 	 */
-	public abstract function getMaxFileSize();
+	function getMaxFileSize();
 }
