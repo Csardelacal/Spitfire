@@ -31,9 +31,6 @@ abstract class CoffeeBean extends Validatable implements RenderableForm
 	const STATUS_SUBMITTED_ERR = 1;
 	const STATUS_UNSUBMITTED   = 0;
 	
-	private static $counter = 0;
-	private $id = null;
-	
 	private $fields = Array();
 	private $record;
 	private $parent;
@@ -77,16 +74,15 @@ abstract class CoffeeBean extends Validatable implements RenderableForm
 	 * @return int Status code of the submission
 	 */
 	public function getStatus() {
-		
-		
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if ($_POST['_XSS_'] != $this->getXSSToken())
 				throw new publicException('XSS Attack', 403);
 			
-			if ($this->validate())
+			if ($this->validate()) {
 				return self::STATUS_SUBMITTED_OK;
-			else
+			} else {
 				return self::STATUS_SUBMITTED_ERR;
+			}
 		}
 		else {
 			return self::STATUS_UNSUBMITTED;
@@ -107,7 +103,6 @@ abstract class CoffeeBean extends Validatable implements RenderableForm
 	}
 	
 	public function setDBRecord($record) {
-		$this->id = self::$counter++;
 		if ($record instanceof \Model || is_null($record))
 		$this->record = $record;
 	}
@@ -207,17 +202,31 @@ abstract class CoffeeBean extends Validatable implements RenderableForm
 		return $this->parent;
 	}
 	
+	public function getPostId() {
+		return $this->getName();
+	}
+	
 	public function setPostData($postdata = null) {
 		$this->postdata = $postdata;
 	}
 	
 	public function getPostData() {
-		if ($this->postdata !== null) return $this->postdata;
-		else return $_POST;
+		if ($this->postdata !== null) {
+			return $this->postdata;
+		} elseif ($this->parent !== null) {
+			$pd = $this->parent->getRequestValue();
+			return $pd[$this->getName()];
+		} else {
+			return $_POST[$this->getName()];
+		}
 	}
 	
-	public function getId() {
-		return $this->id;
+	public function getEnforcedRenderer() {
+		return null;
+	}
+	
+	public function getVisibility() {
+		return spitfire\io\renderers\Renderable::VISIBILITY_ALL;
 	}
 	
 	public function getAction() {
