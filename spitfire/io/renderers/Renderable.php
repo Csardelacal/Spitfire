@@ -36,17 +36,10 @@ Interface Renderable
 	const VISIBILITY_FORM   = 2;
 	
 	/**
-	 * A card is Spitfire's equivalent of a small element that contains a title,
-	 * a description, an optional image and URL (and additional custom metadata).
-	 * This allows your application to quickly present this 'card' to a user and
-	 * generate quick visual connections with elements.
+	 * Displays the element in both situations. When rendering both a form and a
+	 * list of elements.
 	 */
-	const VISIBILITY_CARD   = 4;
-	
-	/**
-	 * 
-	 */
-	const VISIBILITY_ALL    = 7;
+	const VISIBILITY_ALL    = 3;
 	
 	/**
 	 * Returns the post id this control wants to read the data from at a later 
@@ -64,7 +57,7 @@ Interface Renderable
 	
 	/**
 	 * Defines the visibility of this renderable object. The scopes are either 
-	 * form, card or list. Which indicate whether the renderable 'agrees' to be 
+	 * form or list. Which indicate whether the renderable 'agrees' to be 
 	 * rendered into any of those.
 	 * 
 	 * Please take note, that even if it should do so. The renderer may ignore the 

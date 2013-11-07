@@ -95,21 +95,9 @@ abstract class Field
 	}
 	
 	public function getPostId() {
-		
 		$name = $this->getName();
-		
-		if ($this->getBean()->getParent()) {
-			$record = $this->getBean()->getRecord();
-			
-			if (!is_null($record)) {
-				$id = implode(':', $record->getPrimaryData());
-				return $this->getBean()->getParent()->getName() . "[$id][$name]";
-			}
-			else {
-				return $this->getBean()->getParent()->getName() . "[_new_{$this->getBean()->getId()}][$name]";
-			}
-		}
-		return $name;
+		$parent = $this->bean->getPostId();
+		return "{$parent}[{$name}]";
 	}
 	
 	public function setCaption($caption) {
