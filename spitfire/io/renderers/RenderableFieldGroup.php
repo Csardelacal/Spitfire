@@ -11,5 +11,5 @@ interface RenderableFieldGroup extends RenderableField
 	/**
 	 * Returns the fields the sub-form contains so they can be rendered.
 	 */
-	abstract public function getFields();
+	function getFields();
 }
