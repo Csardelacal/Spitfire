@@ -5,6 +5,7 @@ use spitfire\environment;
 use spitfire\Context;
 use spitfire\locales\langInfo;
 use spitfire\storage\database\DB;
+use spitfire\validation\Validatable;
 
 function spitfire() {
 	static $sf;
@@ -153,4 +154,12 @@ function current_context(Context$set = null) {
 	static $context = null;
 	if ($set!==null) {$context = $set;}
 	return $context;
+}
+
+function validate($target = null) {
+	if ($target !== null && $target instanceof Validatable) {
+		return $target->validate();
+	}
+
+	return new spitfire\validation\Validator();
 }
