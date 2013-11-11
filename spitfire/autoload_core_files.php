@@ -55,6 +55,7 @@ AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface', 
 AutoLoad::registerClass('Model',                                                $cur_dir.'/db/databaseRecord.php');
 
 AutoLoad::registerClass('Validatable',                                          $cur_dir.'/validatable.php');
+AutoLoad::registerClass('ValidationException',                                  $cur_dir.'/validation/ValidationException.php');
 AutoLoad::registerClass('Schema',                                               $cur_dir.'/model/model.php');
 AutoLoad::registerClass('OTFModel',                                             $cur_dir.'/model/onthefly.php');
 AutoLoad::registerClass('spitfire\model\Field',                                 $cur_dir.'/model/field.php');

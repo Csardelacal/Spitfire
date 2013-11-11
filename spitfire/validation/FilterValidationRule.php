@@ -20,13 +20,11 @@ class FilterValidationRule implements ValidationRule
 		$this->extendedMessage = $extendedMessage;
 	}
 	
-	public function test($value, $source = null) {
-		$errors = Array();
+	public function test($value, &$source = null) {
 		if (!filter_var($value, $this->filter)) {
-			$errors[] = new ValidationError($this->message, $this->extendedMessage, $source);
+			return new ValidationError($this->message, $this->extendedMessage, $source);
 		}
-		
-		return new ValidationResult($errors);
+		return false;
 	}
 
 }
