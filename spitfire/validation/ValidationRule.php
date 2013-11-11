@@ -2,5 +2,5 @@
 
 interface ValidationRule
 {
-	function test($value, $source = null);
+	function test($value, &$source = null);
 }

@@ -12,13 +12,11 @@ class MaxLengthValidationRule implements ValidationRule
 		$this->extendedMessage = $extendedMessage;
 	}
 	
-	public function test($value, $source = null) {
-		$errors = Array();
+	public function test($value, &$source = null) {
 		if (strlen($value) > $this->length) {
-			$errors[] = new ValidationError($this->message, $this->extendedMessage, $source);
+			return new ValidationError($this->message, $this->extendedMessage, $source);
 		}
-		
-		return new ValidationResult($errors);
+		return false;
 	}
 
 }
