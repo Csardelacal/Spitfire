@@ -14,7 +14,12 @@ use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\EnumField;
 use spitfire\io\beans\BooleanField;
 
+use spitfire\io\PostTarget;
+use spitfire\validation\Validatable;
+use spitfire\validation\ValidationResult;
+
 use spitfire\io\renderers\RenderableForm;
+use spitfire\io\renderers\RenderableFieldGroup;
 
 /**
  * A Bean is the equivalent to a Model for users. Instead of generating SQL and
@@ -24,7 +29,7 @@ use spitfire\io\renderers\RenderableForm;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class CoffeeBean extends Validatable implements RenderableForm
+abstract class CoffeeBean extends PostTarget implements RenderableForm, RenderableFieldGroup, Validatable
 {
 	
 	const STATUS_SUBMITTED_OK  = 2;
@@ -35,7 +40,6 @@ abstract class CoffeeBean extends Validatable implements RenderableForm
 	private $record;
 	private $parent;
 	private $table;
-	private $postdata = null;
 	private $session  = null;
 	
 	public $name;
@@ -233,18 +237,12 @@ abstract class CoffeeBean extends Validatable implements RenderableForm
 		return '';
 	}
 	
-	/**
-	 * Check if the contents of this bean are valid.
-	 * 
-	 * @param mixed $data Is ignored
-	 * @return boolean
-	 */
 	public function validate($data = null) {
+		$errors = Array();
 		foreach ($this->fields as $field => $content) {
-			if (!($content instanceof ChildBean))
-			$data[$field] = $content->getValue(); 
+			$errors[] = $field->validate();
 		}
-		return parent::validate($data);
+		return new ValidationResult($errors);
 	}
 	
 	public function getXSSToken() {
