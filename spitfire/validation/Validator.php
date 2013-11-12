@@ -104,16 +104,28 @@ class Validator
 	 * @throws \ValidationException If the validation is not correct.
 	 */
 	public function test($value, &$src = null) {
-		if ($value instanceof Validatable) {return $value->validate();}
+		if ($value instanceof Validatable) {$result = $value->validate();}
+		else { $result = $this->iterateRules($value, $src);}
 		
+		if ($result instanceof ValidationResult && $result->success()) { return $result; }
+		elseif ($result instanceof ValidationError ) { throw self::makeException()->setResult(new ValidationResult(Array($result))); }
+		else { throw self::makeException()->setResult($result);};
+	}
+	
+	/**
+	 * Loops throught the list of rules this validator has testing if all of them 
+	 * are satisfied by the value.
+	 * 
+	 * @param mixed $value
+	 * @param mixed $src
+	 * @return \spitfire\validation\ValidationResult
+	 */
+	private function iterateRules($value, &$src) {
 		$errors = Array();
 		foreach ($this->rules as $rule) {
 			$errors[] = $this->testRule($rule, $value, $src);
 		}
-		
-		$result = new ValidationResult(array_filter($errors));
-		if ($result->success()) { return $result; }
-		else { throw self::makeException()->setResult($result);};
+		return new ValidationResult(array_filter($errors));
 	}
 	
 	/**
