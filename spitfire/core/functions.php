@@ -6,6 +6,7 @@ use spitfire\Context;
 use spitfire\locales\langInfo;
 use spitfire\storage\database\DB;
 use spitfire\validation\Validatable;
+use spitfire\validation\Validator;
 
 function spitfire() {
 	static $sf;
@@ -161,5 +162,5 @@ function validate($target = null) {
 		return $target->validate();
 	}
 
-	return new spitfire\validation\Validator();
+	return new Validator();
 }
