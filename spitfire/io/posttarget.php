@@ -1,6 +1,6 @@
 <?php namespace spitfire\io;
 
-class PostTarget
+abstract class PostTarget
 {
 	
 	private $postData;
@@ -21,6 +21,6 @@ class PostTarget
 		}
 	}
 	
-	public function getPostTargetFor($name);
+	abstract public function getPostTargetFor($name);
 	
 }

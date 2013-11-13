@@ -13,7 +13,9 @@ use spitfire\io\beans\ManyToManyField;
 use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\EnumField;
 use spitfire\io\beans\BooleanField;
+use spitfire\io\beans\UnSubmittedException;
 
+use spitfire\io\XSSToken;
 use spitfire\io\PostTarget;
 use spitfire\validation\Validatable;
 use spitfire\validation\ValidationResult;
@@ -32,15 +34,11 @@ use spitfire\io\renderers\RenderableFieldGroup;
 abstract class CoffeeBean extends PostTarget implements RenderableForm, RenderableFieldGroup, Validatable
 {
 	
-	const STATUS_SUBMITTED_OK  = 2;
-	const STATUS_SUBMITTED_ERR = 1;
-	const STATUS_UNSUBMITTED   = 0;
-	
 	private $fields = Array();
 	private $record;
 	private $parent;
 	private $table;
-	private $session  = null;
+	private $xss;
 	
 	public $name;
 	public $model;
@@ -53,6 +51,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	 */
 	public final function __construct(Table$table = null) {
 		$this->table = $table;
+		$this->xss   = new XSSToken();
 		$this->definitions();
 	}
 	
@@ -64,46 +63,47 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 
 	/**
 	 * This function informs you about the status of the bean. This status
-	 * can take three different values.
-	 * <ul>
-	 * <li>STATUS_SUBMITTED_OK: If the bean did receive data and it is valid.</li>
-	 * <li>STATUS_SUBMITTED_ERR: If the data was received but not valid</li>
-	 * <li>STATUS_UNSUBMITTED: If the data wasn't received at all</li>
-	 * </ul>
+	 * can take three different values, the bean returns a value that is considered
+	 * safe or the bean throws one of two possible exceptions (validation or 
+	 * unsubmitted) allowing you to react accordingly.
 	 * 
 	 * This function is meant to aid you taking the decision whether the bean
-	 * should display a form or store the data. To do so you can compare the
-	 * values or compare status to be less (&lt;) than OK.
+	 * should display a form or store the data.
 	 * 
-	 * @return int Status code of the submission
+	 * @throws ValidationException|UnSubmittedException If the bean cannot be stored
+	 * @return ValidationResult In case it successfully stored the data
 	 */
-	public function getStatus() {
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-			if ($_POST['_XSS_'] != $this->getXSSToken())
-				throw new publicException('XSS Attack', 403);
+	public function validate() {
+		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
 			
-			if ($this->validate()) {
-				return self::STATUS_SUBMITTED_OK;
-			} else {
-				return self::STATUS_SUBMITTED_ERR;
-			}
+			$xss = filter_input(INPUT_POST, '_XSS_') !== $this->xss->getValue();
+			if ($xss) { throw new publicException('XSS Attack', 403); }
+			
+			$errors = Array();
+			foreach($this->fields as $field) {$errors[] = $field->validate();}
+			return new ValidationResult($errors);
 		}
-		else {
-			return self::STATUS_UNSUBMITTED;
-		}
+		else { throw new UnSubmittedException(); }
 	}
 	
-	public function updateDBRecord() {
+	/**
+	 * Updates the data stored in the current record (Model) so you can use it or 
+	 * write it to the database. In case the record has additional validation 
+	 * methods you will have to run those first. 
+	 * 
+	 * @return \Model
+	 */
+	public function updateDBRecord($record = false) {
+		if ($record === false) { $record = $this->record; }
 		
-		$record = $this->record;
-		
-		if ($this->table) {
+		if ($this->table && $record) {
 			$fields = $this->fields;
 			foreach ($fields as $field) {
 				$value = $field->getValue();
 				$record->{$field->getFieldName()} = $value;
 			}
 		}
+		return $record;
 	}
 	
 	public function setDBRecord($record) {
@@ -210,21 +210,6 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		return $this->getName();
 	}
 	
-	public function setPostData($postdata = null) {
-		$this->postdata = $postdata;
-	}
-	
-	public function getPostData() {
-		if ($this->postdata !== null) {
-			return $this->postdata;
-		} elseif ($this->parent !== null) {
-			$pd = $this->parent->getRequestValue();
-			return $pd[$this->getName()];
-		} else {
-			return $_POST[$this->getName()];
-		}
-	}
-	
 	public function getEnforcedRenderer() {
 		return null;
 	}
@@ -237,35 +222,29 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		return '';
 	}
 	
-	public function validate($data = null) {
-		$errors = Array();
-		foreach ($this->fields as $field => $content) {
-			$errors[] = $field->validate();
-		}
-		return new ValidationResult($errors);
+	/**
+	 * Returns the field that handles a certain post handle. This allows you to 
+	 * quickly cascade data down into the fields where it belongs.
+	 * 
+	 * @param string $name
+	 * @return Field That contains the said target
+	 */
+	public function getPostTargetFor($name) {
+		return $this->getField($name);
 	}
 	
-	public function getXSSToken() {
-		if ($this->session === null) $this->session = new session();
-		
-		$session = $this->session;
-		/* @var $session session*/
-		if (false == $xss_token = $session->get('_XSS_')) {
-			$xss_token = base64_encode(rand());
-			$session->set('_XSS_', $xss_token);
-		}
-		
-		return $xss_token;
+	/**
+	 * Returns the value that this Bean would hold in case it was stored. In order
+	 * to keep the originally submitted data safe and avoid wrong data being wrongly
+	 * written into the system it clones the record before altering it's data.
+	 * 
+	 * @return \Model
+	 */
+	public function getValue() {
+		$record = clone $this->record;
+		$this->updateDBRecord($record);
+		return $record;
 	}
-	
-	public function __set($name, $field) {
-		if ($field instanceof Field) {
-			$this->fields[$name] = $field;
-			return;
-		}
-		throw new privateException("Invalid data");
-	}
-
 	
 	/**
 	 * Returns an instance of a required bean.
