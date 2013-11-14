@@ -48,7 +48,7 @@ class ChildBean extends Field
 			if (!count(array_filter($post))) continue;
 			
 			$table = $this->getField()->getTarget()->getTable();
-			$child = $table->getBean(true);
+			$child = $table->getBean();
 			
 			if (substr($pk, 0, 5) == '_new_')
 				$r = $table->newRecord();

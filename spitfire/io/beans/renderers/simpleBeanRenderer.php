@@ -6,7 +6,6 @@ use \CoffeeBean;
 use spitfire\io\html\HTMLTable;
 use spitfire\io\html\HTMLTableRow;
 use spitfire\io\html\HTMLForm;
-use spitfire\io\html\HTMLInput;
 
 class SimpleBeanRenderer extends Renderer
 {
@@ -15,8 +14,6 @@ class SimpleBeanRenderer extends Renderer
 		$form = new HTMLForm($this->getFormAction($bean));
 		$fields = $bean->getFields();
 		$renderer = new SimpleFieldRenderer();
-		
-		$form->addChild(new HTMLInput('hidden', '_XSS_', $bean->getXSSToken()));
 		
 		foreach ($fields as $field) {
 			if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_FORM) {

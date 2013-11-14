@@ -107,8 +107,9 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 	
 	public function setDBRecord($record) {
-		if ($record instanceof \Model || is_null($record))
-		$this->record = $record;
+		if ($record instanceof \Model || is_null($record)) {
+			$this->record = $record;
+		}
 	}
 	
 	/**
@@ -124,10 +125,8 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	/**
 	 * Creates a new field for the bean.
 	 * 
-	 * @param string $instanceof
-	 * @param string $name
+	 * @param model\Field $field
 	 * @param string $caption
-	 * @param string $method
 	 * @return spitfire\io\beans\Field
 	 */
 	public function field($field, $caption) {
@@ -169,7 +168,9 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 	
 	public function getFields() {
-		return $this->fields;
+		$fields = $this->fields;
+		if (!$this->parent) { $fields[] = $this->xss; }
+		return $fields;
 	}
 	
 	public function getField($name) {
@@ -207,6 +208,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 	
 	public function getPostId() {
+		if ($this->parent) { return $this->parent->getPostId() . "[{$this->name}]";}
 		return $this->getName();
 	}
 	
