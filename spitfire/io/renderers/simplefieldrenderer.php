@@ -15,6 +15,7 @@ class SimpleFieldRenderer {
 		if ($field instanceof RenderableFieldRTF)      { $type = 'RTF'; }
 		if ($field instanceof RenderableFieldString)   { $type = 'String'; }
 		if ($field instanceof RenderableFieldText)     { $type = 'Text'; }
+		if ($field instanceof RenderableFieldHidden)   { $type = 'Hidden'; }
 		
 		$method = 'renderForm' . $type . ($array?'Array':'');
 		
@@ -22,7 +23,7 @@ class SimpleFieldRenderer {
 			throw new \privateException('Renderer does not support this kind of field');
 		}
 		
-		return $this->method($field);
+		return $this->$method($field);
 	}
 	
 	public function renderList($field) {

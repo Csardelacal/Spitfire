@@ -4,6 +4,7 @@ namespace spitfire\io\beans;
 
 use CoffeeBean;
 use privateException;
+use spitfire\io\PostTarget;
 
 /**
  * A bean field is an object that allows the bean to retrieve the data it needs
@@ -15,7 +16,7 @@ use privateException;
  * @since  0.1
  * @last-revision 2013-07-01
  */
-abstract class Field
+abstract class Field extends PostTarget implements \spitfire\validation\Validatable
 {
 	/**
 	 * The bean this field currently belongs to. This is used by the Field to 
@@ -133,11 +134,14 @@ abstract class Field
 	}
 	
 	public function getRequestValue() {
-		$postdata = $this->getBean()->getPostData();
-		$name = ($this->name)? $this->name : $this->getField()->getName();
+		$postdata = $this->getPostData();
 		
-		if (isset($postdata[$name])) return $postdata[$name];
-		else throw new privateException(spitfire()->log ('Field ' . $this->getName() . ' was not sent with request'));
+		if ($this->issetPostData()) {
+			return $postdata;
+		}
+		else {
+			throw new privateException(spitfire()->log ('Field ' . $this->getName() . ' was not sent with request'));
+		}
 	}
 	
 	abstract public function getDefaultValue();
@@ -149,6 +153,10 @@ abstract class Field
 	
 	public function getVisibility() {
 		return $this->visibility;
+	}
+	
+	public function validate() {
+		//TODO: Send this task over to the DB
 	}
 	
 	public function __toString() {

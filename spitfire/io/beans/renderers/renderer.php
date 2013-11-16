@@ -4,6 +4,9 @@ namespace spitfire\io\beans\renderers;
 
 use CoffeeBean;
 
+/**
+ * @deprecated since version 0.1
+ */
 abstract class Renderer
 {
 	

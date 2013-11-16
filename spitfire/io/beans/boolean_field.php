@@ -3,22 +3,32 @@
 namespace spitfire\io\beans;
 
 use \privateException;
+use spitfire\io\renderers\RenderableFieldBoolean;
 
-class BooleanField extends BasicField 
+class BooleanField extends BasicField implements RenderableFieldBoolean
 {
 	
 	public function getRequestValue() {
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') throw new privateException(spitfire()->Log("Not POSTed"));
+		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') !== 'POST') {throw new privateException(spitfire()->Log("Not POSTed"));}
 		
 		try {
 			parent::getRequestValue();
-			spitfire()->Log("Boolean true");
 			return true;
-		}
-		catch(privateException $e) {
-			spitfire()->Log("Boolean false");
+		} catch(privateException $e) {
 			return false;
 		}
 	}
-	
+
+	public function getEnforcedRenderer() {
+		return null;
+	}
+
+	public function getPostTargetFor($name) {
+		return null;
+	}
+
+	public function validate() {
+		//TODO: Validation should be handled by the DB fields
+	}
+
 }

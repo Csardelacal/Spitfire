@@ -16,7 +16,7 @@ class SimpleBeanRenderer extends Renderer
 		$renderer = new SimpleFieldRenderer();
 		
 		foreach ($fields as $field) {
-			if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_FORM) {
+			if ($field->getVisibility() & CoffeeBean::VISIBILITY_FORM) {
 				$form->addChild($renderer->renderForm($field));
 			}
 		}
@@ -30,7 +30,7 @@ class SimpleBeanRenderer extends Renderer
 		//headers
 		$row = new HTMLTableRow();
 		foreach ($bean->getFields() as $field) {
-			if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
+			if ($field->getVisibility() & CoffeeBean::VISIBILITY_LIST)
 			$row->putCell($field->getCaption());
 		}
 		$row->putCell('Actions');
@@ -39,7 +39,7 @@ class SimpleBeanRenderer extends Renderer
 		foreach($records as $record) {
 			$row = new HTMLTableRow();
 			foreach ($bean->getFields() as $field) {
-				if ($field->getVisibility() == CoffeeBean::VISIBILITY_ALL || $field->getVisibility() == CoffeeBean::VISIBILITY_LIST)
+				if ($field->getVisibility() & CoffeeBean::VISIBILITY_LIST)
 				$row->putCell($renderer->renderList ($record->{$field->getModelField()}) );
 			}
 			//Actions

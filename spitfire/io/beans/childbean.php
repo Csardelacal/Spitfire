@@ -2,6 +2,7 @@
 
 namespace spitfire\io\beans;
 
+use spitfire\io\renderers\RenderableFieldGroup;
 use \CoffeeBean;
 
 /**
@@ -15,7 +16,7 @@ use \CoffeeBean;
  * @author César de la Cal <cesar@magic3w.com>
  * @since 0.1
  */
-class ChildBean extends Field 
+class ChildBean extends Field implements RenderableFieldGroup
 {
 	
 	/**
@@ -29,6 +30,14 @@ class ChildBean extends Field
 	private $min_entries = 0;
 	
 	/**
+	 * Contains a list of coffeebeans used to render this thing. They will also be
+	 * responsible for generating and validating the data they receive.
+	 *
+	 * @var \CoffeeBean[]
+	 */
+	private $beans = Array();
+	
+	/**
 	 * Returns the data posted to this childbean. This will be an array containing
 	 * the data sent by the form as arrays.
 	 * 
@@ -37,10 +46,12 @@ class ChildBean extends Field
 	public function getRequestValue() {
 		
 		#Check if the request is done via POST. Otherwise return an empty array.
-		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \privateException("Invalid request method. Requires POST");
+		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') != 'POST') {
+			throw new \privateException("Invalid request method. Requires POST");
+		}
 		
 		#Post will contain an array of subforms for this element.
-		$data    = $this->getBean()->getPostData(); $data = $data[$this->getName()];
+		$data    = $this->getPostData();
 		$_return = Array();
 		
 		#Loop through the passed array and create the subforms to handle the data
@@ -115,5 +126,32 @@ class ChildBean extends Field
 		if ($this->getBean()->getParent()) return CoffeeBean::VISIBILITY_HIDDEN;
 		return CoffeeBean::VISIBILITY_FORM;
 	}
-	
+
+	public function getEnforcedRenderer() {
+		return null;
+	}
+
+	public function getFields() {
+		return $this->beans;
+	}
+
+	public function getPostTargetFor($name) {
+		$table = $this->getField()->getTarget()->getTable();
+		$child = $table->getBean();
+		
+		if (\Strings::startsWith($name, '_new_')) {
+			$r = $table->newRecord();
+		} else {
+			$r = $table->getById($name);
+		}
+		
+		$child->setParent($this);
+		$child->setDBRecord($r);
+		return $this->beans[$name] = $child;
+	}
+
+	public function validate() {
+		//TODO: Add validation from database fields.
+	}
+
 }

@@ -18,4 +18,13 @@ interface RenderableField extends Renderable
 	 * this.
 	 */
 	function getValue();
+	
+	/**
+	 * Returns the expected caption to be rendered to this field. This helps the 
+	 * user knowing what value the field expects. In case you want your field to 
+	 * have no caption for an explicit reason just return null.
+	 * 
+	 * @return string|null
+	 */
+	function getCaption();
 }

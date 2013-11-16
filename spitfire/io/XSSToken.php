@@ -35,7 +35,11 @@ class XSSToken implements RenderableFieldHidden
 	}
 
 	public function getVisibility() {
-		return renderers\RenderableField::VISIBILITY_ALL;
+		return renderers\RenderableField::VISIBILITY_FORM;
+	}
+
+	public function getCaption() {
+		return null;
 	}
 
 }

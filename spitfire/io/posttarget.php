@@ -9,9 +9,13 @@ abstract class PostTarget
 		return $this->postData;
 	}
 	
-	public function setPostData($post) {
-		$this->postData = $post;
+	public function setPostData(&$post) {
+		$this->postData = &$post;
 		$this->propagate();
+	}
+	
+	public function issetPostData() {
+		return isset($this->postData);
 	}
 	
 	private function propagate() {
