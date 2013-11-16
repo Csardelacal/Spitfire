@@ -224,6 +224,10 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		return '';
 	}
 	
+	public function getCaption() {
+		return $this->getName();
+	}
+	
 	/**
 	 * Returns the field that handles a certain post handle. This allows you to 
 	 * quickly cascade data down into the fields where it belongs.

@@ -23,4 +23,9 @@ class BasicField extends Field
 	public function getModelField() {
 		return $this->getFieldName();
 	}
+
+	public function getPostTargetFor($name) {
+		return null;
+	}
+
 }
