@@ -130,12 +130,13 @@ class ChildBean extends Field implements RenderableFieldGroup
 	public function makeFields() {
 		$val = $this->getValue();
 		foreach ($val as $v) {
-			$this->getPostTargetFor(implode(':', $v->getPrimaryData()));
+			$pd = $v->getPrimaryData();
+			if (count(array_filter($pd))) { $this->getPostTargetFor(implode(':', $pd)); }
 		}
 		
-		while (count($this->beans) < $this->getMinimumEntries()) {
+		do {
 			$this->getPostTargetFor('_new_' . count($this->beans));
-		}
+		} while (count($this->beans) < $this->getMinimumEntries());
 	}
 
 	public function getFields() {
@@ -144,6 +145,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 	}
 
 	public function getPostTargetFor($name) {
+		if (isset($this->beans[$name])) { return $this->beans[$name]; }
 		$table = $this->getField()->getTarget()->getTable();
 		$child = $table->getBean();
 		

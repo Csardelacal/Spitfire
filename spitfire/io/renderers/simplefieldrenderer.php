@@ -57,8 +57,8 @@ class SimpleFieldRenderer {
 		return $input;
 	}
 	
-	public function renderFormSelect(RenderableFieldSelect$field, $value = null) {
-		$value   = ($value === null)? $field->getValue() : $value;
+	public function renderFormSelect(RenderableFieldSelect$field, $value = false) {
+		$value   = ($value === false)? $field->getValue() : $value;
 		if ($value instanceof \Model) {$value = implode(':', $value->getPrimaryData());}
 		$select  = new HTMLSelect($field->getPostId(), $value);
 		$label   = new HTMLLabel($select, $field->getCaption());
