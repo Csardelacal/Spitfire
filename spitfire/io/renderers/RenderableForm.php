@@ -21,4 +21,12 @@ interface RenderableForm extends Renderable
 	 * @return RenderableField[] The fields.
 	 */	
 	function getFields();
+	
+	/**
+	 * This function allows a renderable item to enforce a renderer it needs. In case
+	 * you created your own field type (for example for tags) you may need a javascript
+	 * enabled tool that allows users to enter tags the way you planned it, even 
+	 * if they're using the control outside of your planned environment.
+	 */
+	function getEnforcedFormRenderer();
 }

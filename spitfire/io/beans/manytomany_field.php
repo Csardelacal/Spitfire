@@ -3,6 +3,8 @@
 namespace spitfire\io\beans;
 
 use \CoffeeBean;
+use spitfire\io\renderers\RenderableFieldSelect;
+use spitfire\io\renderers\RenderableFieldArray;
 
 /**
  * This class allows a bean to receive data that belongs to this but is handled
@@ -15,7 +17,7 @@ use \CoffeeBean;
  * @author César de la Cal <cesar@magic3w.com>
  * @since 0.1
  */
-class ManyToManyField extends Field 
+class ManyToManyField extends Field implements RenderableFieldSelect, RenderableFieldArray
 {
 	
 	/**
@@ -32,7 +34,7 @@ class ManyToManyField extends Field
 	 * Returns the data posted to this childbean. This will be an array containing
 	 * the data sent by the form as arrays.
 	 * 
-	 * @return mixed[]
+	 * @return Model[]
 	 */
 	public function getRequestValue() {
 		
@@ -40,18 +42,18 @@ class ManyToManyField extends Field
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \privateException("Nothing posted");
 		
 		#Post will contain an array of subforms for this element.
-		$postdata= $this->getBean()->getPostData();
-		$data    = $postdata[$this->getName()];
+		$postdata= $this->getPostData();
 		$_return = Array();
+		$table   = $this->getField()->getTarget()->getTable();
+		
+		if (empty($postdata)) {throw new \privateException("nothing sent");}
 		
 		#Loop through the passed array and create the subforms to handle the data
-		foreach ($data as $pk) {
+		foreach ($postdata as $pk) {
 			
-			$table  = $this->getField()->getTable()->getDb()->table($this->getField()->getTarget());
 			$record = $table->getById($pk);
+			if ($record) { $_return[] = $record; }
 			
-			if ($record) $_return[] = $record;
-
 		}
 
 		return $_return;
@@ -102,5 +104,45 @@ class ManyToManyField extends Field
 	public function getVisibility() {
 		return CoffeeBean::VISIBILITY_FORM;
 	}
+
+	public function getPostTargetFor($name) {
+		return null;
+	}
+
+	public function getEnforcedFieldRenderer() {
+		return null;
+	}
 	
+	
+	public function getOptions() {
+		$opts = $this->getField()->getTarget()->getTable()->getAll()->fetchAll();
+		$_return = Array();
+		
+		foreach ($opts as $opt) {$_return[implode(':', $opt->getPrimaryData())] = strval($opt);}
+		
+		return $_return;
+	}
+	
+	public function getPartial($str) {
+		return $this->getField()->getTable()->get(null, $str)->fetchAll();
+	}
+
+	public function getSelectCaption($id) {
+		return $this->getField()->getTarget()->getTable()->getById($id);
+	}
+
+	public function getSelectId($caption) {
+		$values = $this->getValue();
+		
+		foreach ($values as $value) {
+			if (strval($value) === $caption) {
+				return implode(':', $value->getPrimaryData());
+			}
+		}
+	}
+	
+	public function getPostId() {
+		return parent::getPostId() . '[]';
+	}
+
 }

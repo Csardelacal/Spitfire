@@ -190,6 +190,10 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		if ($this->name) return $this->name;
 		else return substr( get_class ($this), 0, - strlen('Bean'));
 	}
+	
+	public function setName($name) {
+		$this->name = $name;
+	} 
 
 	public function makeForm($renderer) {
 		return $renderer->renderForm($this);
@@ -208,11 +212,15 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 	
 	public function getPostId() {
-		if ($this->parent) { return $this->parent->getPostId() . "[{$this->name}]";}
+		if ($this->parent) { return $this->parent->getPostId() . "[{$this->getName()}]";}
 		return $this->getName();
 	}
 	
-	public function getEnforcedRenderer() {
+	public function getEnforcedFormRenderer() {
+		return null;
+	}
+	
+	public function getEnforcedFieldRenderer() {
 		return null;
 	}
 	
@@ -250,6 +258,10 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		$record = clone $this->record;
 		$this->updateDBRecord($record);
 		return $record;
+	}
+	
+	public function readPost() {
+		$this->setPostData($_POST[$this->getName()]);
 	}
 	
 	/**

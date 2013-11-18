@@ -261,10 +261,6 @@ abstract class Table extends Queriable
 		
 		$bean = new $beanName($this);
 		
-		if (isset($_POST[$bean->getName()])) {
-			$bean->setPostData($_POST[$bean->getName()]);
-		}
-		
 		return $bean;
 	}
 	

@@ -1,8 +1,8 @@
-<?php
+<?php namespace spitfire\io\beans;
 
-namespace spitfire\io\beans;
+use spitfire\io\renderers\RenderableFieldText;
 
-class LongTextField extends BasicField 
+class LongTextField extends BasicField implements RenderableFieldText
 {
 	
 	
@@ -12,4 +12,13 @@ class LongTextField extends BasicField
 			$id, $this->getCaption(), $id, $this->getName(), $this->getValue() 
 			);
 	}
+
+	public function getEnforcedFieldRenderer() {
+		return null;
+	}
+
+	public function getMaxLength() {
+		return null;
+	}
+
 }

@@ -9,8 +9,8 @@ abstract class PostTarget
 		return $this->postData;
 	}
 	
-	public function setPostData(&$post) {
-		$this->postData = &$post;
+	public function setPostData($post) {
+		$this->postData = $post;
 		$this->propagate();
 	}
 	
@@ -19,9 +19,10 @@ abstract class PostTarget
 	}
 	
 	private function propagate() {
+		if (!is_array($this->postData)) { return; }
 		foreach ($this->postData as $key => $value) {
 			$target = $this->getPostTargetFor($key);
-			$target->setPostData($value);
+			if ($target !== null) { $target->setPostData($value); }
 		}
 	}
 	

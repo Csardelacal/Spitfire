@@ -1,13 +1,14 @@
 <?php namespace spitfire\io;
 
 use spitfire\io\renderers\RenderableFieldHidden;
+use session;
 
 class XSSToken implements RenderableFieldHidden
 {
 	
 	private $session;
 	
-	public function getEnforcedRenderer() {
+	public function getEnforcedFieldRenderer() {
 		return null;
 	}
 

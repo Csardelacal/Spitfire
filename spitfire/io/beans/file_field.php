@@ -1,11 +1,9 @@
-<?php
+<?php namespace spitfire\io\beans;
 
-namespace spitfire\io\beans;
+use spitfire\io\renderers\RenderableFieldFile;
 
-class FileField extends BasicField 
+class FileField extends BasicField implements RenderableFieldFile
 {
-	
-	private $upload = null;
 	
 	public function getRequestValue() {
 		$file = parent::getRequestValue();
@@ -20,5 +18,17 @@ class FileField extends BasicField
 			$id, $this->getCaption(), $this->type, $id, $this->getName(), __(end(explode('/', $this->getValue()))) 
 			);
 	}
-	
+
+	public function getEnforcedFieldRenderer() {
+		return null;
+	}
+
+	public function getMaxFileSize() {
+		return null;
+	}
+
+	public function getSupportedFileFormats() {
+		return null;
+	}
+
 }
