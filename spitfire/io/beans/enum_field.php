@@ -9,7 +9,10 @@ class EnumField extends BasicField implements RenderableFieldSelect
 	}
 
 	public function getOptions() {
-		return $this->getField()->getOptions();
+		$options = $this->getField()->getOptions();
+		$_return = Array();
+		foreach($options as $option) {$_return[$option] = $option;}
+		return $_return;
 	}
 
 	public function getPartial($str) {
