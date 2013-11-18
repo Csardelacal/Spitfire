@@ -70,6 +70,16 @@ class ManyToManyAdapter implements ArrayAccess, Iterator
 		}
 	}
 	
+	/**
+	 * Returns the field that contains this data. This allows to query the table or 
+	 * target with ease.
+	 * 
+	 * @return \ManyToManyField
+	 */
+	public function getField() {
+		return $this->field;
+	}
+	
 	public function toArray() {
 		if ($this->children) return $this->children;
 		$this->children = $this->getQuery()->fetchAll();

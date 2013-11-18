@@ -48,14 +48,6 @@ Interface Renderable
 	function getPostId();
 	
 	/**
-	 * This function allows a renderable item to enforce a renderer it needs. In case
-	 * you created your own field type (for eaxmple for tags) you may need a javascript
-	 * enabled tool that allows users to enter tags the way you planned it, even 
-	 * if they're using the control outside of your planned environment.
-	 */
-	function getEnforcedRenderer();
-	
-	/**
 	 * Defines the visibility of this renderable object. The scopes are either 
 	 * form or list. Which indicate whether the renderable 'agrees' to be 
 	 * rendered into any of those.

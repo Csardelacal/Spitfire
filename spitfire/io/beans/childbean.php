@@ -112,7 +112,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 		if ( ($record = $this->getBean()->getRecord()) !== null)
 			return $record->{$this->getField()->getName()};
 		else
-			return null;
+			return Array();
 	}
 	
 	/**
@@ -126,12 +126,20 @@ class ChildBean extends Field implements RenderableFieldGroup
 		if ($this->getBean()->getParent()) return CoffeeBean::VISIBILITY_HIDDEN;
 		return CoffeeBean::VISIBILITY_FORM;
 	}
-
-	public function getEnforcedRenderer() {
-		return null;
+	
+	public function makeFields() {
+		$val = $this->getValue();
+		foreach ($val as $v) {
+			$this->getPostTargetFor(implode(':', $v->getPrimaryData()));
+		}
+		
+		while (count($this->beans) < $this->getMinimumEntries()) {
+			$this->getPostTargetFor('_new_' . count($this->beans));
+		}
 	}
 
 	public function getFields() {
+		$this->makeFields();
 		return $this->beans;
 	}
 
@@ -147,11 +155,16 @@ class ChildBean extends Field implements RenderableFieldGroup
 		
 		$child->setParent($this);
 		$child->setDBRecord($r);
+		$child->setName($name);
 		return $this->beans[$name] = $child;
 	}
 
 	public function validate() {
 		//TODO: Add validation from database fields.
+	}
+
+	public function getEnforcedFieldRenderer() {
+		return null;
 	}
 
 }

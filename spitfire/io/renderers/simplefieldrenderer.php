@@ -1,8 +1,17 @@
 <?php namespace spitfire\io\renderers;
 
+use spitfire\io\html\HTMLTextArea;
+use spitfire\io\html\HTMLLabel;
+use spitfire\io\html\HTMLDiv;
+use spitfire\io\html\HTMLInput;
+use spitfire\io\html\HTMLSelect;
+use spitfire\io\html\HTMLOption;
+
 class SimpleFieldRenderer {
 	
 	public function renderForm(RenderableField$field) {
+		
+		if (!($field->getVisibility() & Renderable::VISIBILITY_FORM)) { return; }
 		
 		$array = $field instanceof RenderableFieldArray;
 		$type  = null;
@@ -16,11 +25,12 @@ class SimpleFieldRenderer {
 		if ($field instanceof RenderableFieldString)   { $type = 'String'; }
 		if ($field instanceof RenderableFieldText)     { $type = 'Text'; }
 		if ($field instanceof RenderableFieldHidden)   { $type = 'Hidden'; }
+		if ($field instanceof RenderableFieldSelect)   { $type = 'Select'; }
 		
 		$method = 'renderForm' . $type . ($array?'Array':'');
 		
 		if (!method_exists($this, $method) || !$type) {
-			throw new \privateException('Renderer does not support this kind of field');
+			throw new \privateException('Renderer has no method: ' . $method);
 		}
 		
 		return $this->$method($field);
@@ -30,6 +40,76 @@ class SimpleFieldRenderer {
 		return __(strip_tags(strval($field)), 100);
 	}
 	
+	public function renderFormText(RenderableFieldText$field) {
+			$input = new HTMLTextArea('text', $field->getPostId(), $field->getValue());
+			$label = new HTMLLabel($input, $field->getCaption());
+			return new HTMLDiv($label, $input, Array('class' => 'field'));
+	}
+	
+	public function renderFormString(RenderableFieldString$field) {
+		$input = new HTMLInput('text', $field->getPostId(), $field->getValue());
+		$label = new HTMLLabel($input, $field->getCaption());
+		return new HTMLDiv($label, $input, Array('class' => 'field'));
+	}
+	
+	public function renderFormHidden(RenderableFieldHidden$field) {
+		$input = new HTMLInput('hidden', $field->getPostId(), $field->getValue());
+		return $input;
+	}
+	
+	public function renderFormSelect(RenderableFieldSelect$field, $value = null) {
+		$value   = ($value === null)? $field->getValue() : $value;
+		if ($value instanceof \Model) {$value = implode(':', $value->getPrimaryData());}
+		$select  = new HTMLSelect($field->getPostId(), $value);
+		$label   = new HTMLLabel($select, $field->getCaption());
+		
+		$select->addChild(new HTMLOption(null, 'Pick'));
+		$options = $field->getOptions();
+		foreach ($options as $value => $caption) {
+			$select->addChild(new HTMLOption($value, $caption));
+		}
+		return new HTMLDiv($label, $select, Array('class' => 'field'));
+	}
+	
+	public function renderFormSelectArray(RenderableFieldSelect$field) {
+		$values = $field->getValue();
+		$html   = new HTMLDiv();
+		foreach ($values as $value) {
+			$html->addChild($this->renderFormSelect($field, $value));
+		}
+		
+		while (count($html->getChildren()) < $field->getMinimumEntries()) {
+			$html->addChild($this->renderFormSelect($field, null));
+		}
+		
+		$html->addChild($this->renderFormSelect($field, null));
+
+		return $html;
+	}
+	
+	public function renderFormFile(RenderableFieldFile$field) {
+		$input = new HTMLInput('file', $field->getPostId(), $field->getValue());
+		$label = new HTMLLabel($input, $field->getCaption());
+		$file  = '<small>' . $field->getValue() . '</small>';
+		return new HTMLDiv($label, $input, $file, Array('class' => 'field'));
+	}
+	
+	public function renderFormGroup(RenderableFieldGroup$field) {
+		$html = new HTMLDiv();
+		$fields = $field->getFields();
+		$html->addChild('<h1>' . $field->getCaption() . '</h1>');
+		foreach ($fields as $f) {
+			$html->addChild($this->renderForm($f));
+		}
+		return $html;
+	}
+	
+	/**
+	 * 
+	 * @deprecated
+	 * @param type $field
+	 * @return \spitfire\io\renderers\HTMLDiv|\spitfire\io\renderers\BooleanField
+	 */
 	public function renderBasicField($field) {
 		if ($field instanceof TextField) {
 			$input = new HTMLInput('text', $field->getPostId(), $field->getValue());

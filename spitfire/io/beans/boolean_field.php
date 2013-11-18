@@ -19,7 +19,7 @@ class BooleanField extends BasicField implements RenderableFieldBoolean
 		}
 	}
 
-	public function getEnforcedRenderer() {
+	public function getEnforcedFieldRenderer() {
 		return null;
 	}
 

@@ -31,10 +31,10 @@ interface RenderableFieldSelect extends RenderableField
 	 * Gets the caption for a certain ID. This is especially useful when the data 
 	 * is fragmented and the value(s) are not in the option list.
 	 */
-	function getCaption($id);
+	function getSelectCaption($id);
 	
 	/**
 	 * Gets the id for a certain caption.
 	 */
-	function getId($caption);
+	function getSelectId($caption);
 }
