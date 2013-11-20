@@ -54,6 +54,11 @@ class ChildBean extends Field implements RenderableFieldGroup
 		$data    = $this->getPostData();
 		$_return = Array();
 		
+		#Test if the postdaa contains anything at all
+		if (!is_array($data) || !count(array_filter($data))) {
+			throw new \privateException("Post was empty");
+		}
+		
 		#Loop through the passed array and create the subforms to handle the data
 		foreach ($data as $pk => $post) {
 			if (!count(array_filter($post))) continue;
@@ -137,6 +142,11 @@ class ChildBean extends Field implements RenderableFieldGroup
 		do {
 			$this->getPostTargetFor('_new_' . count($this->beans));
 		} while (count($this->beans) < $this->getMinimumEntries());
+	}
+	
+	public function clearPostData() {
+		parent::clearPostData();
+		$this->beans = Array();
 	}
 
 	public function getFields() {
