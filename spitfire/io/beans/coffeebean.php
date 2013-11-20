@@ -103,6 +103,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 				$record->{$field->getFieldName()} = $value;
 			}
 		}
+		$this->clearPostData();
 		return $record;
 	}
 	

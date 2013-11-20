@@ -14,6 +14,17 @@ abstract class PostTarget
 		$this->propagate();
 	}
 	
+	public function clearPostData() {
+		if (is_array($this->postData)) {
+			$keys = array_keys($this->postData);
+			foreach ($keys as $post) {
+				$postTarget = $this->getPostTargetFor($post);
+				if ($postTarget !== null) { $postTarget->clearPostData(); }
+			}
+		}
+		$this->postData = null;
+	}
+	
 	public function issetPostData() {
 		return isset($this->postData);
 	}
