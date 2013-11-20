@@ -23,11 +23,11 @@ class MysqlPDORestriction extends Restriction
 			if ($field instanceof \Reference || $field instanceof \ManyToManyField || $field instanceof \ChildrenField) {
 				
 				if ($value instanceof Model) {
-					return implode(' AND ', $value->getQuery()->getRestrictions());
+					$value = $value->getQuery();
 				}
 				
-				elseif ($value instanceof Query) {
-					return implode(' AND ', $value->getRestrictions());
+				if ($value instanceof Query) {
+					return sprintf('(%s)', implode(' AND ', $value->getRestrictions()));
 				}
 				
 				elseif ($value === null) {

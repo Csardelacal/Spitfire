@@ -8,7 +8,7 @@ class MysqlPDOCompositeRestriction extends CompositeRestriction
 {
 	
 	public function __toString() {
-		return implode(' AND ', $this->getSimpleRestrictions());
+		return sprintf('(%s)', implode(' AND ', $this->getSimpleRestrictions()));
 	}
 	
 }
