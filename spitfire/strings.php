@@ -21,7 +21,7 @@ class Strings
 	public static function slug($string) {
 		$str = preg_replace(
 				  /*http://stackoverflow.com/questions/10444885/php-replace-foreign-characters-in-a-string*/
-				  Array('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i','/[^A-Za-z0-9_-]/'), 
+				  Array('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i','/[^A-Za-z0-9_-\s]/'), 
 				  Array('$1',''), 
 				  htmlentities($string, ENT_QUOTES, 'UTF-8'));
 		

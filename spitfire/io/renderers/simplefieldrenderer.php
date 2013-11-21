@@ -104,6 +104,13 @@ class SimpleFieldRenderer {
 		return $html;
 	}
 	
+	public function renderFormDateTime(RenderableFieldDateTime$field) {
+		$input = new \spitfire\io\html\dateTimePicker($field->getValue());
+		$input->setInputName($field->getPostId());
+		$label = new HTMLLabel($input, $field->getCaption());
+		return new HTMLDiv($label, $input, Array('class' => 'field'));
+	}
+	
 	/**
 	 * 
 	 * @deprecated

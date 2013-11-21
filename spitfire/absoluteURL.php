@@ -51,7 +51,7 @@ class absoluteURL extends URL
 			$path[] = $action;
 		}
 		
-		array_merge($path, $context->object);
+		$path = array_merge($path, $context->object);
 		
 		$canonical->setPath($path);
 		$canonical->setExtension($r->getExtension());
