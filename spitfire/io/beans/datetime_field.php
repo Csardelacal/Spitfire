@@ -1,8 +1,8 @@
-<?php
+<?php namespace spitfire\io\beans;
 
-namespace spitfire\io\beans;
+use spitfire\io\renderers\RenderableFieldDateTime;
 
-class DateTimeField extends BasicField 
+class DateTimeField extends BasicField implements RenderableFieldDateTime
 {
 	public function getRequestValue() {
 		$pd = parent::getRequestValue();
@@ -10,4 +10,9 @@ class DateTimeField extends BasicField
 		
 		return date('Y-m-d H:i:s', $ts);
 	}
+
+	public function getEnforcedFieldRenderer() {
+		return null;
+	}
+
 }

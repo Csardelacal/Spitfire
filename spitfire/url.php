@@ -188,23 +188,25 @@ class URL implements ArrayAccess
 	}
 	
 	public static function canonical() {
-		$r = Request::get();
+		$ctx = current_context();
+		$r   = Request::get();
 		$canonical = new self($_GET);
+		if (!$context) throw new privateException("No context for URL generation");
 		
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
 		
-		$path   = $r->getControllerURI();
+		$path   = $ctx->app->getControllerURI();
 		if (count($path) == 1 && reset($path) == $default_controller) {
 			$path = Array();
 		}
 		
-		$action = $r->getAction();
+		$action = $ctx->action;
 		if ($action != $default_action) {
 			$path[] = $action;
 		}
 		
-		array_merge($path, $r->getObject());
+		$path = array_merge($path, $ctx->object);
 		
 		$canonical->setPath($path);
 		$canonical->setExtension($r->getExtension());
