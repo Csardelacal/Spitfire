@@ -16,5 +16,5 @@ Interface RenderableFieldArray extends RenderableField
 	 * 
 	 * @return mixed[]
 	 */
-	function getValue();
+	//This will cause errors in PHP5.3 function getValue();
 }

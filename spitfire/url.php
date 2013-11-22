@@ -118,6 +118,7 @@ class URL implements ArrayAccess
 	 */
 	public function setParam($param, $value) {
 		$this->params[$param] = $value;
+		return $this;
 	}
 	
 	/**

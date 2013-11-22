@@ -20,7 +20,7 @@ interface RenderableForm extends Renderable
 	 * 
 	 * @return RenderableField[] The fields.
 	 */	
-	function getFields();
+	function getFormFields();
 	
 	/**
 	 * This function allows a renderable item to enforce a renderer it needs. In case
