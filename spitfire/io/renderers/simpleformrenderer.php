@@ -12,7 +12,7 @@ class SimpleFormRenderer extends Renderer
 	
 	public function renderForm(RenderableForm$renderable) {
 		$form = new HTMLForm($this->getFormAction($renderable));
-		$fields = $renderable->getFields();
+		$fields = $renderable->getFormFields();
 		$renderer = new SimpleFieldRenderer();
 		
 		foreach ($fields as $field) {
@@ -28,16 +28,16 @@ class SimpleFormRenderer extends Renderer
 		$renderer = new SimpleFieldRenderer();
 		//headers
 		$row = new HTMLTableRow();
-		foreach ($renderable->getFields() as $field) {
+		foreach ($renderable->getFormFields() as $field) {
 			if ($field->getVisibility() & CoffeeBean::VISIBILITY_LIST)
-			$row->putCell($field->getCaption());
+				{$row->putCell($this->stringifyHeader($field));}
 		}
 		$row->putCell('Actions');
 		$table->putRow($row);
 		//Content
 		foreach($records as $record) {
 			$row = new HTMLTableRow();
-			foreach ($renderable->getFields() as $field) {
+			foreach ($renderable->getFormFields() as $field) {
 				if ($field->getVisibility() & CoffeeBean::VISIBILITY_LIST)
 				$row->putCell($renderer->renderList ($record->{$field->getModelField()}) );
 			}
@@ -47,6 +47,10 @@ class SimpleFormRenderer extends Renderer
 			$table->putRow($row);
 		}
 		return $table;
+	}
+	
+	public function stringifyHeader($field) {
+		return $field->getCaption();
 	}
 	
 	public function getListActions($bean, $record) {

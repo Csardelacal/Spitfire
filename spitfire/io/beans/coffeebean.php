@@ -168,9 +168,14 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		}
 	}
 	
-	public function getFields() {
+	public function getFormFields() {
 		$fields = $this->fields;
 		if (!$this->parent) { $fields[] = $this->xss; }
+		return $fields;
+	}
+	
+	public function getFields() {
+		$fields = $this->fields;
 		return $fields;
 	}
 	
