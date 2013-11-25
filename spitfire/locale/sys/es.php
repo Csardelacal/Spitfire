@@ -13,4 +13,7 @@ class Es extends Locale
 	public $weeksago        = Array('Hace menos de una semana', 'Hace una semana', 'Hace %s semanas');
 	public $monthssago      = Array('Hace menos de un mes', 'Hace un mes', 'Hace %s meses');
 	public $yearsago        = Array('Hace menos de un año', 'Hace un año', 'Hace %s años');
+	
+	public $str_too_long    = Array('', 'La cadena debe tener menos de un caracter', 'La cadena debe tener menos de %s caracteres');
+	public $str_too_short   = Array('', 'La cadena debe tener más de un caracter', 'La cadena debe tener más de %s caracteres');
 }

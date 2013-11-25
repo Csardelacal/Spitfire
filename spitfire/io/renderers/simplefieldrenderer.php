@@ -9,7 +9,7 @@ use spitfire\io\html\HTMLOption;
 
 class SimpleFieldRenderer {
 	
-	public function renderForm(RenderableField$field) {
+	public function renderForm(RenderableField$field, $error) {
 		
 		if (!($field->getVisibility() & Renderable::VISIBILITY_FORM)) { return; }
 		
@@ -33,7 +33,7 @@ class SimpleFieldRenderer {
 			throw new \privateException('Renderer has no method: ' . $method);
 		}
 		
-		return $this->$method($field);
+		return $this->$method($field, $error);
 	}
 	
 	public function renderList($field) {
@@ -46,10 +46,20 @@ class SimpleFieldRenderer {
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 	}
 	
-	public function renderFormString(RenderableFieldString$field) {
+	public function renderFormString(RenderableFieldString$field, $error) {
 		$input = new HTMLInput('text', $field->getPostId(), $field->getValue());
 		$label = new HTMLLabel($input, $field->getCaption());
-		return new HTMLDiv($label, $input, Array('class' => 'field'));
+		$errs  = $this->renderError($error);
+		
+		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
+	}
+	
+	public function renderError($error) {
+		if ($error !== null) {
+			$errs  = new HTMLDiv('<ul>' . $error . '</ul>', Array('class' => 'error-output'));
+		} else {$errs = null; }
+		
+		return $errs;
 	}
 	
 	public function renderFormHidden(RenderableFieldHidden$field) {
@@ -104,11 +114,12 @@ class SimpleFieldRenderer {
 		return $html;
 	}
 	
-	public function renderFormDateTime(RenderableFieldDateTime$field) {
+	public function renderFormDateTime(RenderableFieldDateTime$field, $error) {
 		$input = new \spitfire\io\html\dateTimePicker($field->getValue());
 		$input->setInputName($field->getPostId());
 		$label = new HTMLLabel($input, $field->getCaption());
-		return new HTMLDiv($label, $input, Array('class' => 'field'));
+		$errs  = $this->renderError($error);
+		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
 	}
 	
 	/**

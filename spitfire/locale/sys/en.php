@@ -14,4 +14,7 @@ class En extends Locale
 	public $weeksago        = Array('Less than a week ago', 'One week ago', '%s weeks ago');
 	public $monthssago      = Array('Less than a month ago', 'One month ago', '%s months ago');
 	public $yearsago        = Array('Less than a year ago', 'One year ago', '%s years ago');
+	
+	public $str_too_long    = Array('', 'String should be shorter than one character', 'String should be shorter than %s characters');
+	public $str_too_short   = Array('', 'String should be longer than one character', 'String should be longer than %s characters');
 }
