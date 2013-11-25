@@ -89,7 +89,7 @@ class MysqlPDOQuery extends Query
 		return new MysqlPDOQueryTable($this, $table);
 	}
 
-	public function compositeRestrictionInstance(\spitfire\model\Field $field, $value, $operator) {
+	public function compositeRestrictionInstance(\spitfire\model\Field $field = null, $value, $operator) {
 		return new MysqlPDOCompositeRestriction($this, $field, $value, $operator);
 	}
 
