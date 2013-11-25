@@ -125,10 +125,10 @@ abstract class Field
 	 * @return spitfire\storage\database\DBField[]
 	 */
 	public function getPhysical() {
-		if ($this->physical === null) $this->physical = $this->makePhysical();
+		if ($this->physical === null) { $this->physical = $this->makePhysical(); }
 		
-		if (is_array($this->physical)) return $this->physical;
-		else return Array($this->physical);
+		if (is_array($this->physical)) { return $this->physical; }
+		else { return Array($this->physical); }
 	}
 	
 	/**
@@ -281,6 +281,10 @@ abstract class Field
 	 */
 	public function isIndexed() {
 		return ($this->primary || $this->unique);
+	}
+	
+	public function validate($value) {
+		return new \spitfire\validation\ValidationResult();
 	}
 	
 	/**

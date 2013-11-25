@@ -5,6 +5,7 @@ namespace spitfire\io\beans;
 use CoffeeBean;
 use privateException;
 use spitfire\io\PostTarget;
+use spitfire\validation\ValidationError;
 
 /**
  * A bean field is an object that allows the bean to retrieve the data it needs
@@ -156,7 +157,13 @@ abstract class Field extends PostTarget implements \spitfire\validation\Validata
 	}
 	
 	public function validate() {
-		//TODO: Send this task over to the DB
+		$res = $this->field->validate($this->getValue());
+		
+		if ($res instanceof ValidationError) {
+			$res->setSrc($this);
+		}
+		
+		return $res;
 	}
 	
 	public function __toString() {

@@ -161,5 +161,6 @@ class ValidationError
 		$_return.= ($this->extendedMessage)? $this->extendedMessage : '';
 		$_return.= ($this->subErrors)? '<ul>' . implode('', $this->subErrors) . '</ul>' : '';
 		$_return.= '</li>';
+		return $_return;
 	}
 }

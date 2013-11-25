@@ -21,7 +21,12 @@ class ValidationResult
 	 * @param ValidationError[] $errors
 	 */
 	public function __construct($errors = Array()) {
-		$this->errors = array_filter($errors);
+		$errs= Array();
+		foreach ($errors as $error) {
+			if ($error instanceof ValidationResult) $errs = array_merge ($errs, $error->getErrors());
+			else {$errs[] = $error;}
+		}
+		$this->errors = array_filter($errs);
 	}
 	
 	/**
@@ -32,6 +37,14 @@ class ValidationResult
 	 */
 	public function success() {
 		return empty($this->errors);
+	}
+	
+	/**
+	 * Returns the set of errors this validation generated. This allows testing where
+	 * the errors generated and print them to the user.
+	 */
+	public function getErrors() {
+		return $this->errors;
 	}
 	
 	public function __toString() {

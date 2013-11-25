@@ -10,17 +10,26 @@ use spitfire\io\html\HTMLForm;
 class SimpleFormRenderer extends Renderer
 {
 	
-	public function renderForm(RenderableForm$renderable) {
+	public function renderForm(RenderableForm$renderable, $errors = Array()) {
 		$form = new HTMLForm($this->getFormAction($renderable));
 		$fields = $renderable->getFormFields();
 		$renderer = new SimpleFieldRenderer();
 		
 		foreach ($fields as $field) {
 			if ($field->getVisibility() & CoffeeBean::VISIBILITY_FORM) {
-				$form->addChild($renderer->renderForm($field));
+				$form->addChild($renderer->renderForm($field, $this->getErrorsFor($field, $errors)));
 			}
 		}
 		return $form;
+	}
+	
+	public function getErrorsFor($field, $errors) {
+		foreach ($errors as $e) {
+			if ($e->getSrc() === $field) {
+				return $e;
+			}
+		}
+		return null;
 	}
 
 	public function renderList(RenderableForm$renderable, $records) {

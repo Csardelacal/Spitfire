@@ -159,7 +159,8 @@ function current_context(Context$set = null) {
 
 function validate($target = null) {
 	if ($target !== null && $target instanceof Validatable) {
-		return $target->validate();
+		$v = new Validator();
+		return $v->test($target);
 	}
 
 	return new Validator();

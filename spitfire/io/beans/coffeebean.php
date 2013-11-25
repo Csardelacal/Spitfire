@@ -201,8 +201,8 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		$this->name = $name;
 	} 
 
-	public function makeForm($renderer) {
-		return $renderer->renderForm($this);
+	public function makeForm($renderer, $errors = Array()) {
+		return $renderer->renderForm($this, $errors);
 	}
 	
 	public function makeList($renderer, $records) {
