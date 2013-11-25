@@ -22,6 +22,7 @@ class MysqlPDOJoin
 			$restrictions = $this->restriction->getConnectingRestrictions();
 			$_return      = '';
 			
+			if ($restrictions === null) {return '';}
 
 			foreach ($restrictions as $simple_restrictions) {
 				

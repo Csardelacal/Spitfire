@@ -53,8 +53,6 @@ abstract class Query
 			
 			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
 				$field = $fieldname;
-			if ($field == null)
-				throw new privateException("No field '$fieldname'");
 			
 			$restriction = $this->compositeRestrictionInstance($field, $value, $operator);
 		}
@@ -188,7 +186,7 @@ abstract class Query
 		foreach ($this->restrictions as $restriction) {
 			if ($restriction instanceof CompositeRestriction) {
 				$_return[] = $restriction;
-				if ($restriction->getValue() !== null) {
+				if ($restriction->getValue() instanceof Query) {
 					$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
 				}
 			} 
@@ -262,7 +260,7 @@ abstract class Query
 	
 	public abstract function execute($fields = null);
 	public abstract function restrictionInstance(QueryField$field, $value, $operator);
-	public abstract function compositeRestrictionInstance(Field$field, $value, $operator);
+	public abstract function compositeRestrictionInstance(Field$field = null, $value, $operator);
 	
 	/**
 	 * Creates a new instance of a restriction group for this query. The instance

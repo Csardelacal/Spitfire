@@ -18,7 +18,7 @@ class CompositeRestriction
 	private $value;
 	private $operator;
 	
-	public function __construct(Query$query, Field$field, $value, $operator = Restriction::EQUAL_OPERATOR) {
+	public function __construct(Query$query, Field$field = null, $value = null, $operator = Restriction::EQUAL_OPERATOR) {
 		$this->query = $query;
 		$this->field = $field;
 		$this->value = $value;
@@ -69,6 +69,20 @@ class CompositeRestriction
 	}
 	
 	public function getSimpleRestrictions() {
+		if ($this->field === null) {
+			$table = $this->getQuery()->getTable();
+			$fields = $table->getFields();
+			$restrictions = $this->query->restrictionGroupInstance();
+			
+			foreach ($fields as $field) {
+				if (!$field->getLogicalField() instanceof \Reference) {
+					$queryfield = $this->getQuery()->queryFieldInstance($field);
+					$restrictions->addRestriction($field, $this->getValue(), $this->operator);
+				}
+			}
+			return Array($restrictions);
+		}
+		
 		if ($this->value === null) {
 			$restrictions = Array();
 			foreach ($fields = $this->getField()->getPhysical() as $field) {
@@ -79,8 +93,7 @@ class CompositeRestriction
 			}
 			return $restrictions;
 		}
-			
-			
+		
 		if ($this->value instanceof Model) 
 			$this->value = $this->value->getQuery();
 		
@@ -89,6 +102,8 @@ class CompositeRestriction
 	}
 	
 	public function getConnectingRestrictions() {
+		
+		if ($this->field === null) { return null; }
 		
 		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
 			$uplink = new Uplink($this->getQuery(), $this->getValue(), $this->field);
