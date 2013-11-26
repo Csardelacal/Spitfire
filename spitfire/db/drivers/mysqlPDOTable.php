@@ -170,7 +170,7 @@ class MysqlPDOTable extends stdSQLTable
 				elseif ($this->getModel()->getField($field) instanceof \ManyToManyField) 
 					unset($data[$field]);
 				else 
-					$value = $value->fetch();
+					$value = $record->{$field};
 			}
 			
 			if ($this->getModel()->getField($field) instanceof \Reference) {

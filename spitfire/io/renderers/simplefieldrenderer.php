@@ -9,7 +9,7 @@ use spitfire\io\html\HTMLOption;
 
 class SimpleFieldRenderer {
 	
-	public function renderForm(RenderableField$field, $error) {
+	public function renderForm(RenderableField$field, $error = null) {
 		
 		if (!($field->getVisibility() & Renderable::VISIBILITY_FORM)) { return; }
 		
