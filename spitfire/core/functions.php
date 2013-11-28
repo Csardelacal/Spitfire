@@ -90,6 +90,7 @@ function _c($amt) {
  * @return Locale
  */
 function find_locale() {
+	$context = current_context();
 	try {
 		if(environment::get('system_language') && $context)
 			return $context->app->getLocale(environment::get('system_language'));
