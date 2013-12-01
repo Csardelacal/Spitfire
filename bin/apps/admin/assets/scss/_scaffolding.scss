@@ -1,0 +1,67 @@
+/*
+This are the functions (mixins) used to generate the basic scaffolding for our
+website. Due to the inverted functionality of the grid we rewrote big parts to
+make them more usable.
+
+Created on : Oct 26, 2013, 7:18:16 PM
+Author : cesar
+*/
+
+$spacer_width: 20px / 960px * 100%;
+$max_column_count: 10;
+
+div.span {
+	float: left;
+	margin-left: $spacer_width;
+	min-height: 1px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+
+	&:first-child {
+		margin-left: $spacer-width / 2;
+	}
+}
+
+div.row {
+	display: block;
+	margin: 0 auto;
+	width: 960px;
+
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	&.fluid {
+		width: 100%;
+	}
+}
+
+
+@mixin column_spans($row_width) {
+
+	@for $i from 1 through $row_width {
+		div.span#{$i} {
+			@extend div.span;
+			width: (100% - ($row_width * $spacer_width)) / $row_width * $i;
+		}
+
+		@if $i == 1 {
+			div.span {
+				@extend div.span;
+				width: (100% - ($row_width * $spacer_width)) / $row_width * $i;
+			}
+		}
+
+	}
+        
+}
+
+
+@for $i from 1 through $max_column_count {
+        div.row#{$i}{
+                @extend div.row;
+                @include column_spans($i);
+        }
+}
