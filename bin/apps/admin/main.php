@@ -1,11 +1,21 @@
 <?php
 
-use \spitfire\AutoLoad;
+use spitfire\AutoLoad;
+use spitfire\storage\database\Table;
+use \privateException;
 
 class adminApp extends App
 {
 	private $beans = Array();
-	private $userModel = null;
+	private $dashboard_modules = Array();
+	
+	/**
+	 * The table this app uses to identify users that try to log into the admin
+	 * console.
+	 * 
+	 * @var spitfire\storage\database\Table
+	 */
+	private $userTable = null;
 	
 	public function putBean($name) {
 		$this->beans[] = $name;
@@ -16,26 +26,41 @@ class adminApp extends App
 		return $this->beans;
 	}
 	
-	public function setUserModel($name) {
-		$model = new $name();
+	/**
+	 * Defines which table should be used by this app to identify users that 
+	 * log into the admin console.
+	 * 
+	 * @param \spitfire\storage\database\Table $table
+	 * @return \adminApp
+	 * @throws privateException
+	 */
+	public function setUserTable(Table$table) {
 		
-		if ($model instanceof \spitfire\model\defaults\usermodel)
-		{
-			$this->userModel = $model;
-		}
+		$this->userTable = $table;
 		return $this;
 	}
 	
-	public function getUserModel() {
-		return $this->userModel;
+	/**
+	 * Returns the database table that holds the information about the users that
+	 * are available on the system. Only those with admin set to 1 should be allowed
+	 * to retrieve information from the admin panel.
+	 * 
+	 * @return \spitfire\storage\database\Table $table
+	 */
+	public function getUserTable() {
+		return $this->userTable;
 	}
 
 	public function enable() {
-		AutoLoad::registerClass('M3W\admin\homeController', $this->getBaseDir() . 'admin.php');
 		AutoLoad::registerClass('M3W\admin\authController', $this->getBaseDir() . 'auth.php');
-		
-		AutoLoad::registerClass('M3W\admin\enLocale',       $this->getBaseDir() . 'locales/en.php');
-		AutoLoad::registerClass('M3W\admin\esLocale',       $this->getBaseDir() . 'locales/es.php');
+	}
+	
+	public function moduleGroup() {
+		return $this->dashboard_modules[] = new M3W\admin\DashboardModuleGroup($this);
+	}
+	
+	public function getModules() {
+		return $this->dashboard_modules;
 	}
 	
 	public function getAssetsDirectory() {
@@ -45,27 +70,8 @@ class adminApp extends App
 	public function getTemplateDirectory() {
 		return $this->getBaseDir() . 'templates/';
 	}
-
-	public function getControllerClassName($controller) {
-		return 'M3W\admin\\' . $controller . 'Controller';
-	}
-
-	public function getViewClassName($controller) {
-		return 'M3W\admin\\' . $controller . 'View';
-	}
-
-	public function hasController($controller) {
-		return class_exists($this->getControllerClassName($controller));
-	}
-
-	public function getLocaleClassName($locale) {
-		$className = "M3W\\admin\\{$locale}Locale";
-		
-		if (class_exists($className)) return $className;
-		else return "M3W\\admin\\enLocale";
-	}
 	
-	public function getClassNameSpace() {
-		return 'M3W\Admin\\';
+	public function getNameSpace() {
+		return "M3W\\admin\\";
 	}
 }

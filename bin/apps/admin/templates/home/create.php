@@ -1,3 +1,5 @@
-<div class="edit">
-	<?= CoffeeBean::getBean($bean)->makeForm($this->app->url('/insert/' . $bean)) ?>
+<?php
+	use M3W\admin\Renderer;
+?><div class="edit">
+	<?= $bean->makeForm(new Renderer()) ?>
 </div>
