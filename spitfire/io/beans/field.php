@@ -159,6 +159,15 @@ abstract class Field extends PostTarget implements \spitfire\validation\Validata
 	public function validate() {
 		$res = $this->field->validate($this->getValue());
 		
+		if ($res instanceof \spitfire\validation\ValidationResult && !$res->success()) {
+			$errors = $res->getErrors();
+			if (count($errors) === 1) { $res = $errors[0]; }
+			else {
+				$error = new ValidationError('Not valid');
+				$error->setSubErrors($errors);
+				$res = $error;
+			}
+		}
 		if ($res instanceof ValidationError) {
 			$res->setSrc($this);
 		}

@@ -283,6 +283,20 @@ abstract class Field
 		return ($this->primary || $this->unique);
 	}
 	
+	/**
+	 * Returns the field the bean should use to render this. In case it returns null
+	 * it means the field has no suggestions and the Bean should choose the way 
+	 * to render it
+	 * 
+	 * @param \CoffeeBean $bean
+	 * @param Field $field
+	 * @param string $caption
+	 * @return \spitfire\io\beans\Field|null
+	 */
+	public function getBeanField($bean, $field, $caption) {
+		return null;
+	}
+	
 	public function validate($value) {
 		return new \spitfire\validation\ValidationResult();
 	}
