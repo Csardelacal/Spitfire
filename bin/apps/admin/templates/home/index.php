@@ -1,7 +1,5 @@
-<h1>Admin</h1>
-<pre><?= $_SF_DEBUG_OUTPUT ?></pre>
-<?= $this->element('test'); ?>
+<?php $module_groups = $this->app->getModules(); ?>
 
-<?php foreach($beans as $bean_name): ?>
-	<a href="<?= $this->app->url('/lst/' . $bean_name)?>"><?= CoffeeBean::getBean($bean_name)->getName() ?></a><br/>
-<?php endforeach; ?>
+<div>
+	<?= implode("\n<div class='spacer' style='height: 20px'></div>\n", $module_groups); ?>
+</div>

@@ -1,13 +1,10 @@
 <?php
 
-$b = CoffeeBean::getBean($bean);
+$b = $bean;
 $b->setDBRecord($record);
-$nr = $b->makeDBRecord();
+$b->updateDBRecord();
 
-if (!$record->getTable()->validate($nr)) {
-	print_r($record->getTable()->getErrors());
-}
 ?>
 <div class="edit">
-	<?= $b->makeForm($this->app->url('/update/' . $bean . '/' . implode('|', $record->getPrimaryData()) )); ?>
+	<?= $b->makeForm(new \M3W\admin\Renderer(), $errors); ?>
 </div>
