@@ -1,0 +1,42 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 26, 2013, 4:13:28 PM
+    Author     : cesar
+*/
+
+.info-card {
+	padding: 5px 130px 5px 5px;
+	background-color: #FFF;
+	border: solid 1px #CCC;
+	color: #333;
+	background-position: bottom right;
+	background-repeat : no-repeat;
+	box-shadow: 0 0 2px rgba(175, 175, 175, 0.6);
+	min-height: 130px;
+	
+	.title {
+		display: block;
+		border-bottom: solid 1px #DADADA;
+		width: 100%;
+		font-weight: bold;
+	}
+	
+	.value {
+		font-size: 3.5em;
+		font-weight: bold;
+		display: block;
+		text-align: center;
+	}
+	
+	.caption {
+		color: #888;
+		font-size: .8em;
+		display: block;
+		text-align: right;
+	}
+	
+}

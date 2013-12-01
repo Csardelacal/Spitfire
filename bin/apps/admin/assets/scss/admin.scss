@@ -1,0 +1,538 @@
+/* 
+    Document   : admin
+    Created on : Apr 18, 2013, 2:54:07 PM
+    Author     : cesar
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+	background: #F2F2F2;
+	margin: 0;
+	height: 100%;
+	font-family: roboto;
+}
+
+a {
+	color: #444;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #333;
+	text-decoration: underline;
+}
+
+.wrapper {
+	position: relative;
+	min-height: 100%;
+}
+
+.header {
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background: #FFF;
+	border-bottom: solid 1px #CCC;
+	z-index: 9999;
+}
+
+.header .logout {
+	float: right;
+	margin: 3px;
+	color: #C00;
+	text-decoration: none;
+	font-size: 12px;
+}
+
+.header h1 {
+	font-size: 15px;
+	color: #444;
+	margin: 15px;
+}
+
+.beans-help {
+	font-size: 10px;
+	background: #D5DAE4;
+	font-weight: bold;
+	display: block;
+	width: 140px;
+	padding: 5px;
+}
+
+.beans-list {
+	position: absolute;
+	width: 150px;
+	border-right: solid 1px #CCC;
+	top: 50px;
+	left: 0;
+	bottom: 0;
+}
+
+.beans-list .bean {
+	display: block;
+	color: #040809;
+	font-size: 12px;
+	width: 110px;
+	padding: 3px 30px 3px 10px;
+	text-transform: capitalize;
+	text-decoration: none;
+	border-bottom: solid 1px #b5b6bb;
+}
+
+.beans-list .bean.active {
+	background-image: -webkit-linear-gradient(90deg, #1a84d8, #0376ed, #0a5ddd);
+	background-image:    -moz-linear-gradient(90deg, #1a84d8, #0376ed, #0a5ddd);
+	background-color: #1a84d8;
+	color: #FFF;
+	font-weight: bold;
+}
+
+.filter {
+	background: #D5DAE4;
+	display: block;
+	width: 140px;
+	padding: 5px;
+}
+
+.filter input[type="search"] {
+	background: #FFF;
+	border: solid 1px #CACACA;
+	width: 100%;
+	-moz-box-sizing: border-box;
+	padding: 0 3px;
+}
+
+.filter input[type="submit"] {
+	visibility: hidden;
+	height: 0;
+}
+
+
+.main {
+	position: relative;
+	margin-left: 160px;
+	padding-top:   10px;
+}
+
+.new-record {
+	float: right;
+	margin: 5px;
+	margin-right: 20px;
+	color: #444;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.new-record:before {
+	color: #FFF;
+	font-weight: bolder;
+	background: #2F8A24;
+	border-radius: 50%;
+	content: '+';
+	display: inline-block;
+	margin: 3px;
+	width: 13px;
+	height: 13px;
+	font-size: 13px;
+	line-height: 13px;
+	text-align: center;
+}
+
+.table-wrapper {
+	margin: 10px 20px;
+	clear: both;
+}
+
+table {
+	width:  100%;
+	border: solid 1px #CCC;
+	
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+}
+
+table tr {
+	border-bottom: solid 1px #0a5ddd;
+	color: #555;
+	background: #FFF;
+}
+
+table tr:first-child {
+	background: #1a84d8;
+	color: #FFF;
+}
+
+table tr:nth-child(2n) {
+	border-bottom: solid 1px #0a5ddd;
+	background: #EEE;
+}
+
+table tr:hover {
+	color: #000;
+}
+
+table tr:first-child:hover {
+	color: #FFF;
+}
+
+table td {
+	padding: 2px 5px;
+	margin: 0;
+	border: none;
+}
+
+.pagination {
+	float: right;
+}
+
+.pagination ul {
+	list-style: none;
+}
+
+.pagination ul:after,
+.pagination:after,
+.table-wrapper:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.pagination ul li {
+	float: left;
+	border: solid 1px #CCC;
+	border-right: none;
+	background: #FFF;
+}
+
+.pagination ul li a {
+	padding: 
+		5px 10px;
+	display: inline-block;
+	color: #333;
+	text-decoration: none;
+	font-size: 12px;
+}
+
+.pagination ul li.disabled a {
+	color: #999;
+	text-decoration: none;
+	font-size: 12px;
+	cursor: default;
+}
+
+.pagination ul li.active a {
+	font-weight: bold;
+}
+
+.pagination ul li:first-child {
+	border-radius: 3px 0 0 3px;
+}
+
+.pagination ul li:last-child {
+	border-radius: 0 3px 3px 0;
+	border-right: solid 1px #CCC;
+}
+
+
+/* SCAFFOLDING________________________________________________________________*/
+@import '_scaffolding';
+
+/* INFO-CARD__________________________________________________________________*/
+@import '_infocard';
+
+/* EDITION____________________________________________________________________*/
+.edit {
+	display: block;
+	width: 720px;
+	margin: 20px auto;
+	padding: 20px;
+	background: #FFF;
+	border-radius: 3px;
+	border: solid 1px #CCC;
+	box-shadow: 2px 2px 5px #E3E3E3;
+}
+
+.edit .field {
+	margin-top: 5px;
+}
+
+.edit .field small {
+	font-size: 10px;
+	color: #555;
+	display: block;
+	width: 200px;
+	margin-left: 220px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: right;
+	text-overflow: ellipsis;
+	
+	-moz-transition: width 0.5s ease, margin-left 0.5s ease;
+}
+
+.edit .field small:hover {
+	margin-left: 0;
+	width: 620px;
+}
+
+
+.edit label {
+	display: inline-block;
+	width: 200px;
+	font-size: 12px;
+	text-align: right;
+	color: #555;
+}
+
+.edit input,
+.edit textarea,
+.edit select {
+	display: inline-block;
+	border: solid 1px #CCC;
+	border-radius: 3px;
+	margin-left: 20px;
+	padding: 3px;
+	background: #FFF;
+}
+
+.edit input[type="text"],
+.edit textarea,
+.edit select  {
+	width: 400px;
+}
+
+.edit textarea {
+	vertical-align: top;
+	height: 150px;
+}
+
+.edit input[type="submit"] {
+	float: right;
+	margin-right: 100px;
+	margin-top:   10px;
+	color: #FFF;
+	background-color: #416F9B;
+	padding: 3px;
+	cursor: pointer;
+}
+
+
+.edit:after {
+	content: '';
+	clear: both;
+	display: table;
+}
+
+.edit h1 {
+	font-size: 16px;
+	color: #0a5dad;
+	border-bottom: solid 1px #0a5dad;
+	margin-top: 20px;
+}
+
+.edit .dateTimePicker input,
+.edit .dateTimePicker select {
+	width: 70px;
+	margin: 2px;
+}
+
+.edit .dateTimePicker select:first-child {
+	margin-left: 20px;
+}
+
+.edit .error-output {
+	margin-left: 190px;
+}
+
+.edit .error-output ul {
+	font-size: 11px;
+	color: #f00;
+	list-style: none;
+}
+
+/**AUTH_______________________________________________________________________*/
+#auth {
+	display: block;
+	width: 520px;
+	background: #FFF;
+	padding: 25px;
+	margin: 0 auto;
+	border: solid 1px #CCC;
+	border-radius: 5px;
+}
+
+#auth .field {
+	margin-top: 5px;
+}
+
+#auth label {
+	display: inline-block;
+	width: 200px;
+	font-size: 12px;
+	text-align: right;
+	color: #555;
+}
+
+#auth input {
+	display: inline-block;
+	border: solid 1px #CCC;
+	border-radius: 3px;
+	margin-left: 20px;
+	padding: 3px;
+	background: #FFF;
+}
+
+
+#auth input[type="text"],
+#auth input[type="password"],
+#auth select  {
+	width: 200px;
+}
+
+#auth input[type="submit"] {
+	float: right;
+	margin-right: 100px;
+	margin-top:   10px;
+	color: #FFF;
+	background-color: #416F9B;
+	padding: 3px;
+	cursor: pointer;
+}
+
+
+/***************************************+
+***CONFIRMATION DIALOGS
+*******************************************************************/
+.confirm {
+	display: block;
+	width: 720px;
+	margin: 20px auto;
+	padding: 20px;
+	background: #FFF;
+	border-radius: 3px;
+	border: solid 1px #CCC;
+	box-shadow: 2px 2px 5px #E3E3E3;
+}
+
+.form-buttons {
+	text-align: right;
+	padding: 10px;
+}
+
+.confirm .button {
+	display: inline-block;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
+	padding: 7px 10px;
+}
+
+.confirm .button.primary {
+	font-weight: bold;
+	color: #FFF;
+	background: #4575D4;
+	border-color: #29467F;
+}
+
+.confirm .button.primary:hover {
+	text-decoration: none;
+	background: #558AE5;
+}
+
+.confirm .button.warning {
+	color: #FFF;
+	background: #BF3D30;
+	border-color: #C83222;
+}
+
+.confirm .button.warning:hover {
+	text-decoration: none;
+	background: #A2000C;
+}
+
+
+/***************************************+
+***SORTING
+*******************************************************************/
+a.unsorted {
+	color: #fff;
+}
+
+a.sorted {
+	color: #fff;
+}
+
+a.unsorted:after {
+	content: '';
+	margin-left: 5px;
+	border-style: solid solid none solid;
+	border-color: transparent transparent transparent transparent;
+	border-width: 7px;
+	display:  inline-block;
+	vertical-align: 3px;
+}
+
+a.sorted.asc:after,
+a.sorted.desc:hover:after,
+a.unsorted:hover:after {
+	content: '';
+	margin-left: 5px;
+	border-style: solid solid none solid;
+	border-color: #fff transparent transparent transparent;
+	border-width: 7px;
+	display:  inline-block;
+	vertical-align: 3px;
+}
+
+a.sorted.desc:after,
+a.sorted.asc:hover:after {
+	content: '';
+	margin-left: 5px;
+	border-style: none solid solid solid;
+	border-color: transparent transparent #fff transparent;
+	border-width: 7px;
+	display:  inline-block;
+	vertical-align: 3px;
+}
+
+/***************************************+
+***STATUS MESSAGES
+*******************************************************************/
+.message-wrapper {
+	position: absolute;
+	bottom: 0;
+	margin-bottom: -10px;
+	width: 100%;
+}
+
+.message {
+	margin: 0 auto;
+	display: block;
+	width: 500px;
+	text-align: center;
+	border: solid 1px #cccccc;
+	background: #fff;
+	padding: 3px;
+	border-radius: 2px;
+	font-size: 12px;
+}
+
+.message.success {
+	border-color: #78AF2C;
+	color: #589800;
+	font-weight: bold;
+	background-color: #BCF46E;
+}
+
+/***************************************+
+***DEBUGGING
+*******************************************************************/
+pre.debugmessages {
+	border: dashed 1px #cccccc;
+	background: #f2f2f2;
+	border-radius: 5px;
+	padding: 5px;
+	max-height: 300px;
+	overflow: auto;
+}
