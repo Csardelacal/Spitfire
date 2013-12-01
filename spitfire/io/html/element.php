@@ -18,7 +18,7 @@ abstract class HTMLElement
 	}
 	
 	public function getParam($name) {
-		return $this->parameters[$name];
+		return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
 	}
 	
 	public function addChild($child) {

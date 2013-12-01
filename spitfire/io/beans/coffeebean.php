@@ -135,6 +135,9 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		
 		if (!$logical) throw new privateException('No field ' . $field . ' in ' . $this->table->getModel()->getName());
 		
+		$suggested = $logical->getBeanField($this, $logical, $caption);
+		if ($suggested !== null) {return $this->fields[$field] = $suggested;}
+		
 		switch($logical->getDataType()) {
 			case model\Field::TYPE_STRING:
 			case model\Field::TYPE_INTEGER:

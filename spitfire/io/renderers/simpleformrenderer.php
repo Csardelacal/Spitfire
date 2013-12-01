@@ -17,7 +17,11 @@ class SimpleFormRenderer extends Renderer
 		
 		foreach ($fields as $field) {
 			if ($field->getVisibility() & CoffeeBean::VISIBILITY_FORM) {
-				$form->addChild($renderer->renderForm($field, $this->getErrorsFor($field, $errors)));
+				if (null !== $r = $field->getEnforcedFieldRenderer()) {
+					$form->addChild($r->renderForm($field, $this->getErrorsFor($field, $errors)));
+				} else {
+					$form->addChild($renderer->renderForm($field, $this->getErrorsFor($field, $errors)));
+				}
 			}
 		}
 		return $form;

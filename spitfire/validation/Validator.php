@@ -140,7 +140,7 @@ class Validator
 	protected function testRule(ValidationRule$rule, $value, &$src) {
 		$result = $rule->test($value, $src);
 
-		if ($result !== false || !$result instanceof ValidationError) {
+		if ($result !== false && !$result instanceof ValidationError) {
 			throw new \privateException('Invalid result type, expected ValidationResult');
 		}
 		
