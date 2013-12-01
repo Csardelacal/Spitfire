@@ -2,18 +2,10 @@
 
 namespace M3W\Admin;
 
-use URL;
 use Controller;
-use spitfire\InputSanitizer;
+use _SF_InputSanitizer;
 use session;
-use spitfire\Request;
 
-/**
- * This controller handles user and session creation and destruction. This allows
- * all the other controllers to simply require a valid login.
- * 
- * @property-read adminApp $app The app this controller is running under
- */
 class authController extends Controller
 {
 	/** @var session Session info */
@@ -26,20 +18,20 @@ class authController extends Controller
 	}
 	
 	public function index() {
-		$table = $this->app->getUserTable();
-		if (!$table->getAll()->count()) {
-			$user = $table->newRecord();
+		$model = $this->app->getUserModel();
+		if (!db()->table($model)->getAll()->count()) {
+			$user = db()->table($model)->newRecord();
 			$user->username = 'admin';
 			$user->email = 'admin@example.com';
 			$user->admin = true;
-			$password = new InputSanitizer('admin');
+			$password = new _SF_InputSanitizer('admin');
 			$user->password = $password->toPassword();
 			$user->store();
 		}
 	}
 	
 	public function login() {
-		$user = $this->app->getUserTable()
+		$user = db()->table($this->app->getUserModel())
 			->get('admin', true)
 			->group()
 				->addRestriction('username', $this->post->username->value())
@@ -49,16 +41,16 @@ class authController extends Controller
 			->fetch();
 		
 		
-		if ($user->_id) {
-			$this->session->lock($user->_id);
-			$this->response->getHeaders()->redirect(new URL($this->app));
+		if ($user->id) {
+			$this->session->lock($user->id);
+			header ('location: '. $this->app->url('/'));
 		}
-		else $this->response->getHeaders()->redirect(new URL($this->app, 'auth'));
+		else header ('location: '. $this->app->url('/auth'));
 	}
 	
 	
 	public function logout() {
 		$this->session->destroy();
-		$this->response->getHeaders()->redirect(new URL($this->app));
+		header('location: ' . $this->app->url('/') );
 	}
 }

@@ -5,650 +5,319 @@
     Description:
         Purpose of the stylesheet follows.
 */
+
 body {
-  background: #F2F2F2;
-  margin: 0;
-  height: 100%;
-  font-family: roboto; }
+	background: #F2F2F2;
+	margin: 0;
+	height: 100%;
+}
 
 a {
-  color: #444;
-  text-decoration: none; }
+	color: #444;
+	text-decoration: none;
+}
 
 a:hover {
-  color: #333;
-  text-decoration: underline; }
+	color: #333;
+	text-decoration: underline;
+}
 
 .wrapper {
-  position: relative;
-  min-height: 100%; }
+	position: relative;
+	min-height: 100%;
+}
 
 .header {
-  position: fixed;
-  width: 100%;
-  height: 50px;
-  background: #FFF;
-  border-bottom: solid 1px #CCC;
-  z-index: 9999; }
+	position: fixed;
+	width: 100%;
+	height: 50px;
+	background: #FFF;
+	border-bottom: solid 1px #CCC;
+	z-index: 9999;
+}
 
 .header .logout {
-  float: right;
-  margin: 3px;
-  color: #C00;
-  text-decoration: none;
-  font-size: 12px; }
+	float: right;
+	margin: 3px;
+	color: #C00;
+	text-decoration: none;
+	font-size: 12px;
+}
 
 .header h1 {
-  font-size: 15px;
-  color: #444;
-  margin: 15px; }
+	font-size: 15px;
+	color: #444;
+	margin: 15px;
+}
 
 .beans-help {
-  font-size: 10px;
-  background: #D5DAE4;
-  font-weight: bold;
-  display: block;
-  width: 140px;
-  padding: 5px; }
+	font-size: 10px;
+	background: #D5DAE4;
+	font-weight: bold;
+	display: block;
+	width: 140px;
+	padding: 5px;
+}
 
 .beans-list {
-  position: absolute;
-  width: 150px;
-  border-right: solid 1px #CCC;
-  top: 50px;
-  left: 0;
-  bottom: 0; }
+	position: absolute;
+	width: 150px;
+	border-right: solid 1px #CCC;
+	top: 50px;
+	left: 0;
+	bottom: 0;
+}
 
 .beans-list .bean {
-  display: block;
-  color: #040809;
-  font-size: 12px;
-  width: 110px;
-  padding: 3px 30px 3px 10px;
-  text-transform: capitalize;
-  text-decoration: none;
-  border-bottom: solid 1px #b5b6bb; }
+	display: block;
+	color: #040809;
+	font-size: 12px;
+	width: 110px;
+	padding: 3px 30px 3px 10px;
+	text-transform: capitalize;
+	text-decoration: none;
+	border-bottom: solid 1px #b5b6bb;
+}
 
 .beans-list .bean.active {
-  background-image: -webkit-linear-gradient(90deg, #1a84d8, #0376ed, #0a5ddd);
-  background-image: -moz-linear-gradient(90deg, #1a84d8, #0376ed, #0a5ddd);
-  background-color: #1a84d8;
-  color: #FFF;
-  font-weight: bold; }
-
-.filter {
-  background: #D5DAE4;
-  display: block;
-  width: 140px;
-  padding: 5px; }
-
-.filter input[type="search"] {
-  background: #FFF;
-  border: solid 1px #CACACA;
-  width: 100%;
-  -moz-box-sizing: border-box;
-  padding: 0 3px; }
-
-.filter input[type="submit"] {
-  visibility: hidden;
-  height: 0; }
+	background-image: -webkit-linear-gradient(90deg, #1a84d8, #0376ed, #0a5ddd);
+	background-image:    -moz-linear-gradient(90deg, #1a84d8, #0376ed, #0a5ddd);
+	background-color: #1a84d8;
+	color: #FFF;
+	font-weight: bold;
+}
 
 .main {
-  position: relative;
-  margin-left: 160px;
-  padding-top: 10px; }
+	position: relative;
+	margin-left: 160px;
+	padding-top:   10px;
+}
 
 .new-record {
-  float: right;
-  margin: 5px;
-  margin-right: 20px;
-  color: #444;
-  font-size: 12px;
-  text-decoration: none; }
+	float: right;
+	margin: 5px;
+	margin-right: 20px;
+	color: #444;
+	font-size: 12px;
+	text-decoration: none;
+}
 
 .new-record:before {
-  color: #FFF;
-  font-weight: bolder;
-  background: #2F8A24;
-  border-radius: 50%;
-  content: '+';
-  display: inline-block;
-  margin: 3px;
-  width: 13px;
-  height: 13px;
-  font-size: 13px;
-  line-height: 13px;
-  text-align: center; }
+	color: #FFF;
+	font-weight: bolder;
+	background: #2F8A24;
+	border-radius: 50%;
+	content: '+';
+	display: inline-block;
+	margin: 3px;
+	width: 13px;
+	height: 13px;
+	font-size: 13px;
+	line-height: 13px;
+	text-align: center;
+}
 
 .table-wrapper {
-  margin: 10px 20px;
-  clear: both; }
+	margin: 10px 20px;
+	clear: both;
+}
 
 table {
-  width: 100%;
-  border: solid 1px #CCC;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box; }
+	width:  100%;
+	border: solid 1px #CCC;
+	
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+}
 
 table tr {
-  border-bottom: solid 1px #0a5ddd;
-  color: #555;
-  background: #FFF; }
+	border-bottom: solid 1px #0a5ddd;
+	background: #FFF;
+}
 
 table tr:first-child {
-  background: #1a84d8;
-  color: #FFF; }
+	background: #1a84d8;
+	color: #FFF;
+}
 
 table tr:nth-child(2n) {
-  border-bottom: solid 1px #0a5ddd;
-  background: #EEE; }
-
-table tr:hover {
-  color: #000; }
-
-table tr:first-child:hover {
-  color: #FFF; }
+	border-bottom: solid 1px #0a5ddd;
+	background: #EEE;
+}
 
 table td {
-  padding: 2px 5px;
-  margin: 0;
-  border: none; }
+	padding: 2px 5px;
+	margin: 0;
+	border: none;
+}
 
 .pagination {
-  float: right; }
+	float: right;
+}
 
 .pagination ul {
-  list-style: none; }
+	list-style: none;
+}
 
 .pagination ul:after,
 .pagination:after,
 .table-wrapper:after {
-  content: '';
-  display: table;
-  clear: both; }
+	content: '';
+	display: table;
+	clear: both;
+}
 
 .pagination ul li {
-  float: left;
-  border: solid 1px #CCC;
-  border-right: none;
-  background: #FFF; }
+	float: left;
+	border: solid 1px #CCC;
+	border-right: none;
+	background: #FFF;
+	padding: 3px 10px;
+}
 
 .pagination ul li a {
-  padding: 5px 10px;
-  display: inline-block;
-  color: #333;
-  text-decoration: none;
-  font-size: 12px; }
+	color: #333;
+	text-decoration: none;
+	font-size: 12px;
+}
 
 .pagination ul li.disabled a {
-  color: #999;
-  text-decoration: none;
-  font-size: 12px;
-  cursor: default; }
-
-.pagination ul li.active a {
-  font-weight: bold; }
+	color: #999;
+	text-decoration: none;
+	font-size: 12px;
+	cursor: default;
+}
 
 .pagination ul li:first-child {
-  border-radius: 3px 0 0 3px; }
+	border-radius: 3px 0 0 3px;
+}
 
 .pagination ul li:last-child {
-  border-radius: 0 3px 3px 0;
-  border-right: solid 1px #CCC; }
+	border-radius: 0 3px 3px 0;
+	border-right: solid 1px #CCC;
+}
 
-/* SCAFFOLDING________________________________________________________________*/
-/*
-This are the functions (mixins) used to generate the basic scaffolding for our
-website. Due to the inverted functionality of the grid we rewrote big parts to
-make them more usable.
-
-Created on : Oct 26, 2013, 7:18:16 PM
-Author : cesar
-*/
-div.span, div.row1 div.span1, div.row1 div.span, div.row2 div.span1, div.row2 div.span, div.row2 div.span2, div.row3 div.span1, div.row3 div.span, div.row3 div.span2, div.row3 div.span3, div.row4 div.span1, div.row4 div.span, div.row4 div.span2, div.row4 div.span3, div.row4 div.span4, div.row5 div.span1, div.row5 div.span, div.row5 div.span2, div.row5 div.span3, div.row5 div.span4, div.row5 div.span5, div.row6 div.span1, div.row6 div.span, div.row6 div.span2, div.row6 div.span3, div.row6 div.span4, div.row6 div.span5, div.row6 div.span6, div.row7 div.span1, div.row7 div.span, div.row7 div.span2, div.row7 div.span3, div.row7 div.span4, div.row7 div.span5, div.row7 div.span6, div.row7 div.span7, div.row8 div.span1, div.row8 div.span, div.row8 div.span2, div.row8 div.span3, div.row8 div.span4, div.row8 div.span5, div.row8 div.span6, div.row8 div.span7, div.row8 div.span8, div.row9 div.span1, div.row9 div.span, div.row9 div.span2, div.row9 div.span3, div.row9 div.span4, div.row9 div.span5, div.row9 div.span6, div.row9 div.span7, div.row9 div.span8, div.row9 div.span9, div.row10 div.span1, div.row10 div.span, div.row10 div.span2, div.row10 div.span3, div.row10 div.span4, div.row10 div.span5, div.row10 div.span6, div.row10 div.span7, div.row10 div.span8, div.row10 div.span9, div.row10 div.span10 {
-  float: left;
-  margin-left: 2.08333%;
-  min-height: 1px;
-  box-sizing: border-box;
-  -moz-box-sizing: border-box; }
-  div.span:first-child, div.row1 div.span1:first-child, div.row1 div.span:first-child, div.row2 div.span1:first-child, div.row2 div.span:first-child, div.row2 div.span2:first-child, div.row3 div.span1:first-child, div.row3 div.span:first-child, div.row3 div.span2:first-child, div.row3 div.span3:first-child, div.row4 div.span1:first-child, div.row4 div.span:first-child, div.row4 div.span2:first-child, div.row4 div.span3:first-child, div.row4 div.span4:first-child, div.row5 div.span1:first-child, div.row5 div.span:first-child, div.row5 div.span2:first-child, div.row5 div.span3:first-child, div.row5 div.span4:first-child, div.row5 div.span5:first-child, div.row6 div.span1:first-child, div.row6 div.span:first-child, div.row6 div.span2:first-child, div.row6 div.span3:first-child, div.row6 div.span4:first-child, div.row6 div.span5:first-child, div.row6 div.span6:first-child, div.row7 div.span1:first-child, div.row7 div.span:first-child, div.row7 div.span2:first-child, div.row7 div.span3:first-child, div.row7 div.span4:first-child, div.row7 div.span5:first-child, div.row7 div.span6:first-child, div.row7 div.span7:first-child, div.row8 div.span1:first-child, div.row8 div.span:first-child, div.row8 div.span2:first-child, div.row8 div.span3:first-child, div.row8 div.span4:first-child, div.row8 div.span5:first-child, div.row8 div.span6:first-child, div.row8 div.span7:first-child, div.row8 div.span8:first-child, div.row9 div.span1:first-child, div.row9 div.span:first-child, div.row9 div.span2:first-child, div.row9 div.span3:first-child, div.row9 div.span4:first-child, div.row9 div.span5:first-child, div.row9 div.span6:first-child, div.row9 div.span7:first-child, div.row9 div.span8:first-child, div.row9 div.span9:first-child, div.row10 div.span1:first-child, div.row10 div.span:first-child, div.row10 div.span2:first-child, div.row10 div.span3:first-child, div.row10 div.span4:first-child, div.row10 div.span5:first-child, div.row10 div.span6:first-child, div.row10 div.span7:first-child, div.row10 div.span8:first-child, div.row10 div.span9:first-child, div.row10 div.span10:first-child {
-    margin-left: 1.04167%; }
-
-div.row, div.row1, div.row2, div.row3, div.row4, div.row5, div.row6, div.row7, div.row8, div.row9, div.row10 {
-  display: block;
-  margin: 0 auto;
-  width: 960px; }
-  div.row:after, div.row1:after, div.row2:after, div.row3:after, div.row4:after, div.row5:after, div.row6:after, div.row7:after, div.row8:after, div.row9:after, div.row10:after {
-    content: "";
-    display: table;
-    clear: both; }
-  div.row.fluid, div.fluid.row1, div.fluid.row2, div.fluid.row3, div.fluid.row4, div.fluid.row5, div.fluid.row6, div.fluid.row7, div.fluid.row8, div.fluid.row9, div.fluid.row10 {
-    width: 100%; }
-
-div.row1 div.span1 {
-  width: 97.91667%; }
-div.row1 div.span1, div.row1 div.span, div.row1 div.row2 div.span2, div.row2 div.row1 div.span2, div.row1 div.row3 div.span2, div.row3 div.row1 div.span2, div.row1 div.row3 div.span3, div.row3 div.row1 div.span3, div.row1 div.row4 div.span2, div.row4 div.row1 div.span2, div.row1 div.row4 div.span3, div.row4 div.row1 div.span3, div.row1 div.row4 div.span4, div.row4 div.row1 div.span4, div.row1 div.row5 div.span2, div.row5 div.row1 div.span2, div.row1 div.row5 div.span3, div.row5 div.row1 div.span3, div.row1 div.row5 div.span4, div.row5 div.row1 div.span4, div.row1 div.row5 div.span5, div.row5 div.row1 div.span5, div.row1 div.row6 div.span2, div.row6 div.row1 div.span2, div.row1 div.row6 div.span3, div.row6 div.row1 div.span3, div.row1 div.row6 div.span4, div.row6 div.row1 div.span4, div.row1 div.row6 div.span5, div.row6 div.row1 div.span5, div.row1 div.row6 div.span6, div.row6 div.row1 div.span6, div.row1 div.row7 div.span2, div.row7 div.row1 div.span2, div.row1 div.row7 div.span3, div.row7 div.row1 div.span3, div.row1 div.row7 div.span4, div.row7 div.row1 div.span4, div.row1 div.row7 div.span5, div.row7 div.row1 div.span5, div.row1 div.row7 div.span6, div.row7 div.row1 div.span6, div.row1 div.row7 div.span7, div.row7 div.row1 div.span7, div.row1 div.row8 div.span2, div.row8 div.row1 div.span2, div.row1 div.row8 div.span3, div.row8 div.row1 div.span3, div.row1 div.row8 div.span4, div.row8 div.row1 div.span4, div.row1 div.row8 div.span5, div.row8 div.row1 div.span5, div.row1 div.row8 div.span6, div.row8 div.row1 div.span6, div.row1 div.row8 div.span7, div.row8 div.row1 div.span7, div.row1 div.row8 div.span8, div.row8 div.row1 div.span8, div.row1 div.row9 div.span2, div.row9 div.row1 div.span2, div.row1 div.row9 div.span3, div.row9 div.row1 div.span3, div.row1 div.row9 div.span4, div.row9 div.row1 div.span4, div.row1 div.row9 div.span5, div.row9 div.row1 div.span5, div.row1 div.row9 div.span6, div.row9 div.row1 div.span6, div.row1 div.row9 div.span7, div.row9 div.row1 div.span7, div.row1 div.row9 div.span8, div.row9 div.row1 div.span8, div.row1 div.row9 div.span9, div.row9 div.row1 div.span9, div.row1 div.row10 div.span2, div.row10 div.row1 div.span2, div.row1 div.row10 div.span3, div.row10 div.row1 div.span3, div.row1 div.row10 div.span4, div.row10 div.row1 div.span4, div.row1 div.row10 div.span5, div.row10 div.row1 div.span5, div.row1 div.row10 div.span6, div.row10 div.row1 div.span6, div.row1 div.row10 div.span7, div.row10 div.row1 div.span7, div.row1 div.row10 div.span8, div.row10 div.row1 div.span8, div.row1 div.row10 div.span9, div.row10 div.row1 div.span9, div.row1 div.row10 div.span10, div.row10 div.row1 div.span10 {
-  width: 97.91667%; }
-
-div.row2 div.span1 {
-  width: 47.91667%; }
-div.row2 div.span1, div.row2 div.span, div.row2 div.span2, div.row2 div.row3 div.span3, div.row3 div.row2 div.span3, div.row2 div.row4 div.span3, div.row4 div.row2 div.span3, div.row2 div.row4 div.span4, div.row4 div.row2 div.span4, div.row2 div.row5 div.span3, div.row5 div.row2 div.span3, div.row2 div.row5 div.span4, div.row5 div.row2 div.span4, div.row2 div.row5 div.span5, div.row5 div.row2 div.span5, div.row2 div.row6 div.span3, div.row6 div.row2 div.span3, div.row2 div.row6 div.span4, div.row6 div.row2 div.span4, div.row2 div.row6 div.span5, div.row6 div.row2 div.span5, div.row2 div.row6 div.span6, div.row6 div.row2 div.span6, div.row2 div.row7 div.span3, div.row7 div.row2 div.span3, div.row2 div.row7 div.span4, div.row7 div.row2 div.span4, div.row2 div.row7 div.span5, div.row7 div.row2 div.span5, div.row2 div.row7 div.span6, div.row7 div.row2 div.span6, div.row2 div.row7 div.span7, div.row7 div.row2 div.span7, div.row2 div.row8 div.span3, div.row8 div.row2 div.span3, div.row2 div.row8 div.span4, div.row8 div.row2 div.span4, div.row2 div.row8 div.span5, div.row8 div.row2 div.span5, div.row2 div.row8 div.span6, div.row8 div.row2 div.span6, div.row2 div.row8 div.span7, div.row8 div.row2 div.span7, div.row2 div.row8 div.span8, div.row8 div.row2 div.span8, div.row2 div.row9 div.span3, div.row9 div.row2 div.span3, div.row2 div.row9 div.span4, div.row9 div.row2 div.span4, div.row2 div.row9 div.span5, div.row9 div.row2 div.span5, div.row2 div.row9 div.span6, div.row9 div.row2 div.span6, div.row2 div.row9 div.span7, div.row9 div.row2 div.span7, div.row2 div.row9 div.span8, div.row9 div.row2 div.span8, div.row2 div.row9 div.span9, div.row9 div.row2 div.span9, div.row2 div.row10 div.span3, div.row10 div.row2 div.span3, div.row2 div.row10 div.span4, div.row10 div.row2 div.span4, div.row2 div.row10 div.span5, div.row10 div.row2 div.span5, div.row2 div.row10 div.span6, div.row10 div.row2 div.span6, div.row2 div.row10 div.span7, div.row10 div.row2 div.span7, div.row2 div.row10 div.span8, div.row10 div.row2 div.span8, div.row2 div.row10 div.span9, div.row10 div.row2 div.span9, div.row2 div.row10 div.span10, div.row10 div.row2 div.span10 {
-  width: 47.91667%; }
-div.row2 div.span2 {
-  width: 95.83333%; }
-
-div.row3 div.span1 {
-  width: 31.25%; }
-div.row3 div.span1, div.row3 div.span, div.row3 div.span2, div.row3 div.span3, div.row3 div.row4 div.span4, div.row4 div.row3 div.span4, div.row3 div.row5 div.span4, div.row5 div.row3 div.span4, div.row3 div.row5 div.span5, div.row5 div.row3 div.span5, div.row3 div.row6 div.span4, div.row6 div.row3 div.span4, div.row3 div.row6 div.span5, div.row6 div.row3 div.span5, div.row3 div.row6 div.span6, div.row6 div.row3 div.span6, div.row3 div.row7 div.span4, div.row7 div.row3 div.span4, div.row3 div.row7 div.span5, div.row7 div.row3 div.span5, div.row3 div.row7 div.span6, div.row7 div.row3 div.span6, div.row3 div.row7 div.span7, div.row7 div.row3 div.span7, div.row3 div.row8 div.span4, div.row8 div.row3 div.span4, div.row3 div.row8 div.span5, div.row8 div.row3 div.span5, div.row3 div.row8 div.span6, div.row8 div.row3 div.span6, div.row3 div.row8 div.span7, div.row8 div.row3 div.span7, div.row3 div.row8 div.span8, div.row8 div.row3 div.span8, div.row3 div.row9 div.span4, div.row9 div.row3 div.span4, div.row3 div.row9 div.span5, div.row9 div.row3 div.span5, div.row3 div.row9 div.span6, div.row9 div.row3 div.span6, div.row3 div.row9 div.span7, div.row9 div.row3 div.span7, div.row3 div.row9 div.span8, div.row9 div.row3 div.span8, div.row3 div.row9 div.span9, div.row9 div.row3 div.span9, div.row3 div.row10 div.span4, div.row10 div.row3 div.span4, div.row3 div.row10 div.span5, div.row10 div.row3 div.span5, div.row3 div.row10 div.span6, div.row10 div.row3 div.span6, div.row3 div.row10 div.span7, div.row10 div.row3 div.span7, div.row3 div.row10 div.span8, div.row10 div.row3 div.span8, div.row3 div.row10 div.span9, div.row10 div.row3 div.span9, div.row3 div.row10 div.span10, div.row10 div.row3 div.span10 {
-  width: 31.25%; }
-div.row3 div.span2 {
-  width: 62.5%; }
-div.row3 div.span3 {
-  width: 93.75%; }
-
-div.row4 div.span1 {
-  width: 22.91667%; }
-div.row4 div.span1, div.row4 div.span, div.row4 div.span2, div.row4 div.span3, div.row4 div.span4, div.row4 div.row5 div.span5, div.row5 div.row4 div.span5, div.row4 div.row6 div.span5, div.row6 div.row4 div.span5, div.row4 div.row6 div.span6, div.row6 div.row4 div.span6, div.row4 div.row7 div.span5, div.row7 div.row4 div.span5, div.row4 div.row7 div.span6, div.row7 div.row4 div.span6, div.row4 div.row7 div.span7, div.row7 div.row4 div.span7, div.row4 div.row8 div.span5, div.row8 div.row4 div.span5, div.row4 div.row8 div.span6, div.row8 div.row4 div.span6, div.row4 div.row8 div.span7, div.row8 div.row4 div.span7, div.row4 div.row8 div.span8, div.row8 div.row4 div.span8, div.row4 div.row9 div.span5, div.row9 div.row4 div.span5, div.row4 div.row9 div.span6, div.row9 div.row4 div.span6, div.row4 div.row9 div.span7, div.row9 div.row4 div.span7, div.row4 div.row9 div.span8, div.row9 div.row4 div.span8, div.row4 div.row9 div.span9, div.row9 div.row4 div.span9, div.row4 div.row10 div.span5, div.row10 div.row4 div.span5, div.row4 div.row10 div.span6, div.row10 div.row4 div.span6, div.row4 div.row10 div.span7, div.row10 div.row4 div.span7, div.row4 div.row10 div.span8, div.row10 div.row4 div.span8, div.row4 div.row10 div.span9, div.row10 div.row4 div.span9, div.row4 div.row10 div.span10, div.row10 div.row4 div.span10 {
-  width: 22.91667%; }
-div.row4 div.span2 {
-  width: 45.83333%; }
-div.row4 div.span3 {
-  width: 68.75%; }
-div.row4 div.span4 {
-  width: 91.66667%; }
-
-div.row5 div.span1 {
-  width: 17.91667%; }
-div.row5 div.span1, div.row5 div.span, div.row5 div.span2, div.row5 div.span3, div.row5 div.span4, div.row5 div.span5, div.row5 div.row6 div.span6, div.row6 div.row5 div.span6, div.row5 div.row7 div.span6, div.row7 div.row5 div.span6, div.row5 div.row7 div.span7, div.row7 div.row5 div.span7, div.row5 div.row8 div.span6, div.row8 div.row5 div.span6, div.row5 div.row8 div.span7, div.row8 div.row5 div.span7, div.row5 div.row8 div.span8, div.row8 div.row5 div.span8, div.row5 div.row9 div.span6, div.row9 div.row5 div.span6, div.row5 div.row9 div.span7, div.row9 div.row5 div.span7, div.row5 div.row9 div.span8, div.row9 div.row5 div.span8, div.row5 div.row9 div.span9, div.row9 div.row5 div.span9, div.row5 div.row10 div.span6, div.row10 div.row5 div.span6, div.row5 div.row10 div.span7, div.row10 div.row5 div.span7, div.row5 div.row10 div.span8, div.row10 div.row5 div.span8, div.row5 div.row10 div.span9, div.row10 div.row5 div.span9, div.row5 div.row10 div.span10, div.row10 div.row5 div.span10 {
-  width: 17.91667%; }
-div.row5 div.span2 {
-  width: 35.83333%; }
-div.row5 div.span3 {
-  width: 53.75%; }
-div.row5 div.span4 {
-  width: 71.66667%; }
-div.row5 div.span5 {
-  width: 89.58333%; }
-
-div.row6 div.span1 {
-  width: 14.58333%; }
-div.row6 div.span1, div.row6 div.span, div.row6 div.span2, div.row6 div.span3, div.row6 div.span4, div.row6 div.span5, div.row6 div.span6, div.row6 div.row7 div.span7, div.row7 div.row6 div.span7, div.row6 div.row8 div.span7, div.row8 div.row6 div.span7, div.row6 div.row8 div.span8, div.row8 div.row6 div.span8, div.row6 div.row9 div.span7, div.row9 div.row6 div.span7, div.row6 div.row9 div.span8, div.row9 div.row6 div.span8, div.row6 div.row9 div.span9, div.row9 div.row6 div.span9, div.row6 div.row10 div.span7, div.row10 div.row6 div.span7, div.row6 div.row10 div.span8, div.row10 div.row6 div.span8, div.row6 div.row10 div.span9, div.row10 div.row6 div.span9, div.row6 div.row10 div.span10, div.row10 div.row6 div.span10 {
-  width: 14.58333%; }
-div.row6 div.span2 {
-  width: 29.16667%; }
-div.row6 div.span3 {
-  width: 43.75%; }
-div.row6 div.span4 {
-  width: 58.33333%; }
-div.row6 div.span5 {
-  width: 72.91667%; }
-div.row6 div.span6 {
-  width: 87.5%; }
-
-div.row7 div.span1 {
-  width: 12.20238%; }
-div.row7 div.span1, div.row7 div.span, div.row7 div.span2, div.row7 div.span3, div.row7 div.span4, div.row7 div.span5, div.row7 div.span6, div.row7 div.span7, div.row7 div.row8 div.span8, div.row8 div.row7 div.span8, div.row7 div.row9 div.span8, div.row9 div.row7 div.span8, div.row7 div.row9 div.span9, div.row9 div.row7 div.span9, div.row7 div.row10 div.span8, div.row10 div.row7 div.span8, div.row7 div.row10 div.span9, div.row10 div.row7 div.span9, div.row7 div.row10 div.span10, div.row10 div.row7 div.span10 {
-  width: 12.20238%; }
-div.row7 div.span2 {
-  width: 24.40476%; }
-div.row7 div.span3 {
-  width: 36.60714%; }
-div.row7 div.span4 {
-  width: 48.80952%; }
-div.row7 div.span5 {
-  width: 61.0119%; }
-div.row7 div.span6 {
-  width: 73.21429%; }
-div.row7 div.span7 {
-  width: 85.41667%; }
-
-div.row8 div.span1 {
-  width: 10.41667%; }
-div.row8 div.span1, div.row8 div.span, div.row8 div.span2, div.row8 div.span3, div.row8 div.span4, div.row8 div.span5, div.row8 div.span6, div.row8 div.span7, div.row8 div.span8, div.row8 div.row9 div.span9, div.row9 div.row8 div.span9, div.row8 div.row10 div.span9, div.row10 div.row8 div.span9, div.row8 div.row10 div.span10, div.row10 div.row8 div.span10 {
-  width: 10.41667%; }
-div.row8 div.span2 {
-  width: 20.83333%; }
-div.row8 div.span3 {
-  width: 31.25%; }
-div.row8 div.span4 {
-  width: 41.66667%; }
-div.row8 div.span5 {
-  width: 52.08333%; }
-div.row8 div.span6 {
-  width: 62.5%; }
-div.row8 div.span7 {
-  width: 72.91667%; }
-div.row8 div.span8 {
-  width: 83.33333%; }
-
-div.row9 div.span1 {
-  width: 9.02778%; }
-div.row9 div.span1, div.row9 div.span, div.row9 div.span2, div.row9 div.span3, div.row9 div.span4, div.row9 div.span5, div.row9 div.span6, div.row9 div.span7, div.row9 div.span8, div.row9 div.span9, div.row9 div.row10 div.span10, div.row10 div.row9 div.span10 {
-  width: 9.02778%; }
-div.row9 div.span2 {
-  width: 18.05556%; }
-div.row9 div.span3 {
-  width: 27.08333%; }
-div.row9 div.span4 {
-  width: 36.11111%; }
-div.row9 div.span5 {
-  width: 45.13889%; }
-div.row9 div.span6 {
-  width: 54.16667%; }
-div.row9 div.span7 {
-  width: 63.19444%; }
-div.row9 div.span8 {
-  width: 72.22222%; }
-div.row9 div.span9 {
-  width: 81.25%; }
-
-div.row10 div.span1 {
-  width: 7.91667%; }
-div.row10 div.span1, div.row10 div.span, div.row10 div.span2, div.row10 div.span3, div.row10 div.span4, div.row10 div.span5, div.row10 div.span6, div.row10 div.span7, div.row10 div.span8, div.row10 div.span9, div.row10 div.span10 {
-  width: 7.91667%; }
-div.row10 div.span2 {
-  width: 15.83333%; }
-div.row10 div.span3 {
-  width: 23.75%; }
-div.row10 div.span4 {
-  width: 31.66667%; }
-div.row10 div.span5 {
-  width: 39.58333%; }
-div.row10 div.span6 {
-  width: 47.5%; }
-div.row10 div.span7 {
-  width: 55.41667%; }
-div.row10 div.span8 {
-  width: 63.33333%; }
-div.row10 div.span9 {
-  width: 71.25%; }
-div.row10 div.span10 {
-  width: 79.16667%; }
-
-/* INFO-CARD__________________________________________________________________*/
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : Nov 26, 2013, 4:13:28 PM
-    Author     : cesar
-*/
-.info-card {
-  padding: 5px 130px 5px 5px;
-  background-color: #FFF;
-  border: solid 1px #CCC;
-  color: #333;
-  background-position: bottom right;
-  background-repeat: no-repeat;
-  box-shadow: 0 0 2px rgba(175, 175, 175, 0.6);
-  min-height: 130px; }
-  .info-card .title {
-    display: block;
-    border-bottom: solid 1px #DADADA;
-    width: 100%;
-    font-weight: bold; }
-  .info-card .value {
-    font-size: 3.5em;
-    font-weight: bold;
-    display: block;
-    text-align: center; }
-  .info-card .caption {
-    color: #888;
-    font-size: .8em;
-    display: block;
-    text-align: right; }
 
 /* EDITION____________________________________________________________________*/
 .edit {
-  display: block;
-  width: 720px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #FFF;
-  border-radius: 3px;
-  border: solid 1px #CCC;
-  box-shadow: 2px 2px 5px #E3E3E3; }
+	display: block;
+	width: 520px;
+	margin: 20px auto;
+	padding: 20px;
+	background: #FFF;
+	border-radius: 3px;
+	border: solid 1px #CCC;
+	box-shadow: 2px 2px 5px #E3E3E3;
+}
 
 .edit .field {
-  margin-top: 5px; }
+	margin-top: 5px;
+}
 
 .edit .field small {
-  font-size: 10px;
-  color: #555;
-  display: block;
-  width: 200px;
-  margin-left: 220px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-align: right;
-  text-overflow: ellipsis;
-  -moz-transition: width 0.5s ease, margin-left 0.5s ease; }
+	font-size: 10px;
+	color: #555;
+	display: block;
+	width: 200px;
+	margin-left: 220px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-align: right;
+	
+	-moz-transition: width 0.5s ease, margin-left 0.5s ease;
+}
 
 .edit .field small:hover {
-  margin-left: 0;
-  width: 620px; }
+	margin-left: 0;
+	width: 420px;
+}
+
 
 .edit label {
-  display: inline-block;
-  width: 200px;
-  font-size: 12px;
-  text-align: right;
-  color: #555; }
+	display: inline-block;
+	width: 200px;
+	font-size: 12px;
+	text-align: right;
+	color: #555;
+}
 
 .edit input,
-.edit textarea,
 .edit select {
-  display: inline-block;
-  border: solid 1px #CCC;
-  border-radius: 3px;
-  margin-left: 20px;
-  padding: 3px;
-  background: #FFF; }
+	display: inline-block;
+	border: solid 1px #CCC;
+	border-radius: 3px;
+	margin-left: 20px;
+	padding: 3px;
+	background: #FFF;
+}
 
 .edit input[type="text"],
-.edit textarea,
-.edit select {
-  width: 400px; }
-
-.edit textarea {
-  vertical-align: top;
-  height: 150px; }
+.edit select  {
+	width: 200px;
+}
 
 .edit input[type="submit"] {
-  float: right;
-  margin-right: 100px;
-  margin-top: 10px;
-  color: #FFF;
-  background-color: #416F9B;
-  padding: 3px;
-  cursor: pointer; }
+	float: right;
+	margin-right: 100px;
+	margin-top:   10px;
+	color: #FFF;
+	background-color: #416F9B;
+	padding: 3px;
+	cursor: pointer;
+}
+
 
 .edit:after {
-  content: '';
-  clear: both;
-  display: table; }
-
-.edit h1 {
-  font-size: 16px;
-  color: #0a5dad;
-  border-bottom: solid 1px #0a5dad;
-  margin-top: 20px; }
-
-.edit .dateTimePicker input,
-.edit .dateTimePicker select {
-  width: 70px;
-  margin: 2px; }
-
-.edit .dateTimePicker select:first-child {
-  margin-left: 20px; }
-
-.edit .error-output {
-  margin-left: 190px; }
-
-.edit .error-output ul {
-  font-size: 11px;
-  color: #f00;
-  list-style: none; }
+	content: '';
+	clear: both;
+	display: table;
+}
 
 /**AUTH_______________________________________________________________________*/
 #auth {
-  display: block;
-  width: 520px;
-  background: #FFF;
-  padding: 25px;
-  margin: 0 auto;
-  border: solid 1px #CCC;
-  border-radius: 5px; }
+	display: block;
+	width: 520px;
+	background: #FFF;
+	padding: 25px;
+	margin: 0 auto;
+	border: solid 1px #CCC;
+	border-radius: 5px;
+}
 
 #auth .field {
-  margin-top: 5px; }
+	margin-top: 5px;
+}
 
 #auth label {
-  display: inline-block;
-  width: 200px;
-  font-size: 12px;
-  text-align: right;
-  color: #555; }
+	display: inline-block;
+	width: 200px;
+	font-size: 12px;
+	text-align: right;
+	color: #555;
+}
 
 #auth input {
-  display: inline-block;
-  border: solid 1px #CCC;
-  border-radius: 3px;
-  margin-left: 20px;
-  padding: 3px;
-  background: #FFF; }
+	display: inline-block;
+	border: solid 1px #CCC;
+	border-radius: 3px;
+	margin-left: 20px;
+	padding: 3px;
+	background: #FFF;
+}
+
 
 #auth input[type="text"],
 #auth input[type="password"],
-#auth select {
-  width: 200px; }
+#auth select  {
+	width: 200px;
+}
 
 #auth input[type="submit"] {
-  float: right;
-  margin-right: 100px;
-  margin-top: 10px;
-  color: #FFF;
-  background-color: #416F9B;
-  padding: 3px;
-  cursor: pointer; }
-
-/***************************************+
-***CONFIRMATION DIALOGS
-*******************************************************************/
-.confirm {
-  display: block;
-  width: 720px;
-  margin: 20px auto;
-  padding: 20px;
-  background: #FFF;
-  border-radius: 3px;
-  border: solid 1px #CCC;
-  box-shadow: 2px 2px 5px #E3E3E3; }
-
-.form-buttons {
-  text-align: right;
-  padding: 10px; }
-
-.confirm .button {
-  display: inline-block;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 3px;
-  padding: 7px 10px; }
-
-.confirm .button.primary {
-  font-weight: bold;
-  color: #FFF;
-  background: #4575D4;
-  border-color: #29467F; }
-
-.confirm .button.primary:hover {
-  text-decoration: none;
-  background: #558AE5; }
-
-.confirm .button.warning {
-  color: #FFF;
-  background: #BF3D30;
-  border-color: #C83222; }
-
-.confirm .button.warning:hover {
-  text-decoration: none;
-  background: #A2000C; }
-
-/***************************************+
-***SORTING
-*******************************************************************/
-a.unsorted {
-  color: #fff; }
-
-a.sorted {
-  color: #fff; }
-
-a.unsorted:after {
-  content: '';
-  margin-left: 5px;
-  border-style: solid solid none solid;
-  border-color: transparent transparent transparent transparent;
-  border-width: 7px;
-  display: inline-block;
-  vertical-align: 3px; }
-
-a.sorted.asc:after,
-a.sorted.desc:hover:after,
-a.unsorted:hover:after {
-  content: '';
-  margin-left: 5px;
-  border-style: solid solid none solid;
-  border-color: #fff transparent transparent transparent;
-  border-width: 7px;
-  display: inline-block;
-  vertical-align: 3px; }
-
-a.sorted.desc:after,
-a.sorted.asc:hover:after {
-  content: '';
-  margin-left: 5px;
-  border-style: none solid solid solid;
-  border-color: transparent transparent #fff transparent;
-  border-width: 7px;
-  display: inline-block;
-  vertical-align: 3px; }
-
-/***************************************+
-***STATUS MESSAGES
-*******************************************************************/
-.message-wrapper {
-  position: absolute;
-  bottom: 0;
-  margin-bottom: -10px;
-  width: 100%; }
-
-.message {
-  margin: 0 auto;
-  display: block;
-  width: 500px;
-  text-align: center;
-  border: solid 1px #cccccc;
-  background: #fff;
-  padding: 3px;
-  border-radius: 2px;
-  font-size: 12px; }
-
-.message.success {
-  border-color: #78AF2C;
-  color: #589800;
-  font-weight: bold;
-  background-color: #BCF46E; }
-
-/***************************************+
-***DEBUGGING
-*******************************************************************/
-pre.debugmessages {
-  border: dashed 1px #cccccc;
-  background: #f2f2f2;
-  border-radius: 5px;
-  padding: 5px;
-  max-height: 300px;
-  overflow: auto; }
+	float: right;
+	margin-right: 100px;
+	margin-top:   10px;
+	color: #FFF;
+	background-color: #416F9B;
+	padding: 3px;
+	cursor: pointer;
+}
