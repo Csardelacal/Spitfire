@@ -26,6 +26,7 @@ class SimpleFieldRenderer {
 		if ($field instanceof RenderableFieldText)     { $type = 'Text'; }
 		if ($field instanceof RenderableFieldHidden)   { $type = 'Hidden'; }
 		if ($field instanceof RenderableFieldSelect)   { $type = 'Select'; }
+		if ($field instanceof RenderableFieldBoolean)  { $type = 'Boolean'; }
 		
 		$method = 'renderForm' . $type . ($array?'Array':'');
 		
@@ -54,6 +55,15 @@ class SimpleFieldRenderer {
 		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
 	}
 	
+	public function renderFormBoolean(RenderableFieldBoolean$field, $error) {
+		$input = new HTMLInput('checkbox', $field->getPostId());
+		if ($field->getValue()) {$input->setParameter('checked', 'checked');}
+		$label = new HTMLLabel($input, $field->getCaption());
+		$errs  = $this->renderError($error);
+		
+		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
+	}
+	
 	public function renderError($error) {
 		if ($error !== null) {
 			$errs  = new HTMLDiv('<ul>' . $error . '</ul>', Array('class' => 'error-output'));
@@ -67,7 +77,7 @@ class SimpleFieldRenderer {
 		return $input;
 	}
 	
-	public function renderFormSelect(RenderableFieldSelect$field, $value = false) {
+	public function renderFormSelect(RenderableFieldSelect$field, $error = null, $value = false) {
 		$value   = ($value === false)? $field->getValue() : $value;
 		if ($value instanceof \Model) {$value = implode(':', $value->getPrimaryData());}
 		$select  = new HTMLSelect($field->getPostId(), $value);

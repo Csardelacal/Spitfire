@@ -9,7 +9,8 @@ class BooleanField extends BasicField implements RenderableFieldBoolean
 {
 	
 	public function getRequestValue() {
-		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') !== 'POST') {throw new privateException(spitfire()->Log("Not POSTed"));}
+		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') !== 'POST'
+				  || !$this->hasPostData()) {throw new privateException(spitfire()->Log("Not POSTed"));}
 		
 		try {
 			parent::getRequestValue();

@@ -4,6 +4,7 @@ abstract class PostTarget
 {
 	
 	private $postData;
+	private $hasPost = false;
 	
 	public function getPostData() {
 		return $this->postData;
@@ -11,6 +12,7 @@ abstract class PostTarget
 	
 	public function setPostData($post) {
 		$this->postData = $post;
+		$this->hasPost  = true;
 		$this->propagate();
 	}
 	
@@ -22,7 +24,12 @@ abstract class PostTarget
 				if ($postTarget !== null) { $postTarget->clearPostData(); }
 			}
 		}
+		$this->hasPost  = false;
 		$this->postData = null;
+	}
+	
+	public function hasPostData() {
+		return $this->hasPost;
 	}
 	
 	public function issetPostData() {
