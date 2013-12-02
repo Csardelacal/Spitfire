@@ -107,9 +107,9 @@ class Validator
 		if ($value instanceof Validatable) {$result = $value->validate();}
 		else { $result = $this->iterateRules($value, $src);}
 		
-		if ($result instanceof ValidationResult && $result->success()) { return $result; }
-		elseif ($result instanceof ValidationError ) { throw self::makeException()->setResult(new ValidationResult(Array($result))); }
-		else { throw self::makeException()->setResult($result);};
+		if ($result instanceof ValidationResult) { return $result; }
+		elseif ($result instanceof ValidationError ) { return new ValidationResult(Array($result)); }
+		else { return false; }
 	}
 	
 	/**
@@ -152,9 +152,12 @@ class Validator
 	 * as it will require to write it with catch's instead of big if nests that
 	 * are not required in most cases.
 	 * 
+	 * @param \spitfire\validation\ValidationResult $result
 	 * @return \ValidationException
 	 */
-	protected function makeException() {
-		return new \ValidationException('Validation failed', 0);
+	public static function makeException(ValidationResult$result = null) {
+		$ex = new \ValidationException('Validation failed', 0);
+		if ($result !== null) {$ex->setResult($result); }
+		return $ex;
 	}
 }
