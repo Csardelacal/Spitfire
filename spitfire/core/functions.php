@@ -161,7 +161,9 @@ function current_context(Context$set = null) {
 function validate($target = null, Validator$validator = null) {
 	if ($target !== null && $target instanceof Validatable) {
 		$v = new Validator();
-		return $v->test($target);
+		$result = $v->test($target);
+		if (!$result->success()) {	throw Validator::makeException($result); }
+		return $result;
 	}
 	elseif ($validator !== null) {
 		$result = $validator->test($target);
