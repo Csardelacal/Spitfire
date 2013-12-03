@@ -5,17 +5,22 @@ class session
 
 	private $secure  = false;
 
-	public function set($key, $value) {
+	public function set($key, $value, $app = null) {
+		if ($app === null) {$app = current_context()->app;}
+		/* @var $app App */
+		$namespace = ($app->getNameSpace())? $app->getNameSpace() : '*';
 
 		if (!session_id()) $this->start();
-		$_SESSION[$key] = $value;
+		$_SESSION[$namespace][$key] = $value;
 
 	}
 
-	public function get($key) {
+	public function get($key, $app = null) {
+		if ($app === null) {$app = current_context()->app;}
+		$namespace = ($app->getNameSpace())? $app->getNameSpace() : '*';
 
 		if (!session_id()) $this->start();
-		return isset($_SESSION[$key])? $_SESSION[$key] : null;
+		return isset($_SESSION[$namespace][$key])? $_SESSION[$namespace][$key] : null;
 
 	}
 
