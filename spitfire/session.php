@@ -24,33 +24,33 @@ class session
 
 	}
 
-	public function lock($userdata) {
-
+	public function lock($userdata, App$app = null) {
+		
 		$user = Array();
 		$user['ip']       = $_SERVER['REMOTE_ADDR'];
 		$user['userdata'] = $userdata;
 		$user['secure']   = true;
 
-		$this->set('_SF_Auth', $user);
+		$this->set('_SF_Auth', $user, $app);
 
 	}
 
-	public function isSafe() {
+	public function isSafe(App$app = null) {
 
-		$user = $this->get('_SF_Auth');
+		$user = $this->get('_SF_Auth', $app);
 		if ($user) {
 			$user['secure'] = $user['secure'] && ($user['ip'] == $_SERVER['REMOTE_ADDR']);
 
-			$this->set('_SF_Auth', $user);
+			$this->set('_SF_Auth', $user, $app);
 			return $user['secure'];
 		} 
 		else return false;
 
 	}
 
-	public function getUser() {
+	public function getUser(App$app = null) {
 
-		$user = $this->get('_SF_Auth');
+		$user = $this->get('_SF_Auth', $app);
 		return $user['userdata'];
 		
 	}
