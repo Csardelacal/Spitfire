@@ -2,9 +2,9 @@
 
 namespace M3W\admin;
 
-use Locale;
+use spitfire\locale\sys\En;
 
-class enLocale extends Locale
+class EnLocale extends En
 {
 	public $username = "Username";
 	public $password = "Password";

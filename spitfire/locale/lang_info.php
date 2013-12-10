@@ -39,11 +39,11 @@ class langInfo
 	
 	public function getLocaleClass($context) {
 		try {
-			return $context->app->getLocale($this->langcode);
+			return $context->app->getLocale(str_replace('-', '\\', $this->localecode));
 		}
 		catch(privateException $e) {
 			try {
-				return $context->app->getLocale(substr($this->localecode, 0, 2));
+				return $context->app->getLocale($this->langcode);
 			}
 			catch(privateException $e) {
 				if (class_exists($t = 'system\\' . $this->langcode . 'Locale')) { return new $t();}
