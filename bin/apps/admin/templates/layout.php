@@ -47,5 +47,6 @@
 				<?php endif; ?>
 			</div>
 		</div>
+		<?= $this->js(); ?>
 	</body>
 </html>

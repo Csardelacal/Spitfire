@@ -67,7 +67,7 @@ class SpitFire extends App
 	public function fire() {
 		
 		#Get the current path...
-		$pinfo = isset($_SERVER['PATH_INFO'])? $_SERVER['PATH_INFO'] : '/';
+		$pinfo = get_path_info();
 		$path = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD']);
 		
 		#If the user responded to the current route with a response we do not need 

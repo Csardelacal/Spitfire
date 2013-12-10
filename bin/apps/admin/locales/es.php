@@ -2,7 +2,9 @@
 
 namespace M3W\admin;
 
-class esLocale extends enLocale
+use spitfire\locale\sys\Es;
+
+class EsLocale extends Es
 {
 	public $username = "Nombre de usuario";
 	public $password = "Contraseña";

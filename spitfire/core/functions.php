@@ -101,7 +101,7 @@ function find_locale() {
 
 	foreach($langs as $l) {
 		$l = new langInfo($l);
-		if ($l->isUnderstood())	return $l->getLocaleClass($context);
+		if (null != $c = $l->getLocaleClass($context))	return $c;
 	}
 	return new \spitfire\locale\sys\En;
 }
@@ -171,4 +171,16 @@ function validate($target = null, Validator$validator = null) {
 		return $result;
 	}
 	return new Validator();
+}
+
+function get_path_info() {
+	if (isset($_SERVER['PATH_INFO'])) {
+		return $_SERVER['PATH_INFO'];
+	} elseif (isset($_SERVER['REQUEST_URI'])) {
+		$base_url = spitfire()->baseUrl();
+		$path = substr($_SERVER['REQUEST_URI'], strlen($base_url));
+		if (strlen($path) !== 0) { return $path; }
+	}
+	
+	return  '/';
 }

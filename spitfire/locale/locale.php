@@ -1,4 +1,4 @@
-<?php
+<?php namespace spitfire\locale;
 
 class Locale
 {

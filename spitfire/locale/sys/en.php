@@ -1,6 +1,6 @@
 <?php namespace spitfire\locale\sys;
 
-use Locale;
+use spitfire\locale\Locale;
 
 class En extends Locale
 {

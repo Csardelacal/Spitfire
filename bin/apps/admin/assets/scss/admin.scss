@@ -287,6 +287,7 @@ table td {
 
 .edit input,
 .edit textarea,
+.edit .input-wrapper,
 .edit select {
 	display: inline-block;
 	border: solid 1px #CCC;
@@ -297,9 +298,24 @@ table td {
 }
 
 .edit input[type="text"],
+.edit input[type="email"],
+.edit input[type="password"],
+.edit .input-wrapper,
 .edit textarea,
 .edit select  {
 	width: 400px;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.input-wrapper label {
+	width: auto;
+	display: inline;
+}
+
+.input-wrapper input[type="text"] {
+	width: 100px;
+	display: inline;
 }
 
 .edit textarea {
