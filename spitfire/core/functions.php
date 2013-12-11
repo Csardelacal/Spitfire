@@ -178,7 +178,7 @@ function get_path_info() {
 		return $_SERVER['PATH_INFO'];
 	} elseif (isset($_SERVER['REQUEST_URI'])) {
 		$base_url = spitfire()->baseUrl();
-		$path = substr($_SERVER['REQUEST_URI'], strlen($base_url));
+		list($path) = explode('?', substr($_SERVER['REQUEST_URI'], strlen($base_url)));
 		if (strlen($path) !== 0) { return $path; }
 	}
 	

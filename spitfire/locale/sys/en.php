@@ -7,6 +7,8 @@ class En extends Locale
 	
 	public $comment_count   = Array('No comments', 'One comment', '%s comments');
 	
+	public $select_pick     = 'Pick'; 
+	
 	public $secondsago      = Array('Right now', 'One second ago', '%s seconds ago');
 	public $minutesago      = Array('Less than a minute ago', 'One minute ago', '%s minutes ago');
 	public $hoursago        = Array('Less than an hour ago', 'One hour ago', '%s hours ago');
@@ -17,4 +19,6 @@ class En extends Locale
 	
 	public $str_too_long    = Array('', 'String should be shorter than one character', 'String should be shorter than %s characters');
 	public $str_too_short   = Array('', 'String should be longer than one character', 'String should be longer than %s characters');
+	public $err_not_numeric = Array('Requires a numeric value');
+	public $err_field_null  = Array('Field cannot be null');
 }

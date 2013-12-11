@@ -83,7 +83,7 @@ class SimpleFieldRenderer {
 		$select  = new HTMLSelect($field->getPostId(), $value);
 		$label   = new HTMLLabel($select, $field->getCaption());
 		
-		$select->addChild(new HTMLOption(null, 'Pick'));
+		$select->addChild(new HTMLOption(null, _t('select_pick')));
 		$options = $field->getOptions();
 		foreach ($options as $value => $caption) {
 			$select->addChild(new HTMLOption($value, $caption));

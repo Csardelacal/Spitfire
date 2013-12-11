@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\validation\ValidationError;
 
 class IntegerField extends Field
 {
@@ -19,6 +20,11 @@ class IntegerField extends Field
 
 	public function getDataType() {
 		return Field::TYPE_INTEGER;
+	}
+	
+	public function validate($value) {
+		if (!is_numeric($value)) { return new ValidationError(_t('err_not_numeric', $this->length)); }
+		else { return parent::validate($value); }
 	}
 	
 }

@@ -23,6 +23,6 @@ class StringField extends Field
 	
 	public function validate($value) {
 		if (strlen($value) > $this->length) { return new ValidationError(_t('str_too_long', $this->length)); }
-		else { return false; }
+		else { return parent::validate($value); }
 	}
 }
