@@ -1,6 +1,6 @@
-<?php
+<?php namespace spitfire\model;
 
-namespace spitfire\model;
+use spitfire\validation\ValidationError;
 
 /**
  * Represents a table's field in a database. Contains information about the
@@ -298,7 +298,8 @@ abstract class Field
 	}
 	
 	public function validate($value) {
-		return new \spitfire\validation\ValidationResult();
+		if (!$this->nullable && !$value) return new ValidationError(_t('err_field_null'));
+		return false;
 	}
 	
 	/**

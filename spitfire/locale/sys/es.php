@@ -6,6 +6,8 @@ class Es extends Locale
 {
 	public $comment_count   = Array('Sin comentarios', 'Un comentario', '%s comentarios');
 	
+	public $select_pick     = 'Elegir';
+	
 	public $secondsago      = Array('Ahora mismo', 'Hace un segundo', 'Hace %s segundos');
 	public $minutesago      = Array('Hace menos de un minuto', 'Hace un minuto', 'Hace %s minutos');
 	public $hoursago        = Array('Hace menos de una hora', 'Hace una hora', 'Hace %s horas');
@@ -16,4 +18,6 @@ class Es extends Locale
 	
 	public $str_too_long    = Array('', 'La cadena debe tener menos de un caracter', 'La cadena debe tener menos de %s caracteres');
 	public $str_too_short   = Array('', 'La cadena debe tener más de un caracter', 'La cadena debe tener más de %s caracteres');
+	public $err_not_numeric = Array('Se exige un dato numérico');
+	public $err_field_null  = Array('El campo no puede ser nulo');
 }

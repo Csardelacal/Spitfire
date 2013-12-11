@@ -74,9 +74,9 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	 * @return ValidationResult In case it successfully stored the data
 	 */
 	public function validate() {
-		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'POST') {
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			
-			$xss = filter_input(INPUT_POST, '_XSS_') !== $this->xss->getValue();
+			$xss = $_POST['_XSS_'] !== $this->xss->getValue();
 			if ($xss) { throw new publicException('XSS Attack', 403); }
 			
 			$errors = Array();

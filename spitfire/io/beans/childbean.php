@@ -46,7 +46,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 	public function getRequestValue() {
 		
 		#Check if the request is done via POST. Otherwise return an empty array.
-		if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') != 'POST') {
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 			throw new \privateException("Invalid request method. Requires POST");
 		}
 		
