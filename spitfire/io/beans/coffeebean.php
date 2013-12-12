@@ -13,6 +13,7 @@ use spitfire\io\beans\ManyToManyField;
 use spitfire\io\beans\DateTimeField;
 use spitfire\io\beans\EnumField;
 use spitfire\io\beans\BooleanField;
+use spitfire\io\beans\IntegerField;
 use spitfire\io\beans\UnSubmittedException;
 
 use spitfire\io\XSSToken;
@@ -140,13 +141,14 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		
 		switch($logical->getDataType()) {
 			case model\Field::TYPE_STRING:
-			case model\Field::TYPE_INTEGER:
 			case model\Field::TYPE_LONG:
 				if ($logical instanceof \EnumField)
 					return $this->fields[$field] = new EnumField($this, $logical, $caption);
 				else
 					return $this->fields[$field] = new TextField($this, $logical, $caption);
 				break;
+			case model\Field::TYPE_INTEGER:
+				return $this->fields[$field] = new IntegerField($this, $logical, $caption);
 			case model\Field::TYPE_DATETIME:
 				return $this->fields[$field] = new DateTimeField($this, $logical, $caption);
 				break;

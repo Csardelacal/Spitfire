@@ -97,6 +97,7 @@ AutoLoad::registerClass('CoffeeBean',            $cur_dir.'/io/beans/coffeebean.
 AutoLoad::registerClass('spitfire\io\beans\Field',                              $cur_dir.'/io/beans/field.php');
 AutoLoad::registerClass('spitfire\io\beans\BasicField',                         $cur_dir.'/io/beans/basic_field.php');
 AutoLoad::registerClass('spitfire\io\beans\TextField',                          $cur_dir.'/io/beans/text_field.php');
+AutoLoad::registerClass('spitfire\io\beans\IntegerField',                       $cur_dir.'/io/beans/integer_field.php');
 AutoLoad::registerClass('spitfire\io\beans\LongTextField',                      $cur_dir.'/io/beans/long_text_field.php');
 AutoLoad::registerClass('spitfire\io\beans\EnumField',                          $cur_dir.'/io/beans/enum_field.php');
 AutoLoad::registerClass('spitfire\io\beans\BooleanField',                       $cur_dir.'/io/beans/boolean_field.php');
