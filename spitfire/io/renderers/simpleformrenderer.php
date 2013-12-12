@@ -9,11 +9,16 @@ use spitfire\io\html\HTMLForm;
 
 class SimpleFormRenderer extends Renderer
 {
+	private $field_renderer;
+	
+	public function __construct($fieldrenderer = null) {
+		$this->field_renderer = ($fieldrenderer === null)? new SimpleFieldRenderer() : $fieldrenderer;
+	}
 	
 	public function renderForm(RenderableForm$renderable, $errors = Array()) {
 		$form = new HTMLForm($this->getFormAction($renderable));
 		$fields = $renderable->getFormFields();
-		$renderer = new SimpleFieldRenderer();
+		$renderer = $this->field_renderer;
 		
 		foreach ($fields as $field) {
 			if ($field->getVisibility() & CoffeeBean::VISIBILITY_FORM) {

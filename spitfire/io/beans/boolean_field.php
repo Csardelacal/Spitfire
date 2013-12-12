@@ -13,8 +13,7 @@ class BooleanField extends BasicField implements RenderableFieldBoolean
 				  || !$this->hasPostData()) {throw new privateException(spitfire()->Log("Not POSTed"));}
 		
 		try {
-			parent::getRequestValue();
-			return true;
+			return !!parent::getRequestValue();
 		} catch(privateException $e) {
 			return false;
 		}

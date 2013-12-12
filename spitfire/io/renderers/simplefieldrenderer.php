@@ -52,7 +52,20 @@ class SimpleFieldRenderer {
 		$label = new HTMLLabel($input, $field->getCaption());
 		$errs  = $this->renderError($error);
 		
-		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
+		$class = ($errs === null)? 'field' : 'field has-errors';
+		
+		return new HTMLDiv($label, $input, $errs, Array('class' => $class));
+	}
+	
+	public function renderFormInteger(RenderableFieldInteger$field, $error) {
+		$input = new HTMLInput('number', $field->getPostId(), $field->getValue());
+		$label = new HTMLLabel($input, $field->getCaption());
+		$errs  = $this->renderError($error);
+		
+		$class = ($errs === null)? 'field' : 'field has-errors';
+		$input->setParameter('pattern', '\d*');
+		
+		return new HTMLDiv($label, $input, $errs, Array('class' => $class));
 	}
 	
 	public function renderFormBoolean(RenderableFieldBoolean$field, $error) {
@@ -88,7 +101,11 @@ class SimpleFieldRenderer {
 		foreach ($options as $value => $caption) {
 			$select->addChild(new HTMLOption($value, $caption));
 		}
-		return new HTMLDiv($label, $select, Array('class' => 'field'));
+		
+		$err = $this->renderError($error);
+		$class = ($err === null)? 'field' : 'field has-errors';
+		
+		return new HTMLDiv($label, $select, $err, Array('class' => $class));
 	}
 	
 	public function renderFormSelectArray(RenderableFieldSelect$field) {
