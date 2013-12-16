@@ -184,7 +184,7 @@ class URL implements ArrayAccess
 	}
 	
 	public static function current() {
-		$path = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
+		$path = get_path_info();
 		return new self($path, $_GET);
 	}
 	
