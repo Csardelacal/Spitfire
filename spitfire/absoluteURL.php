@@ -28,7 +28,7 @@ class absoluteURL extends URL
 	}
 	
 	public static function current() {
-		return new self($_SERVER['PATH_INFO'], $_GET);
+		return new self(get_path_info(), $_GET);
 	}
 	
 	public static function canonical() {
