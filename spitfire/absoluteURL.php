@@ -1,5 +1,6 @@
 <?php
 
+use spitfire\SpitFire;
 use spitfire\environment;
 use spitfire\Request;
 
@@ -29,6 +30,16 @@ class absoluteURL extends URL
 	
 	public static function current() {
 		return new self(get_path_info(), $_GET);
+	}
+	
+	public static function asset($asset_name, $app = null) {
+		if ($app == null) { $path = SpitFire::baseUrl() . '/assets/' . $asset_name; }
+		else { $path = SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name; }
+		
+		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
+		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
+		
+		return $proto . $server . $path;
 	}
 	
 	public static function canonical() {

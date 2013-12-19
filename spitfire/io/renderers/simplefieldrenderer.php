@@ -108,18 +108,19 @@ class SimpleFieldRenderer {
 		return new HTMLDiv($label, $select, $err, Array('class' => $class));
 	}
 	
-	public function renderFormSelectArray(RenderableFieldSelect$field) {
+	public function renderFormSelectArray(RenderableFieldSelect$field, $errors) {
 		$values = $field->getValue();
 		$html   = new HTMLDiv();
 		foreach ($values as $value) {
-			$html->addChild($this->renderFormSelect($field, $value));
+			$error = ($errors !== null)? $this->getErrorsFor($field, $errors->getSubErrors()) : null;
+			$html->addChild($this->renderFormSelect($field, $error, $value));
 		}
 		
 		while (count($html->getChildren()) < $field->getMinimumEntries()) {
-			$html->addChild($this->renderFormSelect($field, null));
+			$html->addChild($this->renderFormSelect($field, null, null));
 		}
 		
-		$html->addChild($this->renderFormSelect($field, null));
+		$html->addChild($this->renderFormSelect($field, null, null));
 
 		return $html;
 	}
@@ -302,5 +303,23 @@ class SimpleFieldRenderer {
 		} while ($count < $field->getMinimumEntries());
 		
 		return $ret;
+	}
+	
+	
+	/**
+	 * This method is to be removed as it is a duplicate of the one found in the
+	 * parent element
+	 * 
+	 * @param type $field
+	 * @param type $errors
+	 * @return null
+	 */
+	public function getErrorsFor($field, $errors) {
+		foreach ($errors as $e) {
+			if ($e->getSrc() === $field) {
+				return $e;
+			}
+		}
+		return null;
 	}
 }
