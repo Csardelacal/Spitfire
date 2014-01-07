@@ -7,6 +7,8 @@ abstract class HTMLElement
 	private $parameters = Array();
 	private $children   = Array();
 	
+	private $buffer     = null;
+	
 	public abstract function getTag();
 	
 	public function setParameter($parameter, $value) {
@@ -30,10 +32,21 @@ abstract class HTMLElement
 	}
 
 	public function getContent() {
+		$this->endBuffering();
 		$children = $this->getChildren();
 		
 		if (count($children) == 1) return reset ($children);
 		else return "\n" . implode("\n", $children) . "\n";
+	}
+	
+	public function startBuffering() {
+		$this->buffer = ob_start();
+	}
+	
+	public function endBuffering() {
+		if ($this->buffer !== null) {
+			$this->addChild(ob_get_clean());
+		}
 	}
 
 	public function __toString() {
