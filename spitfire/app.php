@@ -41,13 +41,19 @@ abstract class App
 		$this->URISpace = $URISpace;
 	}
 	
-	
+	/**
+	 * Generates a URL. This method will generate a string / URL depending on the 
+	 * string being inputted.
+	 * 
+	 * @param Generates a URL for the current app $url
+	 * @return \URL|string
+	 */
 	public function url($url) {
 		
-		if (0 === strpos($url, 'http://')) return $url;
-		if (0 === strpos($url, 'https://')) return $url;
-		if (0 === strpos($url, 'www.')) return 'http://' . $url;
-		else return new URL($this, $url);
+		if (0 === strpos($url, 'http://'))  { return $url; }
+		if (0 === strpos($url, 'https://')) { return $url; }
+		if (0 === strpos($url, 'www.'))     { return 'http://' . $url; }
+		else { return new URL($this, $url); }
 	}
 	
 	public function getBaseDir() {
