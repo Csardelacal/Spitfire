@@ -17,15 +17,73 @@
  */
 interface AdapterInterface
 {
-	
+	/**
+	 * This receives data from the database and stores it into the adapter. The 
+	 * reason there are two methods for setting data is the different nature of the
+	 * contents they set to the app.
+	 * 
+	 * @param mixed $data Data to be stored to the adapter.
+	 */
 	function dbSetData($data);
+	
+	/**
+	 * This method returns the data the adapter wants to store to the database. The
+	 * DBMS controller should use this endpoint to collect the data it will store 
+	 * to the driver.
+	 * 
+	 * @return mixed Data to be contained in the database.
+	 */
 	function dbGetData();
 	
+	/**
+	 * This method sets the data from the 'user' end. This means the opposite one
+	 * to the database, the one being moved into the database.
+	 * You can and should use this method to allow verifying that the data sent 
+	 * by the user is correct here, there is no need to check it's database 
+	 * friendliness here (this could even be bad for performance). 
+	 * 
+	 * @param mixed $data Data to be contained in the database.
+	 */
 	function usrSetData($data);
+	
+	/**
+	 * Returns the data that is meant to reach the 'user space'. Objects here should 
+	 * be programmer friendly and can be objects if needed.
+	 * 
+	 * You should avoid making verifications / parsing the data in this function,
+	 * stuff you think should go here probably belongs in dbSetData()
+	 * 
+	 * @return mixed Data to be delivered to the programmer
+	 */
 	function usrGetData();
 	
+	/**
+	 * This method should return the model / record this belongs to. This allows
+	 * for checking against other database data (in case this is needed) and 
+	 * several operations that are critical for the systems correct behavior.
+	 * 
+	 * @return \Model The model this belongs to.
+	 */
 	function getModel();
+	
+	/**
+	 * Returns the field this adapter holds data for. This is important for the 
+	 * database driver as it will have to locate the field where it has to place 
+	 * this data.
+	 * 
+	 * @return \spitfire\storage\database\DBField The field this represents
+	 */
 	function getField();
 	
+	/**
+	 * Allows the adapter to tell the database driver whether the data inside this
+	 * is synced (has not been modified) and should be stored to the database to 
+	 * avoid being lost.
+	 * If data considers itself non-DB friendly (like arrays / subrecords /etc) 
+	 * these should return false always and use this method to store the data.
+	 * 
+	 * @return boolean Indicates whether the data is already in sync. Returns false
+	 * if it should be stored.
+	 */
 	function isSynced();
 }
