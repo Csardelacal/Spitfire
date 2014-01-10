@@ -80,10 +80,27 @@ interface AdapterInterface
 	 * is synced (has not been modified) and should be stored to the database to 
 	 * avoid being lost.
 	 * If data considers itself non-DB friendly (like arrays / subrecords /etc) 
-	 * these should return false always and use this method to store the data.
+	 * these should return false always and use the commit method to store the data.
 	 * 
 	 * @return boolean Indicates whether the data is already in sync. Returns false
 	 * if it should be stored.
 	 */
 	function isSynced();
+	
+	/**
+	 * Settles the content inside the adapter. This method is usually called when
+	 * the model is being stored. This means the data is considered final and the 
+	 * data inside the adapter is no longer out of sync with the database.
+	 * 
+	 * In case the data is not stored inside the database you can use the commit 
+	 * function to do so, as this is called even if the adapter is in sync.
+	 */
+	function commit();
+	
+	/**
+	 * Resets the content inside the adapter. In case you don't want to keep the 
+	 * altered data and want to modify or read the original source data instead
+	 * of the altered one.
+	 */
+	function rollback();
 }
