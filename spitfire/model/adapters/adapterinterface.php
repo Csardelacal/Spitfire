@@ -71,7 +71,7 @@ interface AdapterInterface
 	 * database driver as it will have to locate the field where it has to place 
 	 * this data.
 	 * 
-	 * @return \spitfire\storage\database\DBField The field this represents
+	 * @return \spitfire\model\Field The field this represents
 	 */
 	function getField();
 	
