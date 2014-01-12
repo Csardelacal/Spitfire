@@ -104,27 +104,63 @@ abstract class baseAdapter implements AdapterInterface, Validatable
 	public function getModel() {
 		return $this->model;
 	}
-
+	
+	/**
+	 * Returns the current synchronization status with the database. If the data
+	 * is the same inside the database and the program scope this function will 
+	 * return true. Otherwise it'll return false.
+	 * 
+	 * @return boolean
+	 */
 	public function isSynced() {
 		return $this->data == $this->src;
 	}
-
+	
+	/**
+	 * Returns the data for the user scope. This may contain special objects and
+	 * arrays as opposed to the methods planned for the DBMS.
+	 * 
+	 * @return mixed
+	 */
 	public function usrGetData() {
 		return $this->data;
 	}
-
+	
+	/**
+	 * Returns the data that is meant to reach the 'user space'. Objects here should 
+	 * be programmer friendly and can be objects if needed.
+	 * 
+	 * You should avoid making verifications / parsing the data in this function,
+	 * stuff you think should go here probably belongs in dbSetData()
+	 * 
+	 * @return mixed Data to be delivered to the programmer
+	 */
 	public function usrSetData($data) {
 		$this->data = $data;
 	}
-
+	
+	/**
+	 * Sets the data as stored to the database and therefore as synced. After 
+	 * committing, rolling back will return the current value.
+	 */
 	public function commit() {
 		$this->src = $this->data;
 	}
-
+	
+	/**
+	 * Resets the data to the status the database holds. This is especially 
+	 * interesting if you want to undo certain changes.
+	 */
 	public function rollback() {
 		$this->data = $this->src;
 	}
 	
+	/**
+	 * Returns whether the data is valid or not. This data is stored inside a 
+	 * ValidationResult class allowing further checks.
+	 * 
+	 * @return \spitfire\validation\ValidationResult
+	 */
 	public function validate() {
 		return $this->field->validate($this->data);
 	}

@@ -33,7 +33,7 @@ class Model implements Serializable
 	/**
 	 * Creates a new record.
 	 * 
-	 * @param _SF_DBTable $table DB Table this record belongs to. Easiest way
+	 * @param Table $table DB Table this record belongs to. Easiest way
 	 *                       to get this is by using $this->model->*tablename*
 	 * 
 	 * @param mixed $srcData Attention! This parameter is intended to be 

@@ -303,6 +303,19 @@ abstract class Field
 	}
 	
 	/**
+	 * Returns the adapter this field wants to use for the database interaction,
+	 * usually this will be a BaseAdapter that allows the most basic interaction
+	 * with the most basic kinds of fields.
+	 * 
+	 * But you can also create custom adapters that manage complex data and return
+	 * them here.
+	 * 
+	 * @param \Model $model The model to contain the adapter
+	 * @return adapters\AdapterInterface The new adapter
+	 */
+	abstract public function getAdapter(\Model$model);
+
+	/**
 	 * This method informs the system what primary datatype the overriding 
 	 * Field class uses. You can define custom classes that store data into
 	 * any DBMS by defining which primary data they use.
