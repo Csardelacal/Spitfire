@@ -9,7 +9,7 @@ use Model;
  * setting and sync tasks to this base adapter. Allowing them to reduce duplicate
  * code from the actual returning and storing data and focusing on their tasks.
  */
-abstract class baseAdapter implements AdapterInterface, Validatable
+abstract class BaseAdapter implements AdapterInterface, Validatable
 {
 	/**
 	 * This is the logical field the adapter contains data for. Allowing the system
