@@ -27,7 +27,7 @@ class DateTimeAdapter extends BaseAdapter
 	 * user friendly DateTime object that allows solid object oriented programming
 	 * inside of Spitfire.
 	 * 
-	 * @param DateTime $data
+	 * @param string $data
 	 */
 	public function dbSetData($data) {
 		$data = new DateTime(strtotime($data));

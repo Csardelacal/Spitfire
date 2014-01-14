@@ -1,5 +1,7 @@
 <?php namespace spitfire\model\adapters;
 
+use EnumField;
+
 /**
  * This adapter is in charge of ensuring that only values that are inside the 
  * range defined by the field are stored. If the user tries to set data that is
@@ -16,6 +18,11 @@ class EnumAdapter extends BaseAdapter
 	 */
 	public function usrSetData($data) {
 		$field   = $this->getField();
+		
+		if ( !$field instanceof EnumField) {
+			throw new \privateException('An enum field is required for this adapter');
+		}
+		
 		$options = $field->getOptions();
 		
 		if ( !in_array($data, $options) ) {
