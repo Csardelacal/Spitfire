@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\model\adapters\EnumAdapter;
 
 class EnumField extends Field
 {
@@ -21,5 +22,9 @@ class EnumField extends Field
 	public function getDataType() {
 		return Field::TYPE_STRING;
 	}
-	
+
+	public function getAdapter(\Model $model) {
+		return new EnumAdapter($this, $model);
+	}
+
 }
