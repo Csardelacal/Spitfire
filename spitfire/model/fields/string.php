@@ -2,6 +2,7 @@
 
 use spitfire\model\Field;
 use spitfire\validation\ValidationError;
+use spitfire\model\adapters\StringAdapter;
 
 class StringField extends Field
 {
@@ -25,4 +26,9 @@ class StringField extends Field
 		if (strlen($value) > $this->length) { return new ValidationError(_t('str_too_long', $this->length)); }
 		else { return parent::validate($value); }
 	}
+
+	public function getAdapter(\Model $model) {
+		return new StringAdapter($this, $model);
+	}
+
 }
