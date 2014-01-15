@@ -113,5 +113,9 @@ class Reference extends Field
 	public function getDataType() {
 		return Field::TYPE_REFERENCE;
 	}
-	
+
+	public function getAdapter(\Model $model) {
+		return new spitfire\model\adapters\IntegerAdapter($this, $model);
+	}
+
 }

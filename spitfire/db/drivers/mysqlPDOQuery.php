@@ -119,7 +119,7 @@ class MysqlPDOQuery extends Query
 				}
 				if ($restriction instanceof CompositeRestriction) {
 					foreach ($restriction->getSimpleRestrictions() as $r)
-						if (!in_array($r->getField()->getQuery()->getQueryTable(), $tables))
+						if (!in_array($r->getField()->getQuery()->getQueryTable(), $tables, true))
 							$tables[] = $r->getField()->getQuery()->getQueryTable();
 				}
 			}

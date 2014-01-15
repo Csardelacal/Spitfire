@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\model\adapters\ChildrenAdapter;
 
 class ChildrenField extends Field
 {
@@ -66,5 +67,9 @@ class ChildrenField extends Field
 			}
 		}
 	}
-	
+
+	public function getAdapter(\Model $model) {
+		return new ChildrenAdapter($this, $model);
+	}
+
 }
