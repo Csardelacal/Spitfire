@@ -46,7 +46,7 @@ class mysqlPDOResultSet implements resultSetInterface
 		$_record = Array();
 		$fields  = $this->table->getModel()->getFields();
 		
-		foreach ($fields as $field) {
+		/*foreach ($fields as $field) {
 			
 			if ($field instanceof Reference) {
 				$physical = $field->getPhysical();
@@ -77,7 +77,8 @@ class mysqlPDOResultSet implements resultSetInterface
 				$_record[$field->getName()] = $data[array_shift($phys)->getName()];
 			}
 			
-		}
+		}/**/
+		$_record = $data;
 		
 		$record = $this->table->newRecord($_record);
 		$this->table->cache($record);

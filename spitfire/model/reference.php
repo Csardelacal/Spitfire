@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\model\adapters\ReferenceAdapter;
 
 /**
  * Elements of this class indicate a connection between two Models, this allows
@@ -115,7 +116,7 @@ class Reference extends Field
 	}
 
 	public function getAdapter(\Model $model) {
-		return new spitfire\model\adapters\IntegerAdapter($this, $model);
+		return new ReferenceAdapter($this, $model);
 	}
 
 }
