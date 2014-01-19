@@ -22,12 +22,10 @@ class Model implements Serializable
 	 * @var mixed 
 	 */
 	private $data;
-	private $src;
 	private $table;
 	
 	#Status vars
 	private $new = false;
-	private $synced = true;
 	private $deleted = false;
 	
 	/**
@@ -43,9 +41,14 @@ class Model implements Serializable
 	public function __construct(Table $table, $data) {
 		
 		$this->table   = $table;
-		$this->data    = $data;
-		$this->src     = $data;
 		$this->new     = empty($data);
+		
+		$this->makeAdapters();
+		$this->populateAdapters($data);
+		foreach ($this->data as $key => $val) {
+			echo "$key => {$val->usrGetData()}\n";
+		}
+		die(print_r(spitfire()->getMessages()));
 	}
 	
 	/**
@@ -355,4 +358,24 @@ class Model implements Serializable
 	public function increment($key, $diff = 1) {
 		$this->table->increment($this, $key, $diff);
 	}
+	
+	public function makeAdapters() {
+		$fields = $this->getTable()->getModel()->getFields();
+		foreach ($fields as $field) {
+			$this->data[$field->getName()] = $field->getAdapter($this);
+		}
+	}
+	
+	public function populateAdapters($data) {
+		$fields = $this->getTable()->getModel()->getFields();
+		foreach ($fields as $field) {
+			$physical = $field->getPhysical();
+			$current  = Array();
+			foreach ($physical as $p) {
+				$current[$p->getName()] = $data[$p->getName()];
+			}
+			$this->data[$field->getName()]->dbSetData((count($current) === 1)? reset($current) : $current);
+		}
+	}
+
 }
