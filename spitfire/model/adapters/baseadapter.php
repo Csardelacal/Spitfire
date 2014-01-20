@@ -81,8 +81,8 @@ abstract class BaseAdapter implements AdapterInterface
 	 * @param mixed $data
 	 */
 	public function dbSetData($data) {
-		$this->data = $data;
-		$this->src  = $data;
+		$this->data = reset($data);
+		$this->src  = reset($data);
 	}
 	
 	/**

@@ -45,10 +45,6 @@ class Model implements Serializable
 		
 		$this->makeAdapters();
 		$this->populateAdapters($data);
-		foreach ($this->data as $key => $val) {
-			echo "$key => {$val->usrGetData()}\n";
-		}
-		die(print_r(spitfire()->getMessages()));
 	}
 	
 	/**
@@ -242,6 +238,12 @@ class Model implements Serializable
 
 	public function __set($field, $value) {
 		
+		if (!isset($this->data[$field])) {
+			throw new privateException("Setting non existent field: " . $field);
+		}
+		
+		$this->data[$field]->usrSetData($value);
+		/*
 		$field_info = $this->table->getModel()->getField($field);
 		
 		if ($field_info instanceof Reference) {
@@ -276,35 +278,18 @@ class Model implements Serializable
 		}
 		else {
 			throw new privateException ('Setting non-existent database field: ' . $field);
-		}
+		}/**/
 
 	}
 	
 	public function __get($field) {
-		
-		$field_info = $this->table->getModel()->getField($field);
-		
-		if ($field_info instanceof Reference) {
-			if ($this->data[$field] instanceof Query) {
-				return $this->data[$field] = $this->src[$field] = $this->data[$field]->fetch();
-			} else {
-				return $this->data[$field];
-			}
+		#If the field is in the record we return it's contents
+		if (isset($this->data[$field])) {
+			return $this->data[$field]->usrGetData();
+		} else {
+			//TODO: In case debug is enabled this should throw an exception
+			return null;
 		}
-		
-		elseif (isset($this->data[$field]))  {
-			return $this->data[$field];
-		}
-		
-		elseif ($field_info instanceof ManyToManyField) {
-			return $this->data[$field] = new spitfire\model\adapters\ManyToManyAdapter($field_info, $this);
-		}
-		
-		elseif ($field_info instanceof ChildrenField) {
-			return $this->data[$field] = new spitfire\model\adapters\ChildrenAdapter($field_info, $this);
-		}
-		
-		else return null;
 	}
 	
 	public function serialize() {
@@ -359,14 +344,14 @@ class Model implements Serializable
 		$this->table->increment($this, $key, $diff);
 	}
 	
-	public function makeAdapters() {
+	protected function makeAdapters() {
 		$fields = $this->getTable()->getModel()->getFields();
 		foreach ($fields as $field) {
 			$this->data[$field->getName()] = $field->getAdapter($this);
 		}
 	}
 	
-	public function populateAdapters($data) {
+	protected function populateAdapters($data) {
 		$fields = $this->getTable()->getModel()->getFields();
 		foreach ($fields as $field) {
 			$physical = $field->getPhysical();
@@ -374,7 +359,7 @@ class Model implements Serializable
 			foreach ($physical as $p) {
 				$current[$p->getName()] = $data[$p->getName()];
 			}
-			$this->data[$field->getName()]->dbSetData((count($current) === 1)? reset($current) : $current);
+			$this->data[$field->getName()]->dbSetData($current);
 		}
 	}
 
