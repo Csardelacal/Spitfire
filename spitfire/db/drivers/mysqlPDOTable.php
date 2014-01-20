@@ -115,11 +115,8 @@ class MysqlPDOTable extends stdSQLTable
 		$db = $table->getDb();
                 
 		foreach ($data as $field => $value) {
-			try {
-				$logical = $this->getField($field)->getLogicalField();
-			} catch (\privateException $e) {
-				$logical = $this->getModel()->getField($field);
-			}
+			$value = $value->usrGetData();
+			$logical = $this->getModel()->getField($field);
 			
 			if ($logical instanceof \Reference) {
 				if ($value === null) {
@@ -135,13 +132,16 @@ class MysqlPDOTable extends stdSQLTable
 				}
 				unset($data[$field]);
 			}
-			if ($logical instanceof \ChildrenField) {
+			elseif ($logical instanceof \ChildrenField) {
 				unset($data[$field]);
 			}
 			elseif (is_array($value)) {
 				unset($data[$field]);
+			} else {
+				$data[$field] = $value;
 			}
 		}
+		
 		
 		$fields = array_keys($data);
 		foreach ($fields as &$field) $field = '`' . $field . '`';
