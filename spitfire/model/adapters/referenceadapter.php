@@ -20,6 +20,36 @@ class ReferenceAdapter extends BaseAdapter
 		$this->query = $query;
 	}
 	
+	public function dbGetData() {
+		$field = $this->getField();
+		$physical = $field->getPhysical();
+		$_return = Array();
+		
+		if ($this->query instanceof Model) {
+			foreach ($physical as $p) {
+				$_return[$p->getName()] = $this->query->{$p->getReferencedField()->getName()};
+			}
+		} elseif ($this->query instanceof \spitfire\storage\database\Query) {
+			$restrictions = $this->query->getRestrictions();
+			foreach ($restrictions as $r) {
+				/* @var $r \spitfire\storage\database\Restriction */
+				foreach ($physical as $p) {
+					if ($p instanceof \spitfire\storage\database\Restriction && $r->getField() === $p->getReferencedField()->getLogical()) {
+						$_return[$p->getName()] = $r->getValue();
+					}
+				}
+			}
+		} elseif (is_null($this->query)) {
+			foreach ($physical as $p) {
+				$_return[$p->getName()] = null;
+			}
+		} else {
+			throw new privateException('Adapter holds invalid data');
+		}
+		
+		return $_return;
+	}
+	
 	public function usrGetData() {
 		if ($this->query instanceof \spitfire\storage\database\Query) {
 			return $this->query = $this->query->fetch();

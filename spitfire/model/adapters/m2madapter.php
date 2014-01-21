@@ -192,7 +192,7 @@ class ManyToManyAdapter implements ArrayAccess, Iterator, AdapterInterface
 	}
 
 	public function dbGetData() {
-		return null;
+		return Array();
 	}
 	
 	/**

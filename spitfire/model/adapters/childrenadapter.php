@@ -85,23 +85,18 @@ class ChildrenAdapter implements ArrayAccess, Iterator, AdapterInterface
 	}
 
 	public function commit() {
-		
-		$bridge_records = $this->getBridgeRecordsQuery()->fetchAll();
-
-		foreach($bridge_records as $r) {
-			$r->delete();
-		}
-
 		//@todo: Change for definitive.
 		$value = $this->toArray();
+		$role  = $this->getField()->getRole();
+		
 		foreach($value as $child) {
-			$insert = new BridgeAdapter($this->field, $this->parent, $child);
-			$insert->makeRecord()->store();
+			$child->{$role} = $this->getModel();
+			$child->store();
 		}
 	}
 
 	public function dbGetData() {
-		return null;
+		return Array();
 	}
 	
 	/**
