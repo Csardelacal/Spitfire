@@ -113,41 +113,18 @@ class MysqlPDOTable extends stdSQLTable
 		$data = $record->getData();
 		$table = $record->getTable();
 		$db = $table->getDb();
+		
+		$write = Array();
                 
-		foreach ($data as $field => $value) {
-			$value = $value->usrGetData();
-			$logical = $this->getModel()->getField($field);
-			
-			if ($logical instanceof \Reference) {
-				if ($value === null) {
-					$phys = $logical->getPhysical();
-					foreach ($phys as $f) {
-						$data[$f->getName()] = null;
-					}
-				} else {
-					$primary = $value->getPrimaryData();
-					foreach ($primary as $key => $v) {
-						$data[$field . '_' . $key] = $v;
-					}
-				}
-				unset($data[$field]);
-			}
-			elseif ($logical instanceof \ChildrenField) {
-				unset($data[$field]);
-			}
-			elseif (is_array($value)) {
-				unset($data[$field]);
-			} else {
-				$data[$field] = $value;
-			}
+		foreach ($data as $value) {
+			$write = array_merge($write, $value->dbGetData());
 		}
 		
-		
-		$fields = array_keys($data);
+		$fields = array_keys($write);
 		foreach ($fields as &$field) $field = '`' . $field . '`';
 		unset($field);
 		
-		$quoted = array_map(Array($db, 'quote'), $data);
+		$quoted = array_map(Array($db, 'quote'), $write);
 		
 		$stt = sprintf('INSERT INTO %s (%s) VALUES (%s)',
 			$table,
@@ -163,32 +140,15 @@ class MysqlPDOTable extends stdSQLTable
 		$table = $record->getTable();
 		$db = $table->getDb();
 		
-		foreach ($data as $field => $value) {
-			if ($value instanceof Query || is_array($value) || $value instanceof \spitfire\model\adapters\ManyToManyAdapter || $value instanceof \spitfire\model\adapters\ChildrenAdapter) {
-				if ($this->getModel()->getField($field) instanceof \ChildrenField) 
-					unset($data[$field]);
-				elseif ($this->getModel()->getField($field) instanceof \ManyToManyField) 
-					unset($data[$field]);
-				else 
-					$value = $record->{$field};
-			}
-			
-			if ($this->getModel()->getField($field) instanceof \Reference) {
-				if ($value instanceof Model) {
-					$primary = $value->getPrimaryData();
-					foreach ($primary as $key => $v) {
-						$data[$field . '_' . $key] = $v;
-					}
-				}
-				unset($data[$field]);
-			}
-			elseif (is_array($value)) {
-				unset($data[$field]);
-			}
+		$write = Array();
+                
+		foreach ($data as $value) {
+			print_r($value->dbGetData());
+			$write = array_merge($write, $value->dbGetData());
 		}
 		
 		$quoted = Array();
-		foreach ($data as $f => $v) $quoted[] = "{$table->getField($f)} = {$db->quote($v)}";
+		foreach ($write as $f => $v) $quoted[] = "{$table->getField($f)} = {$db->quote($v)}";
 		
 		$stt = sprintf('UPDATE %s SET %s WHERE %s',
 			$table, 

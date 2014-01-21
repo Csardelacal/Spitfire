@@ -19,9 +19,17 @@ class Model implements Serializable
 	 * around the array that allows to validate data on the go and to alert the 
 	 * programmer about inconsistent types.
 	 * 
-	 * @var mixed 
+	 * @var spitfire\model\adapters\AdapterInterface[] 
 	 */
 	private $data;
+	
+	/**
+	 * Keeps information about the table that owns the record this Model represents.
+	 * This allows it to power functions like store that require knowledge about 
+	 * the database keeping the information.
+	 * 
+	 * @var Table
+	 */
 	private $table;
 	
 	#Status vars
@@ -62,6 +70,7 @@ class Model implements Serializable
 	 * fits into the table. You're assumed to pass the data correctly.
 	 * 
 	 * @param mixed $newdata
+	 * @deprecated since version 0.1-dev
 	 */
 	public function setData($newdata) {
 		$this->data = $newdata;
@@ -84,6 +93,7 @@ class Model implements Serializable
 	 * been destroyed or modified, or this data altered)
 	 * 
 	 * @return mixed
+	 * @deprecated since version 0.1-dev
 	 */
 	public function getSrcData() {
 		return $this->src;
@@ -114,38 +124,22 @@ class Model implements Serializable
 			$this->onbeforesave();
 		}
 		
-		if( !$this->table->validate($this)) {
-			throw new privateException(_t('invalid_data'));
-		}
-		
 		if ($this->new) {
 			$id = $this->insert();
 			$ai = $this->table->getAutoIncrement();
 			
 			if ($ai && empty($this->data[$ai->getName()]) ) {
-				$this->data[$ai->getName()] = $id;
+				$this->data[$ai->getName()]->dbSetData($id);
 			}
 		}
 		else {
 			$this->update($this);
 		}
 		
-		$this->src    = $this->data;
-		$this->synced = true;
 		$this->new    = false;
 		
 		foreach($this->data as $field => $value) {
-			
-			$field_info = $this->table->getModel()->getField($field);
-			
-			if ($field_info instanceof ManyToManyField) {
-				$value->store();
-			}
-			elseif ($field_info instanceof ChildrenField) {
-				if (is_array($value) || $value instanceof \spitfire\model\adapters\ChildrenAdapter) {
-					foreach ($value as $record) $record->store();
-				}
-			}
+			$value->commit();
 		}
 	}
 
@@ -171,14 +165,8 @@ class Model implements Serializable
 		$ret = Array();
 	    
 		foreach ($primaryFields as $field) {
-			if (null != $ref = $field->getReferencedField()) {
-				$logical = $field->getLogicalField();
-				$name    = $ref->getName();
-				$ret[$field->getName()] = $this->{$logical->getName()}->{$name};
-			}
-			else {
-				$ret[$field->getName()] = $this->{$field->getName()};
-			}
+			$logical = $field->getLogicalField();
+			$ret = array_merge($ret, $this->data[$logical->getName()]->dbGetData());
 	    }
 	    
 	    return $ret;
@@ -243,43 +231,6 @@ class Model implements Serializable
 		}
 		
 		$this->data[$field]->usrSetData($value);
-		/*
-		$field_info = $this->table->getModel()->getField($field);
-		
-		if ($field_info instanceof Reference) {
-			if (!$value instanceof Model && !is_null($value)) 
-				throw new privateException('Not a record');
-			
-			$this->data[$field] = $value;
-		}
-		
-		elseif ($field_info instanceof ManyToManyField) {
-			if (is_array($value))
-				$value = new spitfire\model\adapters\ManyToManyAdapter($field_info, $this, $value);
-				
-			if (!$value instanceof \spitfire\model\adapters\ManyToManyAdapter)
-				throw new privateException('Many to many only accept adapters as value');
-			
-			$this->data[$field] = $value;
-		}
-		
-		elseif ($field_info instanceof ChildrenField) {
-			if (is_array($value))
-				$value = new spitfire\model\adapters\ChildrenAdapter($field_info, $this, $value);
-				
-			if (!$value instanceof \spitfire\model\adapters\ChildrenAdapter)
-				throw new privateException('Children only accept adapters as value');
-			
-			$this->data[$field] = $value;
-		}
-		
-		elseif (!is_null($field_info)) {
-			$this->data[$field] = $value;
-		}
-		else {
-			throw new privateException ('Setting non-existent database field: ' . $field);
-		}/**/
-
 	}
 	
 	public function __get($field) {
@@ -306,9 +257,7 @@ class Model implements Serializable
 		
 		$input = unserialize($serialized);
 		$this->table = db()->table($input['model']);
-		$this->src   = $input['data'];
 		$this->data  = $input['data'];
-		$this->synced= true;
 	}
 	
 	public function __toString() {

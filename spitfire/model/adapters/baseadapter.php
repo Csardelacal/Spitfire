@@ -1,6 +1,5 @@
 <?php namespace spitfire\model\adapters;
 
-use Validatable;
 use spitfire\model\Field;
 use Model;
 
@@ -69,7 +68,7 @@ abstract class BaseAdapter implements AdapterInterface
 	 * @return mixed
 	 */
 	public function dbGetData() {
-		return $this->data;
+		return Array($this->field->getName() => $this->data);
 	}
 	
 	/**
