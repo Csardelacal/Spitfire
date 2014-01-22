@@ -112,6 +112,18 @@ class Model implements Serializable
 	}
 	
 	/**
+	 * This function performs the checks required before the Model can write it's
+	 * contents to the database. Currently this just checks for the existence of
+	 * a onbeforesave method and calls it.
+	 */
+	private function prepareForWrite() {
+		#Check if onbeforesave is there and use it.
+		if (is_callable(Array($this, 'onbeforesave'))) {
+			$this->onbeforesave();
+		}
+	}
+	
+	/**
 	 * This method stores the data of this record to the database. In case
 	 * of database error it throws an Exception and leaves the state of the
 	 * record unchanged.
@@ -119,26 +131,14 @@ class Model implements Serializable
 	 * @throws privateException
 	 */
 	public function store() {
+		$this->prepareForWrite();
 		
-		if (is_callable(Array($this, 'onbeforesave'))) {
-			$this->onbeforesave();
-		}
+		if ($this->new) { $this->insert(); }
+		else            { $this->update($this); }
 		
-		if ($this->new) {
-			$id = $this->insert();
-			$ai = $this->table->getAutoIncrement();
-			
-			if ($ai && empty($this->data[$ai->getName()]) ) {
-				$this->data[$ai->getName()]->dbSetData($id);
-			}
-		}
-		else {
-			$this->update($this);
-		}
+		$this->new = false;
 		
-		$this->new    = false;
-		
-		foreach($this->data as $field => $value) {
+		foreach($this->data as $value) {
 			$value->commit();
 		}
 	}
@@ -269,7 +269,18 @@ class Model implements Serializable
 	}
 	
 	public function insert() {
-		return $this->table->insert($this);
+		#Insert the record by calling the driver.
+		$id = $this->table->insert($this);
+		#Get the autoincrement field
+		$ai = $this->table->getAutoIncrement();
+		$payload = array_filter($this->data[$ai->getName()]->dbGetData());
+		
+		#If the autoincrement field is empty set the new DB given id
+		if ($ai && empty($payload) ) {
+			$this->data[$ai->getName()]->dbSetData(Array($ai->getName() => $id));
+		}
+		
+		return $id;
 	}
 	
 	public function update() {
@@ -301,13 +312,23 @@ class Model implements Serializable
 	}
 	
 	protected function populateAdapters($data) {
+		#If the set carries no data, why bother reading?
+		if (empty($data)) { return; }
+		
+		#Retrieves the full list of fields this adapter needs to populate
 		$fields = $this->getTable()->getModel()->getFields();
+		
+		#Loops through the fields retrieving the physical fields
 		foreach ($fields as $field) {
 			$physical = $field->getPhysical();
 			$current  = Array();
+			
+			#The physical fields are matched to the content and it is assigned.
 			foreach ($physical as $p) {
 				$current[$p->getName()] = $data[$p->getName()];
 			}
+			
+			#Set the data into the adapter and let it work it's magic.
 			$this->data[$field->getName()]->dbSetData($current);
 		}
 	}

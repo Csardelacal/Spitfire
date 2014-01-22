@@ -19,7 +19,7 @@ class DateTimeAdapter extends BaseAdapter
 		/* @var $datetime DateTime */
 		$datetime = parent::dbGetData();
 		
-		return $datetime->format('Y-m-d H:i:s');
+		return Array(key($datetime) => current($datetime)->format('Y-m-d H:i:s'));
 	}
 	
 	/**
@@ -30,7 +30,6 @@ class DateTimeAdapter extends BaseAdapter
 	 * @param string $data
 	 */
 	public function dbSetData($data) {
-		$data = new DateTime(strtotime($data));
-		parent::dbSetData($data);
+		parent::dbSetData(Array(key($data) => new DateTime(current($data))));
 	}
 }
