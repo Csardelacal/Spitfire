@@ -3,6 +3,7 @@
 namespace spitfire\storage\database;
 
 use Model;
+use Exception;
 use privateException;
 use \spitfire\model\Field;
 
@@ -131,8 +132,15 @@ abstract class Query
 		return $this->table->getErrors();
 	}
 	
+	//@TODO: Add a decent way to sorting fields that doesn't resort to this awful thing.
 	public function setOrder ($field, $mode) {
-		$this->order['field'] = $field;
+		try {
+			$this->order['field'] = $this->table->getTable()->getField($field);
+		} catch (Exception $ex) {
+			$physical = $this->table->getTable()->getModel()->getField($field)->getPhysical();
+			$this->order['field'] = reset($physical);
+		}
+		
 		$this->order['mode'] = $mode;
 		return $this;
 	}

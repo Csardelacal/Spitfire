@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\model\adapters\ManyToManyAdapter;
 
 class ManyToManyField extends ChildrenField
 {
@@ -69,6 +70,10 @@ class ManyToManyField extends ChildrenField
 
 	public function getDataType() {
 		return Field::TYPE_BRIDGED;
+	}
+	
+	public function getAdapter(\Model $model) {
+		return new ManyToManyAdapter($this, $model);
 	}
 	
 }

@@ -45,8 +45,6 @@ abstract class RestrictionGroup
 			
 			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->belongsto->getTable()->getModel())
 				$field = $fieldname;
-			if ($field == null)
-				throw new \privateException("No field '$fieldname'");
 			
 			$restriction = $this->belongsto->compositeRestrictionInstance($field, $value, $operator);
 		}

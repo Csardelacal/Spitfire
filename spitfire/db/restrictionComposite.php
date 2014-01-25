@@ -76,7 +76,6 @@ class CompositeRestriction
 			
 			foreach ($fields as $field) {
 				if (!$field->getLogicalField() instanceof \Reference) {
-					$queryfield = $this->getQuery()->queryFieldInstance($field);
 					$restrictions->addRestriction($field, $this->getValue(), $this->operator);
 				}
 			}

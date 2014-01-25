@@ -43,7 +43,7 @@ class SimpleFormRenderer extends Renderer
 
 	public function renderList(RenderableForm$renderable, $records) {
 		$table = new HTMLTable();
-		$renderer = new SimpleFieldRenderer();
+		$renderer = $this->field_renderer;
 		//headers
 		$row = new HTMLTableRow();
 		foreach ($renderable->getFormFields() as $field) {
