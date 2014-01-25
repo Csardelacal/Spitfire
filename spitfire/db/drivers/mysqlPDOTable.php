@@ -73,7 +73,10 @@ class MysqlPDOTable extends stdSQLTable
 	public function delete(Model$record) {
 		$table = $this;
 		$db    = $table->getDb();
-		$restrictions = $record->getUniqueRestrictions();
+		$key   = $record->getPrimaryData();
+		
+		$restrictions = Array();
+		foreach ($key as $k => $v) {$restrictions[] = "$k = $v";}
 		
 		$stt = sprintf('DELETE FROM %s WHERE %s',
 			$table,
@@ -96,14 +99,18 @@ class MysqlPDOTable extends stdSQLTable
 	public function increment(Model$record, $key, $diff = 1) {
 		
 		$table = $this;
-		$db = $table->getDb();
+		$db    = $table->getDb();
+		$key   = $record->getPrimaryData();
+		
+		$restrictions = Array();
+		foreach ($key as $k => $v) {$restrictions[] = "$k = $v";}
 		
 		$stt = sprintf('UPDATE %s SET `%s` = `%s` + %s WHERE %s',
 			$table, 
 			$key,
 			$key,
 			$db->quote($diff),
-			implode(' AND ', $record->getUniqueRestrictions())
+			implode(' AND ', $restrictions)
 		);
 		
 		$db->execute($stt);
@@ -136,9 +143,13 @@ class MysqlPDOTable extends stdSQLTable
 	}
 
 	public function update(Model$record) {
-		$data = $record->getData();
+		$data  = $record->getData();
 		$table = $record->getTable();
-		$db = $table->getDb();
+		$db    = $table->getDb();
+		$key   = $record->getPrimaryData();
+		
+		$restrictions = Array();
+		foreach ($key as $k => $v) {$restrictions[] = "$k = $v";}
 		
 		$write = Array();
                 
@@ -153,7 +164,7 @@ class MysqlPDOTable extends stdSQLTable
 		$stt = sprintf('UPDATE %s SET %s WHERE %s',
 			$table, 
 			implode(', ', $quoted),
-			implode(' AND ', $record->getUniqueRestrictions())
+			implode(' AND ', $restrictions)
 		);
 		
 		$this->getDb()->execute($stt);

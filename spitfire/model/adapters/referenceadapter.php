@@ -34,7 +34,7 @@ class ReferenceAdapter extends BaseAdapter
 			foreach ($restrictions as $r) {
 				/* @var $r \spitfire\storage\database\Restriction */
 				foreach ($physical as $p) {
-					if ($p instanceof \spitfire\storage\database\Restriction && $r->getField() === $p->getReferencedField()->getLogical()) {
+					if ($r instanceof \spitfire\storage\database\Restriction && $r->getField()->getField() === $p->getReferencedField()) {
 						$_return[$p->getName()] = $r->getValue();
 					}
 				}

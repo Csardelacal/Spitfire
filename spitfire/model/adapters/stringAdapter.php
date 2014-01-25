@@ -9,4 +9,3 @@ class StringAdapter extends BaseAdapter
 {
 	
 }
-
