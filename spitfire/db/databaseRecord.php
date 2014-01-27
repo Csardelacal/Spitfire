@@ -273,7 +273,10 @@ class Model implements Serializable
 		$id = $this->table->insert($this);
 		#Get the autoincrement field
 		$ai = $this->table->getAutoIncrement();
-		$payload = array_filter($this->data[$ai->getName()]->dbGetData());
+		
+		if ($ai) {
+			$payload = array_filter($this->data[$ai->getName()]->dbGetData());
+		}
 		
 		#If the autoincrement field is empty set the new DB given id
 		if ($ai && empty($payload) ) {

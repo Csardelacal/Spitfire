@@ -15,6 +15,27 @@ class MysqlPDOJoin
 		$this->restriction = $restriction;
 	}
 	
+	public function getTables() {
+		
+		$restrictions = $this->restriction->getConnectingRestrictions();
+		$_return      = Array();
+
+		if ($restrictions === null) {return '';}
+
+		foreach ($restrictions as $simple_restrictions) {
+
+			if ($simple_restrictions instanceof \spitfire\storage\database\RestrictionGroup) {
+				$table = $simple_restrictions->getQuery()->getQueryTable();
+				$_return[] = $table;
+			}
+			else {
+				throw new \privateException('Joins require restriction groups to be created.');
+			}
+		}
+
+		return $_return;
+	}
+	
 	public function __toString() {
 		if ($this->restriction->getValue() === null) return '';
 		
