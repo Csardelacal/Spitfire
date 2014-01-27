@@ -177,11 +177,7 @@ class ManyToManyAdapter implements ArrayAccess, Iterator, AdapterInterface
 
 	public function commit() {
 		
-		$bridge_records = $this->getBridgeRecordsQuery()->fetchAll();
-
-		foreach($bridge_records as $r) {
-			$r->delete();
-		}
+		 $this->getBridgeRecordsQuery()->delete();
 
 		//@todo: Change for definitive.
 		$value = $this->toArray();
