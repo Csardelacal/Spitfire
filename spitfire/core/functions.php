@@ -184,3 +184,7 @@ function get_path_info() {
 	
 	return  '/';
 }
+
+function _def(&$a, $b) {
+	return ($a)? $a : $b;
+}

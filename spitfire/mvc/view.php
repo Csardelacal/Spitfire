@@ -2,6 +2,7 @@
 
 namespace spitfire;
 
+use privateException;
 use spitfire\MVC;
 use \_SF_ViewElement;
 use spitfire\registry\JSRegistry;

@@ -4,7 +4,6 @@ namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\Query;
 use spitfire\storage\database\QueryField;
-use spitfire\storage\database\CompositeRestriction;
 
 class MysqlPDOQuery extends Query
 {
