@@ -43,6 +43,10 @@ class Route
 	private $protocol;
 	
 	/**
+	 * A route is a pattern Spitfire uses to redirect an URL to something else.
+	 * It can 'redirect' (without it being a 302) a request to a new URL, it can
+	 * directly send back a response or assign a custom controller, action and 
+	 * object to the request.
 	 * 
 	 * @param \spitfire\router\Server $server The server this route belongs to
 	 * @param string $pattern
@@ -60,6 +64,16 @@ class Route
 		$this->pattern = $array;
 	}
 	
+	/**
+	 * Tests all the elements of a pattern to see whether the tested route is 
+	 * valid or not and to fetch the parameters for it. In case the route and the
+	 * URL match we will have an array of parameters in the route that allow us
+	 * to customize a request.
+	 * 
+	 * @throws RouteMismatchException In case the route was not valid.
+	 * @param Pattern[] $pattern
+	 * @param string[] $array
+	 */
 	protected function patternWalk($pattern, $array) {
 		foreach ($pattern as $p) {
 			$this->parameters = array_merge($this->parameters, $p->test(array_shift($array)));
@@ -87,6 +101,13 @@ class Route
 		return $this->method & $method;
 	}
 	
+	/**
+	 * Tests if a URL matches the current Route. If so it will return true and you
+	 * can use the parameters in it.
+	 * 
+	 * @param string $URI
+	 * @return boolean
+	 */
 	public function testURI($URI) {
 		$array = array_filter(explode('/', $URI));
 		$this->parameters = $this->server->getParameters();
