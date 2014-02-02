@@ -6,19 +6,33 @@
  * strings, which are the most common daatype when interacting with a user.
  * 
  * It uses a set of rules, that can return either a validationError or a boolean 
- * false if no errors where encountered. If you want your validation rules to 
- * return several errors you will have to generate a validation arror that holds
- * several suberrors.
+ * false if no errors where encountered. 
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-class Validator
+class Validator implements ValidatorInterface
 {
 	/**
 	 * The set of rules used to validate data that is tested with these.
 	 * @var ValidationRule[]
 	 */
 	private $rules;
+	
+	/**
+	 * Holds the array of messages that generated when validating the content.
+	 * This can be used to inform the user verbosely about the kind of error that
+	 * generated when testing the content.
+	 * @var ValidationError[]
+	 */
+	private $messages;
+	
+	/**
+	 * The value this element is testing for validity. When the data is set the 
+	 * validator will re-run all the tests on the next call to one of the methods
+	 * that provides validation status.
+	 * @var mixed
+	 */
+	private $value;
 	
 	/**
 	 * Adds a rule to this validator. This way it can test the correctness of 
@@ -30,6 +44,63 @@ class Validator
 	public function addRule(ValidationRule$rule) {
 		$this->rules[] = $rule;
 		return $this;
+	}
+	
+	/**
+	 * Defines the value to be tested. The validator will then use the existing 
+	 * functions to inform you about the status fo the validation of this value.
+	 * 
+	 * @param mixed $value
+	 * @return \spitfire\validation\Validator
+	 */
+	public function setValue($value) {
+		$this->value    = $value;
+		$this->iterateRules();
+		return $this;
+	}
+	
+	/**
+	 * Returns the value this validator is containing and that is being tested 
+	 * against the rules inside it.
+	 * 
+	 * @return mixed
+	 */
+	public function getValue() {
+		return $this->value;
+	}
+	
+	/**
+	 * Returns the list of messages that the validator has generated when testing 
+	 * it's content.
+	 * 
+	 * @return type Description
+	 */
+	public function getMessages() {
+		return $this->messages;
+	}
+	
+	/**
+	 * Returns true if the data held by the validator is acceptable and passes all
+	 * the tests being requested to consider the data valid.
+	 * 
+	 * @return boolean
+	 */
+	public function isOk() {
+		return empty($this->messages);
+	}
+	
+	/**
+	 * Throws an exception in case the data is not valid. This is often the most 
+	 * comfortable way to return errors as it will simply break layers that are not
+	 * able to handle it and therefore making the application safer, forcing it to
+	 * react to the error or fail.
+	 * 
+	 * @throws ValidationException
+	 */
+	public function validate() {
+		if (!empty($this->messages)) {
+			throw self::makeException($this->messages);
+		}
 	}
 	
 	/**
@@ -98,6 +169,7 @@ class Validator
 	 * data about all the errors generated while testing so you can assign them to
 	 * tested values.p
 	 * 
+	 * @deprecated
 	 * @param \spitfire\validation\Validatable|mixed $value
 	 * @param mixed $src
 	 * @return \spitfire\validation\ValidationResult
@@ -117,15 +189,14 @@ class Validator
 	 * are satisfied by the value.
 	 * 
 	 * @param mixed $value
-	 * @param mixed $src
 	 * @return \spitfire\validation\ValidationResult
 	 */
-	private function iterateRules($value, &$src) {
+	private function iterateRules() {
 		$errors = Array();
 		foreach ($this->rules as $rule) {
-			$errors[] = $this->testRule($rule, $value, $src);
+			$errors[] = $this->testRule($rule, $this->value);
 		}
-		return new ValidationResult(array_filter($errors));
+		$this->messages = array_filter($errors);
 	}
 	
 	/**
@@ -133,12 +204,11 @@ class Validator
 	 * 
 	 * @param \spitfire\validation\ValidationRule $rule
 	 * @param mixed $value
-	 * @param type $src
 	 * @return \spitfire\validation\ValidationError
 	 * @throws \privateException If the rule returns unexpected data.
 	 */
-	protected function testRule(ValidationRule$rule, $value, &$src) {
-		$result = $rule->test($value, $src);
+	protected function testRule(ValidationRule$rule, $value) {
+		$result = $rule->test($value);
 
 		if ($result !== false && !$result instanceof ValidationError) {
 			throw new \privateException('Invalid result type, expected ValidationResult');
@@ -152,12 +222,13 @@ class Validator
 	 * as it will require to write it with catch's instead of big if nests that
 	 * are not required in most cases.
 	 * 
+	 * @todo Replace the result with errors
 	 * @param \spitfire\validation\ValidationResult $result
 	 * @return \ValidationException
 	 */
-	public static function makeException(ValidationResult$result = null) {
+	public static function makeException() {
 		$ex = new \ValidationException('Validation failed', 0);
-		if ($result !== null) {$ex->setResult($result); }
 		return $ex;
 	}
+
 }

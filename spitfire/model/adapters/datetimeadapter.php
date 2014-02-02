@@ -1,6 +1,6 @@
 <?php namespace spitfire\model\adapters;
 
-use DateTime;
+use spitfire\DateTime;
 
 /**
  * This class creates an interface between the usual database's string or integer

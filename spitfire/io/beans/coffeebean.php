@@ -18,7 +18,7 @@ use spitfire\io\beans\UnSubmittedException;
 
 use spitfire\io\XSSToken;
 use spitfire\io\PostTarget;
-use spitfire\validation\Validatable;
+use spitfire\validation\ValidatorInterface;
 use spitfire\validation\ValidationResult;
 
 use spitfire\io\renderers\RenderableForm;
@@ -32,7 +32,7 @@ use spitfire\io\renderers\RenderableFieldGroup;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class CoffeeBean extends PostTarget implements RenderableForm, RenderableFieldGroup, Validatable
+abstract class CoffeeBean extends PostTarget implements RenderableForm, RenderableFieldGroup, ValidatorInterface
 {
 	
 	private $fields = Array();
@@ -80,11 +80,27 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 			$xss = $_POST['_XSS_'] !== $this->xss->getValue();
 			if ($xss) { throw new publicException('XSS Attack', 403); }
 			
-			$errors = Array();
-			foreach($this->fields as $field) {$errors[] = $field->validate();}
-			return new ValidationResult($errors);
+			foreach($this->fields as $field) {$field->validate();}
 		}
 		else { throw new UnSubmittedException(); }
+	}
+
+	public function addRule(\spitfire\validation\ValidationRule $rule) {
+		throw new privateException('You cannot add validation rules to beans');
+	}
+
+	public function getMessages() {
+		return Array();
+	}
+
+	public function isOk() {
+		$ok = true;
+		
+		foreach ($this->fields as $field) {
+			$ok = $field->isOk() && $ok;
+		}
+		
+		return $ok;
 	}
 	
 	/**
@@ -206,8 +222,8 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		$this->name = $name;
 	} 
 
-	public function makeForm($renderer, $errors = Array()) {
-		return $renderer->renderForm($this, $errors);
+	public function makeForm($renderer) {
+		return $renderer->renderForm($this);
 	}
 	
 	public function makeList($renderer, $records) {
@@ -293,5 +309,5 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		}
 		else throw new privateException('Bean not found');
 	}
-	
+
 }

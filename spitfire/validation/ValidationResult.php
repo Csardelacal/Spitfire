@@ -3,6 +3,8 @@
 /**
  * Objects of this class represent the result of a validation. This means, they
  * store whether a test was successful or if a 
+ * 
+ * @deprecated since version 0.1-dev
  */
 class ValidationResult
 {

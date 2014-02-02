@@ -44,9 +44,9 @@ class MinLengthValidationRule implements ValidationRule
 	 * @param mixed $source
 	 * @return \spitfire\validation\ValidationError|boolean
 	 */
-	public function test($value, &$source = null) {
+	public function test($value) {
 		if (strlen($value) < $this->length) {
-			return new ValidationError($this->message, $this->extendedMessage, $source);
+			return new ValidationError($this->message, $this->extendedMessage);
 		}
 		return false;
 	}

@@ -54,7 +54,8 @@ class environment
 		 'cachefile.directory'     => 'bin/usr/cache/',
 	    
 		#Timezone settings
-		'timezone'                 => 'Europe/Berlin'
+		'timezone'                 => 'Europe/Berlin',
+		'datetime.format'          => 'd/m/Y H:i:s'
 		
 	);
 	

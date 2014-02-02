@@ -5,7 +5,7 @@ namespace spitfire\io\beans;
 use CoffeeBean;
 use privateException;
 use spitfire\io\PostTarget;
-use spitfire\validation\ValidationError;
+use spitfire\validation\ValidatorInterface;
 
 /**
  * A bean field is an object that allows the bean to retrieve the data it needs
@@ -17,7 +17,7 @@ use spitfire\validation\ValidationError;
  * @since  0.1
  * @last-revision 2013-07-01
  */
-abstract class Field extends PostTarget implements \spitfire\validation\Validatable
+abstract class Field extends PostTarget implements ValidatorInterface
 {
 	/**
 	 * The bean this field currently belongs to. This is used by the Field to 
@@ -154,25 +154,6 @@ abstract class Field extends PostTarget implements \spitfire\validation\Validata
 	
 	public function getVisibility() {
 		return $this->visibility;
-	}
-	
-	public function validate() {
-		$res = $this->field->validate($this->getValue());
-		
-		if ($res instanceof \spitfire\validation\ValidationResult && !$res->success()) {
-			$errors = $res->getErrors();
-			if (count($errors) === 1) { $res = $errors[0]; }
-			else {
-				$error = new ValidationError('Not valid');
-				$error->setSubErrors($errors);
-				$res = $error;
-			}
-		}
-		if ($res instanceof ValidationError) {
-			$res->setSrc($this);
-		}
-		
-		return $res;
 	}
 	
 	public function __toString() {

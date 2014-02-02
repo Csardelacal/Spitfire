@@ -51,12 +51,11 @@ class FilterValidationRule implements ValidationRule
 	 * this element or boolean false on no errors.
 	 * 
 	 * @param mixed $value The value tested.
-	 * @param mixed $source This allows to determine the element which's value was tested
 	 * @return \spitfire\validation\ValidationError|boolean A validation error or boolean on success
 	 */
-	public function test($value, &$source = null) {
+	public function test($value) {
 		if (!filter_var($value, $this->filter)) {
-			return new ValidationError($this->message, $this->extendedMessage, $source);
+			return new ValidationError($this->message, $this->extendedMessage);
 		}
 		return false;
 	}
