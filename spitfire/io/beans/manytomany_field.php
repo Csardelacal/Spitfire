@@ -113,7 +113,6 @@ class ManyToManyField extends Field implements RenderableFieldSelect, Renderable
 		return null;
 	}
 	
-	
 	public function getOptions() {
 		$opts = $this->getField()->getTarget()->getTable()->getAll()->fetchAll();
 		$_return = Array();

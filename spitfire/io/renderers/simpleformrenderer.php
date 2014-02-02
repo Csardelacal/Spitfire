@@ -15,7 +15,7 @@ class SimpleFormRenderer extends Renderer
 		$this->field_renderer = ($fieldrenderer === null)? new SimpleFieldRenderer() : $fieldrenderer;
 	}
 	
-	public function renderForm(RenderableForm$renderable, $errors = Array()) {
+	public function renderForm(RenderableForm$renderable) {
 		$form = new HTMLForm($this->getFormAction($renderable));
 		$fields = $renderable->getFormFields();
 		$renderer = $this->field_renderer;
@@ -23,9 +23,9 @@ class SimpleFormRenderer extends Renderer
 		foreach ($fields as $field) {
 			if ($field->getVisibility() & CoffeeBean::VISIBILITY_FORM) {
 				if (null !== $r = $field->getEnforcedFieldRenderer()) {
-					$form->addChild($r->renderForm($field, $this->getErrorsFor($field, $errors)));
+					$form->addChild($r->renderForm($field));
 				} else {
-					$form->addChild($renderer->renderForm($field, $this->getErrorsFor($field, $errors)));
+					$form->addChild($renderer->renderForm($field));
 				}
 			}
 		}

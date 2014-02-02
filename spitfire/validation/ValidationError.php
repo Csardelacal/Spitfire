@@ -158,8 +158,8 @@ class ValidationError
 	public function __toString() {
 		$_return = '<li>';
 		$_return.= $this->message;
+		$_return.= ' ';
 		$_return.= ($this->extendedMessage)? $this->extendedMessage : '';
-		$_return.= ($this->subErrors)? '<ul>' . implode('', $this->subErrors) . '</ul>' : '';
 		$_return.= '</li>';
 		return $_return;
 	}

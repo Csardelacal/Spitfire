@@ -9,7 +9,7 @@ use spitfire\io\html\HTMLOption;
 
 class SimpleFieldRenderer {
 	
-	public function renderForm(RenderableField$field, $error = null) {
+	public function renderForm(RenderableField$field) {
 		
 		if (!($field->getVisibility() & Renderable::VISIBILITY_FORM)) { return; }
 		
@@ -34,7 +34,7 @@ class SimpleFieldRenderer {
 			throw new \privateException('Renderer has no method: ' . $method);
 		}
 		
-		return $this->$method($field, $error);
+		return $this->$method($field);
 	}
 	
 	public function renderList($field) {
@@ -47,20 +47,20 @@ class SimpleFieldRenderer {
 			return new HTMLDiv($label, $input, Array('class' => 'field'));
 	}
 	
-	public function renderFormString(RenderableFieldString$field, $error) {
+	public function renderFormString(RenderableFieldString$field) {
 		$input = new HTMLInput('text', $field->getPostId(), $field->getValue());
 		$label = new HTMLLabel($input, $field->getCaption());
-		$errs  = $this->renderError($error);
+		$errs  = $this->renderError($field->getMessages());
 		
 		$class = ($errs === null)? 'field' : 'field has-errors';
 		
 		return new HTMLDiv($label, $input, $errs, Array('class' => $class));
 	}
 	
-	public function renderFormInteger(RenderableFieldInteger$field, $error) {
+	public function renderFormInteger(RenderableFieldInteger$field) {
 		$input = new HTMLInput('number', $field->getPostId(), $field->getValue());
 		$label = new HTMLLabel($input, $field->getCaption());
-		$errs  = $this->renderError($error);
+		$errs  = $this->renderError($field->getMessages());
 		
 		$class = ($errs === null)? 'field' : 'field has-errors';
 		$input->setParameter('pattern', '\d*');
@@ -68,18 +68,18 @@ class SimpleFieldRenderer {
 		return new HTMLDiv($label, $input, $errs, Array('class' => $class));
 	}
 	
-	public function renderFormBoolean(RenderableFieldBoolean$field, $error) {
+	public function renderFormBoolean(RenderableFieldBoolean$field) {
 		$input = new HTMLInput('checkbox', $field->getPostId());
 		if ($field->getValue()) {$input->setParameter('checked', 'checked');}
 		$label = new HTMLLabel($input, $field->getCaption());
-		$errs  = $this->renderError($error);
+		$errs  = $this->renderError($field->getMessages());
 		
 		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
 	}
 	
-	public function renderError($error) {
-		if ($error !== null) {
-			$errs  = new HTMLDiv('<ul>' . $error . '</ul>', Array('class' => 'error-output'));
+	public function renderError($errors) {
+		if (is_array($errors)) {
+			$errs  = new HTMLDiv('<ul>' . implode('', $errors) . '</ul>', Array('class' => 'error-output'));
 		} else {$errs = null; }
 		
 		return $errs;
@@ -90,7 +90,7 @@ class SimpleFieldRenderer {
 		return $input;
 	}
 	
-	public function renderFormSelect(RenderableFieldSelect$field, $error = null, $value = false) {
+	public function renderFormSelect(RenderableFieldSelect$field, $value = false) {
 		$value   = ($value === false)? $field->getValue() : $value;
 		if ($value instanceof \Model) {$value = implode(':', $value->getPrimaryData());}
 		$select  = new HTMLSelect($field->getPostId(), $value);
@@ -102,25 +102,24 @@ class SimpleFieldRenderer {
 			$select->addChild(new HTMLOption($value, $caption));
 		}
 		
-		$err = $this->renderError($error);
+		$err = $this->renderError($field->getMessages());
 		$class = ($err === null)? 'field' : 'field has-errors';
 		
 		return new HTMLDiv($label, $select, $err, Array('class' => $class));
 	}
 	
-	public function renderFormSelectArray(RenderableFieldSelect$field, $errors) {
+	public function renderFormSelectArray(RenderableFieldSelect$field) {
 		$values = $field->getValue();
 		$html   = new HTMLDiv();
 		foreach ($values as $value) {
-			$error = ($errors !== null)? $this->getErrorsFor($field, $errors->getSubErrors()) : null;
-			$html->addChild($this->renderFormSelect($field, $error, $value));
+			$html->addChild($this->renderFormSelect($field, $value));
 		}
 		
 		while (count($html->getChildren()) < $field->getMinimumEntries()) {
-			$html->addChild($this->renderFormSelect($field, null, null));
+			$html->addChild($this->renderFormSelect($field, null));
 		}
 		
-		$html->addChild($this->renderFormSelect($field, null, null));
+		$html->addChild($this->renderFormSelect($field, null));
 
 		return $html;
 	}
@@ -142,11 +141,11 @@ class SimpleFieldRenderer {
 		return $html;
 	}
 	
-	public function renderFormDateTime(RenderableFieldDateTime$field, $error) {
+	public function renderFormDateTime(RenderableFieldDateTime$field) {
 		$input = new \spitfire\io\html\dateTimePicker($field->getValue());
 		$input->setInputName($field->getPostId());
 		$label = new HTMLLabel($input, $field->getCaption());
-		$errs  = $this->renderError($error);
+		$errs  = $this->renderError($field->getMessages());
 		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
 	}
 	

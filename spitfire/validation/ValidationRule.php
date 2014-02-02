@@ -13,9 +13,6 @@ interface ValidationRule
 	 * it will return a validation error.
 	 * 
 	 * @param mixed $value The value to be tested
-	 * @param mixed $source This value allows to define the origin of an error, 
-	 *         allowing to attach this data next to the source. For example, in forms
-	 *         you can render the errors next to the field.
 	 */
-	function test($value, &$source = null);
+	function test($value);
 }
