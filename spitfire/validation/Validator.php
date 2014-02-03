@@ -43,6 +43,8 @@ class Validator implements ValidatorInterface
 	 */
 	public function addRule(ValidationRule$rule) {
 		$this->rules[] = $rule;
+		$message = $this->testRule($rule, $this->value);
+		if ($message) { $this->messages[] = $message; }
 		return $this;
 	}
 	
