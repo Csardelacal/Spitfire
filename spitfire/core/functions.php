@@ -158,19 +158,17 @@ function current_context(Context$set = null) {
 	return $context;
 }
 
-function validate($target = null, Validator$validator = null) {
-	if ($target !== null && $target instanceof Validatable) {
-		$v = new Validator();
-		$result = $v->test($target);
-		if (!$result->success()) {	throw Validator::makeException($result); }
-		return $result;
+function validate($target = null) {
+	if ($target !== null && $target instanceof \spitfire\validation\ValidatorInterface) {
+		$targets = func_get_args();
+		foreach ($targets as $target) {
+			$target->validate();
+		}
+	} else {
+		$validator = new Validator();
+		$validator->setValue($target);
+		return $validator;
 	}
-	elseif ($validator !== null) {
-		$result = $validator->test($target);
-		if (!$result->success()) {	throw Validator::makeException($result); }
-		return $result;
-	}
-	return new Validator();
 }
 
 function get_path_info() {

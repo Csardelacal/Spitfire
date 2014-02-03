@@ -243,6 +243,7 @@ class Model implements Serializable
 		}
 	}
 	
+	//TODO: This now breaks due to the adapters
 	public function serialize() {
 		if (! $this->synced) throw new privateException("Database record cannot be serialized out of sync");
 		
