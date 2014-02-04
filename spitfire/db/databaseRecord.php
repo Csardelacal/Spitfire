@@ -245,11 +245,15 @@ class Model implements Serializable
 	
 	//TODO: This now breaks due to the adapters
 	public function serialize() {
-		if (! $this->synced) throw new privateException("Database record cannot be serialized out of sync");
+		$data = array();
+		foreach($this->data as $adapter) {
+			if (! $adapter->isSynced()) throw new privateException("Database record cannot be serialized out of sync");
+			$data = array_merge($data, $adapter->dbGetData());
+		}
 		
 		$output = Array();
 		$output['model'] = $this->table->getModel()->getName();
-		$output['data']  = $this->data;
+		$output['data']  = $data;
 		
 		return serialize($output);
 	}
@@ -258,7 +262,9 @@ class Model implements Serializable
 		
 		$input = unserialize($serialized);
 		$this->table = db()->table($input['model']);
-		$this->data  = $input['data'];
+		
+		$this->makeAdapters();
+		$this->populateAdapters($input['data']);
 	}
 	
 	public function __toString() {
