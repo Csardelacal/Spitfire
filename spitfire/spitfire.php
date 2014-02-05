@@ -68,12 +68,14 @@ class SpitFire extends App
 		
 		#Get the current path...
 		$pinfo = get_path_info();
-		$path = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD']);
+		$https = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
+		$path = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD'], $https);
 		
 		#If the user responded to the current route with a response we do not need 
 		#to handle the request
 		if (!$path instanceof Response) {
 			$request = $this->request = Request::get();
+			if (is_string($path)) { $request->setPath($path); }
 
 			#Import the apps
 			self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
