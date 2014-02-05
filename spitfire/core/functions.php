@@ -5,7 +5,6 @@ use spitfire\environment;
 use spitfire\Context;
 use spitfire\locales\langInfo;
 use spitfire\storage\database\DB;
-use spitfire\validation\Validatable;
 use spitfire\validation\Validator;
 
 function spitfire() {

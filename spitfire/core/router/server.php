@@ -11,7 +11,7 @@ class Server extends Routable
 	private $protocol;
 	private $routes = Array();
 	
-	public function __construct($pattern, $proto = Route::PROTO_HTTP) {
+	public function __construct($pattern, $proto = Route::PROTO_ANY) {
 		$array = explode('.', $pattern);
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
@@ -35,7 +35,6 @@ class Server extends Routable
 		$this->parameters = Array();
 		
 		try {
-			if ($this->pattern instanceof Closure) {$this->parameters = call_user_func($this->pattern);}
 			$this->patternWalk($this->pattern, $array);
 			return true;
 		} catch(RouteMismatchException $e) {
@@ -43,11 +42,11 @@ class Server extends Routable
 		}
 	}
 	
-	public function rewrite($server, $url, $method) {
+	public function rewrite($server, $url, $method, $protocol) {
 		
 		if ($this->test($server)) {
 			foreach ($this->routes as $route) {
-				if (false != $rewrite = $route->rewrite($url, $method)) {
+				if (false != $rewrite = $route->rewrite($url, $method, $protocol)) {
 					Request::get()->setParameters($route->getParameters());
 					return $rewrite;
 				}

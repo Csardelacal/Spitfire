@@ -21,9 +21,8 @@ class Request
 	private $parameters;
 	
 	protected function __construct() {
-		$pinfo = get_path_info();
 		
-		$this->path     = $pinfo;
+		$this->path     = get_path_info();
 		$this->response = new Response(null);
 		self::$instance = $this;
 	}
@@ -63,6 +62,10 @@ class Request
 		$context = $this->readPath(Context::create());
 		$context->view = $context->app->getView($context->controller);
 		return $context;
+	}
+	
+	public function setPath($path) {
+		$this->path = $path;
 	}
 
 
@@ -110,8 +113,8 @@ class Request
 	 * @param string $path
 	 * @return \Request
 	 */
-	public static function get($path = null) {
+	public static function get() {
 		if (self::$instance) return self::$instance;
-		else return self::$instance = new self($path);
+		else return self::$instance = new self();
 	}
 }

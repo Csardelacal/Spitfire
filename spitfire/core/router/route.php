@@ -17,8 +17,9 @@ class Route
 	 * depending on if the request is done via HTTP(S). This is especially useful
 	 * when your application wants to enforce HTTPS for certain requests.
 	 */
-	const PROTO_HTTP    = false;
-	const PROTO_HTTPS   = true;
+	const PROTO_HTTP    = 0x01;
+	const PROTO_HTTPS   = 0x02;
+	const PROTO_ANY     = 0x03;
 	
 	/* These constants are intended to allow routes to react differently depending
 	 * on the METHOD used to issue the request the server is receiving. Spitfire
@@ -54,10 +55,11 @@ class Route
 	 * @param string $method
 	 * @param string $pattern
 	 */
-	public function __construct(Server$server, $pattern, $new_route, $method) {
+	public function __construct(Server$server, $pattern, $new_route, $method, $proto = Route::PROTO_ANY) {
 		$this->server    = $server;
 		$this->new_route = $new_route;
 		$this->method    = $method;
+		$this->protocol  = $proto;
 		
 		$array = array_filter(explode('/', $pattern));
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
@@ -120,8 +122,15 @@ class Route
 		}
 	}
 	
-	public function test($URI, $method) {
-		return $this->testURI($URI) && $this->testMethod($method);
+	public function testProto($protocol) {
+		if (!is_int($protocol)) {
+			$protocol = ($protocol && $protocol != 'off')? Route::PROTO_HTTPS : Route::PROTO_HTTP;
+		}
+		return $this->protocol & $protocol;
+	}
+	
+	public function test($URI, $method, $protocol) {
+		return $this->testURI($URI) && $this->testMethod($method) && $this->testProto($protocol);
 	}
 	
 	protected function rewriteString() {
@@ -159,8 +168,8 @@ class Route
 		return true;
 	}
 	
-	public function rewrite($URI, $method) {
-		if ($this->test($URI, $method)) {
+	public function rewrite($URI, $method, $protocol) {
+		if ($this->test($URI, $method, $protocol)) {
 			if (is_string($this->new_route))         {return $this->rewriteString();}
 			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, $this->parameters);}
 			if (is_array($this->new_route))          {return $this->rewriteArray(); }

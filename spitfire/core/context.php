@@ -3,6 +3,7 @@
 use publicException;
 use privateException;
 use spitfire\InputSanitizer;
+use spitfire\core\annotations\ActionReflector;
 
 /**
  * The context is a wrapper for an application that 'does stuff' it basically
@@ -58,6 +59,9 @@ class Context
 		if (method_exists($this->controller, 'onload') ) {
 			call_user_func_array(Array($this->controller, 'onload'), Array($this->action));
 		}
+		
+		$reflector = new ActionReflector($this->controller, $this->action);
+		$reflector->execute();
 		
 		#Check if the controller can handle the request
 		$request = Array($this->controller, $this->action);
