@@ -16,6 +16,7 @@ class View extends MVC
 	private $js;
 	private $css;
 	
+	private $render_template = true;
 	private $render_layout = true;
 	private $layout;
 	
@@ -73,6 +74,8 @@ class View extends MVC
 	}
 	
 	public function setFile ($fileName) {
+		$fileName = $this->app->getTemplateDirectory() . $fileName;
+		
 		if (file_exists($fileName)) $this->file = $fileName;
 		else throw new fileNotFoundException('File ' . $fileName . 'not found. View can\'t use it');
 	}
@@ -83,9 +86,14 @@ class View extends MVC
 		if (!file_exists($filename)) throw new privateException('Element ' . $file . ' missing');
 		return new _SF_ViewElement($filename, $this->data);
 	}
+	
+	public function setRenderTemplate($set) {
+		$this->render_template = $set;
+	}
 
 	public function render () {
-		$this->getFiles();
+		if (!$this->file) { $this->getFiles(); }
+		if (!$this->render_template) { echo $this->data['_SF_DEBUG_OUTPUT']; return; }
 		ob_start();
 		foreach ($this->data as $data_var => $data_content) {
 			$$data_var = $data_content;
