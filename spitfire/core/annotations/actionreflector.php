@@ -82,6 +82,13 @@ class ActionReflector
 		}
 	}
 	
+	public function getDocBlock() {
+		$reflection = new ReflectionClass($this->controller);
+		$method     = $reflection->getMethod($this->action);
+		
+		return $method->getDocComment();
+	}
+	
 	/**
 	 * Fetches the annotations for the action so they can be used to establish
 	 * the way the app behaves.
@@ -89,10 +96,7 @@ class ActionReflector
 	 * @return string[]
 	 */
 	public function parseAnotations() {
-		$reflection = new ReflectionClass($this->controller);
-		$method     = $reflection->getMethod($this->action);
-		$docblock   = $method->getDocComment();
-		
+		$docblock = $this->getDocBlock();
 		$data  = explode("\n", $docblock);
 		$count = count($data);
 		$info  = array();
