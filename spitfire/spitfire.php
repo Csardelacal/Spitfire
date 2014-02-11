@@ -31,7 +31,7 @@ class SpitFire extends App
 		if (self::$started) throw new \privateException('Spitfire is already running');
 		
 		#Set the current working directory
-		$this->cwd = getcwd();
+		$this->cwd = dirname(dirname(__FILE__));
 		$cur_dir = $this->cwd . DIRECTORY_SEPARATOR . 'spitfire';
 
 		#Try to start autoload
