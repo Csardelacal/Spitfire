@@ -36,19 +36,19 @@ class Pattern
 	
 	public function test($str) {
 		if ($this->optional && empty($str)) {
-			if ($this->type === self::WILDCARD_NONE) {return [];}
-			else { return [$this->pattern => null];}
+			if ($this->type === self::WILDCARD_NONE) {return Array();}
+			else { return Array($this->pattern => null);}
 		}
 		
 		switch ($this->type) {
 			case self::WILDCARD_NUMERIC:
-				if (((int)$str) !== 0) { return [$this->pattern => $str]; }
+				if (((int)$str) !== 0) { return Array($this->pattern => $str); }
 				break;
 			case self::WILDCARD_STRING:
-				if (is_string($str)) { return [$this->pattern => filter_var($str, FILTER_SANITIZE_STRING)]; }
+				if (is_string($str)) { return ARray($this->pattern => filter_var($str, FILTER_SANITIZE_STRING)); }
 				break;
 			default:
-				if (in_array($str, $this->pattern)) { return []; }
+				if (in_array($str, $this->pattern)) { return Array(); }
 				break;
 		}
 		

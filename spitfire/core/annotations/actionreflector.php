@@ -79,9 +79,22 @@ class ActionReflector
 				return call_user_func_array(Array($this, 'cache' ), $annotation);
 			case '@template':
 				return call_user_func_array(Array($this, 'template' ), $annotation);
+			case '@layout':
+				return call_user_func_array(Array($this, 'layout' ), $annotation);
+			/*
+			 * Stuff that still is in the works
+			 * * Route
+			 */
 		}
 	}
 	
+	/**
+	 * Fetches the docblock of the action by creating a reflection of the class,
+	 * the action method and then requesting it's docblock. Guess there is no more
+	 * straightforward way to do this currently.
+	 * 
+	 * @return string
+	 */
 	public function getDocBlock() {
 		$reflection = new ReflectionClass($this->controller);
 		$method     = $reflection->getMethod($this->action);
@@ -109,6 +122,16 @@ class ActionReflector
 		return $info;
 	}
 	
+	/**
+	 * Checks whether the request being sent by the user is acceptable for the 
+	 * selected action. This allows your application to set a bunch of valid methods
+	 * that will avoid this one throwing an exception informing about the invalid
+	 * request.
+	 * 
+	 * @return mixed
+	 * @throws \publicException If the user is throwing a request with one method
+	 *			that is not accepted.
+	 */
 	protected function method() {
 		$accepted = func_get_args();
 		foreach($accepted as $ok) {
@@ -120,6 +143,12 @@ class ActionReflector
 		throw new \publicException("No valid request", 400);
 	}
 	
+	/**
+	 * Sets the time the current Request is still valid. This is especially useful
+	 * to reduce server load and increase performance when applied to requests 
+	 * that are not expected to change in foreseeable time, especially big requests
+	 * like images.
+	 */
 	protected function cache() {
 		current_context()
 			->response
@@ -127,6 +156,13 @@ class ActionReflector
 			->set('expires', gmdate('D, d M Y H:i:s \G\M\T', strtotime(implode(' ', func_get_args()))));
 	}
 	
+	/**
+	 * Defines whether the current template is rendered or not and what file is
+	 * used for that purpose. This allows your application to quickly define
+	 * templates that are not located in normal locations.
+	 * 
+	 * @return mixed
+	 */
 	protected function template() {
 		
 		$file = implode(' ', func_get_args());
@@ -136,6 +172,24 @@ class ActionReflector
 		}
 		
 		current_context()->view->setFile($file);
+	}
+	
+	/**
+	 * Defines whether the current template is rendered or not with a layout
+	 * and what file is used for that purpose. This allows your application to 
+	 * quickly define templates that are not located in normal locations.
+	 * 
+	 * @return mixed
+	 */
+	protected function layout() {
+		
+		$file = implode(' ', func_get_args());
+		
+		if ($file === 'none') {
+			return current_context()->view->setRenderLayout(false);
+		}
+		
+		current_context()->view->setLayoutFile($file);
 	}
 	
 }
