@@ -61,11 +61,12 @@ class BasicField extends Field
 	}
 
 	public function getMessages() {
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { return Array(); }
 		return $this->getValidator()->getMessages();
 	}
 
 	public function isOk() {
-		return $this->getValidator()->getMessages();
+		return $this->getValidator()->isOk();
 	}
 
 	public function validate() {
