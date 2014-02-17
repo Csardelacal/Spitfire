@@ -1,6 +1,5 @@
 <?php namespace spitfire\router;
 
-use Closure;
 use spitfire\Request;
 
 class Server extends Routable
@@ -8,14 +7,12 @@ class Server extends Routable
 	
 	private $pattern;
 	private $parameters;
-	private $protocol;
 	private $routes = Array();
 	
-	public function __construct($pattern, $proto = Route::PROTO_ANY) {
+	public function __construct($pattern) {
 		$array = explode('.', $pattern);
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
-		$this->protocol = $proto;
 	}
 	
 	/**
@@ -59,8 +56,8 @@ class Server extends Routable
 		return $this->parameters;
 	}
 
-	public function addRoute($pattern, $target, $method = 0x03) {
-		return $this->routes[] = new Route($this, $pattern, $target, $method);
+	public function addRoute($pattern, $target, $method = 0x03, $protocol = 0x03) {
+		return $this->routes[] = new Route($this, $pattern, $target, $method, $protocol);
 	}
 
 }
