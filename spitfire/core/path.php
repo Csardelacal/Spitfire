@@ -76,4 +76,60 @@
 		 $this->parameters = $parameters;
 	 }
 	 
+	 public function getController() {
+		 return $this->controller;
+	 }
+
+	 public function getAction() {
+		 return $this->action;
+	 }
+
+	 public function getObject() {
+		 return $this->object;
+	 }
+
+	 public function getFormat() {
+		 return $this->format;
+	 }
+
+	 public function getParameters() {
+		 return $this->parameters;
+	 }
+
+	 public function setController($controller) {
+		 $this->controller = $controller;
+		 return $this;
+	 }
+
+	 public function setAction($action) {
+		 $this->action = $action;
+		 return $this;
+	 }
+
+	 public function setObject($object) {
+		 $this->object = $object;
+		 return $this;
+	 }
+
+	 public function setFormat($format) {
+		 $this->format = $format;
+		 return $this;
+	 }
+
+	 public function setParameters($parameters) {
+		 $this->parameters = $parameters;
+		 return $this;
+	 }
+	 
+	 /**
+	  * This is a small convenience method that allows the controller to delegate
+	  * the task to a subcontroller as it hasn't been able to find any method able
+	  * to handle the request with this Path.
+	  * 
+	  */
+	 public function shift() {
+		 $this->controller[] = $this->action;
+		 $this->action = array_shift($this->object);
+	 }
+	 
  }
