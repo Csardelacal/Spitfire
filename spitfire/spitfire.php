@@ -66,6 +66,7 @@ class SpitFire extends App
 
 	public function fire() {
 		
+		$_GET = new io\Get($_GET);
 		#Get the current path...
 		$pinfo = get_path_info();
 		$https = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
