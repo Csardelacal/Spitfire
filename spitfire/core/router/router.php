@@ -33,7 +33,7 @@ class Router extends Routable
 	public function rewrite ($server, $route, $method, $protocol) {
 		#Loop through the servers to find valid routes
 		foreach ($this->servers as $box) {
-			if (false !== $t = $m->rewrite($server, $route, $method, $protocol)) {
+			if (false !== $t = $box->rewrite($server, $route, $method, $protocol)) {
 				return $t;
 			}
 		}
