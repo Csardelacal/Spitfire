@@ -80,10 +80,26 @@ class Get implements Iterator, ArrayAccess
 		foreach ($this->used as $key) {
 			#Check whether the object is another Get.
 			if ($this->data[$key] instanceof Get) {
-				$_ret = $this->data[$key]->getCanonical();
+				$_ret[$key] = $this->data[$key]->getCanonical();
 			#Check if the object is set at all. 
 			} elseif (isset($this->data[$key])) {
 				$_ret[$key] = $this->data[$key];
+			}
+		}
+		
+		return $_ret;
+	}
+	
+	public function getRaw() {
+		$_ret = Array();
+		
+		foreach ($this->data as $key => $value) {
+			#Check whether the object is another Get.
+			if ($value instanceof Get) {
+				$_ret[$key] = $value->getRaw();
+			#Check if the object is set at all. 
+			} elseif (isset($this->data[$key])) {
+				$_ret[$key] = $value;
 			}
 		}
 		
