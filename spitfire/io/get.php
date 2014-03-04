@@ -49,6 +49,7 @@ class Get implements Iterator, ArrayAccess
 	 */
 	public function __construct($data) {
 		$this->data = array_map(Array($this, 'sanitize'), $data);
+		$this->used = Array();
 	}
 	
 	/**
@@ -78,50 +79,91 @@ class Get implements Iterator, ArrayAccess
 		$_ret = Array();
 		
 		foreach ($this->used as $key) {
+			$value =&$this->data[$key];
 			#Check whether the object is another Get.
-			if ($this->data[$key] instanceof Get) {
-				$_ret[$key] = $this->data[$key]->getCanonical();
+			if ($value instanceof Get) { $_ret[$key] = $value->getCanonical(); }
+			
 			#Check if the object is set at all. 
-			} elseif (isset($this->data[$key])) {
-				$_ret[$key] = $this->data[$key];
-			}
+			elseif (isset($value))     { $_ret[$key] = $value; }
 		}
 		
 		return $_ret;
 	}
 	
+	/**
+	 * Returns the data the way it was received. As an array of basic types 
+	 * (usually strings), just like PHP would usually return them. This function
+	 * can be used to 'restore' the original _GET in case a component of your 
+	 * application needs it.
+	 * 
+	 * This is useful in situations where applications use the GET array in a manner
+	 * that is not recommended and read the data in a way that is not completely
+	 * standard.
+	 * 
+	 * @return \spitfire\io\Get
+	 */
 	public function getRaw() {
 		$_ret = Array();
+		$data =&$this->data;
 		
-		foreach ($this->data as $key => $value) {
+		foreach ($data as $key => $value) {
 			#Check whether the object is another Get.
-			if ($value instanceof Get) {
-				$_ret[$key] = $value->getRaw();
+			if ($value instanceof Get) { $_ret[$key] = $value->getRaw(); }
 			#Check if the object is set at all. 
-			} elseif (isset($this->data[$key])) {
-				$_ret[$key] = $value;
-			}
+			else { $_ret[$key] = $value; }
 		}
 		
 		return $_ret;
 	}
-
+	
+	/**
+	 * Returns the current element the array is iterating over.
+	 * 
+	 * @return mixed
+	 */
 	public function current() {
 		return current($this->data);
 	}
-
+	
+	/**
+	 * Returns the current key being used. This is also used for iteration and 
+	 * is not meant to be used by a actual user.
+	 * 
+	 * @return int|string
+	 */
 	public function key() {
 		return key($this->data);
 	}
-
+	
+	/**
+	 * Returns the next element in the array. This is also part of the iterator,
+	 * so let's just implement it for people to have this.
+	 * 
+	 * @return mixed
+	 */
 	public function next() {
 		return next($this->data);
 	}
-
+	
+	/**
+	 * Returns true if the offset is defined in the get. This is also part of the
+	 * implementation of Iterator and should just mirror the operation on the 
+	 * source.
+	 * 
+	 * @param string $offset
+	 * @return mixed
+	 */
 	public function offsetExists($offset) {
 		return isset($this->data[$offset]);
 	}
-
+	
+	/**
+	 * Gets a parameter by the name of it's key. Basically the equivalent of doing
+	 * $array['key'] on any normal array.
+	 * 
+	 * @param string $offset
+	 * @return mixed
+	 */
 	public function offsetGet($offset) {
 		#If the key is found include into the array of used data.
 		#This allows Spitfire to generate canonicals for you adequately.
@@ -130,23 +172,48 @@ class Get implements Iterator, ArrayAccess
 		}
 		return isset($this->data[$offset])? $this->data[$offset] : null;
 	}
-
+	
+	/**
+	 * Sets a key on the get array. This is usually considered bad practice but 
+	 * Spitfire respects the user doing so.
+	 * 
+	 * @param string $offset
+	 * @param mixed $value
+	 */
 	public function offsetSet($offset, $value) {
+		if (is_array($value)) { $value = new Get($value); }
 		$this->data[$offset] = $value;
 	}
-
+	
+	/**
+	 * Removes an element from the Get array.	This allows your application to 
+	 * 'banish' any key that should not be used or could be potentially unsafe.
+	 * 
+	 * @param string $offset
+	 */
 	public function offsetUnset($offset) {
 		if (isset($this->data[$offset])) {
 			unset($this->data[$offset]);
 		}
 	}
-
+	
+	/**
+	 * Rewinds the array and does not return anything. Just required by the iterator,
+	 * so here it is.
+	 */
 	public function rewind() {
 		reset($this->data);
 	}
-
+	
+	/**
+	 * Tells whether a field in the array is set / exists. The function uses key()
+	 * to detect whether the array has been pointed beyond it's end or not, if not
+	 * it will return true.
+	 * 
+	 * @return boolean
+	 */
 	public function valid() {
-		return isset($this->data);
+		return key($this->data) !== null;
 	}
 
 }
