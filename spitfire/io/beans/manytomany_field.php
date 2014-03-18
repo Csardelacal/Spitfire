@@ -144,4 +144,20 @@ class ManyToManyField extends Field implements RenderableFieldSelect, Renderable
 		return parent::getPostId() . '[]';
 	}
 
+	public function addRule(\spitfire\validation\ValidationRule $rule) {
+		//TODO
+	}
+
+	public function getMessages() {
+		//TODO
+	}
+
+	public function isOk() {
+		//TODO
+	}
+
+	public function validate() {
+		//TODO
+	}
+
 }

@@ -179,4 +179,16 @@ class ChildBean extends Field implements RenderableFieldGroup
 		return null;
 	}
 
+	public function addRule(\spitfire\validation\ValidationRule $rule) {
+		//TODO
+	}
+
+	public function getMessages() {
+		//TODO
+	}
+
+	public function isOk() {
+		//TODO
+	}
+
 }
