@@ -42,8 +42,9 @@ class environment
 		'default_action'           => 'index',
 		'default_object'           => Array(),
 	    
-		#Content support
+		#Request settings
 		'supported_view_extensions'=> Array('php', 'xml', 'json'),
+		'request.replace_globals'  => true,
 		
 		#Memcached settings
 		'memcached_enabled'        => false,

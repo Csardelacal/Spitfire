@@ -84,13 +84,32 @@ abstract class App
 				return $this->getBaseDir() . 'apps/';
 		}
 	}
+
+	/**
+	 * Checks if the current application has a controller with the name specified
+	 * by the single argument this receives. In case a controller is found and
+	 * it is not abstract the app will return the fully qualified class name of 
+	 * the Controller.
+	 *
+	 * It should not be necessary to check the return value with the === operator
+	 * as the return value on success should never be matched otherwise.
+	 *
+	 * @param string $name The name of the controller being searched
+	 */
+	public function hasController($name) {
+		$name = (array)$name;
+		$c    = $this->getNameSpace() . $controller . 'Controller';
+		if (!class_exists($c)) { return false; }
+
+		$reflection = new ReflectionClass($c);
+		if ($reflection->isAbstract()) { return false; }
+			
+		return $c;
+	}
 	
 	public function getController($controller, Context$intent) {
-		if (is_array($controller)) $controller = implode ('\\', $controller);
-		$c = $this->getNameSpace() . $controller . 'Controller';
-		$reflection = new ReflectionClass($c);
-		if ($reflection->isAbstract()) 
-			throw new publicException("Page not found", 404, new privateException("Abstract Controller", 0) );
+		$c = $this->hasController($controller);
+		if (!$c) { throw new publicException("Page not found", 404, new privateException("Controller not fond", 0) ); }
 		return new $c($intent);
 	}
 	
