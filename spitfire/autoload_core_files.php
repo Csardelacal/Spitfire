@@ -145,9 +145,7 @@ AutoLoad::registerClass('Pluggable',                                            
 
 AutoLoad::registerClass('URL',                                                  $cur_dir.'/url.php');
 AutoLoad::registerClass('absoluteURL',                                          $cur_dir.'/absoluteURL.php');
-AutoLoad::registerClass('spitfire\Request',                                     $cur_dir.'/core/request.php');
 AutoLoad::registerClass('spitfire\Context',                                     $cur_dir.'/core/context.php');
-AutoLoad::registerClass('spitfire\Response',                                    $cur_dir.'/core/response.php');
 AutoLoad::registerClass('spitfire\path\PathParser',                             $cur_dir.'/core/path/PathParser.php');
 AutoLoad::registerClass('spitfire\path\AppParser',                              $cur_dir.'/core/path/AppParser.php');
 AutoLoad::registerClass('spitfire\path\ControllerParser',                       $cur_dir.'/core/path/ControllerParser.php');
