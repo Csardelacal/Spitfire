@@ -67,6 +67,15 @@ class Request
 	private $response;
 	
 	/**
+	 * The context this request is being handled in. The context allows Spitfire 
+	 * to virtually run 'several instances' of a Request in a single run. This is
+	 * usually especially interesting to people who are testing a Spitfire app.
+	 * 
+	 * @var Context
+	 */
+	private $context;
+	
+	/**
 	 * Usually, the Request will be a singleton. The most convenient way of using
 	 * it is accessing via Request::get() or request() as they will provide a 
 	 * consistent way to do so.
@@ -104,14 +113,28 @@ class Request
 		self::$instance = $this;
 	}
 	
+	/**
+	 * Returns the response object this Request is using. You can use it to set
+	 * custom response bodies or headers within your application. This is dropped
+	 * in case the context is rebuilt.
+	 * 
+	 * @return Response
+	 */
 	public function getResponse() {
 		return $this->response;
 	}
 	
-	public function makeContext($path) {
-		$context = $this->readPath(Context::create());
-		$context->view = $context->app->getView($context->controller);
-		return $context;
+	/**
+	 * Automatically creates a context from the available data. This allows Spitfire
+	 * to create a single interface that your app can use to access all it's 
+	 * components in a convenient way.
+	 * 
+	 * @return type
+	 */
+	public function makeContext() {
+		$this->context = Context::create($this);
+		//TODO: $context->view = $context->app->getView($context->controller);
+		return $this->context;
 	}
 	
 	public function setPath($path) {
