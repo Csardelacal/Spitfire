@@ -88,7 +88,7 @@ class Upload
 			unset($file);
 		}
 		
-		$_POST = array_replace_recursive ($_POST, $files);
+		return array_replace_recursive ($_POST, $files);
 		
 	}
 	

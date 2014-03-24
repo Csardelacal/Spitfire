@@ -1,8 +1,8 @@
 <?php namespace spitfire\core;
 
-use Strings;
 use spitfire\io\Get;
 use spitfire\Context;
+use spitfire\core\router\Router;
 
 /**
  * The request class is a component that allows developers to retrieve information
@@ -137,45 +137,26 @@ class Request
 		return $this->context;
 	}
 	
+	public function getPath() {
+		return $this->path;
+	}
+	
 	public function setPath($path) {
 		$this->path = $path;
 	}
 
-
-	/**
-	 * Reads the current path the user has selected and tries to detect
-	 * Controllers, actions and objects from it.
-	 * 
-	 * [NOTICE] readPath does not guarantee safe input, you will have to
-	 * manually check whether the input it received is valid.
-	 * 
-	 * @throws \publicException In case a controller with no callable action
-	 *            has been found.
-	 */
-	public function readPath($context) {
-		$path = array_filter(explode('/', $this->path));
-		
-		list($last, $extension) = Strings::splitExtension(array_pop($path), 'php');
-		array_push($path, $last);
-		
-		$handlers = $this->getHandlers();
-		foreach ($handlers as $handler) {
-			if ($handler($context, reset($path))) {
-				array_shift($path);
-			}
-		}
-		
-		$context->object = $path;
-		$this->setExtension($context->extension = $extension);
-		return $context;
-	}
 	
-	public function addHandler($parser) {
-		$this->parsers[] = $parser;
-	}
-	
-	public function getHandlers() {
-		return $this->parsers;
+	public static function fromServer() {
+		$get     = new Get($_GET);
+		$post    = \spitfire\io\Upload::init();
+		$cookie  = $_COOKIE;
+		$headers = $_SERVER;
+		
+		$pinfo   = get_path_info();
+		$https   = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
+		$path    = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD'], $https);
+		
+		return new Request($path, $get, $post, $cookie, $headers);
 	}
 
 	/**
@@ -188,6 +169,6 @@ class Request
 	 */
 	public static function get() {
 		if (self::$instance) return self::$instance;
-		else return self::$instance = new self();
+		else return self::$instance = self::fromServer();
 	}
 }

@@ -1,9 +1,11 @@
 <?php namespace spitfire;
 
+use spitfire\core\Request;
 use publicException;
 use privateException;
 use spitfire\InputSanitizer;
 use spitfire\core\annotations\ActionReflector;
+use spitfire\core\Response;
 
 /**
  * The context is a wrapper for an application that 'does stuff' it basically
@@ -49,7 +51,7 @@ class Context
 		$context->post = new InputSanitizer($_POST);
 		$context->cache = MemcachedAdapter::getInstance();
 		$context->request = Request::get();
-		$context->parameters = new InputSanitizer($context->request->getParameters());
+		$context->parameters = new InputSanitizer($context->request->getPath()->getParameters());
 		$context->response = new Response($context);
 		return $context;
 	}

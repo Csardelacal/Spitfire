@@ -3,7 +3,7 @@
 namespace spitfire;
 
 use App;
-use spitfire\router\Router;
+use spitfire\core\Request;
 
 require_once 'spitfire/strings.php';
 require_once 'spitfire/app.php';
@@ -68,14 +68,11 @@ class SpitFire extends App
 		
 		$_GET = new io\Get($_GET);
 		#Get the current path...
-		$pinfo = get_path_info();
-		$https = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
-		$path = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD'], $https);
+		$request = $this->request = Request::get();
 		
 		#If the user responded to the current route with a response we do not need 
 		#to handle the request
 		if (!$path instanceof Response) {
-			$request = $this->request = Request::get();
 			if (is_string($path)) { $request->setPath($path); }
 
 			#Import the apps
