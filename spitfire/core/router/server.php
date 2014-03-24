@@ -1,4 +1,4 @@
-<?php namespace spitfire\router;
+<?php namespace spitfire\core\router;
 
 use spitfire\Request;
 

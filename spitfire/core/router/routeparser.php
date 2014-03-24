@@ -1,59 +1,63 @@
-<?php namespace spitfire\router;
+<?php namespace spitfire\core\router;
 
-class Pattern
+use spitfire\core\Path;
+use Strings;
+
+class RouteParser
 {
+	private $parsers = Array();
 	
-	const WILDCARD_NONE    = 0;
-	const WILDCARD_STRING  = 1;
-	const WILDCARD_NUMERIC = 2;
+	protected static $instance;
 	
-	private $type;
-	private $pattern;
-	private $optional = false;
-	
-	public function __construct($pattern) {
+	protected function __construct() {
+		self::$instance = $this;
+	}
+
+	/**
+	 * Reads the current path the user has selected and tries to detect
+	 * Controllers, actions and objects from it.
+	 * 
+	 * [NOTICE] readPath does not guarantee safe input, you will have to
+	 * manually check whether the input it received is valid.
+	 * 
+	 * @throws \publicException In case a controller with no callable action
+	 *            has been found.
+	 */
+	public function readPath() {
+		$path = array_filter(explode('/', $this->path));
+		$_ret = new Path(null, null, null, null);
 		
-		if (substr($pattern, -1) === '?') {
-			$this->optional = true;
-			$pattern        = substr($pattern, 0, -1);
+		list($last, $extension) = Strings::splitExtension(array_pop($path), 'php');
+		array_push($path, $last);
+		
+		$handlers = $this->getHandlers();
+		foreach ($handlers as $handler) {
+			if ($handler($_ret, reset($path))) {
+				array_shift($path);
+			}
 		}
 		
-		switch ( substr($pattern, 0, 1) ) {
-			case ':':
-				$this->type    = self::WILDCARD_STRING;
-				$this->pattern = substr($pattern, 1);
-				break;
-			case '#':
-				$this->type     = self::WILDCARD_NUMERIC;
-				$this->pattern  = substr($pattern, 1);
-				break;
-			default:
-				$this->type     = self::WILDCARD_NONE;
-				$this->pattern  = explode('|', $pattern);
-				break;
-		}
+		$context->object = $path;
+		$_ret->setExtension($extension);
+		
+		return $_ret;
 	}
 	
-	public function test($str) {
-		if ($this->optional && empty($str)) {
-			if ($this->type === self::WILDCARD_NONE) {return Array();}
-			else { return Array($this->pattern => null);}
-		}
-		
-		switch ($this->type) {
-			case self::WILDCARD_NUMERIC:
-				if (((int)$str) !== 0) { return Array($this->pattern => $str); }
-				break;
-			case self::WILDCARD_STRING:
-				if (is_string($str)) { return ARray($this->pattern => filter_var($str, FILTER_SANITIZE_STRING)); }
-				break;
-			default:
-				if (in_array($str, $this->pattern)) { return Array(); }
-				break;
-		}
-		
-		//If the pattern wasn't matched throw us out of it
-		throw new RouteMismatchException();
+	public function addHandler($parser) {
+		$this->parsers[] = $parser;
+	}
+	
+	public function getHandlers() {
+		return $this->parsers;
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @return RouteParser
+	 */
+	public static function getInstance() {
+		return self::$instance? self::$instance : new self();
 	}
 	
 }

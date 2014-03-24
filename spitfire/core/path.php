@@ -218,6 +218,11 @@
 		 return $this;
 	 }
 	 
+	 public function setExtension($extension) {
+		 return $this->setFormat($extension);
+	 }
+
+
 	 /**
 	  * Defines the named parameters that the router (or you) found. These can be
 	  * retrieved by the application by accessing the request object and let you

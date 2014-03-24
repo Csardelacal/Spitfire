@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\router;
+<?php namespace spitfire\core\router;
 
 /**
  * Routers are tools that allow your application to listen on alternative urls and
@@ -38,7 +36,7 @@ class Router extends Routable
 			}
 		}
 		#Implicit else.
-		return $route;
+		return RouteParser::getInstance()->readPath($route);
 	}
 	
 	/**

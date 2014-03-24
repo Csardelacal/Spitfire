@@ -24,12 +24,12 @@ class AutoLoad
 		$this->locators[] = new autoload\SystemClassLocator();
 		$this->locators[] = new RegisteredClassLocator();
 		$this->locators[] = new autoload\AppClassLocator();
-		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER);
-		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL);
-		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE);
-		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW);
-		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN);
-		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS);
+		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER, $this->spitfire);
+		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL, $this->spitfire);
+		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE, $this->spitfire);
+		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW, $this->spitfire);
+		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN, $this->spitfire);
+		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS, $this->spitfire);
 	}
 
 	public function register($className, $location) {

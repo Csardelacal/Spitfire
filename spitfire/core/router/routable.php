@@ -1,4 +1,4 @@
-<?php namespace spitfire\router;
+<?php namespace spitfire\core\router;
 
 /**
  * The routable class is the base class for both routers and router servers, 
