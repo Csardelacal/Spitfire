@@ -66,14 +66,13 @@ class SpitFire extends App
 
 	public function fire() {
 		
-		$_GET = new io\Get($_GET);
 		#Get the current path...
 		$request = $this->request = Request::get();
 		
 		#If the user responded to the current route with a response we do not need 
 		#to handle the request
-		if (!$path instanceof Response) {
-			if (is_string($path)) { $request->setPath($path); }
+		if (true) {//TODO: Fix: !$path instanceof Response) {
+			//if (is_string($path)) { $request->setPath($path); }
 
 			#Import the apps
 			self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
