@@ -37,7 +37,7 @@ class RouteParser
 			}
 		}
 		
-		$context->object = $path;
+		$_ret->setObject($path);
 		$_ret->setExtension($extension);
 		
 		return $_ret;
