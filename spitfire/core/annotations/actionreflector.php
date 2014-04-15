@@ -2,6 +2,7 @@
 
 use ReflectionClass;
 use Strings;
+use Exception;
 
 /**
  * This tool allows to parse annotations for an action. An action is a method of
@@ -97,7 +98,13 @@ class ActionReflector
 	 */
 	public function getDocBlock() {
 		$reflection = new ReflectionClass($this->controller);
-		$method     = $reflection->getMethod($this->action);
+		
+		try {
+			$method = $reflection->getMethod($this->action);
+		} catch (Exception $ex) {
+			try {$method = $reflection->getMethod('__call');}
+			catch (Exception $i) {throw $ex;}
+		}
 		
 		return $method->getDocComment();
 	}

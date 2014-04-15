@@ -23,8 +23,8 @@ class RouteParser
 	 * @throws \publicException In case a controller with no callable action
 	 *            has been found.
 	 */
-	public function readPath() {
-		$path = array_filter(explode('/', $this->path));
+	public function readPath($route) {
+		$path = array_filter(explode('/', $route));
 		$_ret = new Path(null, null, null, null);
 		
 		list($last, $extension) = Strings::splitExtension(array_pop($path), 'php');

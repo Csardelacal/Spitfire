@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\exceptions;
+<?php namespace spitfire\exceptions;
 
 use Exception;
 use \fileNotFoundException;
@@ -48,9 +46,13 @@ function get_error_page($code, $message, $moreInfo = '') {
 
 class ExceptionHandler {
 
-	private $msgs = Array();
+	private $msgs     = Array();
+	static  $instance = null;
 
 	public function __construct() {
+		#Make this the instance for the singleton
+		self::$instance = $this;
+		
 		set_exception_handler( Array($this, 'exceptionHandle'));
 		set_error_handler    ( Array($this, 'errorHandle'), error_reporting() );
 		register_shutdown_function( Array($this, 'shutdownHook'));
@@ -132,5 +134,9 @@ class ExceptionHandler {
 
 	public function getMessages () {
 		return $this->msgs;
+	}
+	
+	public static function getInstance() {
+		return self::$instance;
 	}
 }

@@ -1,6 +1,7 @@
 <?php namespace spitfire\core;
 
 use Headers;
+use spitfire\Context;
 
 class Response
 {

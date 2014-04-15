@@ -37,8 +37,6 @@ class UserClassLocator extends ClassLocator
 	 */
 	private $contenttype;
 	
-	private $spitfire;
-	
 	/**
 	 * Creates a new class locator for user classes. In Spitfire those are the ones
 	 * that are used by the developers to alter it's behavior, like controllers,
@@ -47,10 +45,9 @@ class UserClassLocator extends ClassLocator
 	 * @param string $suffix
 	 * @param mixed $contenttype
 	 */
-	public function __construct($suffix, $contenttype, $spitfire) {
+	public function __construct($suffix, $contenttype) {
 		$this->suffix = $suffix;
 		$this->contenttype = $contenttype;
-		$this->spitfire    = $spitfire;
 	}
 	
 	/**
@@ -62,7 +59,7 @@ class UserClassLocator extends ClassLocator
 	 * @return string|boolean
 	 */
 	public function getFilenameFor($class) {
-		$app = $this->spitfire->findAppForClass($class);
+		$app = spitfire()->findAppForClass($class);
 		
 		if ($app && Strings::endsWith($class, $this->suffix)) {
 			$classURI = $this->getClassURI($class, $app);

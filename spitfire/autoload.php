@@ -2,19 +2,18 @@
 
 use spitfire\autoload\RegisteredClassLocator;
 use spitfire\autoload\UserClassLocator;
+use spitfire\exceptions\ExceptionHandler;
 
 class AutoLoad
 {
 
 	static $instance = false;
 
-	private $spitfire;
 	private $imported_classes   = Array();
 	private $locators           = Array();
 
-	public function __construct($spitfire) {
+	public function __construct() {
 		self::$instance = $this;
-		$this->spitfire = $spitfire;
 		spl_autoload_register(Array($this, 'retrieveClass'));
 		
 		$this->makeLocators();
@@ -24,12 +23,12 @@ class AutoLoad
 		$this->locators[] = new autoload\SystemClassLocator();
 		$this->locators[] = new RegisteredClassLocator();
 		$this->locators[] = new autoload\AppClassLocator();
-		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER, $this->spitfire);
-		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL, $this->spitfire);
-		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE, $this->spitfire);
-		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW, $this->spitfire);
-		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN, $this->spitfire);
-		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS, $this->spitfire);
+		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER);
+		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL);
+		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE);
+		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW);
+		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN);
+		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS);
 	}
 
 	public function register($className, $location) {
@@ -41,7 +40,7 @@ class AutoLoad
 			if (false !== $file = $locator->getFilenameFor($className)) {
 				include $file;
 				$this->imported_classes[$className] = $file;
-				$this->spitfire->log("Imported class $className...");
+				ExceptionHandler::getInstance()->log("Imported class $className...");
 				return true;
 			}
 		}

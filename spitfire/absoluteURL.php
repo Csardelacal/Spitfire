@@ -2,7 +2,7 @@
 
 use spitfire\SpitFire;
 use spitfire\environment;
-use spitfire\Request;
+use spitfire\core\Request;
 
 class absoluteURL extends URL
 {
@@ -65,7 +65,7 @@ class absoluteURL extends URL
 		$path = array_merge($path, $context->object);
 		
 		$canonical->setPath($path);
-		$canonical->setExtension($r->getExtension());
+		$canonical->setExtension($r->getPath()->getFormat());
 		
 		return $canonical;
 	}

@@ -121,7 +121,7 @@
 	  * @return string[]
 	  */
 	 public function getController() {
-		 return $this->controller;
+		 return $this->controller ? $this->controller : (array) \spitfire\environment::get('default_controller');
 	 }
 	 
 	 /**
@@ -134,7 +134,7 @@
 	  * @return string
 	  */
 	 public function getAction() {
-		 return $this->action;
+		 return $this->action ? $this->action : \spitfire\environment::get('default_action');
 	 }
 	 
 	 /**
@@ -155,7 +155,7 @@
 	  * @return string
 	  */
 	 public function getFormat() {
-		 return $this->format;
+		 return $this->format ? $this->format : 'php';
 	 }
 	 
 	 /**
