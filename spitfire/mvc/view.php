@@ -19,6 +19,7 @@ class View extends MVC
 	private $render_template = true;
 	private $render_layout = true;
 	private $layout;
+	private $extension;
 	
 	const default_view = 'default.php';
 	
@@ -30,6 +31,8 @@ class View extends MVC
 		
 		parent::__construct($intent);
 		
+		#Get the answer format
+		$this->extension = $intent->request->getPath()->getFormat();
 		#Create registries
 		$this->js  = new JSRegistry();
 		$this->css = new CSSRegistry();

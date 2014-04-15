@@ -4,6 +4,7 @@ namespace spitfire;
 
 use App;
 use spitfire\core\Request;
+use spitfire\exceptions\ExceptionHandler;
 
 require_once 'spitfire/strings.php';
 require_once 'spitfire/app.php';
@@ -32,20 +33,9 @@ class SpitFire extends App
 		
 		#Set the current working directory
 		$this->cwd = dirname(dirname(__FILE__));
-		$cur_dir = $this->cwd . DIRECTORY_SEPARATOR . 'spitfire';
-
-		#Try to start autoload
-		self::includeIfPossible($cur_dir.'/class.php');
-		self::includeIfPossible($cur_dir.'/autoload.php');
-		self::includeIfPossible($cur_dir.'/autoload/classlocator.php');
-		self::includeIfPossible($cur_dir.'/autoload/systemclasslocator.php');
-		$this->autoload = new AutoLoad($this);
-
-		#Include file to define the location of core components
-		self::includeIfPossible("$cur_dir/autoload_core_files.php");
-
-		#Initialize the exception handler
-		$this->debug   = new exceptions\ExceptionHandler();
+		
+		#Import the exception handler for logging
+		$this->debug = ExceptionHandler::getInstance();
 
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
@@ -66,23 +56,25 @@ class SpitFire extends App
 
 	public function fire() {
 		
+		#Import the apps
+		self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
+		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
+		
 		#Get the current path...
-		$request = $this->request = Request::get();
+		$request = $this->request = Request::fromServer();
 		
 		#If the user responded to the current route with a response we do not need 
 		#to handle the request
 		if (true) {//TODO: Fix: !$path instanceof Response) {
 			//if (is_string($path)) { $request->setPath($path); }
 
-			#Import the apps
-			self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
-			self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 
 			#Start debugging output
 			ob_start();
 
 			#If the request has no defined controller, action and object it will define
 			#those now.
+			$path    = $request->getPath();
 			$context = ($path instanceof Context)? $path : $request->makeContext($path);
 			#Define te context for the helper function lang()
 			lang(current_context($context));

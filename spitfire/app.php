@@ -98,7 +98,7 @@ abstract class App
 	 */
 	public function hasController($name) {
 		$name = (array)$name;
-		$c    = $this->getNameSpace() . $controller . 'Controller';
+		$c    = $this->getNameSpace() . implode('\\', $name) . 'Controller';
 		if (!class_exists($c)) { return false; }
 
 		$reflection = new ReflectionClass($c);
