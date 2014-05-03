@@ -77,7 +77,7 @@
 	  * @param string $format
 	  * @param array  $parameters
 	  */
-	 public function __construct($app, $controller, $action, $object, $format = 'html', $parameters = Array()) {
+	 public function __construct($app, $controller, $action, $object, $format = 'php', $parameters = Array()) {
 		 $this->app        = $app;
 		 $this->controller = (array)$controller;
 		 $this->action     = $action;

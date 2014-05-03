@@ -36,7 +36,7 @@ class Router extends Routable
 			}
 		}
 		#Implicit else.
-		return RouteParser::getInstance()->readPath($route);
+		throw new \publicException('No such route', 404);
 	}
 	
 	/**

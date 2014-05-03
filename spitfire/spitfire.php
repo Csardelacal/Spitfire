@@ -59,6 +59,8 @@ class SpitFire extends App
 		#Import the apps
 		self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
+		foreach ($this->apps as $app) { $app->createRoutes(); }
+		$this->createRoutes();
 		
 		#Get the current path...
 		$request = $this->request = Request::fromServer();
