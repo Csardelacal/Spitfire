@@ -38,6 +38,7 @@ class Route
 	 */
 	private $server;
 	private $pattern;
+	private $patterns;
 	private $new_route;
 	private $parameters;
 	private $method;
@@ -61,6 +62,7 @@ class Route
 		$this->method    = $method;
 		$this->protocol  = $proto;
 		
+		$this->patterns = $pattern;
 		$array = array_filter(explode('/', $pattern));
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
@@ -80,6 +82,7 @@ class Route
 		foreach ($pattern as $p) {
 			$this->parameters = array_merge($this->parameters, $p->test(array_shift($array)));
 		}
+		$this->parameters['_UNPARSED'] = $array;
 	}
 	
 	/**
@@ -154,6 +157,7 @@ class Route
 		}
 		
 		if (isset($route['action'])) {
+			//TODO: Broken
 			$action = str_replace($this->getParameters(true), $this->getParameters(), $action);
 			$request->setAction($action);
 		}
