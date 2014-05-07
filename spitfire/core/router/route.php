@@ -80,9 +80,9 @@ class Route
 	 */
 	protected function patternWalk($pattern, $array) {
 		foreach ($pattern as $p) {
-			$this->parameters = array_merge($this->parameters, $p->test(array_shift($array)));
+			$this->parameters->addParameters($p->test(array_shift($array)));
 		}
-		$this->parameters['_UNPARSED'] = $array;
+		$this->parameters->setUnparsed($array);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ class Route
 	 */
 	public function testURI($URI) {
 		$array = array_filter(explode('/', $URI));
-		$this->parameters = $this->server->getParameters();
+		$this->parameters = new Parameters();//$this->server->getParameters();
 		
 		try {
 			$this->patternWalk($this->pattern, $array);
@@ -175,7 +175,7 @@ class Route
 	public function rewrite($URI, $method, $protocol) {
 		if ($this->test($URI, $method, $protocol)) {
 			if (is_string($this->new_route))         {return $this->rewriteString();}
-			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, $this->parameters);}
+			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, Array($this->parameters, $this->server->getParameters()));}
 			if (is_array($this->new_route))          {return $this->rewriteArray(); }
 		}
 		return false;

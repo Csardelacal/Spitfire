@@ -45,7 +45,7 @@ class Pattern
 				if (((int)$str) !== 0) { return Array($this->pattern => $str); }
 				break;
 			case self::WILDCARD_STRING:
-				if (is_string($str)) { return ARray($this->pattern => filter_var($str, FILTER_SANITIZE_STRING)); }
+				if (is_string($str)) { return Array($this->pattern => filter_var($str, FILTER_SANITIZE_STRING)); }
 				break;
 			default:
 				if (in_array($str, $this->pattern)) { return Array(); }
