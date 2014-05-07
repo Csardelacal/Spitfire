@@ -32,6 +32,7 @@ class EmptyValidationRule implements ValidationRule
 	 * Tests a value with this validation rule. Returns the errors detected for
 	 * this element or boolean false on no errors.
 	 * 
+	 * @assert ('ok') == false
 	 * @param mixed $value
 	 * @param mixed $source
 	 * @return \spitfire\validation\ValidationError|boolean
