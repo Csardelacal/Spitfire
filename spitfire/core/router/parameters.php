@@ -41,7 +41,8 @@ class Parameters
 	/**
 	 * Returns the parameter for the given parameter name. Please note that this 
 	 * function may return boolean false and empty strings alike. You can use the
-	 * === operator to compare the values.
+	 * === operator to compare the values and check if the returned one was 
+	 * because the data was not set or empty.
 	 * 
 	 * @param string $name
 	 * @return string
@@ -50,18 +51,46 @@ class Parameters
 		return (isset($this->parameters[$name]))? $this->parameters[$name] : false;
 	}
 	
+	/**
+	 * Returns the list of parameters parsed from the URL path. Please note that 
+	 * every parameter is sent as a URL portion and therefore a string.
+	 * 
+	 * @return string[]
+	 */
 	public function getParameters() {
 		return $this->parameters;
 	}
-
+	
+	/**
+	 * Return the list of URL components that were unaffected by a 'greedy' route.
+	 * That means that the parsed route was longer than the parameters parsed the
+	 * route parsed.
+	 * 
+	 * @return string[]
+	 */
 	public function getUnparsed() {
 		return $this->unparsed;
 	}
-
+	
+	/**
+	 * Sets the list of parameters this element holds. This is usually used 
+	 * internally to indicate what parameters where passed with the route.
+	 * 
+	 * @param string[] $parameters
+	 */
 	public function setParameters($parameters) {
 		$this->parameters = $parameters;
 	}
-
+	
+	/**
+	 * Allows to set the list of URL fragments that were sent with the request but
+	 * were not parsed by the route. This function is usually called from within
+	 * Spitfire's router to indicate the lack of a need for this elements.
+	 * 
+	 * The content of this URL will be useful to you when defining greedy URLs.
+	 * 
+	 * @param string[] $unparsed
+	 */
 	public function setUnparsed($unparsed) {
 		$this->unparsed = $unparsed;
 	}
