@@ -45,7 +45,8 @@ class Server extends Routable
 			foreach ($this->routes as $route) {
 				if (false != $rewrite = $route->rewrite($url, $method, $protocol)) {
 					//Request::get()->setParameters($route->getParameters());
-					return $rewrite;
+					if (!$rewrite instanceof Path && is_string($rewrite)) {$url = $rewrite;}
+					else { return $rewrite; }
 				}
 			}
 		}
