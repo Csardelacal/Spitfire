@@ -5,14 +5,17 @@ use spitfire\Request;
 class Server extends Routable
 {
 	
+	private $router;
 	private $pattern;
 	private $parameters;
 	private $routes = Array();
 	
-	public function __construct($pattern) {
+	public function __construct($pattern, Router$router) {
 		$array = explode('.', $pattern);
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
+		
+		$this->router  = $router;
 	}
 	
 	/**
@@ -41,9 +44,11 @@ class Server extends Routable
 	
 	public function rewrite($server, $url, $method, $protocol) {
 		
+		$routes = array_merge($this->routes, $this->router->getRoutes());
+		
 		if ($this->test($server)) {
-			foreach ($this->routes as $route) {
-				if (false != $rewrite = $route->rewrite($url, $method, $protocol)) {
+			foreach ($routes as $route) {
+				if (false != $rewrite = $route->rewrite($url, $method, $protocol, $this)) {
 					//Request::get()->setParameters($route->getParameters());
 					if (!$rewrite instanceof Path && is_string($rewrite)) {$url = $rewrite;}
 					else { return $rewrite; }

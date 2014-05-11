@@ -63,20 +63,27 @@ class ExceptionHandler {
 			while(ob_get_clean()); //The content generated till now is not valid. DESTROY. DESTROY!
 
 			ob_start();
+				
+			if ($request) { $response = $request->getResponse(); }
+			else {$response = new \spitfire\core\Response(null);}
+			
 			if ( is_a($e, 'publicException') ) {
 				$previous = $e->getPrevious();
 				$trace    = $e->getTraceAsString();
 				$prevmsg  = ($previous)? '###' . $previous->getMessage() . "###\n" : '';
-				spitfire()->getRequest()->getResponse()->getHeaders()->status($e->getCode());
+				$response->getHeaders()->status($e->getCode());
 				get_error_page($e->getCode(), $e->getMessage(),  $prevmsg . $trace);
 			} else { 
 				error_log($e->getMessage());
 				$trace = $e->getTraceAsString();
-				spitfire()->getRequest()->getResponse()->getHeaders()->status(500);
+				$request = spitfire()->getRequest();
+				
+				$response->getHeaders()->status(500);
+				
 				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
-			spitfire()->getRequest()->getResponse()->getHeaders()->send();
+			$response->getHeaders()->send();
 			if(ob_get_length()) ob_flush();
 			die();
 

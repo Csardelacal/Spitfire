@@ -12,6 +12,7 @@ class Router extends Routable
 {
 	
 	private $servers = Array();
+	private $routes  = Array();
 	
 	/**
 	 * This rewrites a request into a Path (or in given cases, a Response). This 
@@ -29,6 +30,8 @@ class Router extends Routable
 	 * @return Path|Response
 	 */
 	public function rewrite ($server, $route, $method, $protocol) {
+		#Ensures the base server is created
+		$this->server();
 		#Loop through the servers to find valid routes
 		$servers = array_reverse($this->servers);
 		foreach ($servers as $box) {
@@ -50,7 +53,7 @@ class Router extends Routable
 		if ($address === null && is_string($_SERVER['HTTP_HOST'])) { $address = $_SERVER['HTTP_HOST']; }
 		
 		if (isset($this->servers[$address])) { return $this->servers[$address]; }
-		return $this->servers[$address] = new Server($address);
+		return $this->servers[$address] = new Server($address, $this);
 	}
 	
 	/**
@@ -63,7 +66,17 @@ class Router extends Routable
 	 * @return Route
 	 */
 	public function addRoute($pattern, $target, $method = 0x03, $protocol = 0x03) {
-		return $this->server()->addRoute($pattern, $target, $method, $protocol);
+		return $this->routes[] = new Route($this, $pattern, $target, $method, $protocol);
+	}
+	
+	/**
+	 * Returns the list of routes. This is usually called by the "Server" to 
+	 * retrieve generic routes
+	 * 
+	 * @return Route[]
+	 */
+	public function getRoutes() {
+		return $this->routes;
 	}
 	
 	/**
