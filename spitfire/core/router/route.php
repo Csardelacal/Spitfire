@@ -34,7 +34,7 @@ class Route
 	 * This var holds a reference to a route server (an object containing a pattern
 	 * to match virtualhosts) that isolates this route from the others.
 	 * 
-	 * @var \spitfire\router\Server 
+	 * @var \spitfire\router\Routable 
 	 */
 	private $server;
 	private $pattern;
@@ -50,13 +50,13 @@ class Route
 	 * directly send back a response or assign a custom controller, action and 
 	 * object to the request.
 	 * 
-	 * @param \spitfire\router\Server $server The server this route belongs to
+	 * @param \spitfire\router\Routable $server The server this route belongs to
 	 * @param string $pattern
 	 * @param string $new_route
 	 * @param string $method
 	 * @param string $pattern
 	 */
-	public function __construct(Server$server, $pattern, $new_route, $method, $proto = Route::PROTO_ANY) {
+	public function __construct(Routable$server, $pattern, $new_route, $method, $proto = Route::PROTO_ANY) {
 		$this->server    = $server;
 		$this->new_route = $new_route;
 		$this->method    = $method;
@@ -172,10 +172,10 @@ class Route
 		return true;
 	}
 	
-	public function rewrite($URI, $method, $protocol) {
+	public function rewrite($URI, $method, $protocol, $server) {
 		if ($this->test($URI, $method, $protocol)) {
 			if (is_string($this->new_route))         {return $this->rewriteString();}
-			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, Array($this->parameters, $this->server->getParameters()));}
+			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, Array($this->parameters, $server->getParameters()));}
 			if (is_array($this->new_route))          {return $this->rewriteArray(); }
 		}
 		return false;
