@@ -182,7 +182,7 @@ class Route
 	}
 	
 	public function getParameters($keys = false) {
-		if (!$keys) return $this->parameters;
+		if (!$keys) { return $this->parameters; }
 		
 		$array = array_keys($this->parameters);
 		array_walk($array, function(&$e) {$e = ':' . $e;});

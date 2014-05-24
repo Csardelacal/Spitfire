@@ -47,6 +47,15 @@ class Pattern
 	private $type;
 	
 	/**
+	 * The name of the variable that is being assigned the content of the result
+	 * of this pattern. When the name is set the test will return an exception
+	 * or an array like (name => value).
+	 * 
+	 * @var string
+	 */
+	private $name;
+	
+	/**
 	 * The pattern to be tested. In case the router is testing for a wildcard this
 	 * will contain the name of the parameter to be return in case of a success.
 	 *
@@ -72,15 +81,18 @@ class Pattern
 		
 		switch ( substr($pattern, 0, 1) ) {
 			case ':':
-				$this->type    = self::WILDCARD_STRING;
-				$this->pattern = substr($pattern, 1);
+				$this->type     = self::WILDCARD_STRING;
+				$this->name     = substr($pattern, 1);
+				$this->pattern  = null;
 				break;
 			case '#':
 				$this->type     = self::WILDCARD_NUMERIC;
-				$this->pattern  = substr($pattern, 1);
+				$this->name     = substr($pattern, 1);
+				$this->pattern  = null;
 				break;
 			default:
 				$this->type     = self::WILDCARD_NONE;
+				$this->name     = null;
 				$this->pattern  = explode('|', $pattern);
 				break;
 		}
@@ -89,18 +101,18 @@ class Pattern
 	public function test($str) {
 		if ($this->optional && empty($str)) {
 			if ($this->type === self::WILDCARD_NONE) {return Array();}
-			else { return Array($this->pattern => null);}
+			else { return Array($this->name => null);}
 		}
 		
 		switch ($this->type) {
 			case self::WILDCARD_NUMERIC:
-				if (((int)$str) !== 0) { return Array($this->pattern => $str); }
+				if (((int)$str) !== 0 && $this->testPattern($str)) { return Array($this->name => $str); }
 				break;
 			case self::WILDCARD_STRING:
-				if (is_string($str)) { return Array($this->pattern => filter_var($str, FILTER_SANITIZE_STRING)); }
+				if (is_string($str)   && $this->testPattern($str)) { return Array($this->name => filter_var($str, FILTER_SANITIZE_STRING)); }
 				break;
 			default:
-				if (in_array($str, $this->pattern)) { return Array(); }
+				if ($this->testPattern($str)) { return $this->name? Array($this->name => $str) : Array(); }
 				break;
 		}
 		
@@ -108,4 +120,23 @@ class Pattern
 		throw new RouteMismatchException();
 	}
 	
+	public function testPattern($value) {
+		#If the pattern is null then it is always valid
+		if ($this->pattern === null) {
+			return true;
+		#If the pattern is an array then we search it for the value
+		} elseif (is_array($this->pattern)) {
+			return in_array($value, $this->pattern);
+		#If the pattern has been passed as a closure it will execute it and return the value
+		} elseif ($this->pattern instanceof \Closure) {
+			return $this->pattern($value);
+		#Otherwise
+		} else {
+			return in_array($value, explode('|', $this->pattern));
+		}
+	}
+	
+	public function setPattern($pattern) {
+		$this->pattern = $pattern;
+	}
 }
