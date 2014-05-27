@@ -72,12 +72,45 @@ class Pattern
 	 */
 	private $optional = false;
 	
+	/**
+	 * Creates the pattern from the base string that comes with the URL. It will
+	 * retrieve information whether the pattern was optional or not, what type it
+	 * was and if it is a basic pattern.
+	 * 
+	 * @param string $pattern
+	 */
 	public function __construct($pattern) {
+		$this->extractType($this->extractOptional($pattern));
+	}
+	
+	/**
+	 * This function will check if a pattern is optional. This means that it will
+	 * return a valid result when it receives an empty value.
+	 * 
+	 * Please note that if it receieves a value and it's not valid it will return
+	 * an error.
+	 * 
+	 * @param string $pattern
+	 * @return string The rest of the pattern
+	 */
+	protected function extractOptional($pattern) {
 		
 		if (substr($pattern, -1) === '?') {
 			$this->optional = true;
 			$pattern        = substr($pattern, 0, -1);
 		}
+		
+		return $pattern;
+	}
+	
+	/**
+	 * Assigns the type variable and/or pattern that is to be matched by reading
+	 * a URL string that can be passed to the router as string. Even though the 
+	 * router's matching mechanism is really basic it should be suffcient.
+	 * 
+	 * @param string $pattern
+	 */
+	protected function extractType($pattern) {
 		
 		switch ( substr($pattern, 0, 1) ) {
 			case ':':
@@ -98,28 +131,68 @@ class Pattern
 		}
 	}
 	
-	public function test($str) {
+	/**
+	 * Tests whether a string staisfies the pattern being optional. This will always
+	 * return false if the pattern is not optional or the string being tested is 
+	 * not empty.
+	 * 
+	 * @param type $str
+	 * @return type
+	 */
+	public function testOptional($str) {
 		if ($this->optional && empty($str)) {
 			if ($this->type === self::WILDCARD_NONE) {return Array();}
 			else { return Array($this->name => null);}
 		}
 		
+		return false;
+	}
+	
+	/**
+	 * Tests whether the string matches the current pattern and returns an array
+	 * in case it does. Otherwise it throws an exception.
+	 * 
+	 * @todo This could probably be better if split into several functions.
+	 * @param string $str
+	 * @return string[]
+	 * @throws RouteMismatchException
+	 */
+	public function testString($str) {
 		switch ($this->type) {
 			case self::WILDCARD_NUMERIC:
-				if (((int)$str) !== 0 && $this->testPattern($str)) { return Array($this->name => $str); }
-				break;
+				if (((int)$str) !== 0 && $this->testPattern($str)) { return Array($this->name => $str); } break;
 			case self::WILDCARD_STRING:
-				if (is_string($str)   && $this->testPattern($str)) { return Array($this->name => filter_var($str, FILTER_SANITIZE_STRING)); }
-				break;
+				if (is_string($str)   && $this->testPattern($str)) { return Array($this->name => filter_var($str, FILTER_SANITIZE_STRING)); } break;
 			default:
-				if ($this->testPattern($str)) { return $this->name? Array($this->name => $str) : Array(); }
-				break;
+				if ($this->testPattern($str)) { return $this->name? Array($this->name => $str) : Array(); } break;
 		}
 		
-		//If the pattern wasn't matched throw us out of it
+		#If the pattern wasn't matched throw us out of it
 		throw new RouteMismatchException();
 	}
 	
+	/**
+	 * Tests whether a string satisfies this pattern and returns the value it read
+	 * out or throws an exception indicating that the route wasn't matched.
+	 * 
+	 * @throws RouteMismatchException
+	 * @param string $str
+	 * @return string
+	 */
+	public function test($str) {
+		$r = $this->testOptional($str);
+		return ($r !== false)? $r : $this->testString($str);
+	}
+	
+	/**
+	 * Returns whether the pattern was matched. This depends on the type of pattern.
+	 * * If it's a Closure the result of the closure will determined if it's ok
+	 * * Array's will be searched for a match
+	 * * Strings will be splitted by pipe characters (|) and then searched
+	 * 
+	 * @param type $value
+	 * @return boolean
+	 */
 	public function testPattern($value) {
 		#If the pattern is null then it is always valid
 		if ($this->pattern === null) {
@@ -136,6 +209,12 @@ class Pattern
 		}
 	}
 	
+	/**
+	 * Defines the pattern to be used to test. This can be either a string, closure
+	 * or an array.
+	 * 
+	 * @param type $pattern
+	 */
 	public function setPattern($pattern) {
 		$this->pattern = $pattern;
 	}
