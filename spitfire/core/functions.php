@@ -12,7 +12,7 @@ function spitfire() {
 	if ($sf) return $sf;
 	
 	$sf = new SpitFire();
-	$sf->fire();
+	$sf->prepare();
 	return $sf;
 }
 

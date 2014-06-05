@@ -10,6 +10,13 @@ require_once 'spitfire/strings.php';
 require_once 'spitfire/app.php';
 require_once 'spitfire/core/functions.php';
 
+if (!defined('APP_DIRECTORY')){
+	define ('APP_DIRECTORY',         'bin/apps/',        true);
+	define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
+	define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
+	define ('TEMPLATES_DIRECTORY',   'bin/templates/',   true);
+}
+
 /**
  * Dispatcher class of Spitfire. Calls all the required classes for Spitfire to run.
  * @author César de la Cal <cesar@magic3w.com>
@@ -37,6 +44,12 @@ class SpitFire extends App
 		#Import the exception handler for logging
 		$this->debug = ExceptionHandler::getInstance();
 
+
+		self::$started = true;
+	}
+	
+	public function prepare() {
+
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
@@ -49,9 +62,7 @@ class SpitFire extends App
                 
 		#Set the display errors directive to the value of debug
 		ini_set("display_errors" , environment::get('debugging_mode'));
-
-
-		self::$started = true;
+		
 	}
 
 	public function fire() {

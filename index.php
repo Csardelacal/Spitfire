@@ -23,10 +23,6 @@ ini_set("log_errors" , "1");
 ini_set("error_log" , "logs/error_log.log");
 ini_set("display_errors" , "0");
 
-/* Include Spitfire core.
- */
-include 'spitfire/spitfire.php';
-
 /* Define bootstrap settings. Environments are a better way to handle
  * config but we need to create them first.
  */
@@ -34,6 +30,10 @@ define ('APP_DIRECTORY',         'bin/apps/',        true);
 define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
 define ('TEMPLATES_DIRECTORY',   'bin/templates/',   true);
+
+/* Include Spitfire core.
+ */
+include 'spitfire/bootstrap.php';
 
 /* SESSION DEFAULTS AND START_______________________________________
  * This sets basic settings about user sessions and their duration,
@@ -51,4 +51,4 @@ ini_set('session.save_path', "bin/usr/sessions");
 ini_set('memory_limit', '64M');/**/
 
 /* Call the selected controller with the selected method. */
-spitfire();
+spitfire()->fire();
