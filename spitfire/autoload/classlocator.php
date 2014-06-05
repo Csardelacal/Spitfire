@@ -34,13 +34,15 @@ abstract class ClassLocator
 	 * @return string|boolean
 	 */
 	public function findFile($dir, $name, $suffix = null) {
-		$file = rtrim($dir, '/') . '/' . $name .'.php';
+		$sf = spitfire();
+		
+		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . $name .'.php';
 		if (file_exists($file)) { return $file; }
 			
-		$file = rtrim($dir, '/') . '/' . strtolower($name) .'.php';
+		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . strtolower($name) .'.php';
 		if (file_exists($file)) { return $file; }
 		
-		$file = rtrim($dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
+		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
 		if ($suffix && file_exists($file)) { return $file; }
 		
 		return false;
