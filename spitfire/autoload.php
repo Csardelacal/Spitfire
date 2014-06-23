@@ -7,7 +7,7 @@ use spitfire\exceptions\ExceptionHandler;
 class AutoLoad
 {
 
-	static $instance = false;
+	static $instance            = null;
 
 	private $imported_classes   = Array();
 	private $locators           = Array();
