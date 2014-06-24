@@ -1,1 +1,7 @@
+language: php
+php:
+  - 5.5
+  - 5.4
+  - 5.3
+  - hhvm
 script: phpunit --bootstrap spitfire/bootstrap.php bin/tests
