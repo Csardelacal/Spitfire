@@ -23,7 +23,7 @@ class RouterTest extends PHPUnit_Framework_TestCase
 		$route  = $router->get('/test', 'test2');
 		
 		$this->assertEquals(true, $route->test('/test', 'GET', \spitfire\core\router\Route::PROTO_HTTP));
-		$this->assertEquals('/test2', $route->rewrite('/test', 'GET', \spitfire\core\router\Route::PROTO_HTTP));
+		$this->assertEquals('test2', $route->rewrite('/test', 'GET', \spitfire\core\router\Route::PROTO_HTTP));
 	}
 	
 }
