@@ -6,6 +6,8 @@
  * and open the template in the editor.
  */
 
+use \spitfire\core\router\Route;
+
 class RouterTest extends PHPUnit_Framework_TestCase
 {
 	
@@ -22,8 +24,12 @@ class RouterTest extends PHPUnit_Framework_TestCase
 		$router = \spitfire\core\router\Router::getInstance();
 		$route  = $router->get('/test', 'test2');
 		
-		$this->assertEquals(true, $route->test('/test', 'GET', \spitfire\core\router\Route::PROTO_HTTP));
-		$this->assertEquals('test2', $route->rewrite('/test', 'GET', \spitfire\core\router\Route::PROTO_HTTP));
+		$this->assertEquals(true, $route->test('/test', 'GET', Route::PROTO_HTTP));
+		$this->assertEquals('/test2', $route->rewrite('/test', 'GET', Route::PROTO_HTTP));
+
+		$route2 = $router->get('/another/:param', '/:param/another');
+		$this->assertEquals('/test/another', $route2->rewrite('/another/test', 'GET', Route::PROTO_HTTP));
+		$this->assertEquals(false, $route2->rewrite('/another/test', 'POST', Route::PROTO_HTTP));
 	}
 	
 }

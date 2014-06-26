@@ -144,7 +144,7 @@ class Route
 			$route = str_replace (':' . $k, $v, $route);
 		}
 		
-		return $route;
+		return '/' . ltrim($route, '/');
 	}
 	
 	protected function rewriteArray() {
