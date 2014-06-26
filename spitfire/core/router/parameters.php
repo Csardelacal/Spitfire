@@ -104,7 +104,7 @@ class Parameters
 	 */
 	public function replaceInString($string) {
 		foreach ($this->parameters as $key => $val) {
-			$tring = str_replace(':'.$key, $val, $string);
+			$string = str_replace(':'.$key, $val, $string);
 		}
 
 		return $string;
