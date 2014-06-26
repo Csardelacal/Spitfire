@@ -44,9 +44,10 @@ class Server extends Routable
 	
 	public function rewrite($server, $url, $method, $protocol) {
 		
-		$routes = array_merge($this->routes, $this->router->getRoutes());
-		
 		if ($this->test($server)) {
+			#Combine routes from the router and server
+			$routes = array_merge($this->routes, $this->router->getRoutes());
+			#Test the routes
 			foreach ($routes as $route) {
 				if (false != $rewrite = $route->rewrite($url, $method, $protocol, $this)) {
 					//Request::get()->setParameters($route->getParameters());
