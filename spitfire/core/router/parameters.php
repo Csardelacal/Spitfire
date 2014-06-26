@@ -95,5 +95,19 @@ class Parameters
 		$this->unparsed = $unparsed;
 	}
 
+	/**
+	 * Replaces the parameters contained in this object in a string. This will
+	 * look for prefixed versions of a kez and replace them with the key's value
+	 * and then return the string.
+	 * 
+	 * @param string $string The string to search for matches and replace
+	 */
+	public function replaceInString($string) {
+		foreach ($this->parameters as $key => $val) {
+			$tring = str_replace(':'.$key, $val, $string);
+		}
+
+		return $string;
+	}
 
 }

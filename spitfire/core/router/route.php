@@ -137,13 +137,7 @@ class Route
 	}
 	
 	protected function rewriteString() {
-		$parameters = $this->getParameters();
-		$route      = $this->new_route;
-		
-		foreach ($parameters as $k => $v) {
-			$route = str_replace (':' . $k, $v, $route);
-		}
-		
+		$route = $this->getParameters()->replaceInString($this->new_route);
 		return '/' . ltrim($route, '/');
 	}
 	
