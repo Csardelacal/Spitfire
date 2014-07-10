@@ -125,6 +125,18 @@ class Route
 		}
 	}
 	
+	/**
+	 * Tests whether the requested protocol (HTTPS or not) is accepted by this
+	 * route. We use once again binary masks to test the protocol. This means that
+	 * we can either use HTTP (01), HTTPS (10) or both (11) which will translate
+	 * into an integer 1, 2 and 3.
+	 *
+	 * This way the user can quickly decide whether he wants to use any or both
+	 * of them to match a route.
+	 * 
+	 * @param boolean $protocol
+	 * @return boolean
+	 */
 	public function testProto($protocol) {
 		if (!is_int($protocol)) {
 			$protocol = ($protocol && $protocol != 'off')? Route::PROTO_HTTPS : Route::PROTO_HTTP;

@@ -19,11 +19,11 @@ class RouterTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\spitfire\core\router\Route', $route);
 	}
 	
-	public function testRoute() {
+	public function testStringRoute() {
 		
 		$router = \spitfire\core\router\Router::getInstance();
+
 		$route  = $router->get('/test', 'test2');
-		
 		$this->assertEquals(true, $route->test('/test', 'GET', Route::PROTO_HTTP, $router->server()));
 		$this->assertEquals('/test2', $route->rewrite('/test', 'GET', Route::PROTO_HTTP, $router->server()));
 
