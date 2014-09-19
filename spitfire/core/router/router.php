@@ -93,11 +93,3 @@ class Router extends Routable
 	}
 
 }
-
-/*USE EXAMPLE
-router::route('/* /profile', '/user/index/$1');
-router::route('/* /gallery', '/gallery/index/$1');
-
-router::rewrite('/Csardelacal/profile');
-router::rewrite('/tuqiri/gallery');
-/**/
