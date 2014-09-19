@@ -158,7 +158,6 @@ class Route
 	 * This method allows the router to use an array as target for the rewriting
 	 * instead of another string or path.
 	 *
-	 * @todo Fix, because it is currently completely outdated
 	 */
 	protected function rewriteArray($parameters) {
 		$route = $this->new_route;
@@ -178,7 +177,7 @@ class Route
 		if ($this->test($URI, $method, $protocol)) {
 			if (is_string($this->new_route))         {return $this->rewriteString();}
 			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, Array($this->parameters, $server->getParameters()));}
-			if (is_array($this->new_route))          {return $this->rewriteArray(array_merge($server->getParameters(), $this->parameters)); }
+			if (is_array($this->new_route))          {return $this->rewriteArray($server->getParameters()->merge($this->parameters)); }
 		}
 		return false;
 	}

@@ -110,4 +110,10 @@ class Parameters
 		return $string;
 	}
 
+	public function merge($with) {
+		$_return = new Parameters();
+		$_return->setParameters(array_merge($this->getParameters(), $with->getParameters()));
+		return $_return;
+	}
+
 }
