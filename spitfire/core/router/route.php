@@ -1,6 +1,7 @@
 <?php namespace spitfire\core\router;
 
 use Closure;
+use spitfire\core\Path;
 
 /**
  * A route is a class that rewrites a URL path (route) that matches a
@@ -153,36 +154,31 @@ class Route
 		return '/' . ltrim($route, '/');
 	}
 	
-	protected function rewriteArray() {
-		$request = \spitfire\Request::get();
-		$route   = $this->new_route;
-		if (isset($route['controller'])) {
-			$controller = str_replace($this->getParameters(true), $this->getParameters(), $route['controller']) . 'Controller';
-			$instance  = new $controller;
-			$request->setController($instance);
-		}
+	/**
+	 * This method allows the router to use an array as target for the rewriting
+	 * instead of another string or path.
+	 *
+	 * @todo Fix, because it is currently completely outdated
+	 */
+	protected function rewriteArray($parameters) {
+		$route = $this->new_route;
+		$path  = new Path(null, null, null, null, null, null);
+
+		if (isset($route['app']       )) { $path->setApp($parameters->getParameter($route['app'])); }
+		if (isset($route['controller'])) { $path->setController($parameters->getParameter($route['controller'])); }
+		if (isset($route['action']))     { $path->setAction($parameters->getParameter($route['action'])); }
+
+		if (isset($route['object']))     { $path->setObject($parameters->getParameter($route['object'])); }
+		else                             { $path->setObject($parameters->getUnparsed()); }
 		
-		if (isset($route['action'])) {
-			//TODO: Broken
-			$action = str_replace($this->getParameters(true), $this->getParameters(), $action);
-			$request->setAction($action);
-		}
-		
-		if (isset($route['object'])) {
-			foreach ($route['object'] as &$o) {
-				$o = str_replace($this->getParameters(true), $this->getParameters(), $action);
-			}
-			$request->setObject($route['object']);
-		}
-		
-		return true;
+		return $path;
 	}
 	
 	public function rewrite($URI, $method, $protocol, $server) {
 		if ($this->test($URI, $method, $protocol)) {
 			if (is_string($this->new_route))         {return $this->rewriteString();}
 			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, Array($this->parameters, $server->getParameters()));}
-			if (is_array($this->new_route))          {return $this->rewriteArray(); }
+			if (is_array($this->new_route))          {return $this->rewriteArray(array_merge($server->getParameters(), $this->parameters)); }
 		}
 		return false;
 	}
