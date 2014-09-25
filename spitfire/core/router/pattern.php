@@ -115,13 +115,13 @@ class Pattern
 		switch ( substr($pattern, 0, 1) ) {
 			case ':':
 				$this->type     = self::WILDCARD_STRING;
-				$this->name     = substr($pattern, 1);
-				$this->pattern  = null;
+				$this->pattern  = explode('|', $substr($pattern, 1));
+				$this->name     = array_shift($this->pattern);
 				break;
 			case '#':
 				$this->type     = self::WILDCARD_NUMERIC;
-				$this->name     = substr($pattern, 1);
-				$this->pattern  = null;
+				$this->pattern  = explode('|', $substr($pattern, 1));
+				$this->name     = array_shift($this->pattern);
 				break;
 			default:
 				$this->type     = self::WILDCARD_NONE;
