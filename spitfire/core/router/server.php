@@ -2,6 +2,14 @@
 
 use spitfire\Request;
 
+/**
+ * A server in Spitfire's router is a certain virtual host the application is 
+ * listening to. Imagine your application replying to different domain names with
+ * different responses.
+ * 
+ * This allows a Spitfire based application to, for example, manage all the 
+ * GTLD for your application like yourapp.com, yourapp.es or yourapp.de
+ */
 class Server extends Routable
 {
 	
@@ -50,7 +58,6 @@ class Server extends Routable
 			#Test the routes
 			foreach ($routes as $route) {
 				if (false != $rewrite = $route->rewrite($url, $method, $protocol, $this)) {
-					//Request::get()->setParameters($route->getParameters());
 					if (!$rewrite instanceof Path && is_string($rewrite)) {$url = $rewrite;}
 					else { return $rewrite; }
 				}
