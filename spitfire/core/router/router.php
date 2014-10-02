@@ -50,7 +50,8 @@ class Router extends Routable
 	 * @return Server
 	 */
 	public function server($address = null) {
-		if ($address === null && is_string($_SERVER['HTTP_HOST'])) { $address = $_SERVER['HTTP_HOST']; }
+		if ($address === null && isset($_SERVER['HTTP_HOST'])) { $address = $_SERVER['HTTP_HOST']; }
+		else { $address = 'localhost'; }
 		
 		if (isset($this->servers[$address])) { return $this->servers[$address]; }
 		return $this->servers[$address] = new Server($address, $this);

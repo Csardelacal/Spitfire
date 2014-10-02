@@ -1,6 +1,7 @@
 <?php namespace spitfire\core\router;
 
 use spitfire\Request;
+use spitfire\core\Path;
 
 /**
  * A server in Spitfire's router is a certain virtual host the application is 
@@ -33,14 +34,18 @@ class Server extends Routable
 	 * @param array $array
 	 */
 	protected function patternWalk($pattern, $array) {
+		$parameters = Array();
+		
 		foreach ($pattern as $p) {
-			$this->parameters = array_merge($this->parameters, $p->test(array_shift($array)));
+			$parameters = array_merge($parameters, $p->test(array_shift($array)));
 		}
+		
+		$this->parameters = new Parameters();
+		$this->parameters->addParameters($parameters);
 	}
 	
 	public function test($servername) {
 		$array = explode('.', $servername);
-		$this->parameters = Array();
 		
 		try {
 			$this->patternWalk($this->pattern, $array);
@@ -57,8 +62,8 @@ class Server extends Routable
 			$routes = array_merge($this->routes, $this->router->getRoutes());
 			#Test the routes
 			foreach ($routes as $route) {
-				if (false != $rewrite = $route->rewrite($url, $method, $protocol, $this)) {
-					if (!$rewrite instanceof Path && is_string($rewrite)) {$url = $rewrite;}
+				if (false !== $rewrite = $route->rewrite($url, $method, $protocol, $this)) {
+					if ( (!$rewrite instanceof Path) && $rewrite !== false) {$url = $rewrite;}
 					else { return $rewrite; }
 				}
 			}
@@ -67,6 +72,8 @@ class Server extends Routable
 	}
 	
 	public function getParameters() {
+		if ($this->parameters === null) { $this->test(isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost'); }
+		if ($this->parameters === false) { return new Parameters(); }
 		return $this->parameters;
 	}
 

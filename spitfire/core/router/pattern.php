@@ -115,12 +115,12 @@ class Pattern
 		switch ( substr($pattern, 0, 1) ) {
 			case ':':
 				$this->type     = self::WILDCARD_STRING;
-				$this->pattern  = explode('|', $substr($pattern, 1));
+				$this->pattern  = explode('|', substr($pattern, 1));
 				$this->name     = array_shift($this->pattern);
 				break;
 			case '#':
 				$this->type     = self::WILDCARD_NUMERIC;
-				$this->pattern  = explode('|', $substr($pattern, 1));
+				$this->pattern  = explode('|', substr($pattern, 1));
 				$this->name     = array_shift($this->pattern);
 				break;
 			default:
@@ -199,7 +199,7 @@ class Pattern
 			return true;
 		#If the pattern is an array then we search it for the value
 		} elseif (is_array($this->pattern)) {
-			return in_array($value, $this->pattern);
+			return empty($this->pattern) || in_array($value, $this->pattern);
 		#If the pattern has been passed as a closure it will execute it and return the value
 		} elseif ($this->pattern instanceof \Closure) {
 			return $this->pattern($value);
