@@ -64,8 +64,7 @@ class ExceptionHandler {
 
 			ob_start();
 				
-			if ($request) { $response = $request->getResponse(); }
-			else {$response = new \spitfire\core\Response(null);}
+			$response = new \spitfire\core\Response(null);
 			
 			if ( is_a($e, 'publicException') ) {
 				$previous = $e->getPrevious();
@@ -76,7 +75,6 @@ class ExceptionHandler {
 			} else { 
 				error_log($e->getMessage());
 				$trace = $e->getTraceAsString();
-				$request = spitfire()->getRequest();
 				
 				$response->getHeaders()->status(500);
 				
