@@ -162,12 +162,24 @@ class Route
 	protected function rewriteArray($parameters) {
 		$route = $this->new_route;
 		$path  = new Path(null, null, null, null, null, null);
-
-		if (isset($route['app']       )) { $path->setApp($parameters->getParameter($route['app'])); }
-		if (isset($route['controller'])) { $path->setController($parameters->getParameter($route['controller'])); }
-		if (isset($route['action']))     { $path->setAction($parameters->getParameter($route['action'])); }
-
-		if (isset($route['object']))     { $path->setObject($parameters->getParameter($route['object'])); }
+		
+		if (isset($route['app']       )) {
+			$app = $parameters->getParameter($route['app']);
+			$path->setApp($parameters->getParameter($app? $app: $route['app']));
+		}
+		
+		if (isset($route['controller'])) { 
+			$controller = $parameters->getParameter($route['controller']);
+			$path->setController($controller? $controller : $route['controller']);
+		}
+		
+		if (isset($route['action']))     { 
+			$action = $parameters->getParameter($route['action']); 
+			$path->setAction( $action? $action : $route['action']);
+		}
+		
+		//TODO: Sometimes several URL fragments should add up to a Object, this is not possible yet 
+		if (isset($route['object']))     { $path->setObject(Array($parameters->getParameter($route['object']))); }
 		else                             { $path->setObject($parameters->getUnparsed()); }
 		
 		return $path;

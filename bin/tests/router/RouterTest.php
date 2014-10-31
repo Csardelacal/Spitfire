@@ -69,4 +69,17 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('test',    $path->getAction());
 	}
 	
+	public function testArrayRouteWithStaticFragments() {
+		$router = $this->router;
+		
+		#Rewrite a parameter based URL into an array
+		$router->get('/:param1/:param2', Array('controller' => 'param1', 'action' => 'something', 'object' => 'param2'));
+		
+		#Test if the rewriting succeeded and the data was written in the right spot
+		$path  = $router->rewrite('localhost', '/another/test', 'GET', Route::PROTO_HTTP);
+		$this->assertEquals('another',     $path->getController());
+		$this->assertEquals('something',   $path->getAction());
+		$this->assertEquals(Array('test'), $path->getObject());
+	}
+	
 }
