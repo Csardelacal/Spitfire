@@ -12,6 +12,10 @@ abstract class QueryField
 		$this->field = $field;
 	}
 	
+	public function setQuery($query) {
+		$this->query = $query;
+	}
+	
 	public function getQuery() {
 		return $this->query;
 	}

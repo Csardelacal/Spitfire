@@ -191,7 +191,7 @@ abstract class Field
 	 * deliver data about which fields it's a sibling to and which fields
 	 * it refers too.
 	 * 
-	 * @return ModelMeta
+	 * @return \Schema
 	 */
 	public function getModel() {
 		return $this->model;
@@ -212,7 +212,7 @@ abstract class Field
 	 * Returns the table this field belongs to. This is just a shortcut method 
 	 * provided to allow making logical fields and DBFields compatible.
 	 * 
-	 * @return spitfire\storage\database\Table
+	 * @return \spitfire\storage\database\Table
 	 */
 	public function getTable() {
 		return $this->model->getTable();
@@ -321,6 +321,8 @@ abstract class Field
 	 * any DBMS by defining which primary data they use.
 	 */
 	abstract public function getDataType();
+	
+	abstract public function getConnectorQueries(\spitfire\storage\database\Query$parent);
 	
 	/**
 	 * Returns the name of the Field, this is purely a conveiencce method

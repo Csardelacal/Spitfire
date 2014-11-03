@@ -72,4 +72,15 @@ class ChildrenField extends Field
 		return new ChildrenAdapter($this, $model);
 	}
 
+	public function getConnectorQueries(\spitfire\storage\database\Query $parent) {
+		$query = $this->getTarget()->getTable()->getAll();
+		$query->setAliased(true);
+		
+		foreach ($this->getReferencedField()->getPhysical() as $p) {
+			$query->addRestriction($p, $parent->queryFieldInstance($p->getReferencedField()));
+		}
+		
+		return Array($query);
+	}
+
 }

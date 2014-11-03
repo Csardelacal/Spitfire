@@ -119,4 +119,15 @@ class Reference extends Field
 		return new ReferenceAdapter($this, $model);
 	}
 
+	public function getConnectorQueries(\spitfire\storage\database\Query $parent) {
+		$query = $this->getTarget()->getTable()->getAll();
+		$query->setAliased(true);
+		
+		foreach ($this->getPhysical() as $field) {
+			$query->addRestriction($parent->queryFieldInstance($field), $query->queryFieldInstance($field->getReferencedField()));
+		}
+		
+		return Array($query);
+	}
+
 }

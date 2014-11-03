@@ -45,7 +45,7 @@ abstract class Query
 		try {
 			#If the name of the field passed is a physical field we just use it to 
 			#get a queryField
-			$field = $this->table->getTable()->getField($fieldname);
+			$field = $fieldname instanceof QueryField? $fieldname : $this->table->getTable()->getField($fieldname);
 			$restriction = $this->restrictionInstance($this->queryFieldInstance($field), $value, $operator);
 			
 		} catch (\Exception $e) {
@@ -78,6 +78,15 @@ abstract class Query
 			return $this->table->getTable()->getTablename();
 	}
 	
+	public function getId() {
+		return $this->id;
+	}
+	
+	public function setId($id) {
+		$this->id = $id;
+		return $this;
+	}
+		
 	public function getJoins() {
 		$_joins = Array();
 		
@@ -203,6 +212,29 @@ abstract class Query
 			}
 		}
 		return $_return;
+	}
+	
+	public function getPhysicalSubqueries() {
+		$_ret = Array();
+		foreach ($this->getRestrictions() as $r) {
+			$_ret = array_merge($_ret, $r->getPhysicalSubqueries());
+		}
+		
+		return $_ret;
+	}
+	
+	public function importRestrictions(Query$query) {
+		$restrictions = $query->getRestrictions();
+		
+		foreach($restrictions as $r) {
+			$copy = clone $r;
+			$copy->setQuery($this);
+			$this->restrictions[] = $copy;
+		}
+	}
+	
+	public function removeComposite() {
+		$this->restrictions = array_filter($this->restrictions, function ($e) { return !$e instanceof CompositeRestriction; });
 	}
 	
 	public function getOrder() {

@@ -33,7 +33,7 @@ class CompositeRestriction
 	
 	/**
 	 * 
-	 * @return spitfire\storage\database\Query
+	 * @return Query
 	 */
 	public function getQuery() {
 		return $this->query;
@@ -100,6 +100,27 @@ class CompositeRestriction
 			return $this->value->getRestrictions();
 	}
 	
+	
+	public function getPhysicalSubqueries() {
+		if ($this->field === null || $this->value === null) { return Array(); }
+		
+		$field     = $this->getField();
+		$connector = $field->getConnectorQueries($this->getQuery());
+		$last      = end($connector);
+		
+		$last->setId($this->getValue()->getId());
+		$last->importRestrictions($this->getValue());
+		array_merge($connector, $last->getPhysicalSubqueries());
+		$last->removeComposite();
+		
+		return $connector;
+	}
+	
+	/**
+	 * 
+	 * @deprecated since version 0.1dev
+	 * @return type
+	 */
 	public function getConnectingRestrictions() {
 		
 		if ($this->field === null) { return null; }
