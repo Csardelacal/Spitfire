@@ -19,7 +19,6 @@ class MysqlPDOQuery extends Query
 		$fields       = implode(', ', ($fields)? $fields : $this->table->getTable()->getFields());
 		$fromstt      = 'FROM';
 		$tablename    = $this->aliasedTableName();
-		$join         = '';
 		$wherestt     = 'WHERE';
 		/** @link http://www.spitfirephp.com/wiki/index.php/Database/subqueries Information about the filter*/
 		$restrictions = array_filter($this->getRestrictions(), Array('spitfire\storage\database\Query', 'restrictionFilter'));
@@ -30,14 +29,14 @@ class MysqlPDOQuery extends Query
 		
 		
 		#Import tables for restrictions from remote queries
-		if (!empty($restrictions)) {
-			$joins = Array();
-			$composites = $this->getCompositeRestrictions();
-			foreach ($composites as $v) {
-				$joins[] = new MysqlPDOJoin($v);
-			}
-			$join = implode(' ', $joins);
+		$subqueries = $this->getPhysicalSubqueries();
+		$joins      = Array();
+		
+		foreach ($subqueries as $q) {
+			$joins[] = sprintf('LEFT JOIN %s ON (%s)', $q->getQueryTable()->definition(), implode(' AND ', $q->getRestrictions()));
 		}
+		
+		$join = implode(' ', $joins);
 		
 		#Restrictions
 		if (empty($restrictions)) {
@@ -81,6 +80,7 @@ class MysqlPDOQuery extends Query
 	}
 
 	public function queryFieldInstance($field) {
+		if ($field instanceof QueryField) {return $field; }
 		return new MysqlPDOQueryField($this, $field);
 	}
 

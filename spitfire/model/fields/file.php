@@ -13,4 +13,8 @@ class FileField extends Field
 		return new StringAdapter($this, $model);
 	}
 
+	public function getConnectorQueries(\spitfire\storage\database\Query $parent) {
+		return Array();
+	}
+
 }

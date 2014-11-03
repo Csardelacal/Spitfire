@@ -32,4 +32,8 @@ class IntegerField extends Field
 		return new IntegerAdapter($this, $model);
 	}
 
+	public function getConnectorQueries(\spitfire\storage\database\Query $parent) {
+		return Array();
+	}
+
 }

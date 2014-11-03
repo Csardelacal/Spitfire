@@ -104,6 +104,7 @@ abstract class Restriction
 	
 	public function setQuery($query) {
 		$this->query = $query;
+		$this->field->setQuery($query);
 	}
 	
 	public function getOperator() {
@@ -113,6 +114,11 @@ abstract class Restriction
 
 	public function getValue() {
 		return $this->value;
+	}
+	
+	
+	public function getPhysicalSubqueries() {
+		return Array();
 	}
 	
 	/**

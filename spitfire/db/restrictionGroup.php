@@ -36,8 +36,9 @@ abstract class RestrictionGroup
 		try {
 			#If the name of the field passed is a physical field we just use it to 
 			#get a queryField
-			$field = $this->belongsto->getTable()->getField($fieldname);
-			$restriction = $this->belongsto->restrictionInstance($this->belongsto->queryFieldInstance($field), $value, $operator);
+			if ($fieldname instanceof QueryField) {$field = $fieldname;}
+			else { $field = $this->belongsto->queryFieldInstance($this->belongsto->getTable()->getField($fieldname)); }
+			$restriction = $this->belongsto->restrictionInstance($field, $value, $operator);
 			
 		} catch (\Exception $e) {
 			#Otherwise we create a complex restriction for a logical field.
@@ -99,6 +100,12 @@ abstract class RestrictionGroup
 		return $_joins;
 	}
 	
+	public function setQuery(Query$query) {
+		$this->belongsto = $query;
+		
+		foreach ($this->restrictions as $restriction) { $restriction->setQuery($query);}
+	}
+	
 	public function getQuery() {
 		return $this->belongsto;
 	}
@@ -115,6 +122,20 @@ abstract class RestrictionGroup
 	
 	public function getType() {
 		return $this->type;
+	}
+	
+	public function getPhysicalSubqueries() {
+		$_ret = Array();
+		foreach ($this->getRestrictions() as $r) {
+			array_merge($_ret, $r->getPhysicalSubqueries());
+		}
+		
+		return $_ret;
+	}
+	
+	public function __clone() {
+		$newr = Array();
+		foreach ($this->restrictions as $r) { $newr[] = clone $r; }
 	}
 
 	abstract public function __toString();

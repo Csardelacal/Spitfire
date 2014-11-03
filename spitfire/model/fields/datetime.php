@@ -14,4 +14,8 @@ class DatetimeField extends Field
 		return new DateTimeAdapter($this, $model);
 	}
 
+	public function getConnectorQueries(\spitfire\storage\database\Query $parent) {
+		return Array();
+	}
+
 }

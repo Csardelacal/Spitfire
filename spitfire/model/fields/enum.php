@@ -27,4 +27,8 @@ class EnumField extends Field
 		return new EnumAdapter($this, $model);
 	}
 
+	public function getConnectorQueries(\spitfire\storage\database\Query $parent) {
+		return Array();
+	}
+
 }
