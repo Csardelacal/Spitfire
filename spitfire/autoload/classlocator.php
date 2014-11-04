@@ -36,12 +36,19 @@ abstract class ClassLocator
 	public function findFile($dir, $name, $suffix = null) {
 		$sf = spitfire();
 		
+		#Check if just the name of the file is being found
 		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . $name .'.php';
 		if (file_exists($file)) { return $file; }
-			
+		
+		#Check if it exists in lowercase
 		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . strtolower($name) .'.php';
 		if (file_exists($file)) { return $file; }
 		
+		#Check if it exists with the suffix
+		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . $name . '-' . $suffix .'.php';
+		if ($suffix && file_exists($file)) { return $file; }
+		
+		#Check for the lower case file and the lower case suffix.
 		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
 		if ($suffix && file_exists($file)) { return $file; }
 		
