@@ -5,6 +5,10 @@ namespace spitfire\storage\database;
 use spitfire\storage\database\Query;
 use spitfire\storage\database\Table;
 
+/**
+ * 
+ * @deprecated since version 0.1dev.20141109
+ */
 abstract class QueryJoin
 {
 	const RIGHT_JOIN = 'right';
