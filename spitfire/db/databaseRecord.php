@@ -42,7 +42,7 @@ class Model implements Serializable
 	 * @param Table $table DB Table this record belongs to. Easiest way
 	 *                       to get this is by using $this->model->*tablename*
 	 * 
-	 * @param mixed $srcData Attention! This parameter is intended to be 
+	 * @param mixed $data  Attention! This parameter is intended to be 
 	 *                       used by the system. To create a new record, leave
 	 *                       empty and use setData.
 	 */

@@ -61,7 +61,7 @@ class CompositeRestriction
 	}
 
 	public function getOperator() {
-		return $this->operator;
+		return $this->operator === null? '=' : $this->operator;
 	}
 
 	public function setOperator($operator) {
