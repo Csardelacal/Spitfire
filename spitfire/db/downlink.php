@@ -2,6 +2,9 @@
 
 namespace spitfire\storage\database;
 
+/**
+ * @deprecated since version 0.1-dev.20141111
+ */
 class Downlink extends Uplink
 {
 	

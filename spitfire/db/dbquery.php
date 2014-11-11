@@ -36,7 +36,8 @@ abstract class Query
 	 * Adds a restriction to the current query. Restraining the data a field
 	 * in it can contain.
 	 * 
-	 * @param string $field
+	 * @see http://www.spitfirephp.com/wiki/index.php/Method:spitfire/storage/database/Query::addRestriction
+	 * @param string $fieldname
 	 * @param mixed  $value
 	 * @param string $operator
 	 * @return spitfire\storage\database\Query
@@ -53,7 +54,7 @@ abstract class Query
 			$field = $this->table->getTable()->getModel()->getField($fieldname);
 			
 			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
-				$field = $fieldname;
+			{ $field = $fieldname; }
 			
 			$restriction = $this->compositeRestrictionInstance($field, $value, $operator);
 		}

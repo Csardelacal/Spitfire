@@ -48,7 +48,7 @@ include 'spitfire/bootstrap.php';
 $month = 3600*24*30;
 ini_set('session.gc_maxlifetime',$month);
 ini_set('session.save_path', "bin/usr/sessions");
-ini_set('memory_limit', '64M');/**/
+ini_set('memory_limit', '128M');/**/
 
 /* Call the selected controller with the selected method. */
 spitfire()->fire();
