@@ -130,8 +130,8 @@ abstract class Table extends Queriable
 	public function getField($name) {
 		#If the data we get is already a DBField check it belongs to this table
 		if ($name instanceof DBField) {
-			if ($name->getTable() == $this) return $name;
-			else throw new \privateException('Field ' . $name . ' does not belong to ' . $this);
+			if ($name->getTable() === $this) { return $name; }
+			else { throw new \privateException('Field ' . $name . ' does not belong to ' . $this); }
 		}
 		#Otherwise search for it in the fields list
 		if (isset($this->fields[(string)$name])) return $this->fields[(string)$name];

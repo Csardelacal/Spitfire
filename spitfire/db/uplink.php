@@ -21,6 +21,7 @@ use Reference;
  * to convert the other types to References and use those.
  * 
  * 
+ * @deprecated since version 0.1-dev.20141111
  * @author César de la Cal <cesar@magic3w.com>
  * @last-revision 2013-09-30
  */

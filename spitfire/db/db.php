@@ -21,7 +21,7 @@ use spitfire\environment;
  * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
-abstract class DB extends MVC
+abstract class DB //extends MVC
 {
 	
 	const MYSQL_PDO_DRIVER = 'mysqlPDO';
@@ -38,7 +38,7 @@ abstract class DB extends MVC
 	 * Creates an instance of DBInterface. If options are set it will import
 	 * them. Otherwise it will try to read them from the current environment.
 	 * 
-	 * @param String $driver Name of the database driver to be used. You can
+	 * @param String $options Name of the database driver to be used. You can
 	 *                       choose one of the DBInterface::DRIVER_? consts.
 	 */
 	public function __construct($options = null) {
