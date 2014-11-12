@@ -151,6 +151,12 @@ class Route
 	
 	protected function rewriteString() {
 		$route = $this->getParameters()->replaceInString($this->new_route);
+		
+		#If the URL doesn't enforce to be finished pass on the unparsed parameters
+		if (!\Strings::endsWith($route, '/')) {
+			$route.= '/' . implode('/', $this->getParameters()->getUnparsed());
+		}
+		
 		return '/' . ltrim($route, '/');
 	}
 	

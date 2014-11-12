@@ -61,7 +61,9 @@ class ChildBean extends Field implements RenderableFieldGroup
 		
 		#Loop through the passed array and create the subforms to handle the data
 		foreach ($data as $pk => $post) {
-			if (!count(array_filter($post))) continue;
+			if (!count(array_filter($post, function ($v) {
+				return is_array($v)? !!array_filter($v) : !!$v;
+			}))) { continue; }
 			
 			$table = $this->getField()->getTarget()->getTable();
 			$child = $table->getBean();
