@@ -39,7 +39,7 @@ class Route
 	 */
 	private $server;
 	private $pattern;
-	private $patterns;
+	private $patternStr;
 	private $new_route;
 	private $parameters;
 	private $method;
@@ -55,7 +55,7 @@ class Route
 	 * @param string $pattern
 	 * @param string $new_route
 	 * @param string $method
-	 * @param string $pattern
+	 * @param int    $proto
 	 */
 	public function __construct(Routable$server, $pattern, $new_route, $method, $proto = Route::PROTO_ANY) {
 		$this->server    = $server;
@@ -63,7 +63,7 @@ class Route
 		$this->method    = $method;
 		$this->protocol  = $proto;
 		
-		$this->patterns = $pattern;
+		$this->patternStr = $pattern;
 		$array = array_filter(explode('/', $pattern));
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
@@ -153,11 +153,11 @@ class Route
 		$route = $this->getParameters()->replaceInString($this->new_route);
 		
 		#If the URL doesn't enforce to be finished pass on the unparsed parameters
-		if (!\Strings::endsWith($route, '/')) {
-			$route.= '/' . implode('/', $this->getParameters()->getUnparsed());
+		if (!\Strings::endsWith($this->patternStr, '/')) {
+			$route.= implode('/', $this->getParameters()->getUnparsed());
 		}
 		
-		return '/' . ltrim($route, '/');
+		return '/' . trim($route, '/') . '/';
 	}
 	
 	/**
