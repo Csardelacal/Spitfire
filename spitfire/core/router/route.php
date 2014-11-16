@@ -154,7 +154,7 @@ class Route
 		
 		#If the URL doesn't enforce to be finished pass on the unparsed parameters
 		if (!\Strings::endsWith($this->patternStr, '/')) {
-			$route.= implode('/', $this->getParameters()->getUnparsed());
+			$route = rtrim($route, '\/') . '/' . implode('/', $this->getParameters()->getUnparsed());
 		}
 		
 		return '/' . trim($route, '/') . '/';
