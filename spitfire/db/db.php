@@ -164,7 +164,7 @@ abstract class DB //extends MVC
 	 */
 	public function __get($table) {
 		#In case we request a model, view or controller
-		if (parent::__get($table)) return parent::__get($table);
+		//if (parent::__get($table)) return parent::__get($table);
 		#Otherwise we try to get the table with this name
 		return $this->table($table);
 	}
