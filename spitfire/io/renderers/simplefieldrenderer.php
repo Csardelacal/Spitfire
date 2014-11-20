@@ -269,6 +269,12 @@ class SimpleFieldRenderer {
 		
 	}
 	
+	/**
+	 * 
+	 * @deprecated since version 0.1dev20141120
+	 * @param type $field
+	 * @return HTMLDiv
+	 */
 	public function renderChildBean($field) {
 		$childmodel = $field->getField()->getTarget();
 		$childbean  = $childmodel->getTable()->getBean(true);
@@ -284,6 +290,7 @@ class SimpleFieldRenderer {
 		
 		if (!empty($children)) {
 			foreach ($children as $record) {
+				if ($record === $field->getBean()->getRecord()) {continue;}
 				$childbean->setDBRecord($record);
 				$ret->addChild($subform = new HTMLDiv());
 				$subform->addChild('<h1>' . $record->getTable()->getModel()->getName() . ' - ' . $record . '</h1>');

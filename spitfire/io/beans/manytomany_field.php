@@ -102,7 +102,8 @@ class ManyToManyField extends Field implements RenderableFieldSelect, Renderable
 	 * @return int
 	 */
 	public function getVisibility() {
-		return CoffeeBean::VISIBILITY_FORM;
+		if ($this->getBean()->getParent()) { return CoffeeBean::VISIBILITY_HIDDEN; }
+		else { return CoffeeBean::VISIBILITY_FORM; }
 	}
 
 	public function getPostTargetFor($name) {

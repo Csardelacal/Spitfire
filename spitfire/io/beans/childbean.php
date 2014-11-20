@@ -130,13 +130,15 @@ class ChildBean extends Field implements RenderableFieldGroup
 	 * @return int
 	 */
 	public function getVisibility() {
-		if ($this->getBean()->getParent()) return CoffeeBean::VISIBILITY_HIDDEN;
+		if ($this->getBean()->getParent()) { return CoffeeBean::VISIBILITY_HIDDEN; }
 		return CoffeeBean::VISIBILITY_FORM;
 	}
 	
 	public function makeFields() {
 		$val = $this->getValue();
 		foreach ($val as $v) {
+			#If the element is it's own child we avoid conflicts.
+			if ($v->getPrimaryData() === $this->getBean()->getRecord()->getPrimaryData()) {continue; }
 			$pd = $v->getPrimaryData();
 			if (count(array_filter($pd))) { $this->getPostTargetFor(implode(':', $pd)); }
 		}
