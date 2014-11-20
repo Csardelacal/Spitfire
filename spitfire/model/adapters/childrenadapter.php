@@ -33,7 +33,7 @@ class ChildrenAdapter implements ArrayAccess, Iterator, AdapterInterface
 	}
 	
 	public function toArray() {
-		if ($this->children !== null) return $this->children;
+		if ($this->children !== null) { return $this->children; }
 		$this->children = $this->getQuery()->fetchAll();
 		return $this->children;
 	}
@@ -85,11 +85,14 @@ class ChildrenAdapter implements ArrayAccess, Iterator, AdapterInterface
 	}
 
 	public function commit() {
+		#f the query hasn't been fetched then the data has not been modified for sure
+		if ($this->children === null) {
+			return;
+		}
 		//@todo: Change for definitive.
-		$value = $this->toArray();
 		$role  = $this->getField()->getRole();
 		
-		foreach($value as $child) {
+		foreach($this->children as $child) {
 			$child->{$role} = $this->getModel();
 			$child->store();
 		}

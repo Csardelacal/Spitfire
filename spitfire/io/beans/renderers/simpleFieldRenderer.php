@@ -177,6 +177,7 @@ class SimpleFieldRenderer {
 		
 		if (!empty($children)) {
 			foreach ($children as $record) {
+				if ($record === $field->getBean()->getRecord()) {continue;}
 				$childbean->setDBRecord($record);
 				$ret->addChild($subform = new HTMLDiv());
 				$subform->addChild('<h1>' . $record->getTable()->getModel()->getName() . ' - ' . $record . '</h1>');

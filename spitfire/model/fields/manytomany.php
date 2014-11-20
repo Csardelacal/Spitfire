@@ -27,8 +27,8 @@ class ManyToManyField extends ChildrenField
 		$first  = ($src > $target)? $target : $src;
 		$second = ($first == $src)? $target : $src;
 		
-		if ($src == $target) $targetalias = $target . '_1';
-		else                 $targetalias = $target;
+		if ($src === $target) { $targetalias = $target . '_1'; }
+		else                  { $targetalias = $target; }
 		
 		if (!$this->getTable()->getDb()->hasTable("{$first}_{$second}")) {
 			
@@ -62,7 +62,7 @@ class ManyToManyField extends ChildrenField
 	 * @return spitfire\storage\database\Table
 	 */
 	public function getBridge() {
-		if ($this->meta) return $this->meta;
+		if ($this->meta) { return $this->meta; }
 		
 		$this->getTarget();
 		return $this->meta;
@@ -121,8 +121,9 @@ class ManyToManyField extends ChildrenField
 			foreach ($f1p as $k => $v) {$group->addRestriction($route2->queryFieldInstance($v), $route2->queryFieldInstance($f2p[$k]), '<>');}
 			
 			#Link back
-			$r1group = $query->group();
-			$r2group = $query->group();
+			$groupback = $query->group(spitfire\storage\database\RestrictionGroup::TYPE_OR);
+			$r1group   = $groupback->group(spitfire\storage\database\RestrictionGroup::TYPE_AND);
+			$r2group   = $groupback->group(spitfire\storage\database\RestrictionGroup::TYPE_AND);
 			
 			#Note that the fields are now swaped
 			foreach ($f2p as $p) {$r1group->addRestriction($route1->queryFieldInstance($p), $query->queryFieldInstance($p->getReferencedField()));}
