@@ -80,21 +80,24 @@ class ManyToManyAdapter implements ArrayAccess, Iterator, AdapterInterface
 	}
 	
 	public function getBridgeRecordsQuery() {
-		if ($this->field->getModel() === $this->field->getTarget()) {
-			$bridge_fields = $this->field->getBridge()->getFields();
-			$query = $this->field->getBridge()->getTable()->getAll();
-			$group = $query->group();
-			foreach($bridge_fields as $f) {
-				if ($f->getTarget() === $this->field->getModel()) {
-					$group->addRestriction($f->getName(), $this->parent);
-				}
+		#Get the fields in the Bridge table
+		$bridge_fields = $this->field->getBridge()->getFields();
+
+		#Prepare a query for the records that are connected by this field
+		$query = $this->field->getBridge()->getTable()->getAll();
+
+		#We create a group to handle many to many connections that connect to the same model
+		$group = $query->group();
+
+		#Write the query
+		foreach($bridge_fields as $f) {
+			$pk = $this->parent->getPrimaryData();
+			$sg = $group->group(\spitfire\storage\database\RestrictionGroup::TYPE_AND);
+			if ($f->getTarget() === $this->field->getModel()) {
+				foreach($f->getPhysical() as $p) {$sg->addRestriction($p, array_shift($pk));}
 			}
-			$bridge_records = $query;
 		}
-		else {
-			$bridge_records = $this->field->getBridge()->getTable()->get($this->field->getModel()->getName(), $this->parent);
-		}
-		return $bridge_records;
+		return $query;
 	}
 	
 	/**
@@ -177,7 +180,9 @@ class ManyToManyAdapter implements ArrayAccess, Iterator, AdapterInterface
 
 	public function commit() {
 		
-		 $this->getBridgeRecordsQuery()->delete();
+		if ($this->children === null) { return; }
+		
+		$this->getBridgeRecordsQuery()->delete();
 
 		//@todo: Change for definitive.
 		$value = $this->toArray();
