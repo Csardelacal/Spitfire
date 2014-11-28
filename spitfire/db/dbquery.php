@@ -202,14 +202,8 @@ abstract class Query
 	public function getCompositeRestrictions() {
 		$_return = Array();
 		foreach ($this->restrictions as $restriction) {
-			if ($restriction instanceof CompositeRestriction) {
+			if ($restriction instanceof CompositeRestriction || $restriction instanceof RestrictionGroup) {
 				$_return[] = $restriction;
-				if ($restriction->getValue() instanceof Query) {
-					$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
-				}
-			} 
-			if ($restriction instanceof RestrictionGroup) {
-				$_return = array_merge($_return, $restriction->getCompositeRestrictions());
 			}
 		}
 		return $_return;
