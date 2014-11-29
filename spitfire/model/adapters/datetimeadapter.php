@@ -32,4 +32,9 @@ class DateTimeAdapter extends BaseAdapter
 	public function dbSetData($data) {
 		parent::dbSetData(Array(key($data) => new DateTime(current($data))));
 	}
+	
+	public function usrSetData($data) {
+		if (!$data instanceof DateTime) { $data = new DateTime($data);}
+		return parent::usrSetData($data);
+	}
 }

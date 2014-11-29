@@ -138,7 +138,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 		$val = $this->getValue();
 		foreach ($val as $v) {
 			#If the element is it's own child we avoid conflicts.
-			if ($v->getPrimaryData() === $this->getBean()->getRecord()->getPrimaryData()) {continue; }
+			if ($v->getPrimaryData() === $this->getBean()->getRecord()->getPrimaryData() && $v->getTable()->getModel() === $this->getBean()->getTable()->getModel()) {continue; }
 			$pd = $v->getPrimaryData();
 			if (count(array_filter($pd))) { $this->getPostTargetFor(implode(':', $pd)); }
 		}
