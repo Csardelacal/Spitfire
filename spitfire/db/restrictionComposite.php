@@ -68,7 +68,13 @@ class CompositeRestriction
 		$this->operator = $operator;
 	}
 	
+	/**
+	 * 
+	 * @deprecated since version 0.1-dev.20141128
+	 * @return type
+	 */
 	public function getSimpleRestrictions() {
+		trigger_error('Deprecated method getSimpleRestrictions was used', E_USER_DEPRECATED);
 		if ($this->field === null) {
 			$table = $this->getQuery()->getTable();
 			$fields = $table->getFields();
@@ -110,10 +116,7 @@ class CompositeRestriction
 		
 		$last->setId($this->getValue()->getId());
 		$last->importRestrictions($this->getValue());
-		array_merge($connector, $last->getPhysicalSubqueries());
-		$last->removeComposite();
-		
-		return $connector;
+		return array_merge($last->getPhysicalSubqueries(), $connector);
 	}
 	
 	/**
