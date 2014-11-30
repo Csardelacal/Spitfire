@@ -209,12 +209,41 @@ abstract class Query
 		return $_return;
 	}
 	
+	/**
+	 * This is the equivalent of makeExecutionPlan on the root query for any subquery.
+	 * Since subqueries are logical root queries and can be executed just like
+	 * normal ones they require an equivalent method that is named differently.
+	 * 
+	 * It retrieves all the subqueries that are needed to be executed on a relational
+	 * DB before the main query.
+	 * 
+	 * We could have used a single method with a flag, but this way seems cleaner
+	 * and more hassle free than otherwise.
+	 * 
+	 * @return Query[]
+	 */
 	public function getPhysicalSubqueries() {
 		$_ret = Array();
 		foreach ($this->getRestrictions() as $r) {
 			$_ret = array_merge($_ret, $r->getPhysicalSubqueries());
 		}
 		
+		return $_ret;
+	}
+	
+	/**
+	 * Creates the execution plan for this query. This is an array of queries that
+	 * aid relational DBMSs' drivers when generating SQL for the database.
+	 * 
+	 * This basically generate the connecting queries between the tables and injects
+	 * your restrictions in between so the system egenrates logical routes that 
+	 * will be understood by the relational DB.
+	 * 
+	 * @return Query[]
+	 */
+	public function makeExecutionPlan() {
+		$_ret = $this->getPhysicalSubqueries();
+		array_push($_ret, $this);
 		return $_ret;
 	}
 	
@@ -226,10 +255,6 @@ abstract class Query
 			$copy->setQuery($this);
 			$this->restrictions[] = $copy;
 		}
-	}
-	
-	public function removeComposite() {
-		$this->restrictions = array_filter($this->restrictions, function ($e) { return !$e instanceof CompositeRestriction; });
 	}
 	
 	public function getOrder() {
