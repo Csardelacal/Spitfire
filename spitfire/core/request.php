@@ -168,7 +168,7 @@ class Request
 	 * @return \Request
 	 */
 	public static function get() {
-		if (self::$instance) return self::$instance;
-		else return self::$instance = self::fromServer();
+		if (self::$instance) { return self::$instance; }
+		else { return self::$instance = self::fromServer(); }
 	}
 }
