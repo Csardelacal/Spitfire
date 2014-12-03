@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\io;
+<?php namespace spitfire\io;
 
 use \filePermissionsException;
 
@@ -19,6 +17,15 @@ use \filePermissionsException;
  */
 class Upload
 {
+	/**
+	 * Contains the raw metadata that was initially sent with the _FILES array. 
+	 * Since this is pretty deeply worked into the way PHP works we should leave it
+	 * alone. Changes to the way this array is organized are rare and don't affect
+	 * Spitfire based apps hardly.
+	 * 
+	 * @see http://php.net/manual/en/features.file-upload.post-method.php For the array structure used
+	 * @var mixed[]
+	 */
 	private $meta;
 	private $stored;
 	private $uploadDir;
@@ -52,7 +59,7 @@ class Upload
 	public function getData() {
 		
 		if (!is_array($this->meta['name'])) {
-			if ($this->meta['size'] == 0) return null;
+			if ($this->meta['size'] == 0) { return null; }
 			return $this;
 		}
 		
