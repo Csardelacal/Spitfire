@@ -28,6 +28,15 @@ interface Cache
 	 * @param null|int|string|\Closure $fallback
 	 */
 	public function get($key, $fallback = null);
+	
+	/**
+	 * Stores a value to the cache. Remember that this function provides no 
+	 * mechanism to define how long the value should be active in the cache, this
+	 * is up to the caching mechanism to define how it handles timeouts.
+	 * 
+	 * @param string $key
+	 * @param mixed $value
+	 */
 	public function set($key, $value);
 	public function delete ($key);
 	
