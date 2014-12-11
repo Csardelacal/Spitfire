@@ -137,7 +137,7 @@ abstract class Field extends PostTarget implements ValidatorInterface
 	public function getRequestValue() {
 		$postdata = $this->getPostData();
 		
-		if ($this->issetPostData()) {
+		if ($this->hasPostData()) {
 			return $postdata;
 		}
 		else {

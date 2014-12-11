@@ -1,5 +1,8 @@
 <?php namespace spitfire\autoload;
 
+/**
+ * @deprecated since version 0.1-dev 20141211
+ */
 class SystemClassLocator extends ClassLocator
 {
 	

@@ -191,7 +191,6 @@ class Validator implements ValidatorInterface
 	 * are satisfied by the value.
 	 * 
 	 * @param mixed $value
-	 * @return \spitfire\validation\ValidationResult
 	 */
 	private function iterateRules() {
 		$errors = Array();
@@ -212,8 +211,8 @@ class Validator implements ValidatorInterface
 	protected function testRule(ValidationRule$rule, $value) {
 		$result = $rule->test($value);
 
-		if ($result !== false && !$result instanceof ValidationError) {
-			throw new \privateException('Invalid result type, expected ValidationResult');
+		if ($result !== false && $result !== true && $result !== null && !$result instanceof ValidationError) {
+			throw new \privateException('Invalid result type, expected ValidationError');
 		}
 		
 		return $result;
@@ -224,12 +223,11 @@ class Validator implements ValidatorInterface
 	 * as it will require to write it with catch's instead of big if nests that
 	 * are not required in most cases.
 	 * 
-	 * @todo Replace the result with errors
-	 * @param \spitfire\validation\ValidationResult $result
+	 * @param ValidationError[] $errors
 	 * @return \ValidationException
 	 */
-	public static function makeException() {
-		$ex = new \ValidationException('Validation failed', 0);
+	public static function makeException($errors) {
+		$ex = new \ValidationException('Validation failed', 0, $errors);
 		return $ex;
 	}
 

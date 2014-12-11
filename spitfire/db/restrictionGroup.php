@@ -76,6 +76,14 @@ abstract class RestrictionGroup
 		return $_return;
 	}
 	
+	public function getConnectingRestrictions() {
+		$_ret = Array();
+		
+		foreach ($this->restrictions as $r) { $_ret = array_merge($_ret, $r->getConnectingRestrictions());}
+		
+		return $_ret;
+	}
+	
 	public function getValues() {
 		$values = Array();
 		foreach ($this->restrictions as $r) $values[] = $r->getValue();
