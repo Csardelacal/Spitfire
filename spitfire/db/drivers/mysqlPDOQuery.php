@@ -97,27 +97,27 @@ class MysqlPDOQuery extends Query
 		
 		$this->setAliased(false);
 		
+		#Declare vars
+		$rpp          = $this->getResultsPerPage();
+		$offset       = ($this->getPage() - 1) * $rpp;
+		
 		$selectstt    = 'DELETE';
-		$target       = $this->aliasedTableName();
 		$fromstt      = 'FROM';
-		$tables       = Array($this->getQueryTable());
+		$tablename    = $this->aliasedTableName();
 		$wherestt     = 'WHERE';
 		/** @link http://www.spitfirephp.com/wiki/index.php/Database/subqueries Information about the filter*/
 		$restrictions = array_filter($this->getRestrictions(), Array('spitfire\storage\database\Query', 'restrictionFilter'));
 		
 		
 		#Import tables for restrictions from remote queries
-		if (!empty($restrictions)) {
-			$composites = $this->getCompositeRestrictions();
-			foreach ($composites as $v) {
-				$restrictions = array_merge($restrictions, $v->getConnectingRestrictions());
-				$join = new MysqlPDOJoin($v);
-				$tables = array_merge($tables, $join->getTables());
-			}
+		$subqueries = $this->getPhysicalSubqueries();
+		$joins      = Array();
+		
+		foreach ($subqueries as $q) {
+			$joins[] = sprintf('LEFT JOIN %s ON (%s)', $q->getQueryTable()->definition(), implode(' AND ', $q->getRestrictions()));
 		}
 		
-		foreach ($tables as &$table) $table = $table->definition();
-		$tables = implode(', ', $tables);
+		$join = implode(' ', $joins);
 		
 		#Restrictions
 		if (empty($restrictions)) {
@@ -127,7 +127,7 @@ class MysqlPDOQuery extends Query
 			$restrictions = implode(' AND ', $restrictions);
 		}
 		
-		$stt = array_filter(Array( $selectstt, $target, $fromstt, $tables, 
+		$stt = array_filter(Array( $selectstt, $fromstt, $tablename, $join, 
 		    $wherestt, $restrictions));
 		
 		$this->getTable()->getDb()->execute(implode(' ', $stt));

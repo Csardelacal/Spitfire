@@ -11,30 +11,31 @@ class ValidationException extends Exception
 {
 	/**
 	 * The result of the validation.
-	 * @var spitfire\validation\ValidationResult
+	 * @var \spitfire\validation\ValidationError[]
 	 */
 	private $result;
+	
+	/**
+	 * Creates a validation exception. This object will contain the errors that 
+	 * happened during validation of any information youu tested.
+	 * 
+	 * @param mixed $message
+	 * @param mixed $code
+	 * @param \spitfire\validation\ValidationError $errors
+	 */
+	public function __construct($message, $code, $errors) {
+		$this->result = $errors;
+		parent::__construct($message, $code, null);
+	}
 	
 	/**
 	 * Returns the validation result that contains errors for the application to
 	 * use and print the errors.
 	 * 
-	 * @return spitfire\validation\ValidationResult
+	 * @return \spitfire\validation\ValidationError[]
 	 */
 	public function getResult() {
 		return $this->result;
-	}
-	
-	/**
-	 * Sets the result that contains information about the errors this Exception
-	 * carries.
-	 * 
-	 * @param spitfire\validation\ValidationResult $result
-	 * @return \ValidationException
-	 */
-	public function setResult(spitfire\validation\ValidationResult$result) {
-		$this->result = $result;
-		return $this;
 	}
 	
 }

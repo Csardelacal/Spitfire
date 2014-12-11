@@ -15,6 +15,7 @@ use Strings;
  * an app. And a class trying to fetch info about another would just make (did make)
  * the process unnecessarily complicated.
  * 
+ * @deprecated since version 0.1-dev
  * @author César de la Cal <cesar@magic3w.com>
  * @last-revision 2013-10-30
  */

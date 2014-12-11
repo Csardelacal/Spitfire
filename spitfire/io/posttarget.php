@@ -32,10 +32,6 @@ abstract class PostTarget
 		return $this->hasPost;
 	}
 	
-	public function issetPostData() {
-		return isset($this->postData);
-	}
-	
 	private function propagate() {
 		if (!is_array($this->postData)) { return; }
 		foreach ($this->postData as $key => $value) {

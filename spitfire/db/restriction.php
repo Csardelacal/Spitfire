@@ -121,6 +121,10 @@ abstract class Restriction
 		return Array();
 	}
 	
+	public function getConnectingRestrictions() {
+		return Array();
+	}
+	
 	/**
 	 * @deprecated since version 0.1dev
 	 */
