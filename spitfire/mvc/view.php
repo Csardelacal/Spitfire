@@ -3,6 +3,7 @@
 namespace spitfire;
 
 use privateException;
+use fileNotFoundException;
 use spitfire\MVC;
 use \_SF_ViewElement;
 use spitfire\registry\JSRegistry;
@@ -36,6 +37,9 @@ class View extends MVC
 		#Create registries
 		$this->js  = new JSRegistry();
 		$this->css = new CSSRegistry();
+		
+		#Initialize the files
+		$this->getFiles();
 	}
 	
 	public function getFiles() {
@@ -76,11 +80,24 @@ class View extends MVC
 		return $this;
 	}
 	
+	/**
+	 * Sets the file to be used by the template system. Please note that it can
+	 * accept either the full patch to the file (like bin/templates/controller/action.php)
+	 * or just the path relative to the template directory.
+	 * 
+	 * Using the relative Path to the template directory would be a recommended 
+	 * practice in order to reduce the need to change your coding when changing
+	 * your directory structure.
+	 * 
+	 * @param string $fileName
+	 * @throws fileNotFoundException
+	 */
 	public function setFile ($fileName) {
-		$fileName = $this->app->getTemplateDirectory() . $fileName;
 		
-		if (file_exists($fileName)) $this->file = $fileName;
-		else throw new fileNotFoundException('File ' . $fileName . 'not found. View can\'t use it');
+		if (!file_exists($fileName)) { $fileName = $this->app->getTemplateDirectory() . $fileName; }
+		
+		if (file_exists($fileName)) { $this->file = $fileName; }
+		else { throw new fileNotFoundException('File ' . $fileName . 'not found. View can\'t use it'); }
 	}
 
 
@@ -95,7 +112,7 @@ class View extends MVC
 	}
 
 	public function render () {
-		if (!$this->file) { $this->getFiles(); }
+		//if (!$this->file) { $this->getFiles(); }
 		if (!$this->render_template) { echo $this->data['_SF_DEBUG_OUTPUT']; return; }
 		ob_start();
 		foreach ($this->data as $data_var => $data_content) {
