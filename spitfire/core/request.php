@@ -148,7 +148,7 @@ class Request
 	
 	public static function fromServer() {
 		$get     = new Get($_GET);
-		$post    = \spitfire\io\Upload::init();
+		$post    = $_POST = \spitfire\io\Upload::init();
 		$cookie  = $_COOKIE;
 		$headers = $_SERVER;
 		
