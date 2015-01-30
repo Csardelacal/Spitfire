@@ -60,7 +60,7 @@
 	  * params you are allowed to define and that can be across the URL, the server
 	  * and even stuff excluded from the object.
 	  * 
-	  * @var string
+	  * @var array
 	  */
 	 private $parameters;
 	 
@@ -197,7 +197,7 @@
 	  * Defines the object of the request. The object is an array which holds the
 	  * parameters that will be sent to the action method of the controller.
 	  * 
-	  * @param string $object
+	  * @param string[] $object
 	  * @return \spitfire\core\Path
 	  */
 	 public function setObject($object) {
