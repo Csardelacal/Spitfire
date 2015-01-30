@@ -25,7 +25,7 @@
 	  * of string in an array. This is especially useful when mapping a URL
 	  * (<code>/a/url</code>) to a Controller class (<code>\a\urlController</code>)
 	  * 
-	  * @var string[]
+	  * @var string[]|null
 	  */
 	 private $controller;
 	 
@@ -71,7 +71,7 @@
 	  * 
 	  * 
 	  * @param string $app
-	  * @param array  $controller
+	  * @param string|array|null  $controller
 	  * @param string $action
 	  * @param array  $object
 	  * @param string $format
@@ -228,7 +228,7 @@
 	  * retrieved by the application by accessing the request object and let you
 	  * define parameters in seemingly random positions of a route.
 	  * 
-	  * @param string $parameters
+	  * @param string[] $parameters
 	  * @return \spitfire\core\Path
 	  */
 	 public function setParameters($parameters) {
