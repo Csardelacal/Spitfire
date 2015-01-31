@@ -149,14 +149,6 @@ abstract class App
 	public function createRoutes() {
 		$ns       = $this->URISpace? '/' . $this->URISpace : '';
 		$uriSpace = $this->URISpace;
-		/*\spitfire\core\router\Router::getInstance()->request($ns . '/:controller/:action', function () {
-			$args = func_get_args();
-			return new \spitfire\core\Path($this->URISpace, array_shift($args), array_shift($args), $args);
-		});
-		
-		\spitfire\core\router\Router::getInstance()->request($ns . '/:controller', function ($controller) {
-			return new \spitfire\core\Path($this->URISpace, $controller, null, null);
-		});/**/
 		
 		\spitfire\core\router\Router::getInstance()->request($ns . '/', function (spitfire\core\router\Parameters$params) use ($uriSpace) {
 			$args = $params->getUnparsed();

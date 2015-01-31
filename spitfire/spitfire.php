@@ -29,21 +29,22 @@ class SpitFire extends App
 	static  $started = false;
 	
 	private $cwd;
-	private $autoload;
 	private $request;
 	private $debug;
 	private $apps = Array();
 	
 	public function __construct() {
 		#Check if SF is running
-		if (self::$started) throw new \privateException('Spitfire is already running');
+		if (self::$started) { throw new \privateException('Spitfire is already running'); }
 		
 		#Set the current working directory
 		$this->cwd = dirname(dirname(__FILE__));
 		
 		#Import the exception handler for logging
 		$this->debug = ExceptionHandler::getInstance();
-
+		
+		#Call parent
+		parent::__construct('bin/', null);
 
 		self::$started = true;
 	}
@@ -53,9 +54,6 @@ class SpitFire extends App
 		#Try to include the user's evironment & routes
 		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
 		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
-		
-		#If there are uploads to be handled copy them into _POST
-		//Moved to request if(!empty($_FILES)) { $_POST = io\Upload::init(); }
 		
 		#Define the current timezone
 		date_default_timezone_set(environment::get('timezone'));
@@ -177,13 +175,9 @@ class SpitFire extends App
 	public function getRequest() {
 		return $this->request;
 	}
-	
+
 	public function getNameSpace() {
 		return '';
-	}
-	
-	public function getBaseDir() {
-		return 'bin/';
 	}
 
 }

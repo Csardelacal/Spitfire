@@ -144,13 +144,83 @@ class Request
 	public function setPath($path) {
 		$this->path = $path;
 	}
+	
+	public function getGet() {
+		return $this->get;
+	}
 
+	public function getPost() {
+		return $this->post;
+	}
+
+	public function getCookie() {
+		return $this->cookie;
+	}
+
+	public function getHeaders() {
+		return $this->headers;
+	}
+
+	public function getContext() {
+		return $this->context;
+	}
+
+	public function setGet(\spitfire\io\Get $get) {
+		$this->get = $get;
+		return $this;
+	}
+
+	public function setPost($post) {
+		$this->post = $post;
+		return $this;
+	}
+
+	public function setCookie($cookie) {
+		$this->cookie = $cookie;
+		return $this;
+	}
+
+	public function setHeaders(request\Headers $headers) {
+		$this->headers = $headers;
+		return $this;
+	}
+
+	public function setContext(Context $context) {
+		$this->context = $context;
+		return $this;
+	}
+	
+	/**
+	 * This method allows to push the current request back to the server and 
+	 * therefore allowing your application to alter the request the app perceives
+	 * at runtime.
+	 * 
+	 * Please note that the recommended usage of this tool is during testing and
+	 * bootstraping. You're probably making poor choices if your code uses this function.
+	 * 
+	 * @param \spitfire\core\Request $request
+	 * @return \spitfire\core\Request
+	 */
+	public static function toServer(Request$request) {
+		$_GET    = $request->getGet();
+		$_POST   = $request->getPost();
+		$_COOKIE = $request->getCookie();
+		$_SERVER = $request->getHeaders();
+		
+		self::$instance = $request;
+		
+		return $request;
+	}
 	
 	public static function fromServer() {
-		$get     = new Get($_GET);
-		$post    = $_POST = \spitfire\io\Upload::init();
+		$get     = $_GET instanceof Get ? clone $_GET : new Get($_GET);
+		$post    = empty($_FILES)? $_POST : \spitfire\io\Upload::init();
 		$cookie  = $_COOKIE;
 		$headers = $_SERVER;
+		
+		#For the sake of avoiding unnecessary calls this stubs the POST and GET part of toServer
+		$_GET    = $get;
+		$_POST   = $post;
 		
 		$pinfo   = get_path_info();
 		$https   = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
