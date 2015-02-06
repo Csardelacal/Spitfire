@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire;
+<?php namespace spitfire;
 
 use privateException;
 use fileNotFoundException;
@@ -25,8 +23,11 @@ class View extends MVC
 	const default_view = 'default.php';
 	
 	/**
+	 * Creates a new view. The view allows to present the data your application 
+	 * manages in a consistent way and manage and locate the templates the app
+	 * needs.
 	 * 
-	 * @param App $app
+	 * @param \spitfire\Context $intent
 	 */
 	public function __construct(Context$intent) {
 		
@@ -59,10 +60,8 @@ class View extends MVC
 		
 		if     ( file_exists("$basedir$controller/$action$extension.php"))
 			$this->file = "$basedir$controller/$action$extension.php";
-		elseif ( file_exists("$basedir$controller$extension.php"))
-			$this->file = "$basedir$controller$extension.php";
 		else
-			$this->file = $basedir . self::default_view;
+			$this->file = "$basedir$controller$extension.php";
 		
 		
 		if     ( file_exists("{$basedir}layout$extension.php"))
@@ -112,8 +111,12 @@ class View extends MVC
 	}
 
 	public function render () {
-		//if (!$this->file) { $this->getFiles(); }
+		#If the template is not to be rendered at all. Use this.
 		if (!$this->render_template) { echo $this->data['_SF_DEBUG_OUTPUT']; return; }
+		
+		#Consider that a missing template file that should be rendered is a error
+		if (!file_exists($this->file)) { throw new privateException('Missing template file: ' . $this->file); }
+		
 		ob_start();
 		foreach ($this->data as $data_var => $data_content) {
 			$$data_var = $data_content;
