@@ -1,5 +1,6 @@
 <?php namespace spitfire\io\beans;
 
+use privateException;
 use spitfire\io\renderers\RenderableFieldFile;
 
 class FileField extends BasicField implements RenderableFieldFile
