@@ -60,7 +60,7 @@ class URL implements ArrayAccess
 		
 		#Loop through the parameters checking for content.
 		foreach ($params as $param) {
-			if (is_array($param)) $this->params = $param;
+			if (is_array($param) || $param instanceof Iterator) $this->params = $param;
 			elseif (is_a($param, 'App')) $this->app = $param;
 			elseif (strstr($param, '/') || strstr($param, '?')) {
 				$info = parse_url($param);
