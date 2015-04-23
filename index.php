@@ -29,6 +29,7 @@ ini_set("display_errors" , "0");
 define ('APP_DIRECTORY',         'bin/apps/',        true);
 define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
 define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
+define ('ASSET_DIRECTORY',       'assets/',          true);
 define ('TEMPLATES_DIRECTORY',   'bin/templates/',   true);
 
 /* Include Spitfire core.
