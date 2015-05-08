@@ -149,7 +149,7 @@ class MysqlPDOTable extends stdSQLTable
 		$key   = $record->getPrimaryData();
 		
 		$restrictions = Array();
-		foreach ($key as $k => $v) {$restrictions[] = "$k = $v";}
+		foreach ($key as $k => $v) {$restrictions[] = "$k = {$db->quote($v)}";}
 		
 		$write = Array();
                 

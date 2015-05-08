@@ -64,7 +64,11 @@ class Route
 		$this->protocol  = $proto;
 		
 		$this->patternStr = $pattern;
-		$array = array_filter(explode('/', $pattern));
+		$array = explode('/', $pattern);
+		
+		#If the route began with a leading slash we remove the empty piece
+		if (!reset($array)) {array_shift($array); }
+		
 		array_walk($array, function (&$pattern) {$pattern= new Pattern($pattern);});
 		$this->pattern = $array;
 	}
@@ -153,7 +157,7 @@ class Route
 		$route = $this->getParameters()->replaceInString($this->new_route);
 		
 		#If the URL doesn't enforce to be finished pass on the unparsed parameters
-		if (!\Strings::endsWith($this->patternStr, '/')) {
+		if (!\Strings::endsWith($this->new_route, '/')) {
 			$route = rtrim($route, '\/') . '/' . implode('/', $this->getParameters()->getUnparsed());
 		}
 		

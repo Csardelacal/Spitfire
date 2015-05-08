@@ -9,7 +9,7 @@ use Pluggable;
  * @property-read \spitfire\View $view The current view
  * @property-read \spitfire\Context $context The context within this is located
  * @property-read \spitfire\Request $request The request the context is answering to
- * @property-read \spitfire\Response $response Contains the response body and headers
+ * @property-read \spitfire\core\Response $response Contains the response body and headers
  * @property-read \Controller $controller The controller used ot handle this context
  * 
  * @author César de la Cal <cesar@magic3w.com>
