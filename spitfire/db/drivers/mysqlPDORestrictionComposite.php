@@ -9,7 +9,10 @@ class MysqlPDOCompositeRestriction extends CompositeRestriction
 	
 	public function __toString() {
 		//TODO: This should just print the PK IS / IS NOT NULL
-		if ($this->getField() === null || $this->getValue() === null) {
+		$field = $this->getField();
+		$value = $this->getValue();
+		
+		if ($field === null || $value === null) {
 			return implode(' AND ', $this->getSimpleRestrictions());
 		} else {
 			$fields = $this->getValue()->getQueryTable()->getTable()->getPrimaryKey();

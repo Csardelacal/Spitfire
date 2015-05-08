@@ -16,7 +16,7 @@ class InputSanitizer
 		
 		$this->isset = $isset;
 
-		if (is_array($data)) {
+		if (is_array($data) || $data instanceof \Iterator) {
 			$this->data = Array();
 			foreach ($data as $field=>$value) {
 				$this->data[$field] = $this->$field = new InputSanitizer($value);

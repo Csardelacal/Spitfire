@@ -150,7 +150,7 @@ abstract class App
 		$ns       = $this->URISpace? '/' . $this->URISpace : '';
 		$uriSpace = $this->URISpace;
 		
-		\spitfire\core\router\Router::getInstance()->request($ns . '/', function (spitfire\core\router\Parameters$params) use ($uriSpace) {
+		\spitfire\core\router\Router::getInstance()->request($ns, function (spitfire\core\router\Parameters$params) use ($uriSpace) {
 			$args = $params->getUnparsed();
 			return new \spitfire\core\Path($uriSpace, array_shift($args), array_shift($args), $args);
 		});

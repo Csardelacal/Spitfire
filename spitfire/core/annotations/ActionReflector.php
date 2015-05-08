@@ -74,7 +74,7 @@ class ActionReflector
 	public function applyAnotation($annotation) {
 		$method = array_shift($annotation);
 		switch($method) {
-			case '@method':
+			case '@request-method':
 				return call_user_func_array(Array($this, 'method'), $annotation);
 			case '@cache':
 				return call_user_func_array(Array($this, 'cache' ), $annotation);

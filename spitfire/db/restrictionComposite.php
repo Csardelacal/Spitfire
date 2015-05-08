@@ -24,11 +24,8 @@ class CompositeRestriction
 		$this->value = $value;
 		$this->operator = $operator;
 		
-		if ($this->value instanceof Model)
-			$this->value = $this->value->getQuery();
-		
-		if ($this->value instanceof Query)
-			$this->value->setAliased(true);
+		if ($this->value instanceof Model) { $this->value = $this->value->getQuery(); }
+		if ($this->value instanceof Query) { $this->value->setAliased(true); }
 	}
 	
 	/**
@@ -52,7 +49,7 @@ class CompositeRestriction
 	}
 
 	public function getValue() {
-		if ($this->value instanceof Model) $this->value = $this->value->getQuery();
+		if ($this->value instanceof Model) { $this->value = $this->value->getQuery(); }
 		return $this->value;
 	}
 
@@ -69,12 +66,25 @@ class CompositeRestriction
 	}
 	
 	/**
+	 * This method handles NULL scenarios.
 	 * 
-	 * @deprecated since version 0.1-dev.20141128
+	 * This method simplifies complex restrictions when null values are involved.
+	 * Usually, when querying you will define an equivalence between two values and
+	 * launch the query. This method is called when that involves null.
+	 * 
+	 * You can either have a null value, which will force the database to check that
+	 * the physical fields composing your logical field are null.
+	 * 
+	 * Or you can have a null field. Which will force the database to check that 
+	 * one of the fields that this table has equals to the value you specified.
+	 * 
+	 * Please note that the usage of this function for other scenarios has been
+	 * deprecated since 11/2014
+	 * 
+	 * 
 	 * @return type
 	 */
 	public function getSimpleRestrictions() {
-		trigger_error('Deprecated method getSimpleRestrictions was used', E_USER_DEPRECATED);
 		if ($this->field === null) {
 			$table = $this->getQuery()->getTable();
 			$fields = $table->getFields();
@@ -99,6 +109,7 @@ class CompositeRestriction
 			return $restrictions;
 		}
 		
+		trigger_error('Deprecated method getSimpleRestrictions was used', E_USER_DEPRECATED);
 		if ($this->value instanceof Model) 
 			$this->value = $this->value->getQuery();
 		

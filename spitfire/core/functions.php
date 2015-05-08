@@ -7,13 +7,24 @@ use spitfire\locales\langInfo;
 use spitfire\storage\database\DB;
 use spitfire\validation\Validator;
 
+/**
+ * This is a quick hand method to use Spitfire's main App class as a singleton.
+ * It allows you to quickly access many of the components the framework provides
+ * to make it easier to read and maintain the code being created.
+ * 
+ * @staticvar type $sf
+ * @return SpitFire
+ */
 function spitfire() {
-	static $sf;
-	if ($sf) return $sf;
+	static $sf = null;
 	
-	$sf = new SpitFire();
-	$sf->prepare();
-	return $sf;
+	if ($sf !== null) { 
+		return $sf; 
+	} else {
+		$sf = new SpitFire();
+		$sf->prepare();
+		return $sf;
+	}
 }
 
 /**
