@@ -1,18 +1,13 @@
-<?php
-
-namespace spitfire;
+<?php namespace spitfire;
 
 use App;
 use spitfire\core\Request;
 use spitfire\exceptions\ExceptionHandler;
 
-require_once 'spitfire/strings.php';
-require_once 'spitfire/app.php';
-require_once 'spitfire/core/functions.php';
-
 if (!defined('APP_DIRECTORY')){
 	define ('APP_DIRECTORY',         'bin/apps/',        true);
 	define ('CONFIG_DIRECTORY',      'bin/settings/',    true);
+	define ('ASSET_DIRECTORY',       'assets/',          true);
 	define ('CONTROLLERS_DIRECTORY', 'bin/controllers/', true);
 	define ('TEMPLATES_DIRECTORY',   'bin/templates/',   true);
 }
@@ -155,10 +150,26 @@ class SpitFire extends App
 		return $this->cwd;
 	}
 
+	/**
+	 * Returns the directory the assets are located in. This function should be 
+	 * avoided in favor of the ASSET_DIRECTORY constant.
+	 * 
+	 * Please note that the fact that this function provides a bit more flexibility
+	 * than a constant would also allow users to create erratic patterns.
+	 * 
+	 * @deprecated since version 0.1-dev 20150423
+	 */
 	public function getAssetsDirectory() {
-		return 'assets/';
+		return ASSET_DIRECTORY;
 	}
 
+
+	/**
+	 * Returns the directory the templates are located in. This function should be 
+	 * avoided in favor of the TEMPLATE_DIRECTORY constant.
+	 * 
+	 * @deprecated since version 0.1-dev 20150423
+	 */
 	public function getTemplateDirectory() {
 		return TEMPLATES_DIRECTORY;
 	}
