@@ -94,7 +94,8 @@ abstract class App
 	 * It should not be necessary to check the return value with the === operator
 	 * as the return value on success should never be matched otherwise.
 	 *
-	 * @param string $name The name of the controller being searched
+	 * @param  string $name The name of the controller being searched
+	 * @return string The name of the class that has the controller
 	 */
 	public function hasController($name) {
 		$name = (array)$name;
@@ -160,6 +161,13 @@ abstract class App
 	abstract public function getNameSpace();
 	abstract public function getAssetsDirectory();
 	
+
+	/**
+	 * Returns the directory the templates are located in. This function should be 
+	 * avoided in favor of the getDirectory function.
+	 * 
+	 * @deprecated since version 0.1-dev 20150423
+	 */
 	public function getTemplateDirectory() {
 		return $this->getBaseDir() . 'templates/';
 	}
