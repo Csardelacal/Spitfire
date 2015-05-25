@@ -143,7 +143,7 @@ abstract class Table extends Queriable
 	 * Returns the name of the table that is being used. The table name
 	 * includes the database's prefix.
 	 *
-	 * @return String 
+	 * @return string 
 	 */
 	public function getTablename() {
 		return $this->tablename;

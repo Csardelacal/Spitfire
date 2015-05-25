@@ -60,9 +60,10 @@ class Model implements Serializable
 	 * spitfire to automatically generate tables and allows it to check the types
 	 * of data and fix tables.
 	 * 
+	 * @return \spitfire\db\Schema
 	 * @abstract
 	 */
-	//public static abstract function definitions();
+	//public abstract function definitions();
 	
 	/**
 	 * Receives the data of an array and stores it into this record. This
