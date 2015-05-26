@@ -1,5 +1,7 @@
 <?php
 
+trigger_error('Using the deprecated schema in model.php. Please use storage\database\Schema', E_USER_DEPRECATED);
+
 use spitfire\model\Field;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
