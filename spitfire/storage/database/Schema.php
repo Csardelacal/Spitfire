@@ -175,7 +175,7 @@ class Schema
 	 * Returns a list of fields which compound the primary key of this model.
 	 * The primary key is a set of records that identify a unique record.
 	 * 
-	 * @return spitfire\storage\database\DBField[]
+	 * @return Field[]
 	 */
 	public function getPrimary() {
 		#Fetch the field list
