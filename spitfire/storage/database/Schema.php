@@ -3,6 +3,7 @@
 use spitfire\model\Field;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
+use IntegerField;
 
 /**
  * A Model is a class used to define how Spitfire stores data into a DBMS. We
@@ -220,10 +221,8 @@ class Schema
 	 * @return Field
 	 */
 	public function __get($name) {
-		if (isset($this->fields[$name]))
-			return $this->fields[$name];
-		else
-			throw new privateException('No field ' . $name . ' found');
+		if (isset($this->fields[$name])) { return $this->fields[$name]; }
+		else { throw new privateException('No field ' . $name . ' found'); }
 	}
 	
 	/**
@@ -232,10 +231,8 @@ class Schema
 	 * @throws privateException
 	 */
 	public function __unset($name) {
-		if (isset($this->fields[$name]))
-			unset($this->fields[$name]);
-		else
-			throw new privateException('No field ' . $name . ' found');
+		if (isset($this->fields[$name])) { unset($this->fields[$name]); }
+		else { throw new privateException('No field ' . $name . ' found'); }
 	}
 	
 }
