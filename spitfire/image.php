@@ -23,10 +23,8 @@ class Image
 				imagealphablending($img, false);
 				imagesavealpha($img, true);
 				return $img;
-				break;
 			case IMAGETYPE_JPEG: 
 				return imagecreatefromjpeg($file);
-				break;
 			case IMAGETYPE_PSD:
 				if (class_exists("Imagick")) {
 					set_time_limit(480);
@@ -36,7 +34,6 @@ class Image
 					return $img;
 				}
 				throw new privateException('Spitfire requires Imagemagick to handle PSD files');
-				break;
 			default:
 				throw new privateException('Not supported image type: ' . $meta[2]);
 		}
