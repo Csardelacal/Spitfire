@@ -21,11 +21,14 @@ class Strings
 	public static function slug($string) {
 		$str = preg_replace(
 				  /*http://stackoverflow.com/questions/10444885/php-replace-foreign-characters-in-a-string*/
-				  Array('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i','/[^A-Za-z0-9_-\s]/'), 
-				  Array('$1',''), 
+				  '/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i', 
+				  '$1', //Remove accents
 				  htmlentities($string, ENT_QUOTES, 'UTF-8'));
 		
-		return strtolower(str_replace(Array(' ', '--'), Array('-', '-'), $str));
+		return strtolower(preg_replace(
+				  Array('/[^A-Za-z0-9_-\s]/', '/[ -_]+/'), 
+				  Array('' /*Remove non-alphanumeric characters*/, '-' /*Remove multiple spaces*/), 
+				  html_entity_decode($str, ENT_QUOTES, 'UTF-8')));
 	}
 	
 	public static function endsWith($haystack, $needle) {
