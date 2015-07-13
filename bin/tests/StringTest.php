@@ -15,4 +15,9 @@ class StringTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('a-string-with-special-chrs',  \Strings::slug('a_string_with spëcìal chªrs'));
 	}
 	
+	public function testSlugUppercase() {
+		$this->assertEquals('uppercase', \Strings::slug('UPPERCASE'));
+		$this->assertEquals('some-caps', \Strings::slug('Some CaPS'));
+	}
+	
 }
