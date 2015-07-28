@@ -154,7 +154,6 @@ class MysqlPDOTable extends stdSQLTable
 		$write = Array();
                 
 		foreach ($data as $value) {
-			print_r($value->dbGetData());
 			$write = array_merge($write, $value->dbGetData());
 		}
 		
