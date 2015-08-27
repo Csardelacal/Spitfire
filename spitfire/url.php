@@ -41,18 +41,31 @@ class URL implements ArrayAccess
 	private $extension = 'php';
 	
 	/**
+	 * This static method allows your application to provide a custom serializer
+	 * for your app. This is useful if you're using a custom routing system that 
+	 * does not comply with the standard controller/action/object format.
+	 *
+	 * @var Closure
+	 */
+	private static $serializer = null;
+	
+	/**
 	 * Creates a new URL. Use this class to generate dynamic URLs or to pass
 	 * URLs as parameters. For consistency (double base prefixes and this
 	 * kind of misshaps aren't funny) use this object to pass or receive URLs
 	 * as paramaters.
 	 * 
+	 * Please note that when passing a URL that contains the URL as a string like
+	 * "/hello/world?a=b&c=d" you cannot pass any other parameters. It implies that
+	 * you already have a full URL.
+	 * 
 	 * @param mixed $_ You can pass any amount of parameters to this class,
 	 * the constructor will try to automatically parse the URL as good as possible.
 	 * <ul>
-	 *	<li>Arrays are used as _GET</li>
+	 *		<li>Arrays are used as _GET</li>
 	 * 	<li>App objects are used to identify the namespace</li>
-	 *	<li>Strings that contain / or ? will be parsed and added to GET and path</li>
-	 *	<li>The rest of strings will be pushed to the path.</li>
+	 *		<li>Strings that contain / or ? will be parsed and added to GET and path</li>
+	 *		<li>The rest of strings will be pushed to the path.</li>
 	 * </ul>
 	 */
 	public function __construct() {
@@ -60,16 +73,22 @@ class URL implements ArrayAccess
 		
 		#Loop through the parameters checking for content.
 		foreach ($params as $param) {
-			if (is_array($param) || $param instanceof Iterator) $this->params = $param;
-			elseif (is_a($param, 'App')) $this->app = $param;
-			elseif (strstr($param, '/') || strstr($param, '?')) {
+			#Check if the parameter is an array, if it is it's GET
+			if (is_array($param) || $param instanceof Iterator) { $this->params = $param; }
+			
+			#If it's an App object, it means that it's got a special place in the Path
+			elseif ($param instanceof App) { $this->app = $param; }
+			
+			#If we get a whole block of text with the raw url, parse it
+			#To improve performance, we only do this IF the user has provided only that parameter
+			elseif (!isset($params[1]) && ( strstr($param, '/') || strstr($param, '?') ) ) {
 				$info = parse_url($param);
 				$this->path = array_merge ($this->path, explode('/', $info['path']));
-				if (isset($info['query'])) {
-					$this->params = parse_str($info['query']);
-				}
+				$this->params = isset($info['query'])? parse_str($info['query']) : $this->params;
 			}
-			else $this->path[] = $param;
+			
+			#Otherwise it's just a path component
+			else  { $this->path[] = $param; }
 		}
 		
 		#Check if the first element of the path is an app.
@@ -79,8 +98,8 @@ class URL implements ArrayAccess
 	}
 	
 	public function setExtension($extension) {
-		if (! empty($extension) )
-		$this->extension = $extension;
+		if (! empty($extension) ) { $this->extension = $extension; }
+		return $this;
 	}
 	
 	public function getExtension() {
@@ -157,16 +176,22 @@ class URL implements ArrayAccess
 	 * url.
 	 */
 	public function __toString() {
+		#In case of a custom serializer. We will need to respect that
+		if (self::$serializer !== null) { 
+			#In case the serializer rejects the URL we will use the standard serializer
+			$_ret = self::$serializer($this); 
+			if ($_ret) { return $_ret; }
+		}
 		
 		$path = $this->path;
-		if ($this->app) array_unshift ($path, $this->app->getURISpace());
-		$path = implode('/', array_filter($path));
+		if ($this->app) { array_unshift ($path, $this->app->getURISpace()); }
 		
-		$str =  SpitFire::baseUrl().'/'. $path;
+		#Create the URL full path (base URL + Request path)
+		$str =  SpitFire::baseUrl() . '/' . implode('/', array_filter($path));
 		
-		if ($this->extension != 'php') $str.= ".$this->extension";
+		#If the extension provided is special, we print it
+		if ($this->extension !== 'php') { $str.= ".$this->extension"; }
 		
-		$first = true;
 		if (!empty($this->params)) {
 			$str.= '?' . http_build_query($this->params);
 		}
