@@ -149,45 +149,6 @@ class SimpleFieldRenderer {
 		return new HTMLDiv($label, $input, $errs, Array('class' => 'field'));
 	}
 	
-	/**
-	 * 
-	 * @deprecated
-	 * @param type $field
-	 * @return \spitfire\io\renderers\HTMLDiv|\spitfire\io\renderers\BooleanField
-	 */
-	public function renderBasicField($field) {
-		if ($field instanceof TextField) {
-			$input = new HTMLInput('text', $field->getPostId(), $field->getValue());
-			$label = new HTMLLabel($input, $field->getCaption());
-			return new HTMLDiv($label, $input, Array('class' => 'field'));
-		}
-		elseif ($field instanceof LongTextField) {
-			$input = new HTMLTextArea('text', $field->getPostId(), $field->getValue());
-			$label = new HTMLLabel($input, $field->getCaption());
-			return new HTMLDiv($label, $input, Array('class' => 'field'));
-		}
-		elseif ($field instanceof FileField) {
-			$input = new HTMLInput('file', $field->getPostId(), $field->getValue());
-			$label = new HTMLLabel($input, $field->getCaption());
-			$file  = '<small>' . $field->getValue() . '</small>';
-			return new HTMLDiv($label, $input, $file, Array('class' => 'field'));
-		}
-		elseif ($field instanceof DateTimeField) {
-			$input = new \spitfire\io\html\dateTimePicker($field->getValue());
-			$input->setInputName($field->getPostId());
-			$label = new HTMLLabel($input, $field->getCaption());
-			return new HTMLDiv($label, $input, Array('class' => 'field'));
-		}
-		elseif ($field instanceof BooleanField) {
-			$input = new HTMLInput('checkbox', $field->getPostId(), 'true');
-			if ($field->getValue()) $input->setParameter('checked', 'checked');
-			$label = new HTMLLabel($input, $field->getCaption());
-			return new HTMLDiv($label, $input, Array('class' => 'field'));
-		}
-		//TODO: Add more options
-		else return $field;
-	}
-	
 	public function renderEnumField(EnumField$field) {
 		$value   = $field->getValue();
 		$options = $field->getField()->getOptions();
@@ -268,49 +229,6 @@ class SimpleFieldRenderer {
 		return implode('', $_return);
 		
 	}
-	
-	/**
-	 * 
-	 * @deprecated since version 0.1dev20141120
-	 * @param type $field
-	 * @return HTMLDiv
-	 */
-	public function renderChildBean($field) {
-		$childmodel = $field->getField()->getTarget();
-		$childbean  = $childmodel->getTable()->getBean(true);
-		$childbean->setParent($field);
-		
-		$fields = $childbean->getFields();
-		
-		if ($field->getBean()->getRecord()) {
-			$children  = $field->getBean()->getRecord()->{$field->getName()};
-		}
-		
-		$ret = new HTMLDiv();
-		
-		if (!empty($children)) {
-			foreach ($children as $record) {
-				if ($record === $field->getBean()->getRecord()) {continue;}
-				$childbean->setDBRecord($record);
-				$ret->addChild($subform = new HTMLDiv());
-				$subform->addChild('<h1>' . $record->getTable()->getModel()->getName() . ' - ' . $record . '</h1>');
-				foreach ($fields as $f) 
-						$subform->addChild ($this->renderForm($f));
-			}
-		}
-		
-		$count = (empty($children))? 0 : count($children);
-		do {
-			$childbean->setDBRecord(null);
-			$ret->addChild('<h1>' . $childbean->getTable()->getModel()->getName() . ' - ' . 'New record</h1>');
-			foreach ($fields as $f) 
-						$ret->addChild ($this->renderForm($f));
-			$count++;
-		} while ($count < $field->getMinimumEntries());
-		
-		return $ret;
-	}
-	
 	
 	/**
 	 * This method is to be removed as it is a duplicate of the one found in the
