@@ -179,7 +179,8 @@ class URL implements ArrayAccess
 		#In case of a custom serializer. We will need to respect that
 		if (self::$serializer !== null) { 
 			#In case the serializer rejects the URL we will use the standard serializer
-			$_ret = self::$serializer($this); 
+			$serializer = self::$serializer;
+			$_ret = $serializer($this); 
 			if ($_ret) { return $_ret; }
 		}
 		
