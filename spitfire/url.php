@@ -98,7 +98,7 @@ class URL implements ArrayAccess
 	}
 	
 	public function setExtension($extension) {
-		if (! empty($extension) ) { $this->extension = $extension; }
+		$this->extension = $extension;
 		return $this;
 	}
 	
@@ -111,13 +111,13 @@ class URL implements ArrayAccess
 	}
 	
 	public function setPath($path) {
-		if (! empty($path) )
 		$this->path = $path;
+		return $this;
 	}
 	
 	public function setApp($app) {
-		if (! empty($app) )
 		$this->app = $app;
+		return $this;
 	}
 	
 	public function getApp() {
