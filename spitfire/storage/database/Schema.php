@@ -62,17 +62,31 @@ class Schema
 		#Define the Model's table as the one just received
 		$this->table = $table;
 		$this->name  = $name;
+		
 		#Create a field called ID that automatically identifies records 
 		$this->_id = new IntegerField(true);
+		
 		#Define _id as primary key and auto_increment
 		$this->_id->setPrimary(true)->setAutoIncrement(true);
 	}
 	
+	/**
+	 * This method instructs the schema to initialize the creation of "Physical"
+	 * fields. A model maintains logical fields that can be deconstructed into 
+	 * smaller, physically storable columns.
+	 * 
+	 * We call these physical fields. Because they contain data that we can directly
+	 * send to most major DBMS systems.
+	 * 
+	 * @return \spitfire\storage\database\Schema
+	 */
 	public function makePhysical() {
+		
 		#Make the physical counterparts of the fields
 		foreach ($this->fields as $field) {
 			$field->makePhysical();
 		}
+		
 		return $this;
 	}
 
@@ -139,7 +153,7 @@ class Schema
 	 * 
 	 * Hyphens are the only chars that DBMS tend to accept that class names
 	 * do not. So this way we avoid any colissions in names that could be 
-	 * concidentally similar.
+	 * coincidentally similar.
 	 * 
 	 * @return string
 	 */
@@ -147,10 +161,24 @@ class Schema
 		return str_replace('\\', '-', $this->getName());
 	}
 	
+	/**
+	 * Returns the table the Schema represents. The schema is the logical representation
+	 * of a Table. While the Schema will manage logical fields that the programmer
+	 * can directly write data to, the Table will take that data and translate it
+	 * so the database engine can use it.
+	 * 
+	 * @return Table
+	 */
 	public function getTable() {
 		return $this->table;
 	}
 	
+	/**
+	 * Sets the table this schema manages. This connection is used to determine 
+	 * what DBMS table it should address and to make correct data conversion.
+	 * 
+	 * @param Table $table
+	 */
 	public function setTable($table) {
 		$this->table = $table;
 	}
