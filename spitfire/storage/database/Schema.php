@@ -6,7 +6,7 @@ use spitfire\storage\database\Query;
 use IntegerField;
 
 /**
- * A Model is a class used to define how Spitfire stores data into a DBMS. We
+ * A Schema is a class used to define how Spitfire stores data into a DBMS. We
  * usually consider a DBMS as relational database engine, but Spitfire can
  * be connected to virtually any engine that stores data. Including No-SQL
  * databases and directly on the file system. You should even be able to use
@@ -37,7 +37,7 @@ class Schema
 	 * it information about the data that is stored to the DBMS and the format
 	 * it should hold.
 	 *
-	 * @var spitfire\storage\database\Table 
+	 * @var Table 
 	 */
 	private $table;
 	
