@@ -101,10 +101,16 @@ abstract class Query
 	/**
 	 * Creates a new set of alternative restrictions for the current query.
 	 * 
+	 * @param $type The type of connection we wish to make.
 	 * @return RestrictionGroup
 	 */
-	public function group() {
-		return $this->restrictions[] = $this->restrictionGroupInstance($this);
+	public function group($type = RestrictionGroup::TYPE_OR) {
+		#Create the group and set the type we need
+		$group = $this->restrictionGroupInstance();
+		$group->setType($type);
+		
+		#Add it to our restriction list
+		return $this->restrictions[] = $group;
 	}
 	
 	/**
