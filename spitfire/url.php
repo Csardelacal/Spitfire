@@ -231,7 +231,7 @@ class URL implements ArrayAccess
 		$ctx = current_context();
 		$r   = Request::get();
 		$canonical = new self($_GET);
-		if (!$context) throw new privateException("No context for URL generation");
+		if (!$context) { throw new privateException("No context for URL generation"); }
 		
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
@@ -255,22 +255,22 @@ class URL implements ArrayAccess
 	}
 
 	public function offsetExists($offset) {
-		if (is_numeric($offset)) return isset($this->path[$offset]);
-		else return isset($this->params[$offset]);
+		if (is_numeric($offset)) { return isset($this->path[$offset]); }
+		else                     { return isset($this->params[$offset]); }
 	}
 
 	public function offsetGet($offset) {
-		if (is_numeric($offset)) return $this->path[$offset];
-		else return $this->params[$offset];
+		if (is_numeric($offset)) { return $this->path[$offset]; }
+		else                     { return $this->params[$offset]; }
 	}
 
 	public function offsetSet($offset, $value) {
-		if (is_numeric($offset)) return $this->path[$offset] = $value;
-		else return $this->params[$offset] = $value;
+		if (is_numeric($offset)) { return $this->path[$offset] = $value; }
+		else                     { return $this->params[$offset] = $value; }
 	}
 
 	public function offsetUnset($offset) {
-		if (is_numeric($offset)) unset($this->path[$offset]);
-		else unset( $this->params[$offset]);
+		if (is_numeric($offset)) { unset($this->path[$offset]); }
+		else                     { unset( $this->params[$offset]); }
 	}
 }
