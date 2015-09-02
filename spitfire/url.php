@@ -2,15 +2,14 @@
 
 use spitfire\SpitFire;
 use spitfire\Request;
+use spitfire\io\Get;
 
 /**
  * 
- * This dinamically generates system urls
- * this allows us to validate URLs if needed
- * or generate different types of them depending
- * on if pretty links is enabled
+ * This dinamically generates system urls this allows us to validate URLs if needed
+ * or generate different types of them depending on if pretty links is enabled
+ * 
  * @author César de la Cal <cesar@magic3w.com>
- *
  */
 class URL implements ArrayAccess
 {
@@ -74,7 +73,7 @@ class URL implements ArrayAccess
 		#Loop through the parameters checking for content.
 		foreach ($params as $param) {
 			#Check if the parameter is an array, if it is it's GET
-			if (is_array($param) || $param instanceof Iterator) { $this->params = $param; }
+			if (is_array($param) || $param instanceof Get) { $this->params = $param; }
 			
 			#If it's an App object, it means that it's got a special place in the Path
 			elseif ($param instanceof App) { $this->app = $param; }
@@ -168,21 +167,15 @@ class URL implements ArrayAccess
 	}
 	
 	/**
-	 * __toString()
-	 * This function generates a URL for any page that nLive handles,
-	 * it's output depends on if pretty / rewritten urls are active.
-	 * If they are it will return /controller/action/object?params
-	 * based urls and in any other case it'll be a normal GET based
-	 * url.
+	 * This function allows Spitfire to generate URL strings that a browser can 
+	 * use to follow to another location within the application.
+	 * 
+	 * Please note that this is the default behavior that generates URL like
+	 * /baseURL/app/controller/action/object.extension?parameter=a
+	 * 
+	 * @return string
 	 */
-	public function __toString() {
-		#In case of a custom serializer. We will need to respect that
-		if (self::$serializer !== null) { 
-			#In case the serializer rejects the URL we will use the standard serializer
-			$serializer = self::$serializer;
-			$_ret = $serializer($this); 
-			if ($_ret) { return $_ret; }
-		}
+	protected function defaultSerializer() {
 		
 		$path = $this->path;
 		if ($this->app) { array_unshift ($path, $this->app->getURISpace()); }
@@ -200,9 +193,29 @@ class URL implements ArrayAccess
 		return $str;
 	}
 	
+	/**
+	 * Serializes the URL. This method ill check if a custom serializer was defined
+	 * and will then use the appropriate serializer OR fall back to the default 
+	 * one.
+	 * 
+	 * @see URL::defaultSerializer() For the standard behavior.
+	 */
+	public function __toString() {
+		#In case of a custom serializer. We will need to respect that
+		if (self::$serializer !== null) { 
+			#In case the serializer rejects the URL we will use the standard serializer
+			$serializer = self::$serializer;
+			$_ret = $serializer($this); 
+			if ($_ret) { return $_ret; }
+		}
+		
+		#Fall back to default behavior.
+		return $this->defaultSerializer();
+	}
+	
 	public static function asset($asset_name, $app = null) {
-		if ($app == null) return SpitFire::baseUrl() . '/assets/' . $asset_name;
-		else return SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name;
+		if ($app == null) { return SpitFire::baseUrl() . '/assets/' . $asset_name; }
+		else { return SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name; }
 	}
 	
 	public static function make($url) {
