@@ -27,7 +27,7 @@ class URL implements ArrayAccess
 	private $path = Array();
 	
 	/**
-	 * @var mixed[] Contains data about the _GET parameters this URL will pass
+	 * @var mixed|Get[] Contains data about the _GET parameters this URL will pass
 	 * to the system if invoked by the user.
 	 */
 	private $params = Array();
@@ -58,7 +58,7 @@ class URL implements ArrayAccess
 	 * "/hello/world?a=b&c=d" you cannot pass any other parameters. It implies that
 	 * you already have a full URL.
 	 * 
-	 * @param mixed $_ You can pass any amount of parameters to this class,
+	 * You can pass any amount of parameters to this class,
 	 * the constructor will try to automatically parse the URL as good as possible.
 	 * <ul>
 	 *		<li>Arrays are used as _GET</li>
@@ -214,7 +214,10 @@ class URL implements ArrayAccess
 	}
 	
 	public static function asset($asset_name, $app = null) {
-		if ($app == null) { return SpitFire::baseUrl() . '/assets/' . $asset_name; }
+		#If there is no app defined we can use the default directory
+		if ($app === null) { return SpitFire::baseUrl() . '/assets/' . $asset_name; }
+		
+		#Otherwise use the App specific directory
 		else { return SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name; }
 	}
 	
@@ -231,7 +234,7 @@ class URL implements ArrayAccess
 		$ctx = current_context();
 		$r   = Request::get();
 		$canonical = new self($_GET);
-		if (!$context) { throw new privateException("No context for URL generation"); }
+		if (!$ctx) { throw new privateException("No context for URL generation"); }
 		
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
