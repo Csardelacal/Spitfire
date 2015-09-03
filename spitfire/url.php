@@ -2,15 +2,14 @@
 
 use spitfire\SpitFire;
 use spitfire\Request;
+use spitfire\io\Get;
 
 /**
  * 
- * This dinamically generates system urls
- * this allows us to validate URLs if needed
- * or generate different types of them depending
- * on if pretty links is enabled
+ * This dinamically generates system urls this allows us to validate URLs if needed
+ * or generate different types of them depending on if pretty links is enabled
+ * 
  * @author César de la Cal <cesar@magic3w.com>
- *
  */
 class URL implements ArrayAccess
 {
@@ -28,7 +27,7 @@ class URL implements ArrayAccess
 	private $path = Array();
 	
 	/**
-	 * @var mixed[] Contains data about the _GET parameters this URL will pass
+	 * @var mixed|Get[] Contains data about the _GET parameters this URL will pass
 	 * to the system if invoked by the user.
 	 */
 	private $params = Array();
@@ -59,7 +58,7 @@ class URL implements ArrayAccess
 	 * "/hello/world?a=b&c=d" you cannot pass any other parameters. It implies that
 	 * you already have a full URL.
 	 * 
-	 * @param mixed $_ You can pass any amount of parameters to this class,
+	 * You can pass any amount of parameters to this class,
 	 * the constructor will try to automatically parse the URL as good as possible.
 	 * <ul>
 	 *		<li>Arrays are used as _GET</li>
@@ -74,7 +73,7 @@ class URL implements ArrayAccess
 		#Loop through the parameters checking for content.
 		foreach ($params as $param) {
 			#Check if the parameter is an array, if it is it's GET
-			if (is_array($param) || $param instanceof Iterator) { $this->params = $param; }
+			if (is_array($param) || $param instanceof Get) { $this->params = $param; }
 			
 			#If it's an App object, it means that it's got a special place in the Path
 			elseif ($param instanceof App) { $this->app = $param; }
@@ -168,21 +167,15 @@ class URL implements ArrayAccess
 	}
 	
 	/**
-	 * __toString()
-	 * This function generates a URL for any page that nLive handles,
-	 * it's output depends on if pretty / rewritten urls are active.
-	 * If they are it will return /controller/action/object?params
-	 * based urls and in any other case it'll be a normal GET based
-	 * url.
+	 * This function allows Spitfire to generate URL strings that a browser can 
+	 * use to follow to another location within the application.
+	 * 
+	 * Please note that this is the default behavior that generates URL like
+	 * /baseURL/app/controller/action/object.extension?parameter=a
+	 * 
+	 * @return string
 	 */
-	public function __toString() {
-		#In case of a custom serializer. We will need to respect that
-		if (self::$serializer !== null) { 
-			#In case the serializer rejects the URL we will use the standard serializer
-			$serializer = self::$serializer;
-			$_ret = $serializer($this); 
-			if ($_ret) { return $_ret; }
-		}
+	protected function defaultSerializer() {
 		
 		$path = $this->path;
 		if ($this->app) { array_unshift ($path, $this->app->getURISpace()); }
@@ -200,9 +193,32 @@ class URL implements ArrayAccess
 		return $str;
 	}
 	
+	/**
+	 * Serializes the URL. This method ill check if a custom serializer was defined
+	 * and will then use the appropriate serializer OR fall back to the default 
+	 * one.
+	 * 
+	 * @see URL::defaultSerializer() For the standard behavior.
+	 */
+	public function __toString() {
+		#In case of a custom serializer. We will need to respect that
+		if (self::$serializer !== null) { 
+			#In case the serializer rejects the URL we will use the standard serializer
+			$serializer = self::$serializer;
+			$_ret = $serializer($this); 
+			if ($_ret) { return $_ret; }
+		}
+		
+		#Fall back to default behavior.
+		return $this->defaultSerializer();
+	}
+	
 	public static function asset($asset_name, $app = null) {
-		if ($app == null) return SpitFire::baseUrl() . '/assets/' . $asset_name;
-		else return SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name;
+		#If there is no app defined we can use the default directory
+		if ($app === null) { return SpitFire::baseUrl() . '/assets/' . $asset_name; }
+		
+		#Otherwise use the App specific directory
+		else { return SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name; }
 	}
 	
 	public static function make($url) {
@@ -218,7 +234,7 @@ class URL implements ArrayAccess
 		$ctx = current_context();
 		$r   = Request::get();
 		$canonical = new self($_GET);
-		if (!$context) throw new privateException("No context for URL generation");
+		if (!$ctx) { throw new privateException("No context for URL generation"); }
 		
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
@@ -242,22 +258,22 @@ class URL implements ArrayAccess
 	}
 
 	public function offsetExists($offset) {
-		if (is_numeric($offset)) return isset($this->path[$offset]);
-		else return isset($this->params[$offset]);
+		if (is_numeric($offset)) { return isset($this->path[$offset]); }
+		else                     { return isset($this->params[$offset]); }
 	}
 
 	public function offsetGet($offset) {
-		if (is_numeric($offset)) return $this->path[$offset];
-		else return $this->params[$offset];
+		if (is_numeric($offset)) { return $this->path[$offset]; }
+		else                     { return $this->params[$offset]; }
 	}
 
 	public function offsetSet($offset, $value) {
-		if (is_numeric($offset)) return $this->path[$offset] = $value;
-		else return $this->params[$offset] = $value;
+		if (is_numeric($offset)) { return $this->path[$offset] = $value; }
+		else                     { return $this->params[$offset] = $value; }
 	}
 
 	public function offsetUnset($offset) {
-		if (is_numeric($offset)) unset($this->path[$offset]);
-		else unset( $this->params[$offset]);
+		if (is_numeric($offset)) { unset($this->path[$offset]); }
+		else                     { unset( $this->params[$offset]); }
 	}
 }
