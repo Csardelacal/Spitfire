@@ -39,6 +39,17 @@ class Response
 	private $body;
 	
 	/**
+	 * The return state of a request allows the application to quickly define 
+	 * special redirections if the application reached a certain request state.
+	 * 
+	 * This way, if the application finished successfully it can send the user
+	 * while showing him an error page in case there was one.
+	 *
+	 * @var string|null
+	 */
+	private $returnState = null;
+	
+	/**
 	 * Instantiates a new Response element. This element allows you application to
 	 * generate several potential responses to a certain request and then pick the
 	 * one it desires to use.
@@ -71,23 +82,85 @@ class Response
 	public function getHeaders() {
 		return $this->headers;
 	}
-
+	
+	/**
+	 * Returns the content that is to be sent with the body. This is a string your
+	 * application has to set beforehand.
+	 * 
+	 * In case you're using Spitfire's Context object to manage the context the
+	 * response will get the view it contains and render that before returning it.
+	 * 
+	 * @return string
+	 */
 	public function getBody() {
 		if ($this->body instanceof Context) {return $this->body->view->render();}
 		return $this->body;
 	}
-
+	
+	/**
+	 * Changes the headers object. This allows your application to quickly change
+	 * all headers and replace everything the way you want it.
+	 * 
+	 * @param \spitfire\core\Headers $headers
+	 * @return \spitfire\core\Response
+	 */
 	public function setHeaders(Headers $headers) {
 		$this->headers = $headers;
 		return $this;
 	}
-
+	
+	/**
+	 * Defines the body of the response. This can be any string or any object that
+	 * can be converted to string. It can also be a Context object which then 
+	 * will be used to render it's view.
+	 * 
+	 * @param string|Context $body
+	 * @return \spitfire\core\Response
+	 */
 	public function setBody($body) {
 		$this->body = $body;
 		return $this;
 	}
 	
+	/**
+	 * Defines a return state. The return state is just a string that provides 
+	 * the application with a quick way of returning a redirection in certain 
+	 * cases.
+	 * 
+	 * For example, if you application has a login form you can set a "success"
+	 * return state when the user has properly logged in and redirect the user
+	 * to the homepage.
+	 * 
+	 * In this case if a "onsuccess" _GET parameter was set (and it is a valid
+	 * URL) the application will redirect the user to this URL instead of the
+	 * homepage.
+	 * 
+	 * It just removes the need for an additional check before redirecting or 
+	 * display a result message.
+	 * 
+	 * @param string $state
+	 * @return \spitfire\core\Response
+	 */
+	public function setReturnState($state) {
+		$this->returnState = $state;
+		return $this;
+	}
+	
+	/**
+	 * Sends this response to the client computer. It will send both headers and 
+	 * the body. Generating the body first and then sending the headers and body
+	 * to make sure that any errors caused by generation of the body won't affect
+	 * the headers.
+	 */
 	public function send() {
+		
+		#Check for a special return state
+		$returnURL = filter_input(INPUT_GET, 'on' . $this->returnState);
+		
+		if ($returnURL && substr($returnURL, 0, 1) === '/') {
+			$this->getHeaders()->redirect($returnURL);
+		}
+		
 		ob_start();
 		echo $this->getBody();
 		$this->headers->send();
