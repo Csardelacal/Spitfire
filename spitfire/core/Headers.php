@@ -1,4 +1,4 @@
-<?php
+<?php namespace spitfire\core;
 
 use spitfire\environment;
 
@@ -38,9 +38,19 @@ class Headers
 		}
 	}
 	
+	/**
+	 * This method allows the application to define the content type it wishes to
+	 * send with the response. It prevents the user from having to define the 
+	 * headers manually and automatically sets an adequate charset depending on
+	 * the app's settings.
+	 * 
+	 * @param string $str
+	 */
 	public function contentType($str) {
 		
-		$encoding = environment::get('system_encoding');
+		#Check if we have a defined environment that provides a legit encoding
+		if (class_exists('\spitfire\Environment')) { $encoding = environment::get('system_encoding'); }
+		else                                       { $encoding = 'utf8'; }
 		
 		switch ($str) {
 			case 'php':
