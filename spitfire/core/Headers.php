@@ -25,6 +25,10 @@ class Headers
 		$this->headers[$header] = $value;
 	}
 	
+	public function get($header) {
+		return $this->headers[$header];
+	}
+	
 	public function send () {
 		foreach ($this->headers as $header => $value) {
 			
@@ -58,7 +62,7 @@ class Headers
 				$this->set('Content-type', 'text/html;charset=' . $encoding);
 				break;
 			case 'xml':
-				$this->set('Content-type', 'text/xml;charset=' . $encoding);
+				$this->set('Content-type', 'application/xml;charset=' . $encoding);
 				break;
 			case 'json':
 				$this->set('Content-type', 'application/json;charset=' . $encoding);
@@ -69,6 +73,10 @@ class Headers
 	}
 	
 	public function status($code= 200) {
+		#Check if the call was valid
+		if (!is_numeric($code)) { throw new \BadMethodCallException('Invalid argument. Requires a number', 201509031352); }
+		if (!isset($this->states[$code])) { throw new \BadMethodCallException('Invalid status code', 201509031353); }
+		
 		$this->set('Status', $this->states[$code]);
 	}
 	
