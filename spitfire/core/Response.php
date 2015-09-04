@@ -34,7 +34,7 @@ class Response
 	 * data in the response body as long as it can be encoded properly with the
 	 * defined encoding.
 	 *
-	 * @var string 
+	 * @var string|Context
 	 */
 	private $body;
 	
@@ -57,9 +57,9 @@ class Response
 	 * It also provides the App with the ability to discard a certain response 
 	 * before it was sent and generate a completely new one.
 	 * 
-	 * @param string $body
-	 * @param int    $status
-	 * @param mixed  $headers
+	 * @param string|Context $body
+	 * @param int            $status
+	 * @param mixed          $headers
 	 */
 	public function __construct($body, $status = 200, $headers = null) {
 		$this->body    = $body;
