@@ -3,6 +3,7 @@
 use spitfire\model\Field;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\Query;
+use spitfire\exceptions\PrivateException;
 use IntegerField;
 
 /**
@@ -193,6 +194,7 @@ class Schema
 	 * You use a flag to indicate a record is deleted and use this function
 	 * to hide any records that have that flag.
 	 * 
+	 * @todo Move to the model. It makes no sense having it here
 	 * @param Query $query The query that is being prepared to be executed.
 	 * @return type
 	 */
@@ -250,7 +252,7 @@ class Schema
 	 */
 	public function __get($name) {
 		if (isset($this->fields[$name])) { return $this->fields[$name]; }
-		else { throw new privateException('No field ' . $name . ' found'); }
+		else { throw new PrivateException('No field ' . $name . ' found'); }
 	}
 	
 	/**
@@ -260,7 +262,7 @@ class Schema
 	 */
 	public function __unset($name) {
 		if (isset($this->fields[$name])) { unset($this->fields[$name]); }
-		else { throw new privateException('No field ' . $name . ' found'); }
+		else { throw new PrivateException('No field ' . $name . ' found'); }
 	}
 	
 }

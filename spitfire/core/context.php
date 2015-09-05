@@ -81,7 +81,7 @@ class Context
 		if (is_callable($request)) $_return = call_user_func_array($request, $this->object);
 		else throw new publicException('Page not found', 404, new privateException('Action not found', 0));
 		
-		if ($_return instanceof Context) return $_return;
-		else return $this;
+		if ($_return instanceof Context) { return $_return; }
+		else                             { return $this; }
 	}
 }
