@@ -71,20 +71,24 @@ class SpitFire extends App
 		
 		#If the user responded to the current route with a response we do not need 
 		#to handle the request
-		if (true) {//TODO: Fix: !$path instanceof Response) {
-			//if (is_string($path)) { $request->setPath($path); }
-
-
+		if (!$request->getPath() instanceof Response) {
 			#Start debugging output
 			ob_start();
 
 			#If the request has no defined controller, action and object it will define
 			#those now.
 			$path    = $request->getPath();
-			$context = ($path instanceof Context)? $path : $request->makeContext($path);
-			#Define te context for the helper function lang()
-			lang(current_context($context));
-			$context = $context->run();
+			
+			#Receive the initial context for the app. The controller can replace this later
+			/*@var $initContext Context*/
+			$initContext = ($path instanceof Context)? $path : $request->makeContext($path);
+			
+			#Define the context for the helper function lang()
+			lang(current_context($initContext));
+			
+			#Get the return context
+			/*@var $context Context*/
+			$context = $initContext->run();
 
 			#End debugging output
 			$context->view->set('_SF_DEBUG_OUTPUT', ob_get_clean());
@@ -93,7 +97,7 @@ class SpitFire extends App
 			$context->response->send();
 		}
 		else {
-			$path->send();
+			$request->getPath()->send();
 		}
 		
 	}

@@ -21,6 +21,8 @@
  * it will hide the message from the user and try to log information about the
  * error that caused this.
  * 
+ * @deprecated since version 0.1-dev 20150906
+ * @see \spitfire\exceptions\PrivateException
  * @author César de la Cal Bretschneider <cesar@magic3w.com>
  */
 class privateException extends Exception {}
