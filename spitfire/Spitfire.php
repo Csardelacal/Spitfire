@@ -1,6 +1,7 @@
 <?php namespace spitfire;
 
 use App;
+use spitfire\core\Response;
 use spitfire\core\Request;
 use spitfire\exceptions\ExceptionHandler;
 
