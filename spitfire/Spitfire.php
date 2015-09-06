@@ -4,6 +4,7 @@ use App;
 use spitfire\core\Response;
 use spitfire\core\Request;
 use spitfire\exceptions\ExceptionHandler;
+use spitfire\exceptions\PrivateException;
 
 if (!defined('APP_DIRECTORY')){
 	define ('APP_DIRECTORY',         'bin/apps/',        true);
@@ -15,10 +16,10 @@ if (!defined('APP_DIRECTORY')){
 
 /**
  * Dispatcher class of Spitfire. Calls all the required classes for Spitfire to run.
+ * 
  * @author César de la Cal <cesar@magic3w.com>
  * @package spitfire
  */
-
 class SpitFire extends App
 {
 	
@@ -31,7 +32,7 @@ class SpitFire extends App
 	
 	public function __construct() {
 		#Check if SF is running
-		if (self::$started) { throw new \privateException('Spitfire is already running'); }
+		if (self::$started) { throw new PrivateException('Spitfire is already running'); }
 		
 		#Set the current working directory
 		$this->cwd = dirname(dirname(__FILE__));

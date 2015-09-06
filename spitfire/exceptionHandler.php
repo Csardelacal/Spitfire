@@ -93,7 +93,7 @@ class ExceptionHandler {
 	}
 
 	public function errorHandle ($errno, $errstr, $errfile, $errline, $scope) {
-		if (!error_reporting()) return false;
+		if (!error_reporting()) { return false; }
 		
 		switch ($errno) {
 			case E_ERROR:
@@ -105,14 +105,11 @@ class ExceptionHandler {
 				echo getcwd();
 				get_error_page(500, "Error $errno: $errstr in $errfile [$errline]", print_r(debug_print_backtrace(), 1) );
 				return false;
-				break;
 			case E_DEPRECATED:
 				echo "Deprecated function is being used.";
 				return false;
-				break;
 			default:
 				return false;
-				break;
 		}
 	}
 	
