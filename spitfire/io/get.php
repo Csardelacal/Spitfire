@@ -79,7 +79,7 @@ class Get implements Iterator, ArrayAccess
 		$_ret = Array();
 		
 		foreach ($this->used as $key) {
-			$value =&$this->data[$key];
+			$value = $this->data[$key];
 			#Check whether the object is another Get.
 			if ($value instanceof Get) { $_ret[$key] = $value->getCanonical(); }
 			

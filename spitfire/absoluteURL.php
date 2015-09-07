@@ -43,31 +43,15 @@ class absoluteURL extends URL
 	}
 	
 	public static function canonical() {
-		$context = current_context();
-		$r = Request::get();
-		if (!$context) throw new privateException("No context for URL generation");
-		//TODO: Replace with sanitizer
-		$canonical = new self($_GET);
 		
-		$default_controller = environment::get('default_controller');
-		$default_action     = environment::get('default_action');
+		#Get the relative canonical URI
+		$canonical = URL::canonical();
 		
-		$path   = $context->app->getControllerURI($context->controller);
-		if (count($path) == 1 && reset($path) == $default_controller) {
-			$path = Array();
-		}
+		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
+		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
 		
-		$action = $context->action;
-		if ($action != $default_action) {
-			$path[] = $action;
-		}
-		
-		$path = array_merge($path, $context->object);
-		
-		$canonical->setPath($path);
-		$canonical->setExtension($r->getPath()->getFormat());
-		
-		return $canonical;
+		#Prepend protocol and server and return it
+		return $proto . $server . $canonical;
 	}
 
 	public function __toString() {
