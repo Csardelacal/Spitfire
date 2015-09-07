@@ -120,7 +120,7 @@ function find_locale() {
  * Returns the current system language.
  * 
  * @staticvar Locale $lang
- * @param String $set Used to change the system language. Otherwise it will be
+ * @param string|Context $set Used to change the system language. Otherwise it will be
  *               default-ed to Accept-Language header
  * @return Locale The locale being used in the application. This allows to localize
  *               your applications with quite ease.

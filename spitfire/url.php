@@ -3,6 +3,7 @@
 use spitfire\SpitFire;
 use spitfire\Request;
 use spitfire\io\Get;
+use spitfire\exceptions\PrivateException;
 
 /**
  * 
@@ -139,6 +140,11 @@ class URL implements ArrayAccess
 		return $this;
 	}
 	
+	public function setParams($values) {
+		$this->params = $values;
+		return $this;
+	}
+	
 	/**
 	 * Returns the value of a parameter set in the current URL.
 	 * 
@@ -233,13 +239,14 @@ class URL implements ArrayAccess
 	public static function canonical() {
 		$ctx = current_context();
 		$r   = Request::get();
-		$canonical = new self($_GET);
-		if (!$ctx) { throw new privateException("No context for URL generation"); }
+		$canonical = new self();
+		
+		if (!$ctx) { throw new PrivateException("No context for URL generation"); }
 		
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
 		
-		$path   = $ctx->app->getControllerURI();
+		$path = $ctx->app->getControllerURI();
 		if (count($path) == 1 && reset($path) == $default_controller) {
 			$path = Array();
 		}
@@ -249,9 +256,10 @@ class URL implements ArrayAccess
 			$path[] = $action;
 		}
 		
-		$path = array_merge($path, $ctx->object);
+		$canonical->setParams($_GET->getCanonical());
 		
-		$canonical->setPath($path);
+		#Add the object to the Path we generated so far and set it as Path
+		$canonical->setPath(array_merge($path, $ctx->object));
 		$canonical->setExtension($r->getExtension());
 		
 		return $canonical;
