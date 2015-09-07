@@ -83,7 +83,7 @@ class SpitFire extends App
 			
 			#Receive the initial context for the app. The controller can replace this later
 			/*@var $initContext Context*/
-			$initContext = ($path instanceof Context)? $path : $request->makeContext($path);
+			$initContext = ($path instanceof Context)? $path : $request->makeContext();
 			
 			#Define the context for the helper function lang()
 			lang(current_context($initContext));
