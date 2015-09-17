@@ -19,7 +19,7 @@ class SchemaTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * 
-	 * @expectedException privateException
+	 * @expectedException \spitfire\exceptions\PrivateException
 	 */
 	public function testReadingAnUnexistingField() {
 		$schema = new \spitfire\storage\database\Schema('test');
@@ -29,5 +29,16 @@ class SchemaTest extends PHPUnit_Framework_TestCase
 	public function testPrimary() {
 		$schema = new \spitfire\storage\database\Schema('test');
 		$this->assertContainsOnlyInstancesOf(\spitfire\model\Field::class, $schema->getPrimary());
+	}
+	
+	/**
+	 * This test assumes that the table will be located inside a namespace. In 
+	 * this case the schema should return a table name that contains hyphens instead
+	 * of backslashes since tables do accept hyphens and don't accept backslashes.
+	 */
+	public function testComplexTableName() {
+		$schema = new \spitfire\storage\database\Schema('test\test');
+		$this->assertEquals('test\test', $schema->getName(), 'The schema name should be the class name without Model suffix.');
+		$this->assertEquals('test-test', $schema->getTableName(), 'The table name should have replaced hyphens.');
 	}
 }
