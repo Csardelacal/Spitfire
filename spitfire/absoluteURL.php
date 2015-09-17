@@ -2,12 +2,16 @@
 
 use spitfire\SpitFire;
 use spitfire\environment;
-use spitfire\core\Request;
 
 class absoluteURL extends URL
 {
 	
+	const PROTO_HTTP  = 'http';
+	const PROTO_HTTPS = 'https';
+	
 	public $domain;
+	
+	private $proto = self::HTTP;
 	
 	/**
 	 * Set the domain name this URL points to. This is intended to address
@@ -36,10 +40,7 @@ class absoluteURL extends URL
 		if ($app == null) { $path = SpitFire::baseUrl() . '/assets/' . $asset_name; }
 		else { $path = SpitFire::baseUrl() . '/' . $app->getAssetsDirectory() . $asset_name; }
 		
-		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
-		
-		return $proto . $server . $path;
+		return absoluteURL::getServer() . $path;
 	}
 	
 	public static function canonical() {
@@ -47,19 +48,22 @@ class absoluteURL extends URL
 		#Get the relative canonical URI
 		$canonical = URL::canonical();
 		
+		#Prepend protocol and server and return it
+		return absoluteURL::getServer() . $canonical;
+	}
+	
+	public static function getServer() {
+		
 		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
 		
-		#Prepend protocol and server and return it
-		return $proto . $server . $canonical;
+		return $proto . $server;
 	}
 
 	public function __toString() {
 		$rel = parent::__toString();
-		$proto  = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
-		$server = environment::get('server_name')? environment::get('server_name') : $_SERVER['SERVER_NAME'];
-		$domain = $this->domain? $this->domain : $server;
+		$domain = $this->domain? $this->proto . $this->domain : self::getServer();
 		
-		return $proto . $domain . $rel;
+		return $domain . $rel;
 	}
 }
