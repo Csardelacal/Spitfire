@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire;
+<?php namespace spitfire;
 
 class ClassInfo
 {
@@ -35,7 +33,7 @@ class ClassInfo
 	
 	public function __construct($className, $app = null) {
 		
-		if ($app) $className = substr ($className, strlen($app->getNameSpace()));
+		if ($app) { $className = substr ($className, strlen($app->getNameSpace())); }
 		
 		$this->fullName  = $className;
 		
