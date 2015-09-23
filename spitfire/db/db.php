@@ -1,17 +1,8 @@
-<?php
-
-/**
- * Namespace related to all the functions spitfire offers to handle different
- * relational engines.
- * 
- * @package spitfire.storage.database
- */
-namespace spitfire\storage\database;
+<?php namespace spitfire\storage\database;
 
 use spitfire\MVC;
-use Schema;
 use Strings;
-use privateException;
+use spitfire\exceptions\PrivateException;
 use spitfire\environment;
 
 /**
@@ -147,7 +138,7 @@ abstract class DB
 			
 		}
 		
-		else throw new privateException('Invalid type');
+		else throw new PrivateException('Invalid type');
 		
 	}
 	

@@ -3,7 +3,7 @@
 namespace spitfire\storage\database;
 
 use \Model;
-use Schema;
+use spitfire\storage\database\Schema;
 use spitfire\model\Field;
 use spitfire\environment;
 
