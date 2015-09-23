@@ -60,4 +60,11 @@ class SchemaTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf(IntegerField::class, $a->a);
 		$this->assertEquals($a, $a->a->getModel());
 	}
+	
+	public function testMakePhysicalFields() {
+		$schema = new \spitfire\storage\database\Schema('test');
+		$table  = db()->table($schema);
+		
+		$this->assertEquals(1, count($table->getFields()));
+	}
 }
