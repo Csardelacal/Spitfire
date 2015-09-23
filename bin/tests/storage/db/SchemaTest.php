@@ -1,4 +1,8 @@
-<?php
+<?php namespace tests\storage\database;
+
+use PHPUnit_Framework_TestCase;
+use IntegerField;
+use spitfire\model\Field;
 
 class SchemaTest extends PHPUnit_Framework_TestCase
 {
@@ -10,7 +14,7 @@ class SchemaTest extends PHPUnit_Framework_TestCase
 		$schema = new \spitfire\storage\database\Schema('test');
 		
 		#Test if ID exists and is a Integer
-		$this->assertInstanceOf(spitfire\model\Field::class, $schema->_id);
+		$this->assertInstanceOf(Field::class, $schema->_id);
 		$this->assertInstanceOf(IntegerField::class, $schema->_id);
 		
 		#Test if the name is actually test
@@ -40,5 +44,20 @@ class SchemaTest extends PHPUnit_Framework_TestCase
 		$schema = new \spitfire\storage\database\Schema('test\test');
 		$this->assertEquals('test\test', $schema->getName(), 'The schema name should be the class name without Model suffix.');
 		$this->assertEquals('test-test', $schema->getTableName(), 'The table name should have replaced hyphens.');
+	}
+	
+	/**
+	 * This test ensures that the model acquires fields properly in the event of 
+	 * copying them from one Schema to another.
+	 */
+	public function testSetFields() {
+		$a = new \spitfire\storage\database\Schema('test');
+		$b = new \spitfire\storage\database\Schema('test');
+		
+		$b->a = new IntegerField();
+		$a->setFields($b->getFields());
+		
+		$this->assertInstanceOf(IntegerField::class, $a->a);
+		$this->assertEquals($a, $a->a->getModel());
 	}
 }
