@@ -202,7 +202,7 @@ abstract class Field
 	 * redundant but quickens development and makes it more efficient to
 	 * find the model for the field.
 	 * 
-	 * @param Model $model
+	 * @param \spitfire\storage\database\Schema $model
 	 */
 	public function setModel($model) {
 		$this->model = $model;
