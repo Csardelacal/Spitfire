@@ -17,6 +17,9 @@ use IntegerField;
  * allow storing things directly into them, while references are pointers to 
  * other models allowing you to store more complex data into them.
  * 
+ * @property IntegerField $_id This default primary key integer helps the system 
+ * locating the records easily.
+ * 
  * @author César de la Cal <cesar@magic3w.com>
  */
 class Schema
