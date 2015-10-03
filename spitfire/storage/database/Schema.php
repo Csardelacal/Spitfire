@@ -108,10 +108,11 @@ class Schema
 	}
 	     
 	/**
-	 * Returns a logical field for this model. Logical fields refers to fields
-	 * that can also contain complex datatypes aka References. Instead of 
-	 * resoltving them like a DBFields function would do this returns a 
-	 * raw reference when requested.
+	 * Returns a logical field for this model. "Logical field" refers to fields
+	 * that can also contain complex datatypes aka References. 
+	 * 
+	 * You can use the Field::getPhysical() method to retrieve the physical fields
+	 * the application uses to interact with the DBMS.
 	 * 
 	 * @param string $name
 	 * @return Field|null
@@ -261,7 +262,7 @@ class Schema
 	/**
 	 * 
 	 * @param string $name
-	 * @throws privateException
+	 * @throws PrivateException
 	 */
 	public function __unset($name) {
 		if (isset($this->fields[$name])) { unset($this->fields[$name]); }
