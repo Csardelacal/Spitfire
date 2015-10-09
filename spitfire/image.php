@@ -1,5 +1,7 @@
 <?php
 
+use spitfire\exceptions\PrivateException;
+
 class Image
 {
 	private $img;
@@ -14,8 +16,9 @@ class Image
 		
 		$this->meta = $meta = getimagesize($file);
 		
-		if (!function_exists('imagecreatefrompng'))
-			throw new privateException("GD is not installed.");
+		if (!function_exists('imagecreatefrompng')) {
+			throw new PrivateException("GD is not installed.");
+		}
 		
 		switch($meta[2]) {
 			case IMAGETYPE_PNG: 
@@ -33,9 +36,9 @@ class Image
 					$img->setImageIndex(0);
 					return $img;
 				}
-				throw new privateException('Spitfire requires Imagemagick to handle PSD files');
+				throw new PrivateException('Spitfire requires Imagemagick to handle PSD files');
 			default:
-				throw new privateException('Not supported image type: ' . $meta[2]);
+				throw new PrivateException('Not supported image type: ' . $meta[2]);
 		}
 		
 	}

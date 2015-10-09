@@ -34,7 +34,8 @@ class Router extends Routable
 		$this->server();
 		#Loop through the servers to find valid routes
 		$servers = $this->servers;
-		foreach ($servers as $box) {
+		
+		foreach ($servers as $box) { /* @var $box Server */
 			if (false !== $t = $box->rewrite($server, $route, $method, $protocol)) {
 				return $t;
 			}

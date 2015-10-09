@@ -1,6 +1,6 @@
 <?php namespace spitfire;
 
-use privateException;
+use spitfire\exceptions\PrivateException;
 use fileNotFoundException;
 use spitfire\MVC;
 use \_SF_ViewElement;
@@ -27,14 +27,14 @@ class View extends MVC
 	 * manages in a consistent way and manage and locate the templates the app
 	 * needs.
 	 * 
-	 * @param \spitfire\Context $intent
+	 * @param \spitfire\Context $context
 	 */
-	public function __construct(Context$intent) {
+	public function __construct(Context$context) {
 		
-		parent::__construct($intent);
+		parent::__construct($context);
 		
 		#Get the answer format
-		$this->extension = $intent->request->getPath()->getFormat();
+		$this->extension = $context->request->getPath()->getFormat();
 		#Create registries
 		$this->js  = new JSRegistry();
 		$this->css = new CSSRegistry();
@@ -58,13 +58,13 @@ class View extends MVC
 		spitfire()->getRequest()->getResponse()->getHeaders()->contentType($extension);
 		
 		
-		if     ( file_exists("$basedir$controller/$action$extension.php"))
+		if ( file_exists("$basedir$controller/$action$extension.php"))
 			$this->file = "$basedir$controller/$action$extension.php";
 		else
 			$this->file = "$basedir$controller$extension.php";
 		
 		
-		if     ( file_exists("{$basedir}layout$extension.php"))
+		if ( file_exists("{$basedir}layout$extension.php"))
 			$this->layout = "{$basedir}layout$extension.php";
 	}
 	
@@ -102,7 +102,7 @@ class View extends MVC
 
 	public function element($file) {
 		$filename = $this->getApp()->getTemplateDirectory() . 'elements/' . $file . '.php';
-		if (!file_exists($filename)) throw new privateException('Element ' . $file . ' missing');
+		if (!file_exists($filename)) throw new PrivateException('Element ' . $file . ' missing');
 		return new _SF_ViewElement($filename, $this->data);
 	}
 	
@@ -114,8 +114,8 @@ class View extends MVC
 		#If the template is not to be rendered at all. Use this.
 		if (!$this->render_template) { echo $this->data['_SF_DEBUG_OUTPUT']; return; }
 		
-		#Consider that a missing template file that should be rendered is a error
-		if (!file_exists($this->file)) { throw new privateException('Missing template file: ' . $this->file); }
+		#Consider that a missing template file that should be rendered is an error
+		if (!file_exists($this->file)) { throw new PrivateException('Missing template file: ' . $this->file); }
 		
 		ob_start();
 		foreach ($this->data as $data_var => $data_content) {
@@ -124,13 +124,13 @@ class View extends MVC
 		include $this->file;
 		$content_for_layout = ob_get_clean();
 		
-		if ($this->render_layout && file_exists($this->layout) ) include ($this->layout);
-		else echo $content_for_layout;
+		if ($this->render_layout && file_exists($this->layout) ) { include ($this->layout); }
+		else { echo $content_for_layout; }
 	}
 	
 	public function css($add = null) {
-		if ($add) $this->css->add ($add);
-		else return $this->css;
+		if ($add) { $this->css->add ($add); }
+		else      { return $this->css; }
 	}
 	
 	public function js($add = null) {
