@@ -120,10 +120,10 @@ abstract class DB
 		if (is_string($tablename)) {
 			
 			#If the table has already been imported continue
-			if (isset($this->tables[$tablename])) return $this->tables[$tablename];
-
+			if (isset($this->tables[$tablename])) { return $this->tables[$tablename]; }
+			
 			$modelName = $tablename.'Model';
-
+			
 			if (class_exists($modelName)) {
 				return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
 			}
@@ -138,7 +138,7 @@ abstract class DB
 			
 		}
 		
-		else throw new PrivateException('Invalid type');
+		else { throw new PrivateException('Invalid type'); }
 		
 	}
 	

@@ -11,7 +11,7 @@ class absoluteURL extends URL
 	
 	public $domain;
 	
-	private $proto = self::HTTP;
+	private $proto = self::PROTO_HTTP;
 	
 	/**
 	 * Set the domain name this URL points to. This is intended to address
@@ -49,7 +49,7 @@ class absoluteURL extends URL
 		$canonical = URL::canonical();
 		
 		#Prepend protocol and server and return it
-		return absoluteURL::getServer() . $canonical;
+		return $canonical->toAbsolute();
 	}
 	
 	public static function getServer() {
@@ -62,7 +62,7 @@ class absoluteURL extends URL
 
 	public function __toString() {
 		$rel = parent::__toString();
-		$domain = $this->domain? $this->proto . $this->domain : self::getServer();
+		$domain = $this->domain? $this->proto . '://' . $this->domain : self::getServer();
 		
 		return $domain . $rel;
 	}

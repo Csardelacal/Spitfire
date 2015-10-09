@@ -235,7 +235,7 @@ class Request
 	 * storing it in several places.
 	 * 
 	 * @param string $path
-	 * @return \Request
+	 * @return Request
 	 */
 	public static function get() {
 		if (self::$instance) { return self::$instance; }
