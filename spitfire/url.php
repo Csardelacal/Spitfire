@@ -1,9 +1,10 @@
 <?php
 
 use spitfire\SpitFire;
-use spitfire\Request;
+use spitfire\core\Request;
 use spitfire\io\Get;
 use spitfire\exceptions\PrivateException;
+use spitfire\environment;
 
 /**
  * 
@@ -246,7 +247,7 @@ class URL implements ArrayAccess
 		$default_controller = environment::get('default_controller');
 		$default_action     = environment::get('default_action');
 		
-		$path = $ctx->app->getControllerURI();
+		$path = $ctx->app->getControllerURI($ctx->controller);
 		if (count($path) == 1 && reset($path) == $default_controller) {
 			$path = Array();
 		}
@@ -260,9 +261,20 @@ class URL implements ArrayAccess
 		
 		#Add the object to the Path we generated so far and set it as Path
 		$canonical->setPath(array_merge($path, $ctx->object));
-		$canonical->setExtension($r->getExtension());
+		$canonical->setExtension($r->getPath()->getFormat());
 		
 		return $canonical;
+	}
+	
+	public function toAbsolute() {
+		$t = new absoluteURL();
+		
+		$t->setApp($this->app);
+		$t->setExtension($this->extension);
+		$t->setParams($this->params);
+		$t->setPath($this->path);
+		
+		return $t;
 	}
 
 	public function offsetExists($offset) {
