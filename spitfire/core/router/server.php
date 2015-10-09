@@ -1,6 +1,5 @@
 <?php namespace spitfire\core\router;
 
-use spitfire\Request;
 use spitfire\core\Path;
 
 /**
@@ -56,19 +55,18 @@ class Server extends Routable
 	}
 	
 	public function rewrite($server, $url, $method, $protocol) {
+		#If the server doesn't match we don't continue
+		if (!$this->test($server)) { return false; }
 		
-		if ($this->test($server)) {
-			#Combine routes from the router and server
-			$routes = array_merge($this->routes, $this->router->getRoutes());
-			#Test the routes
-			foreach ($routes as $route) {
-				if (false !== $rewrite = $route->rewrite($url, $method, $protocol, $this)) {
-					if ( (!$rewrite instanceof Path) && $rewrite !== false) {$url = $rewrite;}
-					else { return $rewrite; }
-				}
-			}
+		#Combine routes from the router and server
+		$routes = array_merge($this->routes, $this->router->getRoutes());
+		#Test the routes
+		foreach ($routes as $route) {
+			$rewrite = $route->rewrite($url, $method, $protocol, $this);
+
+			if ( ($rewrite instanceof Path)) { return $rewrite; }
+			if ( $rewrite !== false)         { $url = $rewrite; }
 		}
-		return false;
 	}
 	
 	public function getParameters() {
