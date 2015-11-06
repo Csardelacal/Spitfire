@@ -49,8 +49,8 @@ class SpitFire extends App
 	public function prepare() {
 
 		#Try to include the user's evironment & routes
-		self::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
-		self::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
+		ClassInfo::includeIfPossible(CONFIG_DIRECTORY . 'environments.php');
+		ClassInfo::includeIfPossible(CONFIG_DIRECTORY . 'routes.php');
 		
 		#Define the current timezone
 		date_default_timezone_set(environment::get('timezone'));
@@ -63,8 +63,7 @@ class SpitFire extends App
 	public function fire() {
 		
 		#Import the apps
-		self::includeIfPossible(CONFIG_DIRECTORY . 'path_parsers.php');
-		self::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
+		ClassInfo::includeIfPossible(CONFIG_DIRECTORY . 'apps.php');
 		foreach ($this->apps as $app) { $app->createRoutes(); }
 		$this->createRoutes();
 		
@@ -136,11 +135,6 @@ class SpitFire extends App
 		if (environment::get('base_url')) return environment::get('base_url');
 		list($base_url) = explode('/index.php', $_SERVER['PHP_SELF'], 2);
 		return $base_url;
-	}
-
-	public static function includeIfPossible($file) {
-		if (file_exists($file)) return include $file;
-		else return false;
 	}
 	
 	public function log($msg) {

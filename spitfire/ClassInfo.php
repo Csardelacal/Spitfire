@@ -66,4 +66,19 @@ class ClassInfo
 		}
 	}
 	
+	/**
+	 * Locates a file and includes it if possible. Otherwise it will just silently
+	 * return false. 
+	 * 
+	 * This allows applications to either handle errors with includes without issue
+	 * or to ignore the potential error situation that could arise.
+	 * 
+	 * @param string $file
+	 * @return boolean|mixed
+	 */
+	public static function includeIfPossible($file) {
+		if (file_exists($file)) { return include $file; }
+		else { return false; }
+	}
+	
 }

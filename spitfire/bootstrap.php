@@ -27,13 +27,10 @@ require_once 'spitfire/strings.php';
 require_once 'spitfire/App.php';
 require_once 'spitfire/Spitfire.php';
 require_once 'spitfire/core/functions.php';
-require_once 'spitfire/class.php';
+require_once 'spitfire/ClassInfo.php';
 require_once 'spitfire/autoload.php';
 require_once 'spitfire/autoload/classlocator.php';
 require_once 'spitfire/autoload/systemclasslocator.php';
-require_once 'spitfire/autoload/registeredclasslocator.php';
-require_once 'spitfire/autoload/appclasslocator.php';
-require_once 'spitfire/autoload/userclasslocator.php';
 
 #Create the exceptionhandler that will capture errors and try to present useful
 #information to the user.
