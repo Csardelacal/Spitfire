@@ -1,5 +1,14 @@
 <?php namespace spitfire;
 
+/**
+ * This class is actually deprecated. It is used by early versions of Spitfire to
+ * locate classes. This is deprecated in favor of using several locators that can
+ * find classes depending on how they end.
+ * 
+ * @deprecated since version 0.1-dev 20151106
+ * @todo Finish implementing locators
+ * @todo Move includeifpossible method somewhere it belongs.
+ */
 class ClassInfo
 {
 	const TYPE_CONTROLLER = 'Controller';
