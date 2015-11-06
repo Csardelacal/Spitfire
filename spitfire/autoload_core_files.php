@@ -105,7 +105,6 @@ AutoLoad::registerClass('spitfire\io\beans\renderers\Renderer',                 
 AutoLoad::registerClass('spitfire\io\beans\renderers\SimpleBeanRenderer',       $cur_dir.'/io/beans/renderers/simpleBeanRenderer.php');
 AutoLoad::registerClass('spitfire\io\beans\renderers\SimpleFieldRenderer',      $cur_dir.'/io/beans/renderers/simpleFieldRenderer.php');
 AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
-AutoLoad::registerClass('spitfire\ClassInfo',    $cur_dir.'/class.php');
 
 
 AutoLoad::registerClass('spitfire\io\Upload',                                   $cur_dir.'/io/upload.php');
