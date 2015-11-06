@@ -18,15 +18,6 @@ abstract class StackTracePrinter
 	private $exception;
 	
 	/*
-	 * This constants provide a few primary colors to allow a pretty printing of
-	 * class, function and variables inside the stack trace so it provides a consistent
-	 * color scheme across printers and versions.
-	 */
-	const COLOR_CLASS    = '#0000000';
-	const COLOR_FUNCTION = '#FF00000';
-	const COLOR_VARIABLE = '#00FF000';
-	
-	/*
 	 * The system distinguishes three types of lines: error, warn and normal lines.
 	 * 
 	 * The error line will be the one that caused the exception to be thrown, the 
@@ -50,14 +41,25 @@ abstract class StackTracePrinter
 		$this->exception = $e;
 	}
 	
+	/**
+	 * Walks over the components of the stack trace being printed and stringifies
+	 * them. Please note that, in order to do so, it relies on the overriden and
+	 * implemented methods from the child class.
+	 * 
+	 * @todo Handle the behavior when the stack trace is unpopulated.
+	 * @return string
+	 */
 	public function iterateTrace() {
+		#Get the trace and init the string we're gonna be using to collect results
 		$trace = $this->exception->getTrace();
 		$_ret  = '';
 		
+		#Loop over the trace and collect the results into _ret
 		foreach($trace as $entry) {
 			$_ret.= $this->stringifyEntry($entry);
 		}
 		
+		#Return _ret
 		return $_ret;
 	}
 	
