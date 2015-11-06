@@ -47,24 +47,28 @@ function app($name, $namespace) {
 
 /**
  * Shorthand function to create / retrieve the model the application is using
- * to store data.
+ * to store data. We could consider this a little DB handler factory.
  * 
- * @return DB|\spitfire\storage\database\DB|spitfire.storage.database.DB
+ * @return \spitfire\storage\database\DB
  */
 function db($options = null) {
-	static $model;
+	static $model = null;
 	
-	if (is_null($options) && !empty($model)) return $model;
+	#If we're requesting the standard driver and have it cached, we use this
+	if ($options === null && $model !== null) { return $model; }
 	
 	#If the driver is not selected we get the one we want from env.
-	if (!isset($options['db_driver'])) $driver = environment::get('db_driver');
-	else $driver = $options['db_driver'];
+	if (!isset($options['db_driver'])) { $driver = environment::get('db_driver'); }
+	else                               { $driver = $options['db_driver']; }
 	
 	#Instantiate the driver
 	$driver = 'spitfire\storage\database\drivers\\' . $driver . 'Driver';
 	$driver = new $driver($options);
-	#Store to main model
-	if (is_null($options)) $model = $driver;
+	
+	#If no options were provided we will assume that this is the standard DB handler
+	if ($options === null) { $model = $driver; }
+	
+	#Return the driver
 	return $driver;
 }
 
@@ -72,6 +76,7 @@ function db($options = null) {
 /**
  * Returns HTML escaped string and if desired it adds ellipsis. If the string is
  * numeric it will reduce unnecessary decimals.
+ * 
  * @param String $str
  * @param int $maxlength
  * @return String
