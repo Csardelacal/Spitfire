@@ -24,7 +24,7 @@
 set_include_path(get_include_path() . PATH_SEPARATOR . dirname(dirname(__FILE__)));
 require_once 'spitfire/exceptionHandler.php';
 require_once 'spitfire/strings.php';
-require_once 'spitfire/app.php';
+require_once 'spitfire/App.php';
 require_once 'spitfire/Spitfire.php';
 require_once 'spitfire/core/functions.php';
 require_once 'spitfire/class.php';
