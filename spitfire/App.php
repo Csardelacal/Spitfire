@@ -2,6 +2,7 @@
 
 use spitfire\ClassInfo;
 use spitfire\Context;
+use spitfire\exceptions\PrivateException;
 
 /**
  * Spitfire Application Class. This class is the base of every other 'app', an 
@@ -128,7 +129,7 @@ abstract class App
 		$c = $this->hasController($controller);
 		
 		#If no controller was found, we can throw an exception letting the user know
-		if ($c === false) { throw new publicException("Page not found", 404, new privateException("Controller not fond", 0) ); }
+		if ($c === false) { throw new publicException("Page not found", 404, new PrivateException("Controller not fond", 0) ); }
 		
 		#Otherwise we will instantiate the class and return it
 		return new $c($intent);
