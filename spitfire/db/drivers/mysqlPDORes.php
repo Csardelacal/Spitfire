@@ -102,6 +102,6 @@ class mysqlPDOResultSet implements resultSetInterface
 	}
 	
 	public function __destruct() {
-		$this->result->closeCursor();
+		//$this->result->closeCursor();
 	}
 }

@@ -56,7 +56,7 @@ abstract class App
 		if (0 === strpos($url, 'www.'))     { return 'http://' . $url; }
 		
 		$arguments = func_get_args();
-		unshift($this, $arguments);
+		array_unshift($arguments, $this);
 		
 		//Once PHP7 is stable we can use the splat (...) operator to do this
 		$reflection = new ReflectionClass('\URL');
