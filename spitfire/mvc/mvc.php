@@ -6,14 +6,17 @@ use Pluggable;
  * This class handles components common to Views, Controllers and model. Functions
  * and variables declared in this files will be accessible by any of them.
  * 
- * @property-read \spitfire\View $view The current view
- * @property-read \spitfire\Context $context The context within this is located
- * @property-read \spitfire\Request $request The request the context is answering to
+ * The MVC class provides access to many of Spitfire's shared components directly
+ * via the "public" interface of the controller, models and view. Everything within
+ * the context is made available to inheriting classes.
+ * 
+ * @property-read View $view The current view
+ * @property-read Context $context The context within this is located
+ * @property-read Request $request The request the context is answering to
  * @property-read \spitfire\core\Response $response Contains the response body and headers
  * @property-read \Controller $controller The controller used ot handle this context
  * 
  * @author César de la Cal <cesar@magic3w.com>
- * @package Spitfire.spitfire
  * 
  */
 
