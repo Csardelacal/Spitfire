@@ -122,24 +122,24 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		
 		try {
 			spitfire()->log("DB: " . $statement);
-			$stt = $con->query($statement);
 			#Execute the query
-		}
-		catch(PDOException $e) {
+			$stt = $con->query($statement);
+			return $stt;
+		
+		} catch(PDOException $e) {
 			#Recover from exception, make error readable. Re-throw
 			$code = $e->getCode();
 			$err  = $this->connection->errorInfo();
 			$msg  = $err[2]? $err[2] : $this->errs[$code];
 			
-			#Try to solve the error by checking integrity and repeat
+			#If the error is not repairable or the system is blocking repairs throw an exception
 			if (!in_array($err[1], $this->reparable_errors) || !$attemptrepair) 
 				{ throw new PrivateException("Error {$code} [{$msg}] captured. Not repairable", 201511081930, $e); }
 			
+			#Try to solve the error by checking integrity and repeat
 			$this->repair();
 			return $this->execute($statement, false);
 		}
-		
-		return $stt;
 	}
 
 	/**
