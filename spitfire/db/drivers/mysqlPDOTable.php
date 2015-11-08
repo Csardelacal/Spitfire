@@ -41,7 +41,7 @@ class MysqlPDOTable extends stdSQLTable
 		$fields = $this->getFields();
 		//Fetch the DB Fields and create on error.
 		try {
-			$query = $this->getDb()->execute($stt, false);
+			$query = $this->getDb()->execute($stt, Array(), false);
 		}
 		catch(Exception $e) {
 			return $this->create();

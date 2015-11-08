@@ -116,21 +116,23 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * @throws PrivateException In case the query fails for another reason
 	 *                     than the ones the system manages to fix.
 	 */
-	public function execute($statement, $attemptrepair = true) {
+	public function execute($statement, $parameters = Array(), $attemptrepair = true) {
 		#Connect to the database and prepare the statement
 		$con = $this->getConnection();
 		
 		try {
 			spitfire()->log("DB: " . $statement);
 			#Execute the query
-			$stt = $con->query($statement);
+			$stt = $con->prepare($statement);
+			$stt->execute();
+			
 			return $stt;
 		
 		} catch(PDOException $e) {
 			#Recover from exception, make error readable. Re-throw
 			$code = $e->getCode();
-			$err  = $this->connection->errorInfo();
-			$msg  = $err[2]? $err[2] : $this->errs[$code];
+			$err  = $e->errorInfo;
+			$msg  = $err[2]? $err[2] : 'Unknown error';
 			
 			#If the error is not repairable or the system is blocking repairs throw an exception
 			if (!in_array($err[1], $this->reparable_errors) || !$attemptrepair) 
@@ -138,7 +140,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			
 			#Try to solve the error by checking integrity and repeat
 			$this->repair();
-			return $this->execute($statement, false);
+			return $this->execute($statement, $parameters, false);
 		}
 	}
 
