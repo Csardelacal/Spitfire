@@ -11,7 +11,7 @@ use spitfire\SpitFire;
 use spitfire\environment;
 use PDO;
 use PDOException;
-use privateException;
+use spitfire\exceptions\PrivateException;
 use Model;
 
 /**
@@ -41,7 +41,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * requires no parameters as they're stored by the class already.
 	 * 
 	 * @return boolean
-	 * @throws privateException If the database was unable to establish a 
+	 * @throws PrivateException If the database was unable to establish a 
 	 *                          connection because the Server rejected the connection.
 	 */
 	protected function connect() {
@@ -57,7 +57,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			return true;
 		} catch (Exception $e) {
 			SpitFire::$debug->log($e->getMessage());
-			throw new privateException('DB Error. Connection refused by the server');
+			throw new PrivateException('DB Error. Connection refused by the server');
 		}
 
 	}
@@ -113,7 +113,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 *                    to repair any model inconsistencies the server 
 	 *                    encounters.
 	 * @return PDOStatement
-	 * @throws privateException In case the query fails for another reason
+	 * @throws PrivateException In case the query fails for another reason
 	 *                     than the ones the system manages to fix.
 	 */
 	public function execute($statement, $attemptrepair = true) {
@@ -129,20 +129,14 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			#Recover from exception, make error readable. Re-throw
 			$code = $e->getCode();
 			$err  = $this->connection->errorInfo();
-			$msg  = $err[2] or $this->errs[$code];
+			$msg  = $err[2]? $err[2] : $this->errs[$code];
 			
 			#Try to solve the error by checking integrity and repeat
-			if (in_array($err[1], $this->reparable_errors)) 
-			if ($attemptrepair)
-			try{
-				$this->repair();
-				$stt = $con->query($statement);
-				spitfire()->log("DB: " . $statement);
-				return $stt;
-			}
-			catch (Exception $e) {/*Ignore*/}
+			if (!in_array($err[1], $this->reparable_errors) || !$attemptrepair) 
+				{ throw new PrivateException("Error {$code} [{$msg}] captured. Not repairable", 201511081930, $e); }
 			
-			throw new privateException("$msg (#$code) in query: $statement");
+			$this->repair();
+			return $this->execute($statement, false);
 		}
 		
 		return $stt;
