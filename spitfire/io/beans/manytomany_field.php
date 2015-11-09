@@ -91,7 +91,7 @@ class ManyToManyField extends Field implements RenderableFieldSelect, Renderable
 		if ( ($record = $this->getBean()->getRecord()) !== null)
 			return $record->{$this->getField()->getName()};
 		else
-			return null;
+			return Array();
 	}
 	
 	/**

@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\StringAdapter;
 
 class FileField extends Field
@@ -9,7 +10,7 @@ class FileField extends Field
 		return Field::TYPE_FILE;
 	}
 
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new StringAdapter($this, $model);
 	}
 

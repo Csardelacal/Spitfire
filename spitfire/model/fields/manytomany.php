@@ -1,6 +1,8 @@
 <?php
 
+use spitfire\storage\database\Schema;
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\ManyToManyAdapter;
 
 class ManyToManyField extends ChildrenField
@@ -19,7 +21,7 @@ class ManyToManyField extends ChildrenField
 
 	public function getTarget() {
 		
-		if($this->meta) return $this->target; //$this->meta;
+		if($this->meta) { return $this->target; } //$this->meta;
 		
 		$src    = $this->getModel()->getName();
 		$target = $this->target;
@@ -43,12 +45,11 @@ class ManyToManyField extends ChildrenField
 
 			#Register the table
 			$this->getModel()->getTable()->getDb()->table($model);
-		}
-		else {
+		} else {
 			$this->meta = $this->getTable()->getDb()->table("{$first}_{$second}")->getModel();
 		}
 		
-		return $this->target = $this->getModel()->getTable()->getDb()->table($target)->getModel();//$this->meta;
+		return $this->target = $this->meta;
 	}
 	
 	public function getModelField($schema) {
@@ -72,7 +73,7 @@ class ManyToManyField extends ChildrenField
 		return Field::TYPE_BRIDGED;
 	}
 	
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new ManyToManyAdapter($this, $model);
 	}
 	

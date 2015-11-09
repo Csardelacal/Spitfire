@@ -2,15 +2,16 @@
 
 namespace spitfire\model\defaults;
 
-use Model;
+use spitfire\Model;
+use spitfire\storage\database\Schema;
 
 class userModel extends Model
 {
 	
-	public static function definitions($lst) {
-		$lst->username = new \StringField(20);
-		$lst->password = new \StringField(40);
-		$lst->email    = new \StringField(40);
-		$lst->admin    = new \IntegerField();
+	public function definitions(Schema$schema) {
+		$schema->username = new \StringField(20);
+		$schema->password = new \StringField(40);
+		$schema->email    = new \StringField(40);
+		$schema->admin    = new \IntegerField();
 	}
 }

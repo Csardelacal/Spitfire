@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\BooleanAdapter;
 
 /**
@@ -24,10 +25,10 @@ class BooleanField extends Field
 	 * This method receives a model to which it shall create a connection. The
 	 * adapter can then hold information that is useful to the db.
 	 * 
-	 * @param \Model $model
+	 * @param Model $model
 	 * @return \spitfire\model\adapters\BooleanAdapter
 	 */
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new BooleanAdapter($this, $model);
 	}
 

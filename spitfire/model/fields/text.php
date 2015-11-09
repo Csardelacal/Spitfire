@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\StringAdapter;
 
 /**
@@ -34,10 +35,10 @@ class TextField extends Field
 	 * a PHP end and just changing in how the models and the DBMS retrieve the 
 	 * data.
 	 * 
-	 * @param \Model $model
+	 * @param Model $model
 	 * @return \spitfire\model\adapters\StringAdapter
 	 */
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new StringAdapter($this, $model);
 	}
 

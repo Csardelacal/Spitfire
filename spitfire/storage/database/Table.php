@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\storage\database;
+<?php namespace spitfire\storage\database;
 
 use \Model;
 use spitfire\storage\database\Schema;
@@ -78,7 +76,7 @@ abstract class Table extends Queriable
 	 * the right model for the table and will be stored prefixed to this object.
 	 * 
 	 * @param DBInterface $database
-	 * @param String $tablename
+	 * @param string|Schema $tablename
 	 */
 	public function __construct (DB$db, $tablename) {
 		$this->db = $db;
@@ -86,14 +84,13 @@ abstract class Table extends Queriable
 		if ($tablename instanceof Schema) {
 			$this->model = $tablename;
 			$this->model->setTable($this);
-		}
-		else {
+		} else {
 			$model = $tablename . 'Model';
 			$this->model = new Schema($tablename, $this);
 
 			if (class_exists($model)) {
-				$model::definitions($this->model);
-				$this->model->makePhysical();
+				$m = new $model(null);
+				$m->definitions($this->model);
 			}
 		}
 		
@@ -109,8 +106,7 @@ abstract class Table extends Queriable
 		
 		foreach ($fields as $field) {
 			$physical = $field->getPhysical();
-			while ($phys = array_shift($physical))
-					  $dbfields[$phys->getName()] = $phys;
+			while ($phys = array_shift($physical)) { $dbfields[$phys->getName()] = $phys; }
 		}
 		
 		$this->fields = $dbfields;

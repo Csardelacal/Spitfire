@@ -73,26 +73,6 @@ class Schema
 		#Define _id as primary key and auto_increment
 		$this->_id->setPrimary(true)->setAutoIncrement(true);
 	}
-	
-	/**
-	 * This method instructs the schema to initialize the creation of "Physical"
-	 * fields. A model maintains logical fields that can be deconstructed into 
-	 * smaller, physically storable columns.
-	 * 
-	 * We call these physical fields. Because they contain data that we can directly
-	 * send to most major DBMS systems.
-	 * 
-	 * @return \spitfire\storage\database\Schema
-	 */
-	public function makePhysical() {
-		
-		#Make the physical counterparts of the fields
-		foreach ($this->fields as $field) {
-			$field->makePhysical();
-		}
-		
-		return $this;
-	}
 
 	/**
 	 * Imports a set of fields. This allows to back them up in case they're 

@@ -1,7 +1,7 @@
 <?php namespace spitfire\model\adapters;
 
 use spitfire\model\Field;
-use Model;
+use spitfire\Model;
 
 /**
  * This base adapter allows overriding methods to let it handle the actual getting,
