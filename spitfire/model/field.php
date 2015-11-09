@@ -1,5 +1,6 @@
 <?php namespace spitfire\model;
 
+use spitfire\Model;
 use spitfire\validation\ValidationError;
 
 /**
@@ -310,10 +311,10 @@ abstract class Field
 	 * But you can also create custom adapters that manage complex data and return
 	 * them here.
 	 * 
-	 * @param \Model $model The model to contain the adapter
+	 * @param Model $model The model to contain the adapter
 	 * @return adapters\AdapterInterface The new adapter
 	 */
-	abstract public function getAdapter(\Model$model);
+	abstract public function getAdapter(Model$model);
 
 	/**
 	 * This method informs the system what primary datatype the overriding 

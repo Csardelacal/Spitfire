@@ -39,6 +39,9 @@ class SchemaTest extends PHPUnit_Framework_TestCase
 	 * This test assumes that the table will be located inside a namespace. In 
 	 * this case the schema should return a table name that contains hyphens instead
 	 * of backslashes since tables do accept hyphens and don't accept backslashes.
+	 * 
+	 * @covers \spitfire\storage\database\Schema::getName
+	 * @covers \spitfire\storage\database\Schema::getTableName
 	 */
 	public function testComplexTableName() {
 		$schema = new \spitfire\storage\database\Schema('test\test');

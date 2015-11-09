@@ -1,7 +1,7 @@
 <?php namespace spitfire\model\adapters;
 
 use \ManyToManyField;
-use \Model;
+use spitfire\Model;
 use \Iterator;
 use \ArrayAccess;
 

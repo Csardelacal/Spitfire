@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\DateTimeAdapter;
 
 class DatetimeField extends Field
@@ -10,7 +11,7 @@ class DatetimeField extends Field
 		return Field::TYPE_DATETIME;
 	}
 
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new DateTimeAdapter($this, $model);
 	}
 

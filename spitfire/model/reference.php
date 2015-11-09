@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\ReferenceAdapter;
 use spitfire\storage\database\Schema;
 
@@ -116,7 +117,7 @@ class Reference extends Field
 		return Field::TYPE_REFERENCE;
 	}
 
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new ReferenceAdapter($this, $model);
 	}
 

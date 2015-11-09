@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\validation\ValidationError;
 use spitfire\model\adapters\StringAdapter;
 
@@ -27,7 +28,7 @@ class StringField extends Field
 		else { return parent::validate($value); }
 	}
 
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new StringAdapter($this, $model);
 	}
 

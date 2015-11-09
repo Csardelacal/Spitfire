@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\model\Field;
+use spitfire\Model;
 use spitfire\model\adapters\IntegerAdapter;
 use spitfire\validation\ValidationError;
 
@@ -28,7 +29,7 @@ class IntegerField extends Field
 		else { return parent::validate($value); }
 	}
 
-	public function getAdapter(\Model $model) {
+	public function getAdapter(Model $model) {
 		return new IntegerAdapter($this, $model);
 	}
 
