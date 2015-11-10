@@ -1,6 +1,7 @@
 <?php namespace spitfire\storage\database;
 
-use \Model;
+use spitfire\Model;
+use spitfire\exceptions\PrivateException;
 use spitfire\storage\database\Schema;
 use spitfire\model\Field;
 use spitfire\environment;
@@ -75,7 +76,7 @@ abstract class Table extends Queriable
 	 * Creates a new Database Table instance. The tablename will be used to find 
 	 * the right model for the table and will be stored prefixed to this object.
 	 * 
-	 * @param DBInterface $database
+	 * @param DB $db
 	 * @param string|Schema $tablename
 	 */
 	public function __construct (DB$db, $tablename) {
@@ -85,15 +86,17 @@ abstract class Table extends Queriable
 			$this->model = $tablename;
 			$this->model->setTable($this);
 		} else {
-			$model = $tablename . 'Model';
+			$modelname = $tablename . 'Model';
 			$this->model = new Schema($tablename, $this);
-
-			if (class_exists($model)) {
-				$m = new $model(null);
-				$m->definitions($this->model);
+			
+			if (class_exists($modelname)) {
+				#Initialize the model with no table. It will know to provide the schema
+				$model = new $modelname(null);
+				$model->definitions($this->model);
 			}
 		}
 		
+		#Get the physical table name. This will use the prefix to allow multiple instances of the DB
 		$this->tablename = environment::get('db_table_prefix') . $this->model->getTableName();
 		
 		$this->makeFields();
@@ -129,10 +132,12 @@ abstract class Table extends Queriable
 			if ($name->getTable() === $this) { return $name; }
 			else { throw new \privateException('Field ' . $name . ' does not belong to ' . $this); }
 		}
+		
 		#Otherwise search for it in the fields list
-		if (isset($this->fields[(string)$name])) return $this->fields[(string)$name];
-		#Else the table couldn't be found
-		throw new \privateException('Field ' . $name . ' does not exist in ' . $this);
+		if (isset($this->fields[(string)$name])) { return $this->fields[(string)$name]; }
+		
+		#The field could not be found in the Database
+		throw new PrivateException('Field ' . $name . ' does not exist in ' . $this);
 	}
 	
 	/**
@@ -160,31 +165,30 @@ abstract class Table extends Queriable
 	 * @return Array Name of the primary key's column
 	 */
 	public function getPrimaryKey() {
-		if ($this->primaryK)  return $this->primaryK;
+		if ($this->primaryK) { return $this->primaryK; }
 		
 		//Implicit else
 		$fields  = $this->getFields();
 		$pk      = Array();
 		
 		foreach($fields as $name => $field) {
-			if ($field->getLogicalField()->isPrimary()) $pk[$name] = $field;
+			if ($field->getLogicalField()->isPrimary()) { $pk[$name] = $field; }
 		}
 		
 		return $this->primaryK = (array) $pk;
 	}
 	
 	public function getAutoIncrement() {
-		if ($this->auto_increment) return $this->auto_increment;
+		if ($this->auto_increment) { return $this->auto_increment; }
 		
 		//Implicit else
 		$fields  = $this->getFields();
-		$ai      = null;
 		
 		foreach($fields as $field) {
-			if ($field->getLogicalField()->isAutoIncrement()) $ai = $field;
+			if ($field->getLogicalField()->isAutoIncrement()) { return  $this->auto_increment = $field; }
 		}
 		
-		return  $this->auto_increment = $ai;
+		 return null;
 	}
 	
 	/**
@@ -200,26 +204,18 @@ abstract class Table extends Queriable
 	 */
 	public function getById($id) {
 		#If the data is a string separate by colons
-		if (!is_array($id)) $id = explode(':', $id);
+		if (!is_array($id)) { $id = explode(':', $id); }
 		
 		#Create a query
 		$primary = $this->getPrimaryKey();
 		$query   = $this->getQueryInstance();
 		
-		#Check if it's cachable and get the name of the id field
-		//$cachable = count($primary) == 1;
-		//$cachekey = ($cachable)? reset($id) : null;
-		
-		#Detect if there is a cache hit
-		//if (isset($this->cache[$cachekey])) return $this->cache[$cachekey];
-		
 		#Add the restrictions
 		while(count($primary))
-			$query->addRestriction (array_shift($primary), array_shift($id));
+			{ $query->addRestriction (array_shift($primary), array_shift($id)); }
 		
 		#Return the result
 		$_return = $query->fetch();
-		//if ($cachable) $this->cache[$cachekey] = $_return;
 		
 		return $_return;
 	}
@@ -232,8 +228,8 @@ abstract class Table extends Queriable
 	}
 	
 	public function hitCache($id) {
-		if (isset($this->cache[$id])) return $this->cache[$id];
-		else return null;
+		if (isset($this->cache[$id])) { return $this->cache[$id]; }
+		else { return null; }
 	}
 	
 	/**
@@ -271,12 +267,8 @@ abstract class Table extends Queriable
 	public function newRecord($data = Array()) {
 		$classname = $this->getModel()->getName() . 'Model';
 		
-		if (class_exists($classname)) {
-			return new $classname($this, $data);
-		}
-		else {
-			return new Model($this, $data);
-		}
+		if (class_exists($classname)) { return new $classname($this, $data); }
+		else { /*TODO: Allow OTF Models*/}
 	}
 	
 	/**
@@ -322,7 +314,7 @@ abstract class Table extends Queriable
 			if (method_exists( $function[0], $function[1] ) ) {
 				$ok = call_user_func_array($function, $value) && $ok;
 			}
-			unset($errors);
+			
 		}
 		
 		return $ok;
