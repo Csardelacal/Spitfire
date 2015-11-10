@@ -1,4 +1,6 @@
-<?php
+<?php namespace spitfire\cache;
+
+use spitfire\exceptions\PrivateException;
 
 /**
  * This class allows you to set an arbitrary callback to use for a cache miss 
@@ -6,7 +8,7 @@
  * implement just one or two methods.
  * 
  * @author César de la Cal <cesar@magic3w.com>
- * @last-revision 2013.07.09
+ * @last-revision 2015.11.09
  * 
  */
 class SimpleFileCache extends FileCache
@@ -46,7 +48,7 @@ class SimpleFileCache extends FileCache
 		if (is_callable($callback)) {
 			return $callback();
 		} else {
-			throw new privateException("No valid callback supplied");
+			throw new PrivateException("No valid callback supplied");
 		}
 	}	
 }

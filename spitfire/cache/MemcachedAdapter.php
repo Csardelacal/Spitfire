@@ -1,8 +1,6 @@
-<?php
+<?php namespace spitfire\cache;
 
-namespace spitfire;
-
-use \privateException;
+use spitfire\exceptions\PrivateException;
 use \Memcached;
 
 /**
@@ -21,7 +19,7 @@ use \Memcached;
  * </ul>
  * 
  */
-class MemcachedAdapter
+class MemcachedAdapter implements CacheInterface
 {
 	/**
 	 * Defines the amount of time keys are stored before being deleted by default.
@@ -70,7 +68,7 @@ class MemcachedAdapter
 	/**
 	 * Creates a connection to the memcached servers.
 	 * 
-	 * @throws privateException
+	 * @throws PrivateException
 	 * @return \memcache 
 	 */
 	public function connect () {
@@ -79,7 +77,7 @@ class MemcachedAdapter
 		
 		#If memcached is enabled we check if it is available
 		if (!environment::get('memcached_enabled')) { return; }
-		if (!class_exists('\Memcached') ) { throw new privateException('Memcached is enabled but not installed'); }
+		if (!class_exists('\Memcached') ) { throw new PrivateException('Memcached is enabled but not installed'); }
 		
 		#Instance a new memcached connection
 		$this->connection = new Memcached();
@@ -121,13 +119,23 @@ class MemcachedAdapter
 	 * Reads a key from the memcached server. This function does not cache it's
 	 * result, if you require caching use object access.
 	 * 
-	 * @param string $key
+	 * @param string        $key
+	 * @param \Closure|null $fallback
 	 * @return boolean
 	 */
-	public function get($key) {
-		if ($this->connection) {
-			return $this->connection->get($key);
+	public function get($key, $fallback = null) {
+		if ($this->connection) { 
+			$cached = $this->connection->get($key);
+			if ($this->connection->getResultCode() !== \Memcached::RES_NOTFOUND) { return $cached; }
+			
+			#No cached version available, cache the proposed data
+			$newval = $fallback();
+			$this->set($key, $newval);
+			return $newval;
 		}
+		
+		#Implcit else since there is no cache
+		return $fallback? $fallback() : false;
 	}
 	
 	/**
@@ -235,7 +243,7 @@ class MemcachedAdapter
 	 * @return MemcachedAdapter
 	 */
 	public static function getInstance() {
-		if (self::$instance === null) self::$instance = new \spitfire\MemcachedAdapter();
+		if (self::$instance === null) { self::$instance = new \spitfire\MemcachedAdapter(); }
 		return self::$instance;
 	}
 }

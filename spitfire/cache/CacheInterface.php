@@ -4,7 +4,7 @@
  * The cache interface should provide a consistent way to provide caching with 
  * different mechanisms.
  */
-interface Cache
+interface CacheInterface
 {
 	
 	/**
