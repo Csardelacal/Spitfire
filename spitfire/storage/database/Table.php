@@ -10,7 +10,6 @@ use spitfire\environment;
  * This class simulates a table belonging to a database. This way we can query
  * and handle tables with 'compiler-friendly' code that will inform about errors
  * 
- * @package Spitfire.storage.database
  * @author César de la Cal <cesar@magic3w.com>
  */
 abstract class Table extends Queriable
@@ -77,23 +76,16 @@ abstract class Table extends Queriable
 	 * the right model for the table and will be stored prefixed to this object.
 	 * 
 	 * @param DB $db
-	 * @param string|Schema $tablename
+	 * @param string|Schema $schema
 	 */
-	public function __construct (DB$db, $tablename) {
+	public function __construct(DB$db, $schema) {
 		$this->db = $db;
 		
-		if ($tablename instanceof Schema) {
-			$this->model = $tablename;
+		if ($schema instanceof Schema) {
+			$this->model = $schema;
 			$this->model->setTable($this);
 		} else {
-			$modelname = $tablename . 'Model';
-			$this->model = new Schema($tablename, $this);
-			
-			if (class_exists($modelname)) {
-				#Initialize the model with no table. It will know to provide the schema
-				$model = new $modelname(null);
-				$model->definitions($this->model);
-			}
+			throw new PrivateException('Table requires a Schema to be passed');
 		}
 		
 		#Get the physical table name. This will use the prefix to allow multiple instances of the DB

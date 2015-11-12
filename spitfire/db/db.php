@@ -102,48 +102,95 @@ abstract class DB
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
+		
+		#If the table has already been imported continue
+		if ($this->hasTable($tablename)) { return $this->getTableFromCache($tablename); }
+		
 		#If the parameter is a Model, we get it's name
 		if ($tablename instanceof Schema) {
-			
-			if (isset($this->tables[$tablename->getName()]))
-				return $this->tables[$tablename->getName()];
-			
-			elseif (!class_exists($tablename->getName().'Model')) {
-				return $this->tables[$tablename->getName()] = $this->getTableInstance($this, $tablename);
-			}
-			
-			else {
-				$tablename = $tablename->getName();
-			}
+			if (!class_exists($tablename->getName().'Model')) { return $this->addTableToCache($tablename); } 
+			else                                              { $tablename = $tablename->getName(); }
 		}
 		
 		if (is_string($tablename)) {
 			
-			#If the table has already been imported continue
-			if (isset($this->tables[$tablename])) { return $this->tables[$tablename]; }
+			try { return $this->addTableToCache($this->makeTable($tablename)); }
+			catch (\spitfire\exceptions\PrivateException$e) {}
 			
-			$modelName = $tablename.'Model';
+			try { return $this->addTableToCache($this->makeTable(Strings::singular($tablename))); }
+			catch (\spitfire\exceptions\PrivateException$e) {}
 			
-			if (class_exists($modelName)) {
-				return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
-			}
-			elseif (class_exists(Strings::singular($tablename).'Model')) {
-				$tablename = Strings::singular($tablename);
-				return $this->tables[$tablename] = $this->getTableInstance($this, $tablename);
-			}
-			/*else {
+			/*
 				$model = $this->getOTFModel($tablename);
 				return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
 			}*/
 			
 		}
 		
-		else { throw new PrivateException('Invalid type'); }
+		#If all our ressources have come to an end... Halt it.
+		throw new PrivateException('No table ' . $tablename . ' found');
 		
 	}
 	
-	public function hasTable($name) {
+	/**
+	 * 
+	 * @todo Extract these methods (makeTable, hasTable, getTableFromCache) to a separate TablePool class
+	 * @param string $tablename
+	 * @return Schema
+	 * @throws PrivateException
+	 */
+	protected function makeTable($tablename) {
+		$className = $tablename . 'Model';
+		
+		if (class_exists($className)) {
+			#Create a schema and a model
+			$schema = new Schema($tablename);
+			$model = new $className();
+			$model->definitions($schema);
+
+			return $this->getTableInstance($this, $schema);
+		}
+		
+		throw new PrivateException('No table ' . $tablename);
+	}
+	
+	/**
+	 * 
+	 * @param string|Schema $name
+	 * @return boolean
+	 */
+	protected function hasTable($name) {
+		#If the variable we're passing is a schema we need to get it's name to look it up
+		if ($name instanceof Schema) { $name = $name->getName(); }
+		
+		#Otherwise we default to looking up the array key
 		return isset($this->tables[$name]);
+	}
+	
+	/**
+	 * 
+	 * @param string|Schema $name
+	 * @return boolean
+	 */
+	protected function getTableFromCache($name) {
+		#If the variable we're passing is a schema we need to get it's name to look it up
+		if ($name instanceof Schema) { $name = $name->getName(); }
+		
+		#Otherwise we default to looking up the array key
+		return $this->tables[$name];
+	}
+	
+	/**
+	 * 
+	 * @param Table|Schema $table
+	 * @return boolean
+	 */
+	protected function addTableToCache($table) {
+		#If the variable we're passing is a schema we need to get it's name to look it up
+		if ($table instanceof Schema) { $table = $this->getTableInstance($this, $table); }
+		
+		#Otherwise we default to looking up the array key
+		return $this->tables[$table->getModel()->getName()] = $table;
 	}
 
 	/**
