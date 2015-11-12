@@ -1,6 +1,7 @@
 <?php namespace spitfire;
 
 use spitfire\core\Request;
+use spitfire\cache\MemcachedAdapter;
 use publicException;
 use privateException;
 use spitfire\InputSanitizer;

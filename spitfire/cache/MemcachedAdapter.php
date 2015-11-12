@@ -1,5 +1,6 @@
 <?php namespace spitfire\cache;
 
+use spitfire\environment;
 use spitfire\exceptions\PrivateException;
 use \Memcached;
 
@@ -243,7 +244,7 @@ class MemcachedAdapter implements CacheInterface
 	 * @return MemcachedAdapter
 	 */
 	public static function getInstance() {
-		if (self::$instance === null) { self::$instance = new \spitfire\MemcachedAdapter(); }
+		if (self::$instance === null) { self::$instance = new MemcachedAdapter(); }
 		return self::$instance;
 	}
 }
