@@ -57,7 +57,22 @@ abstract class Table extends Queriable
 	 */
 	protected $bean;
 	
+	/**
+	 * Caches a list of fields that compound this table's primary key. The property
+	 * is empty when the table is constructed and collects the primary key's fields
+	 * once they are requested for the first time.
+	 * 
+	 * @var DBField[]
+	 */
 	protected $primaryK;
+	
+	/**
+	 * Just like the primary key field, this property caches the field that contains
+	 * the autonumeric field. This will usually be the ID that the DB refers to 
+	 * when working with the table.
+	 *
+	 * @var DBField
+	 */
 	protected $auto_increment;
 	
 	/**
@@ -275,57 +290,6 @@ abstract class Table extends Queriable
 		array_unshift($arguments, $this);
 		#Pass on
 		return call_user_func_array(Array($this->db, $name), $arguments);
-	}
-	
-	
-	
-	
-	########################################################################
-	#VALIDATION
-	########################################################################
-	
-	/**
-	 * Validates a record passed as parameter to make sure the data it
-	 * contains is valid and can be stored to the database. This function
-	 * is automatically called by insert and update.
-	 *
-	 * @param Model $data Data to be validated
-	 * @return boolean 
-	 */
-	public function validate(Model$data) {
-		
-		$this->errors = Array();
-		$ok = true;
-		$fields = $this->getFields();
-		
-		foreach ($fields as $name => $field) {
-			
-			$function = Array($this->model, 'validate' . ucfirst($name) );
-			$value    = Array($data->$name, $this);
-			
-			if (method_exists( $function[0], $function[1] ) ) {
-				$ok = call_user_func_array($function, $value) && $ok;
-			}
-			
-		}
-		
-		return $ok;
-	}
-	
-	/**
-	 * Adds an error message to the list of errors, this is used by the 
-	 * validation functions to send errors to the list returned by 
-	 * Table::getErrors()
-	 *
-	 * @param string $msg Error message
-	 */
-	public function errorMsg($msg) {
-		$this->errors[] = $msg;
-	}
-	
-	public function getErrors() {
-		if (empty ($this->errors)) return false;
-		return $this->errors;
 	}
 	
 	/**
