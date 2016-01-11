@@ -3,6 +3,11 @@
 /**
  * This class reads data and stores into a Object, additionally the data
  * is trimmed and can be read as a specific type to avoid any injection.
+ * 
+ * The sanitizer is one of the oldest and most obsolete classes in the system and
+ * was begging to be freed of it's own terror
+ * 
+ * @deprecated since version 0.1-dev 20160116
  * @package Spitfire.security.io
  * @author  César de la Cal <cesar@magic3w.com>
  */
