@@ -236,7 +236,7 @@ class Schema
 	 */
 	public function __get($name) {
 		if (isset($this->fields[$name])) { return $this->fields[$name]; }
-		else { throw new PrivateException('No field ' . $name . ' found'); }
+		else { throw new PrivateException('Schema: No field ' . $name . ' found'); }
 	}
 	
 	/**
@@ -246,7 +246,7 @@ class Schema
 	 */
 	public function __unset($name) {
 		if (isset($this->fields[$name])) { unset($this->fields[$name]); }
-		else { throw new PrivateException('No field ' . $name . ' found'); }
+		else { throw new PrivateException('Schema: No field ' . $name . ' found'); }
 	}
 	
 }
