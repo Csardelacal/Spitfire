@@ -227,6 +227,11 @@ abstract class DB
 	 */
 	abstract public function getTableInstance(DB$db, $tablename);
 	
+	/**
+	 * Creates a new On The Fly Model. These allow the system to interact with a 
+	 * database that was not modeled after Spitfire's models or that was not 
+	 * reverse engineered previously.
+	 */
 	abstract public function getOTFModel($tablename);
 
 }
