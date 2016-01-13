@@ -45,7 +45,7 @@ abstract class Table extends Queriable
 	 * shortcut to avoid looping through model-fields everytime a query is
 	 * performed.
 	 *
-	 * @var spitfire\storage\database\DBField[] 
+	 * @var DBField[] 
 	 */
 	protected $fields;
 	
@@ -62,7 +62,7 @@ abstract class Table extends Queriable
 	 * is empty when the table is constructed and collects the primary key's fields
 	 * once they are requested for the first time.
 	 * 
-	 * @var DBField[]
+	 * @var DBField[]|null
 	 */
 	protected $primaryK;
 	
@@ -127,7 +127,7 @@ abstract class Table extends Queriable
 	 * has defined a custom set of fields to work with, this function will
 	 * return the overriden fields.
 	 * 
-	 * @return mixed The fields this table handles.
+	 * @return DBField[] The fields this table handles.
 	 */
 	public function getFields() {
 		return $this->fields;
@@ -172,7 +172,8 @@ abstract class Table extends Queriable
 	 * @return Array Name of the primary key's column
 	 */
 	public function getPrimaryKey() {
-		if ($this->primaryK) { return $this->primaryK; }
+		//Check if we already did this
+		if ($this->primaryK !== null) { return $this->primaryK; }
 		
 		//Implicit else
 		$fields  = $this->getFields();

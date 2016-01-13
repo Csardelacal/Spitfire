@@ -240,13 +240,16 @@ class Schema
 	}
 	
 	/**
+	 * Removes a field from the Schema. This is a somewhat rare method, since you
+	 * should avoid it's usage in production environments and you should REALLY 
+	 * know what you're doing before using it.
 	 * 
 	 * @param string $name
 	 * @throws PrivateException
 	 */
 	public function __unset($name) {
 		if (isset($this->fields[$name])) { unset($this->fields[$name]); }
-		else { throw new PrivateException('Schema: No field ' . $name . ' found'); }
+		else { throw new PrivateException('Schema: Could not delete. No field ' . $name . ' found'); }
 	}
 	
 }
