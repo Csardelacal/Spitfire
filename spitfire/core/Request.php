@@ -133,7 +133,6 @@ class Request
 	 */
 	public function makeContext() {
 		$this->context = Context::create($this);
-		//TODO: $context->view = $context->app->getView($context->controller);
 		return $this->context;
 	}
 	
