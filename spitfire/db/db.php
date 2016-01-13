@@ -115,10 +115,10 @@ abstract class DB
 		if (is_string($tablename)) {
 			
 			try { return $this->addTableToCache($this->makeTable($tablename)); }
-			catch (\spitfire\exceptions\PrivateException$e) {}
+			catch (\spitfire\exceptions\PrivateException$e) { /* Silent failure. The table may not exist */}
 			
 			try { return $this->addTableToCache($this->makeTable(Strings::singular($tablename))); }
-			catch (\spitfire\exceptions\PrivateException$e) {}
+			catch (\spitfire\exceptions\PrivateException$e) { /*Silently fail. The singular of this table may not exist either*/}
 			
 			/*
 				$model = $this->getOTFModel($tablename);
@@ -136,7 +136,7 @@ abstract class DB
 	 * 
 	 * @todo Extract these methods (makeTable, hasTable, getTableFromCache) to a separate TablePool class
 	 * @param string $tablename
-	 * @return Schema
+	 * @return Table
 	 * @throws PrivateException
 	 */
 	protected function makeTable($tablename) {
@@ -170,7 +170,7 @@ abstract class DB
 	/**
 	 * 
 	 * @param string|Schema $name
-	 * @return boolean
+	 * @return Table
 	 */
 	protected function getTableFromCache($name) {
 		#If the variable we're passing is a schema we need to get it's name to look it up
@@ -183,7 +183,7 @@ abstract class DB
 	/**
 	 * 
 	 * @param Table|Schema $table
-	 * @return boolean
+	 * @return Table
 	 */
 	protected function addTableToCache($table) {
 		#If the variable we're passing is a schema we need to get it's name to look it up
