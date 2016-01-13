@@ -8,4 +8,4 @@ script: phpunit --bootstrap spitfire/bootstrap.php --coverage-clover=coverage.cl
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
-    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover  | mail -s Clover output cesar@magic3w.com
+    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover  | mail -s 'Clover output' cesar@magic3w.com
