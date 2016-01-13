@@ -223,7 +223,7 @@ abstract class DB
 	 * this is used to create them when requested by the table() method.
 	 * 
 	 * @abstract
-	 * @return string Class of the table
+	 * @return Table Instance of the table class the driver wants the system to use
 	 */
 	abstract public function getTableInstance(DB$db, $tablename);
 	
