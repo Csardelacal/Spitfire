@@ -4,7 +4,6 @@ namespace spitfire\storage\database;
 
 use Model;
 use Exception;
-use privateException;
 use \spitfire\model\Field;
 
 abstract class Query
