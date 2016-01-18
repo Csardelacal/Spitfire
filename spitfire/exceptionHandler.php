@@ -2,7 +2,7 @@
 
 use Exception;
 use \fileNotFoundException;
-use spitfire\environment;
+use spitfire\core\Environment;
 
 /**
  * Output error page to browser
@@ -78,7 +78,7 @@ class ExceptionHandler {
 				
 				$response->getHeaders()->status(500);
 				
-				if (environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
+				if (Environment::get('debugging_mode')) get_error_page(500, $e->getMessage(), $trace );
 				else                                    get_error_page(500, 'Server error');
 			}
 			$response->getHeaders()->send();

@@ -1,8 +1,10 @@
 <?php namespace spitfire\cache;
 
-use spitfire\environment;
+use spitfire\core\Environment;
 use spitfire\exceptions\PrivateException;
-use \Memcached;
+use spitfire\storage\database\Query; //TODO: Introduce query interface that other vendors can implement
+use Memcached;
+use Closure;
 
 /**
  * Memcached interface. This allows to retrieve cached data easily and increases
@@ -40,6 +42,14 @@ class MemcachedAdapter implements CacheInterface
 	private static $instance = null;
 	
 	/**
+	 * The environment this adapter should be retrieving it's settings from. This
+	 * contains the settings the adapter will need to properly function.
+	 *
+	 * @var Environment
+	 */
+	private $environment = null;
+	
+	/**
 	 * Contains the data cached. Array caches are way faster than even memcached,
 	 * so putting the data retrieved / set into an array and saving it on destruction
 	 * offers better performance.
@@ -70,14 +80,14 @@ class MemcachedAdapter implements CacheInterface
 	 * Creates a connection to the memcached servers.
 	 * 
 	 * @throws PrivateException
-	 * @return \memcache 
+	 * @return \Memcached 
 	 */
 	public function connect () {
 		#First we retrieve the list of Memcached servers
-		$memcached_servers = environment::get('memcached_servers');
+		$memcached_servers = $this->environment->get('memcached_servers');
 		
 		#If memcached is enabled we check if it is available
-		if (!environment::get('memcached_enabled')) { return; }
+		if (!$this->environment->get('memcached_enabled')) { return; }
 		if (!class_exists('\Memcached') ) { throw new PrivateException('Memcached is enabled but not installed'); }
 		
 		#Instance a new memcached connection
@@ -85,7 +95,7 @@ class MemcachedAdapter implements CacheInterface
 		
 		#Add the array of servers we want to use
 		foreach ($memcached_servers as $server) {
-			$this->connection->addServer($server, environment::get('memcached_port'));
+			$this->connection->addServer($server, $this->environment->get('memcached_port'));
 		}
 		
 		#Return the connection.
@@ -97,7 +107,8 @@ class MemcachedAdapter implements CacheInterface
 	 * A MC instance will just check if MC Connection exists by calling 
 	 * @uses MemcachedAdapter::connect();
 	 */
-	protected function __construct(){
+	protected function __construct($env = null){
+		$this->environment = $env? : Environment::get();
 		$this->connect();
 	}
 	
@@ -130,7 +141,11 @@ class MemcachedAdapter implements CacheInterface
 			if ($this->connection->getResultCode() !== \Memcached::RES_NOTFOUND) { return $cached; }
 			
 			#No cached version available, cache the proposed data
-			$newval = $fallback();
+			if ($fallback === null) { return false; }
+			elseif ($fallback instanceof Closure) { $newval = $fallback(); }
+			elseif ($fallback instanceof Query)   { $newval = $fallback->fetchAll(); }
+			//TODO: Add a option for query aggregation functions
+			
 			$this->set($key, $newval);
 			return $newval;
 		}
@@ -197,7 +212,7 @@ class MemcachedAdapter implements CacheInterface
 	 * @return mixed
 	 */
 	public function __get($var) {
-		if (isset($this->cache[$var])) return $this->cache[$var];
+		if (isset($this->cache[$var])) { return $this->cache[$var]; }
 		return $this->get($var);
 	}
 	
@@ -232,8 +247,9 @@ class MemcachedAdapter implements CacheInterface
 	 * @uses \spitfire\MemcachedAdapter::set()
 	 */
 	public function __destruct() {
-		foreach ($this->cache as $key => $value) 
+		foreach ($this->cache as $key => $value) {
 			$this->set($key, $value);
+		}
 	}
 	
 	/**

@@ -1,6 +1,5 @@
 <?php namespace spitfire\core;
 
-use spitfire\environment;
 
 class Headers
 {
