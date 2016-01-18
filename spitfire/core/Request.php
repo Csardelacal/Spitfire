@@ -211,14 +211,10 @@ class Request
 	}
 	
 	public static function fromServer() {
-		$get     = $_GET instanceof Get ? clone $_GET : new Get($_GET);
-		$post    = empty($_FILES)? $_POST : \spitfire\io\Upload::init();
+		$_GET    = $get     = $_GET instanceof Get ? clone $_GET : new Get($_GET);
+		$_POST   = $post    = empty($_FILES)? $_POST : \spitfire\io\Upload::init();
 		$cookie  = $_COOKIE;
 		$headers = $_SERVER;
-		
-		#For the sake of avoiding unnecessary calls this stubs the POST and GET part of toServer
-		$_GET    = $get;
-		$_POST   = $post;
 		
 		$pinfo   = get_path_info();
 		$https   = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
