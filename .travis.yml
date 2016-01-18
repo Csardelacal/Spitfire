@@ -4,7 +4,7 @@ php:
   - 5.6
   - 7.0
   - hhvm
-script: phpunit --bootstrap spitfire/bootstrap.php --coverage-clover=coverage.clover bin/tests
+script: phpunit --bootstrap spitfire/bootstrap.php --coverage-clover=coverage.clover --whitelist="spitfire|bin" bin/tests
 
 after_script:
     - wget https://scrutinizer-ci.com/ocular.phar
