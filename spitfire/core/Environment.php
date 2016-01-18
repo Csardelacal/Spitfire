@@ -57,6 +57,12 @@ class Environment
 		
 	);
 	
+	/**
+	 * The array of declared environments. This allows the user to easily define
+	 * several configurations that they can manage with ease.
+	 *
+	 * @var Environment[]
+	 */
 	static    $envs               = Array();
 	
 	/**
@@ -95,8 +101,8 @@ class Environment
 	 * @param string|Environment $env The environment to be used.
 	 */
 	public static function set_active_environment ($env) {
-		if (is_a($env, __class__) )         { self::$active_environment = $env; }
-		else if (isset (self::$envs[$env])) { self::$active_environment = self::$envs[$env]; }
+		if (is_a($env, __class__) )                          { self::$active_environment = $env; }
+		elseif (is_string($env) && isset(self::$envs[$env])) { self::$active_environment = self::$envs[$env]; }
 	}
 	
 	/**

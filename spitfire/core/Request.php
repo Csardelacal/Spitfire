@@ -131,7 +131,7 @@ class Request
 	 * @return type
 	 */
 	public function makeContext() {
-		$this->context = Context::create($this);
+		$this->context = Context::create();
 		return $this->context;
 	}
 	
@@ -223,6 +223,9 @@ class Request
 		$pinfo   = get_path_info();
 		$https   = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
 		$path    = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD'], $https);
+		
+		#This check was suggested, I suppose it is manufactured, but it would help debugging in case it shows up
+		if ($path === null) { throw new Exception('Path should not be null', 201601181405); }
 		
 		return new Request($path, $get, $post, $cookie, $headers);
 	}

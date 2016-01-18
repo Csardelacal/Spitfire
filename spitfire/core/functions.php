@@ -2,7 +2,7 @@
 
 use spitfire\SpitFire;
 use spitfire\environment;
-use spitfire\Context;
+use spitfire\core\Context;
 use spitfire\locales\langInfo;
 use spitfire\validation\Validator;
 
@@ -143,7 +143,7 @@ function lang($set = null) {
 	}
 	
 	# If we have chosen one retrieve it 
-	if ($set != null) {
+	if ($set !== null) {
 		$lang = $context->app->getLocale($set);
 	}
 	
