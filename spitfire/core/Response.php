@@ -1,7 +1,5 @@
 <?php namespace spitfire\core;
 
-use spitfire\Context;
-
 /**
  * Any HTTP response is built off a set of headers and a body that contains the
  * message being delivered. This class represents an HTTP response that can be

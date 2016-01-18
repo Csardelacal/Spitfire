@@ -57,8 +57,16 @@ class Environment
 		
 	);
 	
-	static    $envs               = false;
-	static    $active_environment = false;
+	static    $envs               = Array();
+	
+	/**
+	 * The environment currently being used by the system. This is only used by the
+	 * singleton methods and should be avoided in multi-head and multi-context
+	 * environments.
+	 *
+	 * @var Environment|null
+	 */
+	static    $active_environment = null;
 	
 	/**
 	 * When creating a new environment it'll be created with a name that will
@@ -84,7 +92,7 @@ class Environment
 	
 	/**
 	 * Defines which environment should be used to read data from it.
-	 * @param string|environment $env The environment to be used.
+	 * @param string|Environment $env The environment to be used.
 	 */
 	public static function set_active_environment ($env) {
 		if (is_a($env, __class__) )         { self::$active_environment = $env; }
