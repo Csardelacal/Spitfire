@@ -2,7 +2,6 @@
 
 use spitfire\io\Get;
 use spitfire\core\router\Router;
-use spitfire\exceptions\PrivateException;
 
 /**
  * The request class is a component that allows developers to retrieve information
