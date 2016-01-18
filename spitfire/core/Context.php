@@ -70,6 +70,8 @@ class Context
 	public $request;
 	public $response;
 	
+	public $context;
+	
 	function __construct() {
 		$this->context = $this;
 	}

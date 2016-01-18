@@ -37,7 +37,7 @@ class MemcachedAdapter implements CacheInterface
 	 * avoid memory waste or conflicts when writing). This variable is only used
 	 * on the static getInstance call.
 	 * 
-	 * @var \spitfire\MemcachedAdapter
+	 * @var MemcachedAdapter
 	 */
 	private static $instance = null;
 	
@@ -145,6 +145,7 @@ class MemcachedAdapter implements CacheInterface
 			elseif ($fallback instanceof Closure) { $newval = $fallback(); }
 			elseif ($fallback instanceof Query)   { $newval = $fallback->fetchAll(); }
 			//TODO: Add a option for query aggregation functions
+			else { $newval = null; }
 			
 			$this->set($key, $newval);
 			return $newval;

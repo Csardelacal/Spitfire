@@ -137,7 +137,7 @@ function lang($set = null) {
 	static $context = null;
 	
 	# If we have chosen one retrieve it 
-	if ($set instanceof \spitfire\Context) {
+	if ($set instanceof \spitfire\core\Context) {
 		$context = $set;
 		return;
 	}

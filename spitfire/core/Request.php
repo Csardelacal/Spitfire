@@ -1,7 +1,6 @@
 <?php namespace spitfire\core;
 
 use spitfire\io\Get;
-use spitfire\Context;
 use spitfire\core\router\Router;
 
 /**
