@@ -1,9 +1,4 @@
-<?php
-
-use spitfire\SpitFire;
-use spitfire\environment;
-
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Spitfire - Server Error</title>

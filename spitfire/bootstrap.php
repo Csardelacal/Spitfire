@@ -27,7 +27,7 @@ require_once 'spitfire/strings.php';
 require_once 'spitfire/App.php';
 require_once 'spitfire/Spitfire.php';
 require_once 'spitfire/core/functions.php';
-require_once 'spitfire/ClassInfo.php';
+require_once 'spitfire/ClassInfo.php';  //TODO: Remove - Deprecated
 require_once 'spitfire/autoload.php';
 require_once 'spitfire/autoload/classlocator.php';
 require_once 'spitfire/autoload/systemclasslocator.php';
