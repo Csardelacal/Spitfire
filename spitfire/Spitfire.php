@@ -73,7 +73,7 @@ class SpitFire extends App
 		
 		#If the user responded to the current route with a response we do not need 
 		#to handle the request
-		if (!$request->getPath() instanceof Response) {
+		if (!$request instanceof Response) {
 			#Start debugging output
 			ob_start();
 
@@ -97,8 +97,7 @@ class SpitFire extends App
 
 			#Send the response
 			$context->response->send();
-		}
-		else {
+		} else {
 			$request->getPath()->send();
 		}
 		

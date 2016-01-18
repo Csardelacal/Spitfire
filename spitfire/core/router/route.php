@@ -120,7 +120,7 @@ class Route
 	 */
 	public function testURI($URI) {
 		$array = array_filter(explode('/', $URI));
-		$this->parameters = new Parameters();//$this->server->getParameters();
+		$this->parameters = new Parameters();
 		
 		try {
 			$this->patternWalk($this->pattern, $array);
