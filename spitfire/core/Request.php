@@ -2,6 +2,7 @@
 
 use spitfire\io\Get;
 use spitfire\core\router\Router;
+use spitfire\exceptions\PrivateException;
 
 /**
  * The request class is a component that allows developers to retrieve information
@@ -211,19 +212,16 @@ class Request
 	}
 	
 	public static function fromServer() {
-		$_GET    = $get     = $_GET instanceof Get ? clone $_GET : new Get($_GET);
-		$_POST   = $post    = empty($_FILES)? $_POST : \spitfire\io\Upload::init();
+		$get     = $_GET    = $_GET instanceof Get ? clone $_GET : new Get($_GET);
+		$post    = $_POST   = empty($_FILES)? $_POST : \spitfire\io\Upload::init();
 		$cookie  = $_COOKIE;
 		$headers = $_SERVER;
 		
-		$pinfo   = get_path_info();
-		$https   = isset($_SERVER['HTTPS'])? $_SERVER['HTTPS'] : null;
-		$path    = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], $pinfo, $_SERVER['REQUEST_METHOD'], $https);
+		$https   = isset($_SERVER['HTTPS']);
+		$path    = Router::getInstance()->rewrite($_SERVER['HTTP_HOST'], get_path_info(), $_SERVER['REQUEST_METHOD'], $https);
 		
-		#This check was suggested, I suppose it is manufactured, but it would help debugging in case it shows up
-		if ($path === null) { throw new Exception('Path should not be null', 201601181405); }
-		
-		return new Request($path, $get, $post, $cookie, $headers);
+		if ($path instanceof Path) { return new Request($path, $get, $post, $cookie, $headers); }
+		else                       { return $path; }
 	}
 
 	/**
