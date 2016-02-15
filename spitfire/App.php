@@ -1,7 +1,7 @@
 <?php
 
 use spitfire\ClassInfo;
-use spitfire\Context;
+use spitfire\core\Context;
 use spitfire\exceptions\PrivateException;
 
 /**
@@ -174,7 +174,7 @@ abstract class App
 		
 		\spitfire\core\router\Router::getInstance()->request($ns, function (spitfire\core\router\Parameters$params) use ($uriSpace) {
 			$args = $params->getUnparsed();
-			return new \spitfire\core\Path($uriSpace, array_shift($args), array_shift($args), $args);
+			return new \spitfire\core\Path($uriSpace, array_shift($args), array_shift($args), $args, $params->getExtension());
 		});
 	}
 	

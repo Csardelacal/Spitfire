@@ -1,6 +1,6 @@
 <?php
 
-use spitfire\Context;
+use spitfire\core\Context;
 use spitfire\MVC;
 
 abstract class Controller extends MVC
