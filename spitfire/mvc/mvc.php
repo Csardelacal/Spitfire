@@ -1,6 +1,7 @@
 <?php namespace spitfire;
 
 use Pluggable;
+use spitfire\core\Context;
 
 /**
  * This class handles components common to Views, Controllers and model. Functions
