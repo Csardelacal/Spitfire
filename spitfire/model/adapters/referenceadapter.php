@@ -1,6 +1,6 @@
 <?php namespace spitfire\model\adapters;
 
-use Model;
+use spitfire\Model;
 use privateException;
 
 class ReferenceAdapter extends BaseAdapter

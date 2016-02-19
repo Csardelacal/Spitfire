@@ -3,6 +3,7 @@
 use spitfire\exceptions\PrivateException;
 use fileNotFoundException;
 use spitfire\MVC;
+use spitfire\core\Context;
 use \_SF_ViewElement;
 use spitfire\registry\JSRegistry;
 use spitfire\registry\CSSRegistry;

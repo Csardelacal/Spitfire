@@ -28,6 +28,18 @@ class Parameters
 	 */
 	private $unparsed   = Array();
 	
+	private $extension  = 'php';
+	
+	
+	public function getExtension() {
+		return $this->extension;
+	}
+	
+	public function setExtension($extension) {
+		$this->extension = $extension;
+		return $this;
+	}
+	
 	/**
 	 * Imports a set of parameters parsed by the router. Usually, this will be a
 	 * single element provided by the route.

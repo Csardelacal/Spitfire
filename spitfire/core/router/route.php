@@ -40,7 +40,7 @@ class Route
 	private $server;
 	private $pattern;
 	private $patternStr;
-	private $new_route;
+	private $newRoute;
 	private $parameters;
 	private $method;
 	private $protocol;
@@ -59,7 +59,7 @@ class Route
 	 */
 	public function __construct(Routable$server, $pattern, $new_route, $method, $proto = Route::PROTO_ANY) {
 		$this->server    = $server;
-		$this->new_route = $new_route;
+		$this->newRoute  = $new_route;
 		$this->method    = $method;
 		$this->protocol  = $proto;
 		
@@ -120,7 +120,13 @@ class Route
 	 */
 	public function testURI($URI) {
 		$array = array_filter(explode('/', $URI));
+		
 		$this->parameters = new Parameters();
+		
+		#Check the extension
+		$last = explode('.', array_pop($array));
+		$this->parameters->setExtension(isset($last[1])? array_pop($last) : 'php');
+		array_push($array, implode('.', $last));
 		
 		try {
 			$this->patternWalk($this->pattern, $array);
@@ -154,14 +160,14 @@ class Route
 	}
 	
 	protected function rewriteString() {
-		$route = $this->getParameters()->replaceInString($this->new_route);
+		$route = $this->getParameters()->replaceInString($this->newRoute);
 		
 		#If the URL doesn't enforce to be finished pass on the unparsed parameters
-		if (!\Strings::endsWith($this->new_route, '/')) {
+		if (!\Strings::endsWith($this->newRoute, '/')) {
 			$route = rtrim($route, '\/') . '/' . implode('/', $this->getParameters()->getUnparsed());
 		}
 		
-		return '/' . trim($route, '/') . '/';
+		return '/' . trim($route, '/') . ($this->parameters->getExtension() === 'php'? '/' : '.' . $this->extension);
 	}
 	
 	/**
@@ -170,8 +176,8 @@ class Route
 	 *
 	 */
 	protected function rewriteArray($parameters) {
-		$route = $this->new_route;
-		$path  = new Path(null, null, null, null, null, null);
+		$route = $this->newRoute;
+		$path  = new Path(null, null, null, null, $this->parameters->getExtension(), null);
 		
 		if (isset($route['app']       )) {
 			$app = $parameters->getParameter($route['app']);
@@ -197,9 +203,9 @@ class Route
 	
 	public function rewrite($URI, $method, $protocol, $server) {
 		if ($this->test($URI, $method, $protocol)) {
-			if (is_string($this->new_route))         {return $this->rewriteString();}
-			if ($this->new_route instanceof Closure) {return call_user_func_array($this->new_route, Array($this->parameters, $server->getParameters()));}
-			if (is_array($this->new_route))          {return $this->rewriteArray($server->getParameters()->merge($this->parameters)); }
+			if (is_string($this->newRoute))         {return $this->rewriteString();}
+			if ($this->newRoute instanceof Closure) {return call_user_func_array($this->newRoute, Array($this->parameters, $server->getParameters()));}
+			if (is_array($this->newRoute))          {return $this->rewriteArray($server->getParameters()->merge($this->parameters)); }
 		}
 		return false;
 	}

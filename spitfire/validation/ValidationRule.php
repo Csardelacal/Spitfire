@@ -13,6 +13,7 @@ interface ValidationRule
 	 * it will return a validation error.
 	 * 
 	 * @param mixed $value The value to be tested
+	 * @return ValidationError|string|bool|null Return a boolean or null value if everything was alright.
 	 */
 	function test($value);
 }
