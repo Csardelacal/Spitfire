@@ -3,8 +3,12 @@
 class Strings
 {
 	
+	private function __construct() {}
+	
 	/**
-	 * Turns camelCased strings into under_scored strings
+	 * Turns camelCased strings into under_scored strings. This is specially useful
+	 * for class to URL conversion and the other way around.
+	 * 
 	 * @param String $str
 	 */
 	public static function camel2underscores ($str) {
