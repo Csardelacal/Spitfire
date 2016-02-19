@@ -1,5 +1,7 @@
 <?php namespace spitfire\validation;
 
+use spitfire\exceptions\PrivateException;
+
 /**
  * A validator is a tool that can be used in order to verify that data is correct.
  * This data can basically be everything, although validation is usually aimed at
@@ -163,30 +165,6 @@ class Validator implements ValidatorInterface
 	}
 	
 	/**
-	 * Tests an element against the validation rules inside this validator. If the
-	 * element is a validatable object it will return the status of validity of 
-	 * the object.
-	 * 
-	 * For easier to read and cleaner syntax this method throws an exception containing
-	 * data about all the errors generated while testing so you can assign them to
-	 * tested values.p
-	 * 
-	 * @deprecated
-	 * @param \spitfire\validation\Validatable|mixed $value
-	 * @param mixed $src
-	 * @return \spitfire\validation\ValidationResult
-	 * @throws \ValidationException If the validation is not correct.
-	 */
-	public function test($value, &$src = null) {
-		if ($value instanceof Validatable) {$result = $value->validate();}
-		else { $result = $this->iterateRules($value, $src);}
-		
-		if ($result instanceof ValidationResult) { return $result; }
-		elseif ($result instanceof ValidationError ) { return new ValidationResult(Array($result)); }
-		else { return false; }
-	}
-	
-	/**
 	 * Loops throught the list of rules this validator has testing if all of them 
 	 * are satisfied by the value.
 	 * 
@@ -210,9 +188,14 @@ class Validator implements ValidatorInterface
 	 */
 	protected function testRule(ValidationRule$rule, $value) {
 		$result = $rule->test($value);
+		
+		#If the result was a string it means that the system returned a message
+		if (is_string($result)) {
+			$result = new ValidationError($result);
+		}
 
 		if ($result !== false && $result !== true && $result !== null && !$result instanceof ValidationError) {
-			throw new \privateException('Invalid result type, expected ValidationError');
+			throw new PrivateException('Invalid result type, expected ValidationError');
 		}
 		
 		return $result;
@@ -227,7 +210,7 @@ class Validator implements ValidatorInterface
 	 * @return \ValidationException
 	 */
 	public static function makeException($errors) {
-		$ex = new \ValidationException('Validation failed', 0, $errors);
+		$ex = new ValidationException('Validation failed', 0, $errors);
 		return $ex;
 	}
 

@@ -1,4 +1,4 @@
-<?php
+<?php namespace spitfire\validation;
 
 /**
  * Validation exceptions are generated after a value for data has been tested 
