@@ -52,7 +52,7 @@ class Request
 	 * will contain information like DNT or User agent that can be relevant to your
 	 * application and alter the experience the user receives.
 	 *
-	 * @var request\Headers 
+	 * @var Headers
 	 */
 	private $headers;
 	
