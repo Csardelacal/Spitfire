@@ -129,7 +129,7 @@ abstract class App
 		$c = $this->hasController($controller);
 		
 		#If no controller was found, we can throw an exception letting the user know
-		if ($c === false) { throw new publicException("Page not found", 404, new PrivateException("Controller not fond", 0) ); }
+		if ($c === false) { throw new publicException("Page not found", 404, new PrivateException("Controller {$controller[0]} not found", 0) ); }
 		
 		#Otherwise we will instantiate the class and return it
 		return new $c($intent);
