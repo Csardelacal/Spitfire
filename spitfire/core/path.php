@@ -79,7 +79,7 @@
 	  */
 	 public function __construct($app, $controller, $action, $object, $format = 'php', $parameters = Array()) {
 		 $this->app        = $app;
-		 $this->controller = (array)$controller;
+		 $this->controller = $controller? (array)$controller : null;
 		 $this->action     = $action;
 		 $this->object     = (array)$object;
 		 $this->format     = $format;

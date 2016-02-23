@@ -3,7 +3,7 @@
 namespace spitfire\model\adapters;
 
 use ChildrenField;
-use Model;
+use spitfire\Model;
 use Iterator;
 use ArrayAccess;
 

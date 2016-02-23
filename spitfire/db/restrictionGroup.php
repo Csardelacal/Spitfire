@@ -135,7 +135,7 @@ abstract class RestrictionGroup
 	public function getPhysicalSubqueries() {
 		$_ret = Array();
 		foreach ($this->getRestrictions() as $r) {
-			array_merge($_ret, $r->getPhysicalSubqueries());
+			$_ret = array_merge($_ret, $r->getPhysicalSubqueries());
 		}
 		
 		return $_ret;

@@ -52,6 +52,9 @@ abstract class Query
 			#Otherwise we create a complex restriction for a logical field.
 			$field = $this->table->getTable()->getModel()->getField($fieldname);
 			
+			#If the fieldname was not null, but the field is null - it means that the system could not fiend the field and is kicking back
+			if ($field === null && $fieldname!== null) { throw new \spitfire\exceptions\PrivateException('No field ' . $fieldname, 201602231949); }
+			
 			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
 			{ $field = $fieldname; }
 			
