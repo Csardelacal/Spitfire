@@ -1,11 +1,7 @@
-<?php
+<?php namespace spitfire\io;
 
 use spitfire\exceptions\PrivateException;
 
-/**
- * 
- * @deprecated since version 0.1-dev 201602242351
- */
 class Image
 {
 	private $img;
@@ -32,6 +28,8 @@ class Image
 				return $img;
 			case IMAGETYPE_JPEG: 
 				return imagecreatefromjpeg($file);
+			case IMAGETYPE_GIF: 
+				return imagecreatefromgif($file);
 			case IMAGETYPE_PSD:
 				if (class_exists("Imagick")) {
 					set_time_limit(480);
@@ -85,6 +83,28 @@ class Image
 		imagealphablending($img, false);
 		imagesavealpha($img, true);
 		imagecopyresampled($img, $this->img, 0, 0, $offset_x, $offset_y, $width, $height, $this->meta[0]-2*$offset_x, $this->meta[1]-2*$offset_y);
+		$this->img = $img;
+		
+		return $this;
+		
+		
+	}
+	
+	public function resize ($width, $height = null) {
+		
+		if ($width === null) {
+			$width = $this->meta[0] * $height / $this->meta[1];
+		}
+		
+		if ($height === null) {
+			$height = $this->meta[1] * $width / $this->meta[0];
+		}
+		
+		$img = imagecreatetruecolor($width, $height);
+		imagecolortransparent($img , imagecolorallocatealpha($img , 0, 0, 0, 127));
+		imagealphablending($img, false);
+		imagesavealpha($img, true);
+		imagecopyresampled($img, $this->img, 0, 0, 0, 0, $width, $height, $this->meta[0], $this->meta[1]);
 		$this->img = $img;
 		
 		return $this;
