@@ -137,7 +137,7 @@ abstract class Model implements Serializable
 		$this->prepareForWrite();
 		
 		if ($this->new) { $this->insert(); }
-		else            { $this->update($this); }
+		else            { $this->update(); }
 		
 		$this->new = false;
 		
