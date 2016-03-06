@@ -54,7 +54,7 @@ abstract class stdSQLTable extends Table
 			//Prepare the statement
 			$refstt = sprintf('FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE CASCADE ON UPDATE CASCADE',
 				implode(', ', $fields),
-				$referencedtable->getTablename(),
+				$referencedtable,
 				implode(', ', $primary) 
 				);
 			
@@ -78,7 +78,7 @@ abstract class stdSQLTable extends Table
 		$clean = array_filter($definitions);
 		
 		$stt = sprintf('CREATE TABLE %s (%s)',
-			$this->getTablename(),
+			$this,
 			implode(', ', $clean)
 			);
 		
