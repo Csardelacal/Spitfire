@@ -14,6 +14,15 @@ class MysqlPDOCompositeRestriction extends CompositeRestriction
 		
 		if ($field === null || $value === null) {
 			return implode(' AND ', $this->getSimpleRestrictions());
+		} elseif ($field instanceof \Reference && $this->getQuery()->getAliased()) {
+			/*
+			 * This section here is a very complicated one. When a query nests several
+			 * layers of queries inside it, the composite restrictions stop using
+			 * the "IS NULL" to String methods.
+			 * 
+			 * Instead of this quirk, it should be filtered out
+			 */
+			return '1';
 		} else {
 			$fields = $this->getValue()->getQueryTable()->getTable()->getPrimaryKey();
 			$_ret   = Array();

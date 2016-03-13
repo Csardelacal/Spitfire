@@ -159,6 +159,10 @@ class Response
 			$this->getHeaders()->redirect($returnURL);
 		}
 		
+		if (in_array($this->getHeaders()->get('Status'), Array('301 Permanently moved', '302 Found'))) {
+			$this->setBody('Redirecting...');
+		}
+		
 		ob_start();
 		echo $this->getBody();
 		$this->headers->send();

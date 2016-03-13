@@ -13,7 +13,7 @@ use spitfire\core\Context;
  * 
  * @property-read View $view The current view
  * @property-read Context $context The context within this is located
- * @property-read Request $request The request the context is answering to
+ * @property-read core\Request $request The request the context is answering to
  * @property-read \spitfire\core\Response $response Contains the response body and headers
  * @property-read \Controller $controller The controller used ot handle this context
  * 
