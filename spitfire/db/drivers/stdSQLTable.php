@@ -68,7 +68,9 @@ abstract class stdSQLTable extends Table
 		
 		$definitions = $this->columnDefinitions();
 		$foreignkeys = $this->foreignKeyDefinitions();
-		$pk = array_keys($this->getPrimaryKey());
+		$pk = $this->getPrimaryKey();
+		
+		foreach($pk as &$f) { $f = '`' . $f->getName() .  '`'; }
 		
 		if (!empty($pk)) $definitions[] = 'PRIMARY KEY(' . implode(', ', $pk) . ')';
 		

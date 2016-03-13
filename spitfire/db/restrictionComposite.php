@@ -127,6 +127,8 @@ class CompositeRestriction
 		
 		$last->setId($this->getValue()->getId());
 		$last->importRestrictions($this->getValue());
+		
+		if ($this->field instanceof \ChildrenField) { return array_merge($connector, $last->getPhysicalSubqueries()); }
 		return array_merge($last->getPhysicalSubqueries(), $connector);
 	}
 	
