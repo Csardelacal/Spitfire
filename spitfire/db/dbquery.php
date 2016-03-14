@@ -66,6 +66,10 @@ abstract class Query
 		return $this;
 	}
 	
+	public function removeRestriction($r) {
+		unset($this->restrictions[array_search($r, $this->restrictions)]);
+	}
+	
 	public function setAliased($aliased) {
 		$this->aliased = $aliased;
 	}
