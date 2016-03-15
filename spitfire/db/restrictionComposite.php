@@ -128,89 +128,36 @@ class CompositeRestriction
 		$last->setId($this->getValue()->getId());
 		$last->importRestrictions($this->getValue());
 		
-		if ($this->field instanceof \ChildrenField) { return array_merge($connector, $last->getPhysicalSubqueries()); }
+		/*
+		 * In case of the field being a childrenfield, we need to get the connector
+		 * from the first subquery and plug it into the current one.
+		 * 
+		 * Basically, since a childrenfield works exactly the other way around that
+		 * a normal reference does we need to turn the restrictions that the reference
+		 * would normally have pointing at it's parent into the childrenfield's 
+		 * restrictions.
+		 * 
+		 * This currently causes a redundant restrictions to appear, but these shouldn't
+		 * harm the operation as it is.
+		 */
+		if ($this->field instanceof \ChildrenField) { 
+			$subqueries = $last->getPhysicalSubqueries();
+			$first      = reset($subqueries);
+			
+			foreach ($first->getRestrictions() as $r) { 
+				$v = $r->getField(); 
+				$q1 = $v->getQuery();
+				$q2 = $last;
+				if ($v instanceof QueryField && $q1 === $q2) {
+					$last->addRestriction($r->getField(), $r->getValue());
+					$first->removeRestriction($r);
+				}
+			}
+			
+			return array_merge($subqueries, $connector); 
+		}
+		
 		return array_merge($last->getPhysicalSubqueries(), $connector);
 	}
 	
-	/**
-	 * 
-	 * @deprecated since version 0.1dev
-	 * @return type
-	 */
-	public function getConnectingRestrictions() {
-		
-		if ($this->field === null) { return null; }
-		
-		if ($this->field instanceof \Reference && $this->field->getTable() === $this->getQuery()->getTable()) {
-			$uplink = new Uplink($this->getQuery(), $this->getValue(), $this->field);
-			return Array($uplink->getRestrictions());
-			
-		}
-		
-		elseif ($this->field instanceof \ManyToManyField && $this->field->getTable() === $this->value->getTable()) {
-			$route1       = $this->field->getBridge()->getTable()->getQueryInstance();
-			$route1->setAliased(true);
-			$route2       = $this->field->getBridge()->getTable()->getQueryInstance();
-			$route2->setAliased(true);
-			$fields       = $this->field->getBridge()->getFields();
-			
-			$restrictions = Array();
-			
-			//Route #1
-			$uplink1 = new Downlink($route1, $this->getQuery(), reset($fields));
-			$restrictions[0] = $uplink1->getRestrictions();
-			
-			//Route2
-			$uplink2 = new Downlink($route2, $this->getQuery(), end($fields));
-			$restrictions[1] = $uplink2->getRestrictions();
-			
-			//Merge
-			$uplink3 = new Uplink($route1, $this->getValue(), end($fields));
-			$uplink4 = new Uplink($route2, $this->getValue(), reset($fields));
-			$restrictions[2] = $this->getValue()->restrictionGroupInstance();
-			$restrictions[2]->putRestriction($uplink3->getRestrictions());
-			$restrictions[2]->putRestriction($uplink4->getRestrictions());
-			
-			return $restrictions;
-			
-			
-		}
-		
-		elseif ($this->field instanceof \ManyToManyField) {
-			$subquery     = $this->field->getBridge()->getTable()->getQueryInstance();
-			$subquery->setAliased(true);
-			$fields       = $this->field->getBridge()->getFields();
-			
-			foreach ($fields as $field) {
-				
-				if ($field->getTarget() === $this->getQuery()->getTable()->getModel()) {
-					$link2 = new Downlink($subquery, $this->getQuery(), $field);
-					$restrictions[0] = $link2->getRestrictions();
-				}
-				if ($field->getTarget() === $this->value->getTable()->getModel()) {
-					$link2 = new Uplink($subquery, $this->value, $field);
-					$restrictions[1] = $link2->getRestrictions();
-				}
-					
-			}
-			
-			return Array($restrictions[0], $restrictions[1]);
-			
-		}
-		
-		elseif ($this->field instanceof \ChildrenField ||
-				  $this->field instanceof \Reference && $this->field->getTable() !== $this->getQuery()->getTable()) {
-
-			if ($this->field instanceof \ChildrenField) {
-				$field = $this->field->findReference();
-			}
-			else {
-				$field = $this->field;
-			}
-			
-			$uplink = new Downlink($this->getValue(), $this->getQuery(), $field);
-			return Array($uplink->getRestrictions());
-		}
-	}
-
 }
