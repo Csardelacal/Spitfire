@@ -16,7 +16,6 @@ class MysqlPDOQuery extends Query
 		$offset       = ($this->getPage() - 1) * $rpp;
 		
 		$selectstt    = 'SELECT';
-		$fields       = implode(', ', ($fields)? $fields : $this->table->getTable()->getFields());
 		$fromstt      = 'FROM';
 		$tablename    = $this->aliasedTableName();
 		$wherestt     = 'WHERE';
@@ -24,6 +23,8 @@ class MysqlPDOQuery extends Query
 		$restrictions = array_filter($this->getRestrictions(), Array('spitfire\storage\database\Query', 'restrictionFilter'));
 		$orderstt     = 'ORDER BY';
 		$order        = $this->getOrder();
+		$groupbystt   = 'GROUP BY';
+		$groupby      = null;
 		$limitstt     = 'LIMIT';
 		$limit        = $offset . ', ' . $rpp;
 		
@@ -34,6 +35,26 @@ class MysqlPDOQuery extends Query
 		
 		foreach ($subqueries as $q) {
 			$joins[] = sprintf('LEFT JOIN %s ON (%s)', $q->getQueryTable()->definition(), implode(' AND ', $q->getRestrictions()));
+		}
+		
+		if ($fields === null) {
+			$fields = $this->table->getTable()->getFields();
+			
+			/*
+			 * If there is subqueries we default to grouping data in a way that will
+			 * give us unique records and the amount of times they appear instead
+			 * of repeating them.
+			 * 
+			 * Example: The users followed by users I follow. Even though I cannot
+			 * follow a user twice, two different users I follow can again follow
+			 * the same user. A regular join would produce a dataset where the user
+			 * is included twice, by adding the grouping mechanism we're excluding
+			 * that behavior.
+			 */
+			if (!empty($subqueries)) { 
+				$groupby  = $fields; 
+				$fields[] = 'COUNT(*) AS __META__count';
+			}
 		}
 		
 		$join = implode(' ', $joins);
@@ -59,8 +80,16 @@ class MysqlPDOQuery extends Query
 			$order = "{$order['field']} {$order['mode']}";
 		}
 		
-		$stt = array_filter(Array( $selectstt, $fields, $fromstt, $tablename, $join, 
-		    $wherestt, $restrictions, $orderstt, $order, $limitstt, $limit));
+		if (empty($groupby)) {
+			$groupbystt = '';
+			$groupby    = '';
+		}
+		else {
+			$groupby = implode(', ', $groupby);
+		}
+		
+		$stt = array_filter(Array( $selectstt, implode(', ', $fields), $fromstt, $tablename, $join, 
+		    $wherestt, $restrictions, $groupbystt, $groupby, $orderstt, $order, $limitstt, $limit));
 		
 		return new mysqlPDOResultSet($this->getTable(), $this->getTable()->getDb()->execute(implode(' ', $stt)));
 		
