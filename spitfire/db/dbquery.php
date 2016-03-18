@@ -93,16 +93,6 @@ abstract class Query
 		$this->id = $id;
 		return $this;
 	}
-		
-	public function getJoins() {
-		$_joins = Array();
-		
-		foreach($this->restrictions as $restriction) {
-			$_joins = array_merge($_joins, $restriction->getJoins());
-		}
-		
-		return $_joins;
-	}
 	
 	/**
 	 * Creates a new set of alternative restrictions for the current query.
