@@ -3,8 +3,6 @@
 namespace spitfire\storage\database\drivers;
 
 use PDO;
-use Reference;
-use ChildrenField;
 
 /**
  * This class works as a traditional resultset. It acts as an adapter between the
@@ -39,46 +37,8 @@ class mysqlPDOResultSet implements resultSetInterface
 	public function fetch() {
 		$data = $this->result->fetch(PDO::FETCH_ASSOC);
 		#If the data does not contain anything we return a null object
-		if (!$data) return null;
-		$data = array_map( Array($this->table->getDB(), 'convertIn'), $data);
-		
-		#Once the data is clean parse it in
-		$_record = Array();
-		$fields  = $this->table->getModel()->getFields();
-		
-		/*foreach ($fields as $field) {
-			
-			if ($field instanceof Reference) {
-				$physical = $field->getPhysical();
-				
-				#If the primary key of the parent only has 1 field we pass it through
-				#a cachable query via getbyid
-				if (count($physical) == 1) {
-					$query = $field->getTarget()->getTable()->hitCache($data[reset($physical)->getName()]);
-				}
-				
-				if ($query == null) {
-					$query    = $this->table->getDb()->table($field->getTarget())->getAll();
-
-					foreach ($physical as $physical_field) {
-						$query->addRestriction($physical_field->getReferencedField()->getName(), $data[$physical_field->getName()]);
-					}
-				}
-				
-				$_record[$field->getName()] = $query;
-			}
-			
-			elseif ($field instanceof ChildrenField) {
-				
-			}
-			
-			else {
-				$phys = $field->getPhysical();
-				$_record[$field->getName()] = $data[array_shift($phys)->getName()];
-			}
-			
-		}/**/
-		$_record = $data;
+		if (!$data) { return null; }
+		$_record = array_map( Array($this->table->getDB(), 'convertIn'), $data);
 		
 		$record = $this->table->newRecord($_record);
 		$this->table->cache($record);
@@ -101,7 +61,4 @@ class mysqlPDOResultSet implements resultSetInterface
 		return $this->result->fetch(PDO::FETCH_ASSOC);
 	}
 	
-	public function __destruct() {
-		//$this->result->closeCursor();
-	}
 }
