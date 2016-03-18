@@ -140,24 +140,24 @@ class CompositeRestriction
 		 * This currently causes a redundant restrictions to appear, but these shouldn't
 		 * harm the operation as it is.
 		 */
-		if ($this->field instanceof \ChildrenField) { 
-			$subqueries = $last->getPhysicalSubqueries();
-			$first      = reset($subqueries);
-			
-			foreach ($first->getRestrictions() as $r) { 
-				$v = $r->getField(); 
-				$q1 = $v->getQuery();
-				$q2 = $last;
-				if ($v instanceof QueryField && $q1 === $q2) {
-					$last->addRestriction($r->getField(), $r->getValue());
-					$first->removeRestriction($r);
-				}
+		$subqueries = $last->getPhysicalSubqueries();
+		$first      = end($subqueries);
+
+		//If there is nothing to descent into we stop here
+		if (!$first) { return array_merge($subqueries, $connector); }
+
+		foreach ($first->getRestrictions() as $r) { 
+			if (!$r->getField() instanceof QueryField) { continue; }
+			$v  = $r->getField(); 
+			$q1 = $v->getQuery();
+			$q2 = $last;
+			if ($v instanceof QueryField && $q1 === $q2) {
+				$last->addRestriction($r->getField(), $r->getValue());
+				$first->removeRestriction($r);
 			}
-			
-			return array_merge($subqueries, $connector); 
 		}
-		
-		return array_merge($last->getPhysicalSubqueries(), $connector);
+
+		return array_merge($subqueries, $connector); 
 	}
 	
 }
