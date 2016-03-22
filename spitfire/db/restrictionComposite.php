@@ -1,9 +1,7 @@
-<?php
-
-namespace spitfire\storage\database;
+<?php namespace spitfire\storage\database;
 
 use spitfire\model\Field;
-use \Model;
+use spitfire\Model;
 
 class CompositeRestriction
 {
@@ -108,13 +106,6 @@ class CompositeRestriction
 			}
 			return $restrictions;
 		}
-		
-		trigger_error('Deprecated method getSimpleRestrictions was used', E_USER_DEPRECATED);
-		if ($this->value instanceof Model) 
-			$this->value = $this->value->getQuery();
-		
-		if ($this->value instanceof Query)
-			return $this->value->getRestrictions();
 	}
 	
 	
@@ -129,16 +120,19 @@ class CompositeRestriction
 		$last->importRestrictions($this->getValue());
 		
 		/*
-		 * In case of the field being a childrenfield, we need to get the connector
-		 * from the first subquery and plug it into the current one.
+		 * Since layered composite restrictions cannot be handled in the same way
+		 * as their "higher" counterparts we need to reorganize the restrictions
+		 * for subsqueries of subqueries.
 		 * 
-		 * Basically, since a childrenfield works exactly the other way around that
-		 * a normal reference does we need to turn the restrictions that the reference
-		 * would normally have pointing at it's parent into the childrenfield's 
-		 * restrictions.
+		 * Basically, in higher levels we indicate that the top query should either
+		 * include or not the lower levels. This is not supported on tables that 
+		 * get joined.
 		 * 
 		 * This currently causes a redundant restrictions to appear, but these shouldn't
 		 * harm the operation as it is.
+		 * 
+		 * TODO: This code is currently broken. It should filter out the composites
+		 * of the subqueries instead. This way we'd ensure that this works
 		 */
 		$subqueries = $last->getPhysicalSubqueries();
 		$first      = end($subqueries);
