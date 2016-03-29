@@ -8,26 +8,6 @@
  */
 
 
-/**
- * Data URI encoding is used to improve CSS performance when loading small images
- * by embedding them directly into the CSS file itself, reducing the ammount of
- * HTTP requests
- * @param String $asset File location of the asset
- * @param String $mime  Content/type
- * @return String URI encoded data
- * @package nLive.storage
- */
-
-function dataURI($asset, $mime = 'image/png', $charset = false) {
-	$data = file_get_contents($asset);
-	$base64 = base64_encode($data);
-	$charset = ($charset)? "charset=$charset" : '';
-	return "data:$mime;$charset;base64,$base64";
-}
-
-
-
-
 class thumb
 {
 	private $image;

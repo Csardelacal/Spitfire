@@ -3,17 +3,14 @@
 class Strings
 {
 	
-	private function __construct() {}
-	
 	/**
-	 * Turns camelCased strings into under_scored strings. This is specially useful
-	 * for class to URL conversion and the other way around.
+	 * Turns camelCased strings into under_scored strings
 	 * 
 	 * @param String $str
 	 */
 	public static function camel2underscores ($str) {
 		$str = preg_replace('/[A-Z]/', '_$0', $str);
-		if ($str[0] == '_') $str = substr ($str, 1);
+		if ($str[0] == '_') { $str = substr ($str, 1); }
 		return strtolower($str);
 	}
 	
@@ -25,14 +22,11 @@ class Strings
 	public static function slug($string) {
 		$str = preg_replace(
 				  /*http://stackoverflow.com/questions/10444885/php-replace-foreign-characters-in-a-string*/
-				  '/&([A-Za-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i', 
-				  '$1', //Remove accents
+				  Array('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);/i','/[^A-Za-z0-9_\-\s]/'), 
+				  Array('$1',''), 
 				  htmlentities($string, ENT_QUOTES, 'UTF-8'));
 		
-		return strtolower(preg_replace(
-				  Array('/[^A-Za-z0-9_\-\s]/', '/[ \-\_]+/'), 
-				  Array('' /*Remove non-alphanumeric characters*/, '-' /*Remove multiple spaces*/), 
-				  html_entity_decode($str, ENT_QUOTES, 'UTF-8')));
+		return strtolower(str_replace(Array(' ', '--'), Array('-', '-'), $str));
 	}
 	
 	public static function endsWith($haystack, $needle) {
@@ -77,11 +71,25 @@ class Strings
 		
 		$str = nl2br($str);
 		
-		return preg_replace_callback('/(http|https):\/\/([a-zA-z0-9\%\&\?\/\.]+)/', function($e) {
+		return preg_replace_callback('/(http|https):\/\/([a-zA-z0-9\%\&\?\/\.\-_\=]+)/', function($e) {
 			$url = $e[0];
 			$pretty = (strlen($e[2]) > 27)? substr($e[2], 0, 15) . '...' . substr($e[2], -10): $e[2];
 			return sprintf('<a href="%s">%s</a>', $url, $pretty);
 		},$str);
+	}
+	
+	/**
+	 * Offsets the line by a character. For example, when you're printing text to 
+	 * HTML you wish it to be indented the same way as the rest of your HTML
+	 * 
+	 * @param string $str
+	 * @param int    $times
+	 * @param string $character
+	 * @return string
+	 */
+	public static function indent($str, $times = 1, $character = "\t") {
+		$offset = str_repeat($character, $times);
+		return $offset . str_replace(PHP_EOL, PHP_EOL . $offset, $str);
 	}
 	
 }

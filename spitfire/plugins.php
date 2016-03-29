@@ -160,7 +160,7 @@ class m3w_parser
 	
 	public function __construct($file) {
 		if (file_exists($file)) $c = file($file);
-		else throw new fileNotFoundException('File '.$file.' not found', 0);
+		else throw new \spitfire\exceptions\FileNotFoundException('File '.$file.' not found', 0);
 		$this->parse($c);
 	}
 	
