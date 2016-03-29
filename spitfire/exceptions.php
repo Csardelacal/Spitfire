@@ -26,7 +26,6 @@
  * @author César de la Cal Bretschneider <cesar@magic3w.com>
  */
 class privateException extends Exception {}
-class fileNotFoundException  extends privateException {}
 class filePermissionsException  extends privateException {}
 
 /**

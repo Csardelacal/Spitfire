@@ -1,7 +1,7 @@
 <?php namespace spitfire;
 
 use spitfire\exceptions\PrivateException;
-use fileNotFoundException;
+use spitfire\exceptions\FileNotFoundException;
 use spitfire\MVC;
 use spitfire\core\Context;
 use \_SF_ViewElement;
@@ -90,14 +90,14 @@ class View extends MVC
 	 * your directory structure.
 	 * 
 	 * @param string $fileName
-	 * @throws fileNotFoundException
+	 * @throws FileNotFoundException
 	 */
 	public function setFile ($fileName) {
 		
 		if (!file_exists($fileName)) { $fileName = $this->app->getTemplateDirectory() . $fileName; }
 		
 		if (file_exists($fileName)) { $this->file = $fileName; }
-		else { throw new fileNotFoundException('File ' . $fileName . 'not found. View can\'t use it'); }
+		else { throw new FileNotFoundException('File ' . $fileName . 'not found. View can\'t use it'); }
 	}
 
 

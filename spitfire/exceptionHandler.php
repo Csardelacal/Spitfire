@@ -1,8 +1,8 @@
 <?php namespace spitfire\exceptions;
 
 use Exception;
-use \fileNotFoundException;
 use spitfire\core\Environment;
+use spitfire\exceptions\FileNotFoundException;
 
 /**
  * Output error page to browser
@@ -24,7 +24,7 @@ function get_error_page($code, $message, $moreInfo = '') {
 	} else {
 		echo 'Error page not found. 
 			  To avoid this message please go to bin/error_pages and create '.$error_page .' with the data about the error you want.';
-		throw new fileNotFoundException('File not found: '.$error_page, 500);
+		throw new FileNotFoundException('File not found: '.$error_page, 500);
 	}
 }
 
