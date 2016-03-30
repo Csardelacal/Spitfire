@@ -131,10 +131,13 @@ class CompositeRestriction
 		 * This currently causes a redundant restrictions to appear, but these shouldn't
 		 * harm the operation as it is.
 		 * 
-		 * TODO: This code is currently broken. It should filter out the composites
-		 * of the subqueries instead. This way we'd ensure that this works
 		 */
 		$subqueries = $last->getPhysicalSubqueries();
+		$last->filterCompositeRestrictions();
+		
+		#Query optimizer - this will swap restrictions from one query to another to 
+		#make it easier for the database to read and process. It also accounts for 
+		#a shortcoming in SQL saving us some INNER joins
 		$first      = end($subqueries);
 
 		//If there is nothing to descent into we stop here
@@ -150,7 +153,7 @@ class CompositeRestriction
 				$first->removeRestriction($r);
 			}
 		}
-
+		
 		return array_merge($subqueries, $connector); 
 	}
 	

@@ -51,8 +51,7 @@ class TableTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testGetUnexistingFieldByObject() {
 		$schema = new \spitfire\storage\database\Schema('notreal');
-		$table  = $this->db->table($schema);
-		$field = new \IntegerField();
+		$field  = new \IntegerField();
 		$field->setModel($schema);
 		$this->table->getField(new \spitfire\storage\database\drivers\mysqlPDOField($field, 'notexisting'));
 	}
