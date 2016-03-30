@@ -50,10 +50,10 @@ class TableTest extends PHPUnit_Framework_TestCase
 	 * @expectedException \spitfire\exceptions\PrivateException
 	 */
 	public function testGetUnexistingFieldByObject() {
-		$schema = new \spitfire\storage\database\Schema('notreal');
-		$field  = new \IntegerField();
-		$field->setModel($schema);
-		$this->table->getField(new \spitfire\storage\database\drivers\mysqlPDOField($field, 'notexisting'));
+		$schema = new \spitfire\storage\database\Schema('test\storage\database\Table\notreal');
+		$this->db->table($schema);
+		$schema->field = new \IntegerField();
+		$this->table->getField(new \spitfire\storage\database\drivers\mysqlPDOField($schema->field, 'notexisting'));
 	}
 
 
