@@ -116,7 +116,7 @@ class View extends MVC
 		if (!$this->render_template) { echo $this->data['_SF_DEBUG_OUTPUT']; return; }
 		
 		#Consider that a missing template file that should be rendered is an error
-		if (!file_exists($this->file)) { throw new PrivateException('Missing template file: ' . $this->file); }
+		if (!file_exists($this->file)) { throw new PrivateException('Missing template file for ' . get_class($this->controller) . '::' . $this->action); }
 		
 		ob_start();
 		foreach ($this->data as $data_var => $data_content) {

@@ -345,9 +345,4 @@ abstract class Query
 	public abstract function restrictionGroupInstance();
 	public abstract function queryFieldInstance($field);
 	public abstract function queryTableInstance(Table$table);
-	
-	/**
-	 * @deprecated since version 0.1
-	 */
-	public abstract function aliasedTableName();
 }

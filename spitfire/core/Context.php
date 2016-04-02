@@ -94,8 +94,8 @@ class Context
 	
 	public function run() {
 		#Run the onload
-		if (method_exists($this->controller, 'onload') ) {
-			call_user_func_array(Array($this->controller, 'onload'), Array($this->action));
+		if (method_exists($this->controller, '_onload') ) {
+			call_user_func_array(Array($this->controller, '_onload'), Array($this->action));
 		}
 		
 		$reflector = new ActionReflector($this->controller, $this->action);
