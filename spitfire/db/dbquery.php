@@ -78,6 +78,13 @@ abstract class Query
 		return $this->aliased;
 	}
 	
+	/**
+	 * This method should be useless due to the fact that the QueryTable does
+	 * perform it's duties now.
+	 * 
+	 * @deprecated since version 0.1-dev 20160402
+	 * @return string
+	 */
 	public function getAlias() {
 		if ($this->aliased)
 			return $this->table->getTable()->getTablename() . '_' . $this->id;
@@ -163,9 +170,10 @@ abstract class Query
 	 * @return Model
 	 */
 	public function fetch() {
-		if (!$this->result) $this->query();
+		if (!$this->result) { $this->query(); }
+		
 		$data = $this->result->fetch();
-		return  $data;//array_map(Array($this->table->getDB(), 'convertIn'), $data) ;
+		return  $data;
 	}
 	
 	public function fetchAll($parent = null) {
@@ -199,16 +207,6 @@ abstract class Query
 	public function getRestrictions() {
 		$this->table->getTable()->getModel()->getBaseRestrictions($this);
 		return $this->restrictions;
-	}
-	
-	public function getCompositeRestrictions() {
-		$_return = Array();
-		foreach ($this->restrictions as $restriction) {
-			if ($restriction instanceof CompositeRestriction || $restriction instanceof RestrictionGroup) {
-				$_return[] = $restriction;
-			}
-		}
-		return $_return;
 	}
 	
 	public function filterCompositeRestrictions() {
