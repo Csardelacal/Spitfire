@@ -62,32 +62,12 @@ abstract class RestrictionGroup
 		return $this->restrictions[$index];
 	}
 	
-	public function getCompositeRestrictions() {
-		$_return = Array();
-		foreach ($this->restrictions as $restriction) {
-			if ($restriction instanceof CompositeRestriction) {
-				$_return[] = $restriction;
-				$_return = array_merge($_return, $restriction->getValue()->getCompositeRestrictions());
-			} 
-			if ($restriction instanceof RestrictionGroup) {
-				$_return = array_merge($_return, $restriction->getCompositeRestrictions());
-			}
-		}
-		return $_return;
-	}
-	
 	public function getConnectingRestrictions() {
 		$_ret = Array();
 		
 		foreach ($this->restrictions as $r) { $_ret = array_merge($_ret, $r->getConnectingRestrictions());}
 		
 		return $_ret;
-	}
-	
-	public function getValues() {
-		$values = Array();
-		foreach ($this->restrictions as $r) $values[] = $r->getValue();
-		return $values;
 	}
 	
 	public function group() {
@@ -132,8 +112,12 @@ abstract class RestrictionGroup
 	}
 	
 	public function __clone() {
+		/*@var $newr Restriction[] */
 		$newr = Array();
-		foreach ($this->restrictions as $r) { $newr[] = clone $r; }
+		
+		foreach ($this->restrictions as $r) { 
+			$newr[] = clone $r; 
+		}
 	}
 
 	abstract public function __toString();
