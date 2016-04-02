@@ -17,7 +17,7 @@ class MysqlPDOQuery extends Query
 		
 		$selectstt    = 'SELECT';
 		$fromstt      = 'FROM';
-		$tablename    = $this->aliasedTableName();
+		$tablename    = $this->getTable();
 		$wherestt     = 'WHERE';
 		/** @link http://www.spitfirephp.com/wiki/index.php/Database/subqueries Information about the filter*/
 		$restrictions = array_filter($this->getRestrictions(), Array('spitfire\storage\database\Query', 'restrictionFilter'));
@@ -103,11 +103,6 @@ class MysqlPDOQuery extends Query
 		return new MysqlPDORestriction($this, $field, $value, $operator);
 	}
 
-	public function aliasedTableName() {
-		if ($this->getAliased()) return $this->getTable() . ' AS ' . $this->getAlias();
-		else return $this->getTable();
-	}
-
 	public function queryFieldInstance($field) {
 		if ($field instanceof QueryField) {return $field; }
 		return new MysqlPDOQueryField($this, $field);
@@ -132,7 +127,7 @@ class MysqlPDOQuery extends Query
 		
 		$selectstt    = 'DELETE';
 		$fromstt      = 'FROM';
-		$tablename    = $this->aliasedTableName();
+		$tablename    = $this->getTable();
 		$wherestt     = 'WHERE';
 		/** @link http://www.spitfirephp.com/wiki/index.php/Database/subqueries Information about the filter*/
 		$restrictions = array_filter($this->getRestrictions(), Array('spitfire\storage\database\Query', 'restrictionFilter'));
