@@ -85,8 +85,22 @@ abstract class RestrictionGroup
 		return $_ret;
 	}
 	
-	public function group() {
-		return $this->restrictions[] = $this->parent->restrictionGroupInstance();
+	public function filterCompositeRestrictions() {
+		$restrictions = $this->restrictions;
+		
+		foreach ($restrictions as $r) {
+			if ($r instanceof CompositeRestriction) {	$this->removeRestriction($r); }
+			if ($r instanceof RestrictionGroup)     { $r->filterCompositeRestrictions(); }
+		}
+	}
+	
+	public function group($type = self::TYPE_OR) {
+		#Create the group and set the type we need
+		$group = $this->getQuery()->restrictionGroupInstance();
+		$group->setType($type);
+		
+		#Add it to our restriction list
+		return $this->restrictions[] = $group;
 	}
 	
 	public function endGroup() {
@@ -130,6 +144,19 @@ abstract class RestrictionGroup
 		return $this->type;
 	}
 	
+	/**
+	 * This is the equivalent of makeExecutionPlan on the root query for any subquery.
+	 * Since subqueries are logical root queries and can be executed just like
+	 * normal ones they require an equivalent method that is named differently.
+	 * 
+	 * It retrieves all the subqueries that are needed to be executed on a relational
+	 * DB before the main query.
+	 * 
+	 * We could have used a single method with a flag, but this way seems cleaner
+	 * and more hassle free than otherwise.
+	 * 
+	 * @return Query[]
+	 */
 	public function getPhysicalSubqueries() {
 		$_ret = Array();
 		foreach ($this->getRestrictions() as $r) {
