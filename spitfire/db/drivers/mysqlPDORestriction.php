@@ -31,7 +31,7 @@ class MysqlPDORestriction extends Restriction
 				}
 				
 				elseif ($value === null) {
-					return "`{$this->getTableName()}`.`{$this->getField()->getName()}` {$this->getOperator()} null}";
+					return "`{$this->getQuery()->getTable()}`.`{$this->getField()->getName()}` {$this->getOperator()} null}";
 				}
 				
 				else {
@@ -68,14 +68,4 @@ class MysqlPDORestriction extends Restriction
 		}
 	}
 	
-	public function queryJoin($value, $query, $field, $type = null) {
-		if (!$query instanceof Query) throw new \privateException("oops");
-		if (!$value instanceof Query) throw new \privateException("oops");
-		return new MysqlPDOJoin($value, $query, $field, $type);
-	}
-	
-	public function getTableName() {
-		if ($this->getQuery()) return $this->getQuery()->getAlias();
-		else return $this->getTable()->getTableName();
-	}
 }

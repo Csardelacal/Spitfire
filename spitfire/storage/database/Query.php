@@ -1,20 +1,16 @@
-<?php
-
-namespace spitfire\storage\database;
+<?php namespace spitfire\storage\database;
 
 use Model;
 use Exception;
 use \spitfire\model\Field;
 
-abstract class Query
+abstract class Query extends RestrictionGroup
 {
 	/** @var spitfire\storage\database\drivers\ResultSetInterface */
 	protected $result;
 	/** @var \spitfire\storage\database\QueryTable  */
 	protected $table;
 	
-	protected $restrictions;
-	protected $restrictionGroups;
 	protected $page = 1;
 	protected $rpp = -1;
 	protected $order;
@@ -28,46 +24,22 @@ abstract class Query
 	public function __construct($table) {
 		$this->id = self::$counter++;
 		$this->table = $this->queryTableInstance($table);
-		$this->restrictions = Array();
+		
+		#Initialize the parent
+		parent::__construct(null, Array());
+		$this->setType(RestrictionGroup::TYPE_AND);
 	}
 	
 	/**
-	 * Adds a restriction to the current query. Restraining the data a field
-	 * in it can contain.
 	 * 
-	 * @see http://www.spitfirephp.com/wiki/index.php/Method:spitfire/storage/database/Query::addRestriction
 	 * @param string $fieldname
-	 * @param mixed  $value
+	 * @param string $value
 	 * @param string $operator
-	 * @return spitfire\storage\database\Query
+	 * @return Query
 	 */
 	public function addRestriction($fieldname, $value, $operator = '=') {
-		try {
-			#If the name of the field passed is a physical field we just use it to 
-			#get a queryField
-			$field = $fieldname instanceof QueryField? $fieldname : $this->table->getTable()->getField($fieldname);
-			$restriction = $this->restrictionInstance($this->queryFieldInstance($field), $value, $operator);
-			
-		} catch (\Exception $e) {
-			#Otherwise we create a complex restriction for a logical field.
-			$field = $this->table->getTable()->getModel()->getField($fieldname);
-			
-			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
-			{ $field = $fieldname; }
-			
-			#If the fieldname was not null, but the field is null - it means that the system could not find the field and is kicking back
-			if ($field === null && $fieldname!== null) { throw new \spitfire\exceptions\PrivateException('No field ' . $fieldname, 201602231949); }
-			
-			$restriction = $this->compositeRestrictionInstance($field, $value, $operator);
-		}
-		
-		$this->restrictions[] = $restriction;
 		$this->result = false;
-		return $this;
-	}
-	
-	public function removeRestriction($r) {
-		unset($this->restrictions[array_search($r, $this->restrictions)]);
+		return parent::addRestriction($fieldname, $value, $operator);
 	}
 	
 	public function setAliased($aliased) {
@@ -76,20 +48,6 @@ abstract class Query
 	
 	public function getAliased() {
 		return $this->aliased;
-	}
-	
-	/**
-	 * This method should be useless due to the fact that the QueryTable does
-	 * perform it's duties now.
-	 * 
-	 * @deprecated since version 0.1-dev 20160402
-	 * @return string
-	 */
-	public function getAlias() {
-		if ($this->aliased)
-			return $this->table->getTable()->getTablename() . '_' . $this->id;
-		else
-			return $this->table->getTable()->getTablename();
 	}
 	
 	public function getId() {
@@ -274,6 +232,12 @@ abstract class Query
 		return $this->table;
 	}
 	
+	/**
+	 * Returns the current 'query table'. This is an object that allows the query
+	 * to alias it's table if needed.
+	 * 
+	 * @return QueryTable
+	 */
 	public function getTable() {
 		return $this->table->getTable();
 	}

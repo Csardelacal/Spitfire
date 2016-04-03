@@ -30,10 +30,8 @@ AutoLoad::registerClass('browser',               $cur_dir.'/security.php');
 #Database related imports
 AutoLoad::registerClass('spitfire\storage\database\Queriable',         $cur_dir.'/db/queriable.php');
 AutoLoad::registerClass('spitfire\storage\database\DBField',           $cur_dir.'/db/field.php');
-AutoLoad::registerClass('spitfire\storage\database\Query',             $cur_dir.'/db/dbquery.php');
 AutoLoad::registerClass('spitfire\storage\database\QueryTable',                 $cur_dir.'/db/querytable.php');
 AutoLoad::registerClass('spitfire\storage\database\QueryField',                 $cur_dir.'/db/queryfield.php');
-AutoLoad::registerClass('spitfire\storage\database\RestrictionGroup',  $cur_dir.'/db/restrictionGroup.php');
 AutoLoad::registerClass('spitfire\storage\database\Restriction',       $cur_dir.'/db/restriction.php');
 AutoLoad::registerClass('spitfire\storage\database\CompositeRestriction',       $cur_dir.'/db/restrictionComposite.php');
 AutoLoad::registerClass('spitfire\storage\database\drivers\Driver',    $cur_dir.'/db/driver.php');
