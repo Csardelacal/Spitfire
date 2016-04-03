@@ -1,8 +1,7 @@
-<?php
-
-namespace spitfire\storage\database;
+<?php namespace spitfire\storage\database;
 
 use Model;
+use spitfire\exceptions\PrivateException;
 
 abstract class Restriction
 {
@@ -20,13 +19,13 @@ abstract class Restriction
 		if (is_null($operator)) $operator = self::EQUAL_OPERATOR;
 		
 		if (!$query instanceof Query && $query !== null)
-			throw new \privateException("Valid field or null required");
+			throw new PrivateException("Valid field or null required");
 		
 		if ($value instanceof Model)
 			$value = $value->getQuery();
 		
 		if (!$field instanceof QueryField)
-			throw new \privateException("Invalid field");
+			throw new PrivateException("Invalid field");
 		
 		$this->query    = $query;
 		$this->field    = $field;
@@ -50,7 +49,7 @@ abstract class Restriction
 	 * Returns the query this restriction belongs to. This allows a query to 
 	 * define an alias for the table in order to avoid collissions.
 	 * 
-	 * @return spitfire\storage\database\Query
+	 * @return \spitfire\storage\database\Query
 	 */
 	public function getQuery() {
 		return $this->query;
