@@ -78,10 +78,5 @@ abstract class Restriction
 		return Array();
 	}
 	
-	/**
-	 * @deprecated since version 0.1dev
-	 */
-	abstract public function queryJoin($value, $query, $field, $type = null);
-	
 	abstract public function __toString();
 }
