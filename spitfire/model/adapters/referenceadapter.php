@@ -1,7 +1,7 @@
 <?php namespace spitfire\model\adapters;
 
 use spitfire\Model;
-use privateException;
+use spitfire\exceptions\PrivateException;
 
 class ReferenceAdapter extends BaseAdapter
 {
@@ -39,12 +39,12 @@ class ReferenceAdapter extends BaseAdapter
 					}
 				}
 			}
-		} elseif (is_null($this->query)) {
+		} elseif ($this->query === null) {
 			foreach ($physical as $p) {
 				$_return[$p->getName()] = null;
 			}
 		} else {
-			throw new privateException('Adapter holds invalid data');
+			throw new PrivateException('Adapter holds invalid data');
 		}
 		
 		return $_return;
