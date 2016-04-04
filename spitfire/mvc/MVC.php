@@ -1,4 +1,4 @@
-<?php namespace spitfire;
+<?php namespace spitfire\mvc;
 
 use Pluggable;
 use spitfire\core\Context;
@@ -28,10 +28,10 @@ class MVC extends Pluggable
 	 *
 	 * @var \spitfire\Context 
 	 */
-	private $context;
+	private $ctx;
 	
 	function __construct(Context$context) {
-		$this->context = $context;
+		$this->ctx = $context;
 	}
 	
 	function getApp() {
@@ -44,8 +44,8 @@ class MVC extends Pluggable
 	 * @return controller|view|DBInterface|URL|boolean
 	 */
 	function __get($variable) {
-		if (isset($this->context->$variable)) {
-			return $this->context->$variable;
+		if (isset($this->ctx->$variable)) {
+			return $this->ctx->$variable;
 		}
 		return false;
 	}

@@ -2,7 +2,7 @@
 
 use spitfire\exceptions\PrivateException;
 use spitfire\exceptions\FileNotFoundException;
-use spitfire\MVC;
+use spitfire\mvc\MVC;
 use spitfire\core\Context;
 use \_SF_ViewElement;
 use spitfire\registry\JSRegistry;
