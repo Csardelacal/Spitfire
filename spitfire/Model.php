@@ -36,7 +36,6 @@ abstract class Model implements Serializable
 	
 	#Status vars
 	private $new = false;
-	private $deleted = false;
 	
 	/**
 	 * Creates a new record.
@@ -68,18 +67,6 @@ abstract class Model implements Serializable
 	public abstract function definitions(Schema$schema);
 	
 	/**
-	 * Receives the data of an array and stores it into this record. This
-	 * does not verify the data is correct nor does it check if the data
-	 * fits into the table. You're assumed to pass the data correctly.
-	 * 
-	 * @param mixed $newdata
-	 * @deprecated since version 0.1-dev
-	 */
-	public function setData($newdata) {
-		$this->data = $newdata;
-	}
-	
-	/**
 	 * Returns the data this record currently contains as associative array.
 	 * Remember that this data COULD be invalid when using setData to provide
 	 * it.
@@ -91,42 +78,6 @@ abstract class Model implements Serializable
 	}
 	
 	/**
-	 * Data contained by the database. Note that it is possible that this
-	 * function does provide data not actually in the DB (the record can have
-	 * been destroyed or modified, or this data altered)
-	 * 
-	 * @return mixed
-	 * @deprecated since version 0.1-dev
-	 */
-	public function getSrcData() {
-		return $this->src;
-	}
-	
-	/**
-	 * This function checks whether the data contained in this record is
-	 * 'in sync' with the DB. Being in sync means that the data contained
-	 * by this record is supposed to be the same as the physical record
-	 * on the DBMS.
-	 * 
-	 * @return boolean True if the data is in sync with the DB
-	 */
-	public function isSynced() {
-		return $this->synced && !$this->deleted;
-	}
-	
-	/**
-	 * This function performs the checks required before the Model can write it's
-	 * contents to the database. Currently this just checks for the existence of
-	 * a onbeforesave method and calls it.
-	 */
-	private function prepareForWrite() {
-		#Check if onbeforesave is there and use it.
-		if (is_callable(Array($this, 'onbeforesave'))) {
-			$this->onbeforesave();
-		}
-	}
-	
-	/**
 	 * This method stores the data of this record to the database. In case
 	 * of database error it throws an Exception and leaves the state of the
 	 * record unchanged.
@@ -134,8 +85,12 @@ abstract class Model implements Serializable
 	 * @throws privateException
 	 */
 	public function store() {
-		$this->prepareForWrite();
+		#Check if onbeforesave is there and use it.
+		if (method_exists($this, 'onbeforesave')) {
+			$this->onbeforesave();
+		}
 		
+		#Decide whether to insert or update depending on the Model
 		if ($this->new) { $this->insert(); }
 		else            { $this->update(); }
 		
@@ -185,22 +140,17 @@ abstract class Model implements Serializable
 	 */
 	public function getUniqueRestrictions() {
 		$primaries    = $this->table->getPrimaryKey();
-		$restrictions = Array();
 		$query        = $this->table->getQueryInstance();
+		$restrictions = Array();
+		$values       = Array();
 		
 		foreach($primaries as $primary) {
-			$ref   = $primary->getReferencedField();
-			$value = &$this->src[$primary->getLogicalField()->getName()];
-			
-			if ($value instanceof Query) $value = $value->fetch();
-			if ($value instanceof Model) {
-				$value = $value->{$ref->getName()};
-			}
-			
-			$r = $query->restrictionInstance($query->queryFieldInstance($primary), $value, '=');
+			$values[] = $this->data[$primary->getLogicalField()->getName()]->dbGetData();
+		}
+		
+		foreach ($values as $primary => $value) {	
+			$r = $query->restrictionInstance($query->queryFieldInstance($this->getTable()->getField($primary)), $value, '=');
 			$restrictions[] = $r;
-			
-			unset($value);
 		}
 		
 		return $restrictions;
