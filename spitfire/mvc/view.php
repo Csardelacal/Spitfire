@@ -102,7 +102,7 @@ class View extends MVC
 
 
 	public function element($file) {
-		$filename = $this->getApp()->getTemplateDirectory() . 'elements/' . $file . '.php';
+		$filename = $this->app->getTemplateDirectory() . 'elements/' . $file . '.php';
 		if (!file_exists($filename)) throw new PrivateException('Element ' . $file . ' missing');
 		return new _SF_ViewElement($filename, $this->data);
 	}
