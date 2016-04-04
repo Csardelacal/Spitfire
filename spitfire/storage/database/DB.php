@@ -1,6 +1,6 @@
 <?php namespace spitfire\storage\database;
 
-use spitfire\MVC;
+use spitfire\mvc\MVC;
 use Strings;
 use spitfire\exceptions\PrivateException;
 use spitfire\environment;

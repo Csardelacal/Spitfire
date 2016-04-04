@@ -4,7 +4,6 @@ use Serializable;
 use spitfire\storage\database\Schema;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\DBField;
-use spitfire\storage\database\Query;
 
 /**
  * This class allows to track changes on database data along the use of a program

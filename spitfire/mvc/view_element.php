@@ -1,6 +1,6 @@
 <?php
 
-use spitfire\MVC;
+use spitfire\mvc\MVC;
 
 class _SF_ViewElement extends MVC
 {
