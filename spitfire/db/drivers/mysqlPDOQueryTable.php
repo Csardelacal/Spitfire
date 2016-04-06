@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\storage\database\drivers;
+<?php namespace spitfire\storage\database\drivers;
 
 use spitfire\storage\database\QueryTable;
 
@@ -12,12 +10,10 @@ class MysqlPDOQueryTable extends QueryTable
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->getQuery()->getAliased()? 
-				  "`{$this->getTable()->getTablename()}_{$this->getQuery()->getId()}`" : 
-				  "`{$this->getTable()->getTablename()}`";
+		return "`{$this->getAlias()}`";
 	}
 
 	public function definition() {
-		return "{$this->getTable()} AS {$this}";
+		return "{$this->getTable()} AS `{$this->getAlias()}`";
 	}
 }

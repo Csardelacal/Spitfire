@@ -200,8 +200,6 @@ abstract class DB
 	 * @return Table|MVC
 	 */
 	public function __get($table) {
-		#In case we request a model, view or controller
-		//if (parent::__get($table)) return parent::__get($table);
 		#Otherwise we try to get the table with this name
 		return $this->table($table);
 	}
@@ -222,7 +220,11 @@ abstract class DB
 	 * Returns an instance of the class the child tables of this class have
 	 * this is used to create them when requested by the table() method.
 	 * 
+	 * Note: This is deprecated in favor of a factory object that could generalize
+	 * driver specific object creation.
+	 * 
 	 * @abstract
+	 * @deprecated since version 0.1-dev 20160406
 	 * @return Table Instance of the table class the driver wants the system to use
 	 */
 	abstract public function getTableInstance(DB$db, $tablename);
@@ -231,6 +233,13 @@ abstract class DB
 	 * Creates a new On The Fly Model. These allow the system to interact with a 
 	 * database that was not modeled after Spitfire's models or that was not 
 	 * reverse engineered previously.
+	 * 
+	 * Note: This is deprecated in favor of a factory object that could generalize
+	 * driver specific object creation.
+	 * 
+	 * @abstract
+	 * @deprecated since version 0.1-dev 20160406
+	 * @return Table Instance of the table class the driver wants the system to use
 	 */
 	abstract public function getOTFModel($tablename);
 

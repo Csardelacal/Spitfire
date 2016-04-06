@@ -22,8 +22,8 @@ class CompositeRestriction
 		$this->value = $value;
 		$this->operator = $operator;
 		
-		if ($this->value instanceof Model) { $this->value = $this->value->getQuery(); }
-		if ($this->value instanceof Query) { $this->value->setAliased(true); }
+		if ($value instanceof Model) { $value = $value->getQuery(); }
+		if ($value instanceof Query) { $value->setAliased(true); }
 	}
 	
 	/**

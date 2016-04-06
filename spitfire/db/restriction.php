@@ -1,6 +1,6 @@
 <?php namespace spitfire\storage\database;
 
-use Model;
+use spitfire\Model;
 use spitfire\exceptions\PrivateException;
 
 abstract class Restriction
@@ -10,8 +10,6 @@ abstract class Restriction
 	private $value;
 	private $operator;
 	
-	private $joins;
-
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
