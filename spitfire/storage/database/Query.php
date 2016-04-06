@@ -15,14 +15,15 @@ abstract class Query extends RestrictionGroup
 	protected $rpp = -1;
 	protected $order;
 	
-	private static $counter = 1;
-	private $id;
-	private $aliased = false;
+	/**
+	 *
+	 * @deprecated since version 0.1-dev 20160406
+	 * @var int|null
+	 */
 	private $count = null;
 
 
 	public function __construct($table) {
-		$this->id = self::$counter++;
 		$this->table = $this->queryTableInstance($table);
 		
 		#Initialize the parent
@@ -42,20 +43,41 @@ abstract class Query extends RestrictionGroup
 		return parent::addRestriction($fieldname, $value, $operator);
 	}
 	
+	/**
+	 * 
+	 * @deprecated since version 0.1-dev 20160406
+	 * @param boolean $aliased
+	 */
 	public function setAliased($aliased) {
-		$this->aliased = $aliased;
+		$this->table->setAliased($aliased);
 	}
 	
+	/**
+	 * 
+	 * @deprecated since version 0.1-dev 20160406
+	 * @return boolean
+	 */
 	public function getAliased() {
-		return $this->aliased;
+		return $this->table->isAliased();
 	}
 	
+	/**
+	 * 
+	 * @deprecated since version 0.1-dev 20160406
+	 * @return int
+	 */
 	public function getId() {
-		return $this->id;
+		return $this->table->getId();
 	}
 	
+	/**
+	 * 
+	 * @param int $id
+	 * @deprecated since version 0.1-dev 20160406
+	 * @return \spitfire\storage\database\Query
+	 */
 	public function setId($id) {
-		$this->id = $id;
+		$this->table->setId($id);
 		return $this;
 	}
 	
