@@ -17,13 +17,14 @@ class CompositeRestriction
 	private $operator;
 	
 	public function __construct(Query$query, Field$field = null, $value = null, $operator = Restriction::EQUAL_OPERATOR) {
+		
+		if ($value instanceof Model) { $value = $value->getQuery(); }
+		if ($value instanceof Query) { $value->setAliased(true); }
+		
 		$this->query = $query;
 		$this->field = $field;
 		$this->value = $value;
 		$this->operator = $operator;
-		
-		if ($value instanceof Model) { $value = $value->getQuery(); }
-		if ($value instanceof Query) { $value->setAliased(true); }
 	}
 	
 	/**
