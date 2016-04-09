@@ -180,7 +180,7 @@ abstract class Query extends RestrictionGroup
 		if ($this->count !== null) return $this->count;
 		$query = $this->query(Array('count(*)'), true)->fetchArray();
 		$count = $query['count(*)'];//end($query);
-		return $this->count = $count;
+		return $this->count = (int)$count;
 	}
 	
 	
