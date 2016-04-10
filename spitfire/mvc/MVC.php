@@ -11,7 +11,7 @@ use spitfire\core\Context;
  * via the "public" interface of the controller, models and view. Everything within
  * the context is made available to inheriting classes.
  * 
- * @property-read View $view The current view
+ * @property-read \spitfire\View $view The current view
  * @property-read \App $app The context within this is located
  * @property-read Context $context The context within this is located
  * @property-read \spitfire\core\Request $request The request the context is answering to

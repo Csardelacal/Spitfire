@@ -45,7 +45,7 @@ abstract class Queriable {
 	 * Creates an empty query that would return all data. This is a syntax
 	 * friendliness oriented method as it does exactly the same as startQuery
 	 * 
-	 * @see _SF_Queriable::startQuery
+	 * @see Queriable::startQuery
 	 * @return Query
 	 */
 	public function getAll() {
@@ -71,7 +71,7 @@ abstract class Queriable {
 		}
 		
 		$query = $this->getQueryInstance();
-		$query->addRestriction(new _SF_Restriction($field, $value, _SF_Restriction::LIKE_OPERATOR));
+		$query->addRestriction($field, $value, Restriction::LIKE_OPERATOR);
 		return $query;
 	}
 
