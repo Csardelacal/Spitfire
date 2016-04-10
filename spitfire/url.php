@@ -193,7 +193,10 @@ class URL implements ArrayAccess
 		#If the extension provided is special, we print it
 		if ($this->extension !== 'php') { $str.= ".$this->extension"; }
 		
-		if (!empty($this->params)) {
+		if ($this->params instanceof Get) {
+			$str.= '?' . http_build_query($this->params->getRaw());
+		}
+		elseif (!empty($this->params)) {
 			$str.= '?' . http_build_query($this->params);
 		}
 		
