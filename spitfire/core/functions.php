@@ -81,14 +81,12 @@ function db($options = null) {
  * @return String
  */
 function __($str, $maxlength = false) {
-	#Check if the string is numeric to return a formatted number
-	if (is_numeric($str)) return number_format ($str, 2);
-	if ($maxlength) $str = Strings::ellipsis ($str, $maxlength);
+	if ($maxlength) { $str = Strings::ellipsis ($str, $maxlength); }
 	
 	if (defined('ENT_HTML5')) 
-		$str = htmlspecialchars($str, ENT_HTML5, environment::get('system_encoding'));
+		{ $str = htmlspecialchars($str, ENT_HTML5, environment::get('system_encoding')); }
 	else
-		$str = htmlspecialchars($str, ENT_COMPAT, environment::get('system_encoding'));
+		{ $str = htmlspecialchars($str, ENT_COMPAT, environment::get('system_encoding')); }
 	
 	return $str;
 }

@@ -49,20 +49,20 @@ abstract class RestrictionGroup
 		try {
 			#If the name of the field passed is a physical field we just use it to 
 			#get a queryField
-			$field = $fieldname instanceof QueryField? $fieldname : $this->table->getTable()->getField($fieldname);
-			$restriction = $this->restrictionInstance($this->queryFieldInstance($field), $value, $operator);
+			$field = $fieldname instanceof QueryField? $fieldname : $this->getQuery()->getTable()->getField($fieldname);
+			$restriction = $this->getQuery()->restrictionInstance($this->getQuery()->queryFieldInstance($field), $value, $operator);
 			
 		} catch (\Exception $e) {
 			#Otherwise we create a complex restriction for a logical field.
 			$field = $this->getQuery()->getTable()->getModel()->getField($fieldname);
 			
-			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->table->getModel())
+			if ($fieldname instanceof \Reference && $fieldname->getTarget() === $this->getQuery()->getTable()->getModel())
 			{ $field = $fieldname; }
 			
 			#If the fieldname was not null, but the field is null - it means that the system could not find the field and is kicking back
 			if ($field === null && $fieldname!== null) { throw new \spitfire\exceptions\PrivateException('No field ' . $fieldname, 201602231949); }
 			
-			$restriction = $this->compositeRestrictionInstance($field, $value, $operator);
+			$restriction = $this->getQuery()->compositeRestrictionInstance($field, $value, $operator);
 		}
 		
 		$this->restrictions[] = $restriction;
