@@ -94,6 +94,11 @@ abstract class RestrictionGroup
 		}
 	}
 	
+	/**
+	 * 
+	 * @param type $type
+	 * @return RestrictionGroup
+	 */
 	public function group($type = self::TYPE_OR) {
 		#Create the group and set the type we need
 		$group = $this->getQuery()->restrictionGroupInstance();
