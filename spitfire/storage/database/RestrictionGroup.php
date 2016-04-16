@@ -13,6 +13,12 @@ abstract class RestrictionGroup
 	const TYPE_OR  = 'OR';
 	const TYPE_AND = 'AND';
 	
+	/**
+	 * The restrictions that this element groups. This allows any application to
+	 * create trees of restrictions that a developer can use to query the database.
+	 *
+	 * @var Restriction|RestrictionGroup[]
+	 */
 	private $restrictions;
 	private $parent;
 	private $type = self::TYPE_OR;
@@ -171,12 +177,14 @@ abstract class RestrictionGroup
 		return $_ret;
 	}
 	
+	/**
+	 * When cloning a restriction group we need to ensure that the new restrictions
+	 * are assigned to the parent, and not some other object.
+	 */
 	public function __clone() {
-		/*@var $newr Restriction[] */
-		$newr = Array();
-		
-		foreach ($this->restrictions as $r) { 
-			$newr[] = clone $r; 
+		foreach ($this->restrictions as &$r) { 
+			$r = clone $r; 
+			$r->setParent($this);
 		}
 	}
 
