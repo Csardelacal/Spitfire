@@ -13,11 +13,11 @@ abstract class Restriction
 	const LIKE_OPERATOR  = 'LIKE';
 	const EQUAL_OPERATOR = '=';
 	
-	public function __construct($query, $field, $value, $operator = '=') {
+	public function __construct($parent, $field, $value, $operator = '=') {
 		if (is_null($operator)) $operator = self::EQUAL_OPERATOR;
 		
-		if (!$query instanceof Query && $query !== null)
-			throw new PrivateException("Valid field or null required");
+		if (!$parent instanceof RestrictionGroup && $parent !== null)
+			{ throw new PrivateException("A restriction's parent can only be a group"); }
 		
 		if ($value instanceof Model)
 			$value = $value->getQuery();
@@ -25,7 +25,7 @@ abstract class Restriction
 		if (!$field instanceof QueryField)
 			throw new PrivateException("Invalid field");
 		
-		$this->query    = $query;
+		$this->query    = $parent;
 		$this->field    = $field;
 		$this->value    = $value;
 		$this->operator = trim($operator);
@@ -50,9 +50,22 @@ abstract class Restriction
 	 * @return \spitfire\storage\database\Query
 	 */
 	public function getQuery() {
+		return $this->query->getQuery();
+	}
+	
+	public function getParent() {
 		return $this->query;
 	}
 	
+	public function setParent($parent) {
+		$this->query = $parent;
+	}
+	
+	/**
+	 * 
+	 * @param type $query
+	 * @deprecated since version 0.1-dev 201604162323
+	 */
 	public function setQuery($query) {
 		$this->query = $query;
 		$this->field->setQuery($query);
