@@ -1,5 +1,7 @@
 <?php namespace spitfire\validation;
 
+use Exception;
+
 /**
  * Validation exceptions are generated after a value for data has been tested 
  * and it has been deemed as faulty. If this happens all errors gathered will

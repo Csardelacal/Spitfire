@@ -1,8 +1,6 @@
-<?php
+<?php namespace spitfire\locale;
 
-namespace spitfire\locales;
-
-use \privateException;
+use spitfire\exceptions\PrivateException;
 
 class langInfo
 {
@@ -41,14 +39,14 @@ class langInfo
 		try {
 			return $context->app->getLocale(str_replace('-', '\\', $this->localecode));
 		}
-		catch(privateException $e) {
+		catch(PrivateException $e) {
 			try {
 				return $context->app->getLocale($this->langcode);
 			}
-			catch(privateException $e) {
+			catch(PrivateException $e) {
 				if (class_exists($t = 'system\\' . $this->langcode . 'Locale')) { return new $t();}
 				if (class_exists($t = 'system\\' . substr($this->localecode, 0, 2) . 'Locale')) { return new $t();}
-				return new system\enLocale();
+				return new sys\En();
 			}
 		}
 	}

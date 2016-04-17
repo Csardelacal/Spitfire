@@ -80,7 +80,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 			$xss = $_POST['_XSS_'] !== $this->xss->getValue();
 			if ($xss) { throw new publicException('XSS Attack', 403); }
 			
-			foreach($this->fields as $field) {$field->validate();}
+			if (!$this->isOk()) { throw new \spitfire\validation\ValidationException('Validation failed', 201604172344, $this->getMessages()); }
 		}
 		else { throw new UnSubmittedException(); }
 	}
@@ -90,7 +90,13 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 
 	public function getMessages() {
-		return Array();
+		$messages = Array();
+		
+		foreach ($this->fields as $field) {
+			$messages = array_merge($messages, $field->getMessages());
+		}
+		
+		return $messages;
 	}
 
 	public function isOk() {
@@ -125,7 +131,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 	
 	public function setDBRecord($record) {
-		if ($record instanceof \Model || is_null($record)) {
+		if ($record instanceof \spitfire\Model || is_null($record)) {
 			$this->record = $record;
 		}
 	}
