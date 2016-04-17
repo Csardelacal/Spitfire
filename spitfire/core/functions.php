@@ -3,7 +3,7 @@
 use spitfire\SpitFire;
 use spitfire\environment;
 use spitfire\core\Context;
-use spitfire\locales\langInfo;
+use spitfire\locale\langInfo;
 use spitfire\validation\Validator;
 
 /**
