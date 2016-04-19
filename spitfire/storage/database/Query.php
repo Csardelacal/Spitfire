@@ -206,7 +206,7 @@ abstract class Query extends RestrictionGroup
 		foreach($restrictions as $r) {
 			$copy = clone $r;
 			$copy->setQuery($this);
-			$this->restrictions[] = $copy;
+			$this->putRestriction($copy);
 		}
 	}
 	

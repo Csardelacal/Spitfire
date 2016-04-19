@@ -122,6 +122,7 @@ function find_locale() {
  * Returns the current system language.
  * 
  * @staticvar Locale $lang
+ * @deprecated since version 0.1-dev 201604200118
  * @param string|Context $set Used to change the system language. Otherwise it will be
  *               default-ed to Accept-Language header
  * @return Locale The locale being used in the application. This allows to localize
@@ -172,10 +173,16 @@ function current_context(Context$set = null) {
 
 function validate($target = null) {
 	if ($target !== null && $target instanceof \spitfire\validation\ValidatorInterface) {
-		$targets = func_get_args();
+		$targets  = func_get_args();
+		$messages = Array();
+		
+		#Retrieve the messages from the validators
 		foreach ($targets as $target) {
-			$target->validate();
+			$messages = array_merge($messages, $target->getMessages());
 		}
+		
+		if (!empty($messages)) { throw new \spitfire\validation\ValidationException('Validation failed', 201604200115, $messages); }
+		
 	} else {
 		$validator = new Validator();
 		$validator->setValue($target);
