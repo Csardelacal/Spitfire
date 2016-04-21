@@ -2,7 +2,7 @@
 
 use spitfire\io\beans\ChildBean;
 use spitfire\storage\database\Table;
-use spitfire\model;
+use spitfire\Model;
 
 use spitfire\io\beans\Field;
 use spitfire\io\beans\TextField;
@@ -19,7 +19,6 @@ use spitfire\io\beans\UnSubmittedException;
 use spitfire\io\XSSToken;
 use spitfire\io\PostTarget;
 use spitfire\validation\ValidatorInterface;
-use spitfire\validation\ValidationResult;
 
 use spitfire\io\renderers\RenderableForm;
 use spitfire\io\renderers\RenderableFieldGroup;
@@ -72,7 +71,6 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	 * should display a form or store the data.
 	 * 
 	 * @throws ValidationException|UnSubmittedException If the bean cannot be stored
-	 * @return ValidationResult In case it successfully stored the data
 	 */
 	public function validate() {
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -86,7 +84,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	}
 
 	public function addRule(\spitfire\validation\ValidationRule $rule) {
-		throw new privateException('You cannot add validation rules to beans');
+		throw new spitfire\exceptions\PrivateException('You cannot add validation rules to beans');
 	}
 
 	public function getMessages() {
@@ -114,10 +112,11 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	 * write it to the database. In case the record has additional validation 
 	 * methods you will have to run those first. 
 	 * 
+	 * @param Model $record The record to be updated (if not defined by setRecord)
 	 * @return \Model
 	 */
-	public function updateDBRecord($record = false) {
-		if ($record === false) { $record = $this->record; }
+	public function updateDBRecord(Model$record = null) {
+		if ($record === null) { $record = $this->record; }
 		
 		if ($this->table && $record) {
 			$fields = $this->fields;
@@ -156,7 +155,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 	public function field($field, $caption) {
 		$logical = $this->table->getModel()->getField($field);
 		
-		if (!$logical) throw new privateException('No field ' . $field . ' in ' . $this->table->getModel()->getName());
+		if (!$logical) { throw new spitfire\exceptions\PrivateException('No field ' . $field . ' in ' . $this->table->getModel()->getName()); }
 		
 		$suggested = $logical->getBeanField($this, $logical, $caption);
 		if ($suggested !== null) {return $this->fields[$field] = $suggested;}
@@ -165,33 +164,25 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 			case model\Field::TYPE_STRING:
 			case model\Field::TYPE_LONG:
 				if ($logical instanceof \EnumField)
-					return $this->fields[$field] = new EnumField($this, $logical, $caption);
+					{ return $this->fields[$field] = new EnumField($this, $logical, $caption); }
 				else
-					return $this->fields[$field] = new TextField($this, $logical, $caption);
-				break;
+					{ return $this->fields[$field] = new TextField($this, $logical, $caption); }
 			case model\Field::TYPE_INTEGER:
 				return $this->fields[$field] = new IntegerField($this, $logical, $caption);
 			case model\Field::TYPE_DATETIME:
 				return $this->fields[$field] = new DateTimeField($this, $logical, $caption);
-				break;
 			case model\Field::TYPE_TEXT:
 				return $this->fields[$field] = new LongTextField($this, $logical, $caption);
-				break;
 			case model\Field::TYPE_FILE:
 				return $this->fields[$field] = new FileField($this, $logical, $caption);
-				break;
 			case model\Field::TYPE_REFERENCE:
 				return $this->fields[$field] = new ReferenceField($this, $logical, $caption);
-				break;
 			case model\Field::TYPE_CHILDREN:
 				return $this->fields[$field] = new ChildBean($this, $logical, $caption);
-				break;
 			case model\Field::TYPE_BRIDGED:
 				return $this->fields[$field] = new ManyToManyField($this, $logical, $caption);
-				break;
 			case model\Field::TYPE_BOOLEAN:
 				return $this->fields[$field] = new BooleanField($this, $logical, $caption);
-				break;
 		}
 	}
 	
@@ -313,7 +304,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 		if (class_exists($class_name)) {
 			return new $class_name();
 		}
-		else throw new privateException('Bean not found');
+		else throw new spitfire\exceptions\PrivateException('Bean not found');
 	}
 
 }
