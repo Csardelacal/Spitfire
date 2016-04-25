@@ -66,7 +66,7 @@ class ExceptionHandler {
 				
 			$response = new \spitfire\core\Response(null);
 			
-			if ( is_a($e, 'publicException') ) {
+			if ( $e instanceof PublicException) {
 				$previous = $e->getPrevious();
 				$trace    = $e->getTraceAsString();
 				$prevmsg  = ($previous)? '###' . $previous->getMessage() . "###\n" : '';
