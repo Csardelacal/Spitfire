@@ -13,6 +13,7 @@ class Headers
 		 200 => '200 OK',
 		 301 => '301 Moved Permanently',
 		 302 => '302 Found',
+		 400 => '400 Invalid request',
 		 401 => '401 Unauthorized',
 		 403 => '403 Forbidden',
 		 404 => '404 Not Found',
