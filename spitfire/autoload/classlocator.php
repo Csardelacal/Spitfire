@@ -15,6 +15,26 @@
  */
 abstract class ClassLocator
 {
+	
+	/**
+	 * The base directory is the top directory this locator should look for classes
+	 * in. This allows the application to locate classes more reliably when changing
+	 * the directory structure.
+	 *
+	 * @var string
+	 */
+	private $basedir;
+	
+	/**
+	 * Create a new class locator, the only parameter this takes is the location 
+	 * of the directory where the classes are located in
+	 * 
+	 * @param string $basedir The root directory to search for classes
+	 */
+	public function __construct($basedir) {
+		$this->basedir = $basedir;
+	}
+	
 	/**
 	 * This method is the main tool of every locator. The implementing class will
 	 * receive a fully qualified name and can either return the filename where 
@@ -34,22 +54,21 @@ abstract class ClassLocator
 	 * @return string|boolean
 	 */
 	public function findFile($dir, $name, $suffix = null) {
-		$sf = spitfire();
 		
 		#Check if just the name of the file is being found
-		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . $name .'.php';
+		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . $name .'.php';
 		if (file_exists($file)) { return $file; }
 		
 		#Check if it exists in lowercase
-		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . strtolower($name) .'.php';
+		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . strtolower($name) .'.php';
 		if (file_exists($file)) { return $file; }
 		
 		#Check if it exists with the suffix
-		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . $name . '-' . $suffix .'.php';
+		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . $name . '-' . $suffix .'.php';
 		if ($suffix && file_exists($file)) { return $file; }
 		
 		#Check for the lower case file and the lower case suffix.
-		$file = $sf->getCWD() . '/' . rtrim($dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
+		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
 		if ($suffix && file_exists($file)) { return $file; }
 		
 		return false;

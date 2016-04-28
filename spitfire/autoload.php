@@ -12,23 +12,23 @@ class AutoLoad
 	private $imported_classes   = Array();
 	private $locators           = Array();
 
-	public function __construct() {
+	public function __construct($basedir) {
 		self::$instance = $this;
 		spl_autoload_register(Array($this, 'retrieveClass'));
 		
-		$this->makeLocators();
+		$this->makeLocators($basedir);
 	}
 	
-	public function makeLocators() {
-		$this->locators[] = new autoload\SystemClassLocator();
-		$this->locators[] = new RegisteredClassLocator();
-		$this->locators[] = new autoload\AppClassLocator();
-		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER);
-		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL);
-		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE);
-		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW);
-		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN);
-		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS);
+	public function makeLocators($basedir) {
+		$this->locators[] = new autoload\SystemClassLocator($basedir);
+		$this->locators[] = new RegisteredClassLocator($basedir);
+		$this->locators[] = new autoload\AppClassLocator($basedir);
+		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER, $basedir);
+		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL, $basedir);
+		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE, $basedir);
+		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW, $basedir);
+		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN, $basedir);
+		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS, $basedir);
 	}
 
 	public function register($className, $location) {

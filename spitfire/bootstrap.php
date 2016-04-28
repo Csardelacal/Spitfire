@@ -38,7 +38,7 @@ new spitfire\exceptions\ExceptionHandler();
 
 #Create the autoload. Once started it will allow you to register classes and 
 #locators to retrieve new classes that are missing to your class-space
-new spitfire\AutoLoad();
+new spitfire\AutoLoad(dirname(dirname(__FILE__)));
 
 #Import the locations of the most critical components to Spitfire so it has no
 #need to look for them.
