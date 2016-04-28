@@ -45,10 +45,13 @@ class UserClassLocator extends ClassLocator
 	 * 
 	 * @param string $suffix
 	 * @param mixed $contenttype
+	 * @param string $basedir
 	 */
-	public function __construct($suffix, $contenttype) {
+	public function __construct($suffix, $contenttype, $basedir) {
 		$this->suffix = $suffix;
 		$this->contenttype = $contenttype;
+		
+		parent::__construct($basedir);
 	}
 	
 	/**
