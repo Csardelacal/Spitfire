@@ -57,8 +57,9 @@ class NamespacedClassLocator extends ClassLocator
 	 */
 	public function __construct($namespace, $dir, $suffix = '') {
 		$this->namespace = trim($namespace,self::NAMESPACE_SEPARATOR) . self::NAMESPACE_SEPARATOR;
-		$this->directory = $dir;
 		$this->suffix    = $suffix;
+		
+		parent::__construct($dir);
 	}
 	
 	/**
@@ -82,9 +83,9 @@ class NamespacedClassLocator extends ClassLocator
 			
 			#Extract the filename and merge the Path to the namespace with the path within
 			$file = array_pop($path);
-			$directory = array_merge(explode(DIRECTORY_SEPARATOR, $this->directory), $path);
+			
 			#Check for the file
-			return $this->findFile(implode(DIRECTORY_SEPARATOR, $directory), $file, $this->suffix);
+			return $this->findFile(implode(DIRECTORY_SEPARATOR, $path), $file . $this->suffix);
 		}
 		
 		return false;

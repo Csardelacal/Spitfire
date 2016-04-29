@@ -8,7 +8,7 @@ class NamespacedclasslocatorTest extends \PHPUnit_Framework_TestCase
 	private $locator;
 	
 	public function testNameSpacedClassLocator() {
-		$this->locator = new NamespacedClassLocator('spitfire', 'spitfire');
+		$this->locator = new NamespacedClassLocator('spitfire', spitfire()->getCWD() . '/spitfire');
 		
 		$this->assertEquals(false, $this->locator->getFilenameFor('\spitfire\somenamespace\someRandomClassThatDoesNotExist'), 
 				'If a class does not exist the test should fail.');
