@@ -1,6 +1,7 @@
 <?php namespace spitfire;
 
 use Serializable;
+use spitfire\exceptions\PrivateException;
 use spitfire\storage\database\Schema;
 use spitfire\storage\database\Table;
 use spitfire\storage\database\DBField;
@@ -81,7 +82,7 @@ abstract class Model implements Serializable
 	 * of database error it throws an Exception and leaves the state of the
 	 * record unchanged.
 	 * 
-	 * @throws privateException
+	 * @throws PrivateException
 	 */
 	public function store() {
 		#Check if onbeforesave is there and use it.
@@ -179,7 +180,7 @@ abstract class Model implements Serializable
 	public function __set($field, $value) {
 		
 		if (!isset($this->data[$field])) {
-			throw new privateException("Setting non existent field: " . $field);
+			throw new PrivateException("Setting non existent field: " . $field);
 		}
 		
 		$this->data[$field]->usrSetData($value);
@@ -199,7 +200,7 @@ abstract class Model implements Serializable
 	public function serialize() {
 		$data = array();
 		foreach($this->data as $adapter) {
-			if (! $adapter->isSynced()) throw new privateException("Database record cannot be serialized out of sync");
+			if (! $adapter->isSynced()) throw new PrivateException("Database record cannot be serialized out of sync");
 			$data = array_merge($data, $adapter->dbGetData());
 		}
 		
@@ -260,7 +261,7 @@ abstract class Model implements Serializable
 	 * 
 	 * @param String $key
 	 * @param int|float $diff
-	 * @throws privateException
+	 * @throws PrivateException
 	 */
 	public function increment($key, $diff = 1) {
 		$this->table->increment($this, $key, $diff);
