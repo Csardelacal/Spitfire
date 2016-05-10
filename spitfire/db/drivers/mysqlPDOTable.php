@@ -148,7 +148,7 @@ class MysqlPDOTable extends stdSQLTable
 		$key   = $record->getPrimaryData();
 		
 		$restrictions = Array();
-		foreach ($key as $k => $v) {$restrictions[] = "$k = {$db->quote($v)}";}
+		foreach ($key as $k => $v) {$restrictions[] = "{$table->getField($k)} = {$db->quote($v)}";}
 		
 		$write = Array();
                 
@@ -157,7 +157,7 @@ class MysqlPDOTable extends stdSQLTable
 		}
 		
 		$quoted = Array();
-		foreach ($write as $f => $v) $quoted[] = "{$table->getField($f)} = {$db->quote($v)}";
+		foreach ($write as $f => $v) { $quoted[] = "{$table->getField($f)} = {$db->quote($v)}"; }
 		
 		$stt = sprintf('UPDATE %s SET %s WHERE %s',
 			$table, 

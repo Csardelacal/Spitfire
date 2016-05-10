@@ -1,6 +1,7 @@
 <?php namespace spitfire\io;
 
-use \filePermissionsException;
+use filePermissionsException;
+use spitfire\exceptions\PrivateException;
 
 /**
  * This class merges the file Uploads coming from a client into the POST array,
@@ -36,21 +37,21 @@ class Upload
 	}
 	
 	public function store() {
-		if (is_array($this->meta['name'])) throw new \privateException('Is an upload array');
+		if (is_array($this->meta['name'])) throw new PrivateException('Is an upload array');
 		
-		if (empty($this->meta['name'])) throw new \privateException('Nothing uploaded');
-		if ($this->meta['error'] > 0  ) throw new \privateException('Upload error');
+		if (empty($this->meta['name'])) throw new PrivateException('Nothing uploaded');
+		if ($this->meta['error'] > 0  ) throw new PrivateException('Upload error');
 		if ($this->stored) return $this->stored;
 		
-		if (!is_dir($this->uploadDir)) {
-			if (!mkdir($this->uploadDir, 0777, true)) 
-				throw new filePermissionsException('Upload directory does not exist and could not be created');
+		if (!is_dir($this->uploadDir) && !mkdir($this->uploadDir, 0755, true)) {
+			throw new filePermissionsException('Upload directory does not exist and could not be created');
 		}
-		elseif (!is_writable($this->uploadDir)) {
+		
+		if (!is_writable($this->uploadDir)) {
 			throw new filePermissionsException('Upload directory is not writable');
 		}
 		
-		$filename = $this->uploadDir . '/' . base_convert(time(), 10, 32) . '_' . base_convert(rand(), 10, 32) . '_' . $this->meta['name'];
+		$filename = $this->uploadDir . '/' . base_convert(time(), 10, 32) . '_' . base_convert(rand(), 10, 32) . '_' . str_replace(Array('?', ' '), '', $this->meta['name']);
 		
 		move_uploaded_file($this->meta['tmp_name'], $filename);
 		return $this->stored = $filename;
@@ -71,6 +72,11 @@ class Upload
 		}
 		
 		return $_return;
+	}
+	
+	public function setUploadDirectory($to) {
+		$this->uploadDir = $to;
+		return $this;
 	}
 	
 	public function __get($name) {
