@@ -46,6 +46,8 @@ abstract class DB
 	 * @return String The string encoded with Spitfire's encoding
 	 */
 	public function convertIn($str) {
+		if ($str === null)    { return null; }
+		if (is_numeric($str)) { return $str; }
 		return iconv(environment::get('database_encoding'), environment::get('system_encoding').'//TRANSLIT', $str);
 	}
 	

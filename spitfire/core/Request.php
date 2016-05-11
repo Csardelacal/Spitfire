@@ -222,7 +222,7 @@ class Request
 	
 	public static function fromServer() {
 		$get     = $_GET    = $_GET instanceof Get ? clone $_GET : new Get($_GET);
-		$post    = $_POST   = empty($_FILES)? $_POST : \spitfire\io\Upload::init();
+		$post    = $_POST   = array_replace_recursive(\spitfire\io\Post::init(), \spitfire\io\Upload::init());
 		$cookie  = $_COOKIE;
 		$headers = $_SERVER;
 		

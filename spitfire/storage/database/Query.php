@@ -155,9 +155,9 @@ abstract class Query extends RestrictionGroup
 		return  $data;
 	}
 	
-	public function fetchAll($parent = null) {
-		if (!$this->result) $this->query();
-		return $this->result->fetchAll($parent);
+	public function fetchAll() {
+		if (!$this->result) { $this->query(); }
+		return $this->result->fetchAll();
 	}
 
 	protected function query($fields = null, $returnresult = false) {

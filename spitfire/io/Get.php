@@ -215,5 +215,16 @@ class Get implements Iterator, ArrayAccess
 	public function valid() {
 		return key($this->data) !== null;
 	}
+	
+	/**
+	 * This method allows you to test if a value was sent with the request by 
+	 * using isset() with the parameter like this isset($_GET->a)
+	 * 
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function __isset($name) {
+		return isset($this->data[$name]);
+	}
 
 }
