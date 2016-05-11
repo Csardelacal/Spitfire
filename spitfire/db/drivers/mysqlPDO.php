@@ -53,6 +53,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		try {
 			$this->connection = new PDO($dsn, $user, $pass);
 			$this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_NATURAL);
 			
 			return true;
 		} catch (Exception $e) {

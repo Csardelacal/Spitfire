@@ -92,16 +92,16 @@ class Upload
 	}
 	
 	public static function init() {
+		if (empty($_FILES)) { return Array(); }
 		
 		$files   = $_FILES;
 		
 		foreach ($files as &$file) {
-			$file = new Upload($file);
-			$file = $file->getData();
-			unset($file);
+			$t = new Upload($file);
+			$file = $t->getData();
 		}
 		
-		return array_replace_recursive ($_POST, $files);
+		return $files;
 		
 	}
 	

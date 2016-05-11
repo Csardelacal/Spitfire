@@ -103,7 +103,6 @@ AutoLoad::registerClass('spitfire\io\beans\renderers\SimpleFieldRenderer',      
 AutoLoad::registerClass('_SF_Invoke',            $cur_dir.'/mvc/invoke.php');
 
 
-AutoLoad::registerClass('spitfire\io\Upload',                                   $cur_dir.'/io/upload.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLElement',                         $cur_dir.'/io/html/element.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLUnclosedElement',                 $cur_dir.'/io/html/unclosed.php');
 AutoLoad::registerClass('spitfire\io\html\HTMLDiv',                             $cur_dir.'/io/html/div.php');
