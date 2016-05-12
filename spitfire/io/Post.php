@@ -55,8 +55,6 @@ class Post
 			/*
 			 * All other cases are handled by the standard post mechanism in PHP.
 			 */
-			case 'application/x-www-form-urlencoded':
-			case 'multipart/form-data':
 			default:
 				$post = $_POST; //PHP will parse this by default
 		}
