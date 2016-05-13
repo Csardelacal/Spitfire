@@ -4,6 +4,7 @@ use spitfire\mvc\MVC;
 use Strings;
 use spitfire\exceptions\PrivateException;
 use spitfire\environment;
+use spitfire\cache\MemoryCache;
 
 /**
  * This class creates a "bridge" beetwen the classes that use it and the actual
@@ -22,7 +23,7 @@ abstract class DB
 	protected $schema;
 	protected $prefix;
 	
-	protected $tables = Array();
+	protected $tableCache;
 	
 	/**
 	 * Creates an instance of DBInterface. If options are set it will import
@@ -37,6 +38,8 @@ abstract class DB
 		$this->password = (isset($options['password']))? $options['password'] : environment::get('db_pass');
 		$this->schema   = (isset($options['schema']))?   $options['schema']   : environment::get('db_database');
 		$this->prefix   = (isset($options['prefix']))?   $options['prefix']   : environment::get('db_table_prefix');
+		
+		$this->tableCache = new MemoryCache();
 	}
 	
 	/**
@@ -70,26 +73,20 @@ abstract class DB
 	 * This method does not actually repair broken databases but broken schemas,
 	 * if your database is broken or data on it corrupt you need to use the 
 	 * DBMS specific tools to repair it.
-	 */
-	public function repair() {
-		$tables = $this->getTables();
-		foreach ($tables as $table) {
-			$table->repair();
-		}
-	}
-	
-	/**
-	 * Returns the list of tables/models <b>currently</b> loaded into the db.
+	 * 
+	 * Repairs the list of tables/models <b>currently</b> loaded into the db.
 	 * If a model hasn't been accessed during execution it won't be listed
 	 * here.
+	 * 
 	 * Please note, that this function is used only for maintenance and repair
 	 * works on tables. Meaning that it is not relevant if <b>all</b> tables
 	 * were imported.
-	 * 
-	 * @return mixed Array of tables imported.
 	 */
-	public function getTables() {
-		return $this->tables;
+	public function repair() {
+		$tables = $this->tableCache->getAll();
+		foreach ($tables as $table) {
+			$table->repair();
+		}
 	}
 	
 	/**
@@ -105,21 +102,23 @@ abstract class DB
 	 */
 	public function table($tablename) {
 		
-		#If the table has already been imported continue
-		if ($this->hasTable($tablename)) { return $this->getTableFromCache($tablename); }
-		
 		#If the parameter is a Model, we get it's name
 		if ($tablename instanceof Schema) {
-			if (!class_exists($tablename->getName().'Model')) { return $this->addTableToCache($tablename); } 
+			if (!class_exists($tablename->getName().'Model')) { return $this->tableCache->set($tablename->getName(), $this->getTableInstance($this, $tablename)); } 
 			else                                              { $tablename = $tablename->getName(); }
+		}
+		
+		#If the table has already been imported continue
+		if ($this->tableCache->contains($tablename instanceof Schema? $tablename->getName() : $tablename)) { 
+			return $this->tableCache->get($tablename instanceof Schema? $tablename->getName() : $tablename); 
 		}
 		
 		if (is_string($tablename)) {
 			
-			try { return $this->addTableToCache($this->makeTable($tablename)); }
+			try { return $this->tableCache->set($tablename, $this->makeTable($tablename)); }
 			catch (\spitfire\exceptions\PrivateException$e) { /* Silent failure. The table may not exist */}
 			
-			try { return $this->addTableToCache($this->makeTable(Strings::singular($tablename))); }
+			try { return $this->tableCache->set(Strings::singular($tablename), $this->makeTable(Strings::singular($tablename))); }
 			catch (\spitfire\exceptions\PrivateException$e) { /*Silently fail. The singular of this table may not exist either*/}
 			
 			/*
@@ -154,45 +153,6 @@ abstract class DB
 		}
 		
 		throw new PrivateException('No table ' . $tablename);
-	}
-	
-	/**
-	 * 
-	 * @param string|Schema $name
-	 * @return boolean
-	 */
-	protected function hasTable($name) {
-		#If the variable we're passing is a schema we need to get it's name to look it up
-		if ($name instanceof Schema) { $name = $name->getName(); }
-		
-		#Otherwise we default to looking up the array key
-		return isset($this->tables[$name]);
-	}
-	
-	/**
-	 * 
-	 * @param string|Schema $name
-	 * @return Table
-	 */
-	protected function getTableFromCache($name) {
-		#If the variable we're passing is a schema we need to get it's name to look it up
-		if ($name instanceof Schema) { $name = $name->getName(); }
-		
-		#Otherwise we default to looking up the array key
-		return $this->tables[$name];
-	}
-	
-	/**
-	 * 
-	 * @param Table|Schema $table
-	 * @return Table
-	 */
-	protected function addTableToCache($table) {
-		#If the variable we're passing is a schema we need to get it's name to look it up
-		if ($table instanceof Schema) { $table = $this->getTableInstance($this, $table); }
-		
-		#Otherwise we default to looking up the array key
-		return $this->tables[$table->getModel()->getName()] = $table;
 	}
 
 	/**
