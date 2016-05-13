@@ -38,6 +38,9 @@ interface CacheInterface
 	 * @param mixed $value
 	 */
 	public function set($key, $value);
+	
+	public function contains($key);
+	
 	public function delete ($key);
 	
 }

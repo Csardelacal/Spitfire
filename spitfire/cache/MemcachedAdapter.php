@@ -264,4 +264,10 @@ class MemcachedAdapter implements CacheInterface
 		if (self::$instance === null) { self::$instance = new MemcachedAdapter(); }
 		return self::$instance;
 	}
+
+	public function contains($key) {
+		//TODO: Implement
+		return true;
+	}
+
 }
