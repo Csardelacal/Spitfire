@@ -24,8 +24,8 @@ class CharsetEncoder
 	 * from one encoding to another. To do so, all you need is to define an input 
 	 * and output encoding (inner and outer) that will be used to convert between.
 	 * 
-	 * @param string $inner Name of the inner encoding
 	 * @param string $outer Name of the outer encoding
+	 * @param string $inner Name of the inner encoding
 	 */
 	public function __construct($outer, $inner) {
 		$this->inner = $inner;
@@ -41,7 +41,7 @@ class CharsetEncoder
 	public function encode($str) {
 		if ($str === null)    { return null; }
 		if (is_numeric($str)) { return $str; }
-		return iconv($this->outer, $this->inner.'//TRANSLIT', $str);
+		return mb_convert_encoding($str, $this->outer, $this->inner);
 	}
 	
 	
@@ -54,7 +54,11 @@ class CharsetEncoder
 	public function decode($str) {
 		if ($str === null)    { return null; }
 		if (is_numeric($str)) { return $str; }
-		return iconv($this->inner, $this->outer.'//TRANSLIT', $str);
+		return mb_convert_encoding($str, $this->inner, $this->outer);
+	}
+	
+	public function getInnerEncoding() {
+		return $this->inner;
 	}
 
 }
