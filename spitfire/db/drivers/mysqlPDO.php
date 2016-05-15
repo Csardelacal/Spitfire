@@ -45,8 +45,8 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 *                          connection because the Server rejected the connection.
 	 */
 	protected function connect() {
-
-		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server;
+		
+		$dsn  = 'mysql:dbname=' . $this->schema . ';host=' . $this->server . ';charset=' . $this->getEncoder()->getInnerEncoding();
 		$user = $this->user;
 		$pass = $this->password;
 

@@ -42,7 +42,7 @@ abstract class DB
 		$this->prefix   = (isset($options['prefix']))?   $options['prefix']   : Environment::get('db_table_prefix');
 		
 		$this->tableCache = new MemoryCache();
-		$this->encoder    = new CharsetEncoder(_def($options['encoding'], Environment::get('database_encoding')), Environment::get('system_encodding'));
+		$this->encoder    = new CharsetEncoder(Environment::get('system_encoding'), _def($options['encoding'], Environment::get('database_encoding')));
 	}
 	
 	/**
@@ -64,7 +64,7 @@ abstract class DB
 	 * @return String The string encoded with Spitfire's encoding
 	 */
 	public function convertIn($str) {
-		trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
+		//trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
 		return $this->encoder->encode($str);
 	}
 	
@@ -78,7 +78,7 @@ abstract class DB
 	 * @return String The string encoded with the database's encoding
 	 */
 	public function convertOut($str) {
-		trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
+		//trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
 		return $this->encoder->decode($str);
 	}
 	
