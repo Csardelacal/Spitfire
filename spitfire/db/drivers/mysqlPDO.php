@@ -259,10 +259,11 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	 * @return string Quoted and escaped string
 	 */
 	public function quote($text) {
-		if ($text === null) return 'null';
-		if ($text ===    0) return "'0'";
+		if ($text === null)  return 'null';
+		if ($text ===    0)  return "'0'";
+		if ($text === false) return "'0'";
 		
-		$str = $this->convertOut(strval($text));
+		$str = $this->convertOut($text);
 		return $this->getConnection()->quote( $str );
 	}
 
