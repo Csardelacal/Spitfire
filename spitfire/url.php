@@ -188,7 +188,7 @@ class URL implements ArrayAccess
 		if ($this->app) { array_unshift ($path, $this->app->getURISpace()); }
 		
 		#Create the URL full path (base URL + Request path)
-		$str =  SpitFire::baseUrl() . '/' . implode('/', array_filter($path));
+		$str =  rtrim(SpitFire::baseUrl(), '\/') . '/' . implode('/', array_filter($path));
 		
 		#If the extension provided is special, we print it
 		if ($this->extension !== 'php') { $str.= ".$this->extension"; }
@@ -237,7 +237,8 @@ class URL implements ArrayAccess
 	
 	public static function current() {
 		$path = get_path_info();
-		return new self($path, $_GET);
+		$refl = new ReflectionClass('URL');
+		return $refl->newInstanceArgs(array_values(array_merge(explode('/', $path), Array($_GET))));
 	}
 	
 	public static function canonical() {
