@@ -3,8 +3,9 @@
 use spitfire\mvc\MVC;
 use Strings;
 use spitfire\exceptions\PrivateException;
-use spitfire\environment;
+use spitfire\core\Environment;
 use spitfire\cache\MemoryCache;
+use spitfire\io\CharsetEncoder;
 
 /**
  * This class creates a "bridge" beetwen the classes that use it and the actual
@@ -23,7 +24,8 @@ abstract class DB
 	protected $schema;
 	protected $prefix;
 	
-	protected $tableCache;
+	private $tableCache;
+	private $encoder;
 	
 	/**
 	 * Creates an instance of DBInterface. If options are set it will import
@@ -33,36 +35,51 @@ abstract class DB
 	 *                       choose one of the DBInterface::DRIVER_? consts.
 	 */
 	public function __construct($options = null) {
-		$this->server   = (isset($options['server']))?   $options['server']   : environment::get('db_server');
-		$this->user     = (isset($options['user']))?     $options['user']     : environment::get('db_user');
-		$this->password = (isset($options['password']))? $options['password'] : environment::get('db_pass');
-		$this->schema   = (isset($options['schema']))?   $options['schema']   : environment::get('db_database');
-		$this->prefix   = (isset($options['prefix']))?   $options['prefix']   : environment::get('db_table_prefix');
+		$this->server   = (isset($options['server']))?   $options['server']   : Environment::get('db_server');
+		$this->user     = (isset($options['user']))?     $options['user']     : Environment::get('db_user');
+		$this->password = (isset($options['password']))? $options['password'] : Environment::get('db_pass');
+		$this->schema   = (isset($options['schema']))?   $options['schema']   : Environment::get('db_database');
+		$this->prefix   = (isset($options['prefix']))?   $options['prefix']   : Environment::get('db_table_prefix');
 		
 		$this->tableCache = new MemoryCache();
+		$this->encoder    = new CharsetEncoder(_def($options['encoding'], Environment::get('database_encoding')), Environment::get('system_encodding'));
+	}
+	
+	/**
+	 * The encoder will allow the application to encode / decode database that 
+	 * is directed towards or comes from the database.
+	 * 
+	 * @return CharsetEncoder
+	 */
+	public function getEncoder() {
+		return $this->encoder;
 	}
 	
 	/**
 	 * Converts data from the encoding the database has TO the encoding the
 	 * system uses.
+	 * 
+	 * @deprecated since version 0.1-dev 20160514
 	 * @param String $str The string encoded with the database's encoding
 	 * @return String The string encoded with Spitfire's encoding
 	 */
 	public function convertIn($str) {
-		if ($str === null)    { return null; }
-		if (is_numeric($str)) { return $str; }
-		return iconv(environment::get('database_encoding'), environment::get('system_encoding').'//TRANSLIT', $str);
+		trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
+		return $this->encoder->encode($str);
 	}
 	
 	
 	/**
 	 * Converts data from the encoding the system has TO the encoding the
 	 * database uses.
+	 * 
+	 * @deprecated since version 0.1-dev 20160514
 	 * @param String $str The string encoded with Spitfire's encoding
 	 * @return String The string encoded with the database's encoding
 	 */
 	public function convertOut($str) {
-		return iconv(environment::get('system_encoding'), environment::get('database_encoding').'//TRANSLIT', $str);
+		trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
+		return $this->encoder->decode($str);
 	}
 	
 	/**
