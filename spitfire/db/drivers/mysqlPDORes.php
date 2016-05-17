@@ -38,7 +38,7 @@ class mysqlPDOResultSet implements resultSetInterface
 		$data = $this->result->fetch(PDO::FETCH_ASSOC);
 		#If the data does not contain anything we return a null object
 		if (!$data) { return null; }
-		$_record = array_map( Array($this->table->getDB(), 'convertIn'), $data);
+		$_record = array_map( Array($this->table->getDB()->getEncoder(), 'decode'), $data);
 		
 		$record = $this->table->newRecord($_record);
 		$this->table->cache($record);
