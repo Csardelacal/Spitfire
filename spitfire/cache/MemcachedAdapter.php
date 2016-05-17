@@ -107,7 +107,7 @@ class MemcachedAdapter implements CacheInterface
 	 * A MC instance will just check if MC Connection exists by calling 
 	 * @uses MemcachedAdapter::connect();
 	 */
-	protected function __construct($env = null){
+	public function __construct($env = null){
 		$this->environment = $env? : Environment::get();
 		$this->connect();
 	}

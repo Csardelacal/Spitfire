@@ -1,7 +1,7 @@
 <?php namespace spitfire\io;
 
 use spitfire\io\renderers\RenderableFieldHidden;
-use session;
+use spitfire\io\session\Session;
 
 class XSSToken implements RenderableFieldHidden
 {
@@ -17,12 +17,7 @@ class XSSToken implements RenderableFieldHidden
 	}
 	
 	private function getSession() {
-		
-		if ($this->session === null) {
-			$this->session = new session();
-		}
-		
-		return $this->session;
+		return Session::getInstance();
 	}
 
 	public function getValue() {

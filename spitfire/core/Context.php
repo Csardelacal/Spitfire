@@ -1,12 +1,17 @@
 <?php namespace spitfire\core;
 
-use spitfire\core\Request;
-use spitfire\cache\MemcachedAdapter;
+use App;
+use Controller;
 use publicException;
+use spitfire\cache\MemcachedAdapter;
+use spitfire\core\annotations\ActionReflector;
+use spitfire\core\Request;
+use spitfire\core\Response;
 use spitfire\exceptions\PrivateException;
 use spitfire\InputSanitizer;
-use spitfire\core\annotations\ActionReflector;
-use spitfire\core\Response;
+use spitfire\io\session\FileSessionHandler;
+use spitfire\io\session\Session;
+use spitfire\View;
 
 /**
  * The context is a wrapper for an Intent. Basically it describes a full request
@@ -35,7 +40,7 @@ class Context
 	 * The application running the current context. The app will provide the controller
 	 * to handle the request / context provided.
 	 *
-	 * @var \App
+	 * @var App
 	 */
 	public $app;
 	
@@ -43,7 +48,7 @@ class Context
 	 * The controller is in charge of preparig a proper response to the request.
 	 * This is the first logical level that is user-defined.
 	 * 
-	 * @var \Controller
+	 * @var Controller
 	 */
 	public $controller;
 	public $action;
@@ -55,7 +60,7 @@ class Context
 	 * charge of rendering the page once the controller has finished processing
 	 * it.
 	 * 
-	 * @var \spitfire\View
+	 * @var View
 	 */
 	public $view;
 	
@@ -69,6 +74,7 @@ class Context
 	 */
 	public $request;
 	public $response;
+	public $session;
 	
 	function __construct() {
 		$this->context = $this;
@@ -78,6 +84,7 @@ class Context
 		$context = new Context;
 		$context->get        = new InputSanitizer($_GET);
 		$context->post       = new InputSanitizer($_POST);
+		$context->session    = Session::getInstance();
 		$context->cache      = MemcachedAdapter::getInstance();
 		$context->request    = Request::get();
 		$context->parameters = new InputSanitizer($context->request->getPath()->getParameters());
