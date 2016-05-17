@@ -263,7 +263,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		if ($text ===    0)  return "'0'";
 		if ($text === false) return "'0'";
 		
-		$str = $this->convertOut($text);
+		$str = $this->getEncoder()->encode($text);
 		return $this->getConnection()->quote( $str );
 	}
 
