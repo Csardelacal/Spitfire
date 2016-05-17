@@ -9,7 +9,6 @@ use spitfire\core\Request;
 use spitfire\core\Response;
 use spitfire\exceptions\PrivateException;
 use spitfire\InputSanitizer;
-use spitfire\io\session\FileSessionHandler;
 use spitfire\io\session\Session;
 use spitfire\View;
 
