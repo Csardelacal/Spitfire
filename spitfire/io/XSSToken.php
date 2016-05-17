@@ -6,8 +6,6 @@ use spitfire\io\session\Session;
 class XSSToken implements RenderableFieldHidden
 {
 	
-	private $session;
-	
 	public function getEnforcedFieldRenderer() {
 		return null;
 	}
