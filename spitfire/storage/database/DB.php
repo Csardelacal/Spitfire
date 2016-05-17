@@ -1,11 +1,12 @@
 <?php namespace spitfire\storage\database;
 
+use BadMethodCallException;
+use spitfire\cache\MemoryCache;
+use spitfire\core\Environment;
+use spitfire\exceptions\PrivateException;
+use spitfire\io\CharsetEncoder;
 use spitfire\mvc\MVC;
 use Strings;
-use spitfire\exceptions\PrivateException;
-use spitfire\core\Environment;
-use spitfire\cache\MemoryCache;
-use spitfire\io\CharsetEncoder;
 
 /**
  * This class creates a "bridge" beetwen the classes that use it and the actual
@@ -64,7 +65,7 @@ abstract class DB
 	 * @return String The string encoded with Spitfire's encoding
 	 */
 	public function convertIn($str) {
-		//trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
+		trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
 		return $this->encoder->encode($str);
 	}
 	
@@ -78,7 +79,7 @@ abstract class DB
 	 * @return String The string encoded with the database's encoding
 	 */
 	public function convertOut($str) {
-		//trigger_error('Using deprecated function DB::convertIn()', E_USER_DEPRECATED);
+		trigger_error('Using deprecated function DB::convertOut()', E_USER_DEPRECATED);
 		return $this->encoder->decode($str);
 	}
 	
@@ -125,25 +126,23 @@ abstract class DB
 			else                                              { $tablename = $tablename->getName(); }
 		}
 		
-		#If the table has already been imported continue
-		if ($this->tableCache->contains($tablename instanceof Schema? $tablename->getName() : $tablename)) { 
-			return $this->tableCache->get($tablename instanceof Schema? $tablename->getName() : $tablename); 
-		}
+		#We just tested if it's a Schema, let's see if it's a string
+		if (!is_string($tablename)) { throw new BadMethodCallException('DB::table requires Schema or string as argument'); }
 		
-		if (is_string($tablename)) {
-			
-			try { return $this->tableCache->set($tablename, $this->makeTable($tablename)); }
-			catch (\spitfire\exceptions\PrivateException$e) { /* Silent failure. The table may not exist */}
-			
-			try { return $this->tableCache->set(Strings::singular($tablename), $this->makeTable(Strings::singular($tablename))); }
-			catch (\spitfire\exceptions\PrivateException$e) { /*Silently fail. The singular of this table may not exist either*/}
-			
-			/*
-				$model = $this->getOTFModel($tablename);
-				return $this->tables[$tablename] = $this->getTableInstance($this, $model->getTableName(), $model);
-			}*/
-			
-		}
+		#If the table has already been imported continue
+		if ($this->tableCache->contains($tablename)) { return $this->tableCache->get($tablename); }
+		
+		#Check if the literall table name can be found in the database
+		try { return $this->tableCache->set($tablename, $this->makeTable($tablename)); }
+		catch (PrivateException$e) { /* Silent failure. The table may not exist */}
+		
+		#It's common to refer to the table as a plural (i.e. users), let's check if it's that
+		try { return $this->tableCache->set(Strings::singular($tablename), $this->makeTable(Strings::singular($tablename))); }
+		catch (PrivateException$e) { /*Silently fail. The singular of this table may not exist either*/}
+		
+		#Get the OTF model
+		try {	return $this->tableCache->set($tablename, $this->getTableInstance($this, $this->getOTFModel($tablename))); }
+		catch (spitfire\exceptions\PrivateException$e) { /*Silent failure again*/}
 		
 		#If all our ressources have come to an end... Halt it.
 		throw new PrivateException('No table ' . $tablename . ' found');

@@ -57,6 +57,12 @@ class CharsetEncoder
 		return mb_convert_encoding($str, $this->inner, $this->outer);
 	}
 	
+	/**
+	 * The encoding you defined as inner. This is the encoding that encode will 
+	 * convert <strong>to</strong> and decode will convert <strong>from</strong>
+	 * 
+	 * @return string
+	 */
 	public function getInnerEncoding() {
 		return $this->inner;
 	}
