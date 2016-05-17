@@ -42,17 +42,6 @@ class InputSanitizer
 	public function toBool() {
 		return !!$this->data;
 	}
-
-	public function toPassword ($min_length = 3) {
-		$str = $this->value();
-
-		if (!$str || strlen($str) < $min_length) return false;
-		$salt   = 'unyc24jgOKCWJSGnAfil';
-		$pepper = 'NxknOQPE9fievlPbhtiG';
-		$pass   = $str;
-		
-		return md5("$pepper$pass$salt");
-	}
 	
 	public function is_set() {
 		return $this->isset;

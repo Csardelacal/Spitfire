@@ -37,19 +37,6 @@ ini_set("display_errors" , "0");
  */
 include 'spitfire/bootstrap.php';
 
-/* SESSION DEFAULTS AND START_______________________________________
- * This sets basic settings about user sessions and their duration,
- * it enables the user to revisit the system after 24 hours without
- * logging in again.
- * 
- * grab a cookie from the user's machine and detect if the user has
- * a valid one. If he has he can enter the system. This cookie is made
- * of the user's Id and a random number we'll store into our DB. After
- * the time of 6 months the cookie should be removed.
- */
-$month = 3600*24*30;
-ini_set('session.gc_maxlifetime',$month);
-ini_set('session.save_path', SESSION_SAVE_PATH);
 ini_set('memory_limit', '128M');/**/
 
 /* Call the selected controller with the selected method. */

@@ -116,6 +116,7 @@ abstract class DB
 	 *                 read the name from the model and use it to find the 
 	 *                 table.
 	 * 
+	 * @throws PrivateException If the table could not be found
 	 * @return Table The database table adapter
 	 */
 	public function table($tablename) {
@@ -142,7 +143,7 @@ abstract class DB
 		
 		#Get the OTF model
 		try {	return $this->tableCache->set($tablename, $this->getTableInstance($this, $this->getOTFModel($tablename))); }
-		catch (spitfire\exceptions\PrivateException$e) { /*Silent failure again*/}
+		catch (PrivateException$e) { /*Silent failure again*/}
 		
 		#If all our ressources have come to an end... Halt it.
 		throw new PrivateException('No table ' . $tablename . ' found');
