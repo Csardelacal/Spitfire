@@ -18,7 +18,7 @@ class Validator implements ValidatorInterface
 	 * The set of rules used to validate data that is tested with these.
 	 * @var ValidationRule[]
 	 */
-	private $rules;
+	private $rules = Array();
 	
 	/**
 	 * Holds the array of messages that generated when validating the content.
