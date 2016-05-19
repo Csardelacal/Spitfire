@@ -46,7 +46,7 @@ class RegexValidationRule implements ValidationRule
 	 * @return \spitfire\validation\ValidationError|boolean
 	 */
 	public function test($value) {
-		if (!preg_match($this->regex, $value)) {
+		if (preg_match($this->regex, $value) !== 1) {
 			return new ValidationError($this->message, $this->extendedMessage);
 		}
 		return false;

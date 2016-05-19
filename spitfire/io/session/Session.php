@@ -95,7 +95,7 @@ class Session
 	public function getUser(App$app = null) {
 
 		$user = $this->get('_SF_Auth', $app);
-		return $user['userdata'];
+		return $user? $user['userdata'] : null;
 		
 	}
 
@@ -110,6 +110,13 @@ class Session
 		return session_destroy();
 	}
 	
+	/**
+	 * This class requires to be managed in "singleton" mode, since there can only
+	 * be one session handler for the system.
+	 * 
+	 * @staticvar Session $instance
+	 * @return Session
+	 */
 	public static function getInstance() {
 		static $instance = null;
 		
