@@ -84,10 +84,10 @@ class MemcachedAdapter implements CacheInterface
 	 */
 	public function connect () {
 		#First we retrieve the list of Memcached servers
-		$memcached_servers = $this->environment->get('memcached_servers');
+		$memcached_servers = $this->environment->read('memcached_servers');
 		
 		#If memcached is enabled we check if it is available
-		if (!$this->environment->get('memcached_enabled')) { return; }
+		if (!$this->environment->read('memcached_enabled')) { return; }
 		if (!class_exists('\Memcached') ) { throw new PrivateException('Memcached is enabled but not installed'); }
 		
 		#Instance a new memcached connection
@@ -95,7 +95,7 @@ class MemcachedAdapter implements CacheInterface
 		
 		#Add the array of servers we want to use
 		foreach ($memcached_servers as $server) {
-			$this->connection->addServer($server, $this->environment->get('memcached_port'));
+			$this->connection->addServer($server, $this->environment->read('memcached_port'));
 		}
 		
 		#Return the connection.

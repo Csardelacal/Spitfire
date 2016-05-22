@@ -24,7 +24,7 @@ class MysqlPDOQuery extends Query
 		$orderstt     = 'ORDER BY';
 		$order        = $this->getOrder();
 		$groupbystt   = 'GROUP BY';
-		$groupby      = null;
+		$groupby      = $this->groupby;
 		$limitstt     = 'LIMIT';
 		$limit        = $offset . ', ' . $rpp;
 		
