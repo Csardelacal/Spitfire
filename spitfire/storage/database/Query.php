@@ -14,6 +14,7 @@ abstract class Query extends RestrictionGroup
 	protected $page = 1;
 	protected $rpp = -1;
 	protected $order;
+	protected $groupby = null;
 	
 	/**
 	 *
@@ -176,11 +177,41 @@ abstract class Query extends RestrictionGroup
 	 */
 	public abstract function delete();
 	
+	/**
+	 * Counts the number of records a query would return. If there is a grouping
+	 * defined it will count the number of records each group would return.
+	 * 
+	 * @return type
+	 */
 	public function count() {
-		if ($this->count !== null) return $this->count;
-		$query = $this->query(Array('count(*)'), true)->fetchArray();
-		$count = $query['count(*)'];//end($query);
-		return $this->count = (int)$count;
+		if (!$this->groupby) {
+			$query = $this->query(Array('count(*)'), true)->fetchArray();
+			$count = $query['count(*)'];
+			return $this->count = (int)$count;
+		}
+		elseif(count($this->groupby) === 1) {
+			$_ret   = Array();
+			$cursor = $this->query(Array(reset($this->groupby), 'count(*)'), true);
+			
+			while ($row = $cursor->fetchArray()) { $_ret[reset($row)] = end($row); }
+			return $_ret;
+		}
+		
+	}
+	
+	/**
+	 * Defines a column or array of columns the system will be using to group 
+	 * data when generating aggregates.
+	 * 
+	 * @param Field|Field[]|null $column
+	 * @return Query Description
+	 */
+	public function aggregateBy($column) {
+		if (is_array($column))   { $this->groupby = $column; }
+		elseif($column === null) { $this->groupby = null; }
+		else                     { $this->groupby = Array($column); }
+		
+		return $this;
 	}
 	
 	
