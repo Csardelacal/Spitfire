@@ -72,9 +72,9 @@ abstract class stdSQLTable extends Table
 		
 		foreach($pk as &$f) { $f = '`' . $f->getName() .  '`'; }
 		
-		if (!empty($pk)) $definitions[] = 'PRIMARY KEY(' . implode(', ', $pk) . ')';
-		
 		if (!empty($foreignkeys)) $definitions = array_merge ($definitions, $foreignkeys);
+		
+		if (!empty($pk)) $definitions[] = 'PRIMARY KEY(' . implode(', ', $pk) . ')';
 		
 		#Strip empty definitions from the list
 		$clean = array_filter($definitions);
