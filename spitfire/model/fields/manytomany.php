@@ -32,7 +32,7 @@ class ManyToManyField extends ChildrenField
 		if ($src === $target) { $targetalias = $target . '_1'; }
 		else                  { $targetalias = $target; }
 		
-		if (!$this->getTable()->getDb()->hasTable("{$first}_{$second}")) {
+		if (!$this->getTable()->getDb()->getTableCache()->contains("{$first}_{$second}")) {
 			
 			$model = $this->meta = new Schema("{$first}_{$second}");
 			unset($model->_id);
@@ -49,7 +49,9 @@ class ManyToManyField extends ChildrenField
 			$this->meta = $this->getTable()->getDb()->table("{$first}_{$second}")->getModel();
 		}
 		
-		return $this->target = $this->meta;
+		#Return the remote model
+		$this->target = $this->getModel()->getTable()->getDb()->table($this->target)->getModel();
+		return $this->target;
 	}
 	
 	public function getModelField($schema) {
