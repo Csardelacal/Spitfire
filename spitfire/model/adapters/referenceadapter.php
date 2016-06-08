@@ -26,8 +26,10 @@ class ReferenceAdapter extends BaseAdapter
 		$_return = Array();
 		
 		if ($this->query instanceof Model) {
+			#Get the raw data from the donor model
+			$modeldata = $this->query->getPrimaryData();
 			foreach ($physical as $p) {
-				$_return[$p->getName()] = $this->query->{$p->getReferencedField()->getName()};
+				$_return[$p->getName()] = $modeldata[$p->getReferencedField()->getName()];
 			}
 		} elseif ($this->query instanceof \spitfire\storage\database\Query) {
 			$restrictions = $this->query->getRestrictions();

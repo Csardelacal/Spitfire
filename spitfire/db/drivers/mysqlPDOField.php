@@ -12,7 +12,12 @@ class mysqlPDOField extends DBField
 	public function columnType() {
 		$logical = $this->getLogicalField();
 		
-		if ($logical instanceof Reference) $logical = $this->getReferencedField()->getLogicalField();
+		if ($logical instanceof Reference) { 
+			$referenced = $this->getReferencedField();
+			while($referenced->getReferencedField()) { $referenced = $referenced->getReferencedField(); }
+			
+			$logical = $referenced->getLogicalField(); 
+		}
 		
 		switch ($logical->getDataType()) {
 			case Field::TYPE_INTEGER:
@@ -39,9 +44,9 @@ class mysqlPDOField extends DBField
 		if ($this->getLogicalField()->isAutoIncrement()) $definition.= "AUTO_INCREMENT ";
 		if ($this->getLogicalField()->isUnique())        $definition.= "UNIQUE ";
 		
-		if (null != $ref = $this->getReferencedField()) {
+		/*if (null != $ref = $this->getReferencedField()) {
 			$definition.= 'REFERENCES ' . $ref . ' ON DELETE CASCADE ON UPDATE CASCADE';
-		}
+		}/**/
 		
 		return $definition;
 	}

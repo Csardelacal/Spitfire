@@ -1,10 +1,12 @@
 <?php namespace spitfire\storage\database;
 
-use spitfire\Model;
-use spitfire\exceptions\PrivateException;
-use spitfire\storage\database\Schema;
-use spitfire\model\Field;
+use CoffeeBean;
 use spitfire\environment;
+use spitfire\exceptions\PrivateException;
+use spitfire\Model;
+use spitfire\model\Field;
+use spitfire\model\OTFModel;
+use spitfire\storage\database\Schema;
 
 /**
  * This class simulates a table belonging to a database. This way we can query
@@ -53,7 +55,7 @@ abstract class Table extends Queriable
 	 * Contains the bean this table uses to generate forms for itself. The bean
 	 * contains additional data to make the data request more user friendly.
 	 * 
-	 * @var CoffeBean
+	 * @var CoffeeBean
 	 */
 	protected $bean;
 	
@@ -159,7 +161,7 @@ abstract class Table extends Queriable
 	
 	/**
 	 * Returns the database the table belongs to.
-	 * @return DB|spitfire\storage\database\DB
+	 * @return DB|DB
 	 */
 	public function getDb() {
 		return $this->db;
@@ -252,7 +254,7 @@ abstract class Table extends Queriable
 	 * Returns the bean this model uses to generate Forms to feed itself with data
 	 * the returned value normally is a class that inherits from CoffeeBean.
 	 * 
-	 * @return \CoffeeBean
+	 * @return CoffeeBean
 	 */
 	public function getBean($name = null) {
 		
@@ -276,7 +278,7 @@ abstract class Table extends Queriable
 		$classname = $this->getModel()->getName() . 'Model';
 		
 		if (class_exists($classname)) { return new $classname($this, $data); }
-		else { /*TODO: Allow OTF Models*/}
+		else { return new OTFModel($this, $data); }
 	}
 	
 	/**
@@ -306,9 +308,9 @@ abstract class Table extends Queriable
 	 * cause data to be corrupted. Increment requires the data to be in sync
 	 * aka. stored to database.
 	 * 
-	 * @param String $key
+	 * @param string $key
 	 * @param int|float $diff
-	 * @throws privateException
+	 * @throws PrivateException
 	 */
 	public abstract function increment(Model$record, $key, $diff = 1);
 	

@@ -122,9 +122,6 @@ class MysqlPDOQuery extends Query
 		$this->setAliased(false);
 		
 		#Declare vars
-		$rpp          = $this->getResultsPerPage();
-		$offset       = ($this->getPage() - 1) * $rpp;
-		
 		$selectstt    = 'DELETE';
 		$fromstt      = 'FROM';
 		$tablename    = $this->getTable();
