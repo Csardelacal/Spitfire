@@ -48,7 +48,7 @@ class Get implements Iterator, ArrayAccess
 	 * @param mixed $data
 	 */
 	public function __construct($data) {
-		$this->data = array_map(Array($this, 'sanitize'), $data);
+		$this->data = array_map(Array($this, 'make'), $data);
 		$this->used = Array();
 	}
 	
@@ -57,13 +57,15 @@ class Get implements Iterator, ArrayAccess
 	 * function converts Arrays into another Object to make the canonicalization
 	 * work on different nesting levels.
 	 * 
+	 * 
+	 * 
 	 * @param  \spitfire\io\Get|string $value
 	 * @return string|\spitfire\io\Get
 	 */
-	public function sanitize($value) {
+	public function make($value) {
 		if     ($value instanceof Get) { return $value; }
 		elseif (is_array($value))      { return new self($value); }
-		else                           { return trim($value); }
+		else                           { return $value; }
 	}
 	
 	/**
@@ -154,7 +156,7 @@ class Get implements Iterator, ArrayAccess
 	 * @return mixed
 	 */
 	public function offsetExists($offset) {
-		return isset($this->data[$offset]);
+		return array_key_exists($offset, $this->data);
 	}
 	
 	/**
@@ -170,7 +172,8 @@ class Get implements Iterator, ArrayAccess
 		if (isset($this->data[$offset]) && !in_array($offset, $this->used)) {	
 			$this->used[] = $offset;
 		}
-		return isset($this->data[$offset])? $this->data[$offset] : null;
+		
+		return array_key_exists($offset, $this->data)? $this->data[$offset] : null;
 	}
 	
 	/**
@@ -192,7 +195,7 @@ class Get implements Iterator, ArrayAccess
 	 * @param string $offset
 	 */
 	public function offsetUnset($offset) {
-		if (isset($this->data[$offset])) {
+		if (array_key_exists($this->data[$offset])) {
 			unset($this->data[$offset]);
 		}
 	}
@@ -224,7 +227,28 @@ class Get implements Iterator, ArrayAccess
 	 * @return boolean
 	 */
 	public function __isset($name) {
-		return isset($this->data[$name]);
+		return array_key_exists($name, $this->data);
+	}
+	
+	/**
+	 * Allows read access to the properties sent in the query string.
+	 * 
+	 * @param string $name
+	 * @return mixed The content of the get variable on that index
+	 */
+	public function __get($name) {
+		return $this->offsetGet($name);
+	}
+	
+	/**
+	 * Allows writing back to the get object. Although you can, you should not :P
+	 * 
+	 * @param string $name
+	 * @param mixed  $value
+	 * @return mixed The content of the get variable on that index
+	 */
+	public function __set($name, $value) {
+		return $this->offsetSet($name, $value);
 	}
 
 }
