@@ -117,8 +117,7 @@ AutoLoad::registerClass('spitfire\io\html\HTMLTable',                           
 AutoLoad::registerClass('spitfire\io\html\HTMLTableRow',                        $cur_dir.'/io/html/table_row.php');
 AutoLoad::registerClass('spitfire\io\html\dateTimePicker',                      $cur_dir.'/io/html/date_picker.php');
 
-AutoLoad::registerClass('Strings',               $cur_dir.'/strings.php');
-AutoLoad::registerClass('Headers',               $cur_dir.'/headers.php');
+AutoLoad::registerClass('Strings',               $cur_dir.'/Strings.php');
 
 AutoLoad::registerClass('Locale',                $cur_dir.'/locale/locale.php');
 AutoLoad::registerClass('spitfire\locale\langInfo',                             $cur_dir.'/locale/lang_info.php');
