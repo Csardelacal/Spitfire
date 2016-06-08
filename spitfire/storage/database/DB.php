@@ -171,6 +171,17 @@ abstract class DB
 		
 		throw new PrivateException('No table ' . $tablename);
 	}
+	
+	/**
+	 * Returns our table cache. This allows an application that uses Spitfire (or
+	 * it's own core) to check whether a table is already cached or inject it's 
+	 * own tables.
+	 * 
+	 * @return MemoryCache
+	 */
+	public function getTableCache() {
+		return $this->tableCache;
+	}
 
 	/**
 	 * Allows short-hand access to tables by using: $db->tablename
