@@ -8,11 +8,25 @@ class Strings
 	 * for class to URL conversion and the other way around.
 	 * 
 	 * @param String $str
+	 * @return string
 	 */
-	public static function camel2underscores ($str) {
-		$str = preg_replace('/[A-Z]/', '_$0', $str);
-		if ($str[0] == '_') { $str = substr ($str, 1); }
-		return strtolower($str);
+	public static function camel2underscores($str) {
+		$_ret = preg_replace('/[A-Z]/', '_$0', $str);
+		return strtolower(trim($_ret, '_'));
+	}
+	
+	/**
+	 * Converts under_score separated strings into camelCased. Allowing an application
+	 * to retrieve a class name from a case insensitive environment.
+	 * 
+	 * @param string  $str  The input string (example: camel_case)
+	 * @param boolean $high Defines whether the first letter should be uppercase. 
+	 *                      "CamelCase" (true) or "camelCase" (false)
+	 * @return string
+	 */
+	public static function underscores2camel($str, $high = true) {
+		$_ret = preg_replace_callback('/\_[a-z]/', function ($e) { return strtoupper($e[0][1]); }, $str);
+		return $high? ucfirst($_ret) : $_ret;
 	}
 	
 	public static function ellipsis ($str, $targetlength, $char = '...') {
@@ -34,7 +48,7 @@ class Strings
 	}
 	
 	public static function endsWith($haystack, $needle) {
-		if (!$needle) return true;
+		if (!$needle) { return true; }
 		return strcmp(substr($haystack, 0 - strlen($needle)), $needle) === 0;
 	}
 	
@@ -44,31 +58,13 @@ class Strings
 	
 	public static function plural($string) {
 		if (Strings::endsWith($string, 'y')) return substr($string, 0, -1) .'ies';
-		else return $string . 's';
+		else { return $string . 's'; }
 	}
 	
 	public static function singular($string) {
 		if (Strings::endsWith($string, 'ies'))   return substr($string, 0, -3) .'y';
 		elseif (Strings::endsWith($string, 's')) return substr($string, 0, -1);
 		else                                     return $string;
-	}
-	
-	public static function splitExtension($filename, $default = '') {
-		/* To fetch the extension we do the following:
-		 * * We get the last element of the path.
-		 * * Split it by the .
-		 * * Keep the first part as filename
-		 * * And the rest as extension.
-		 */
-		$data = explode('.', $filename);
-		
-		if (count($data) > 1) {
-			$extension = array_pop($data);
-		} else {
-			$extension = $default;
-		}
-		
-		return Array(implode('.', $data), $extension);
 	}
 	
 	public static function strToHTML($str) {
