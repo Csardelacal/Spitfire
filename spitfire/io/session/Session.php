@@ -35,7 +35,19 @@ class Session
 	 * @param \spitfire\io\session\SessionHandler $handler
 	 */
 	protected function __construct(SessionHandler$handler = null) {
-		if (!$handler) { $handler = new FileSessionHandler(realpath(session_save_path()), 2592000); }
+		$lifetime = 2592000;
+		
+		if (!$handler) { $handler = new FileSessionHandler(realpath(session_save_path()), $lifetime); }
+		
+		/*
+		 * This is a fallback mechanism that allows dynamic extension of sessions,
+		 * otherwise a twenty minute session would end after 20 minutes even 
+		 * if the user was actively using it.
+		 * 
+		 * Read on: http://php.net/manual/en/function.session-set-cookie-params.php
+		 */
+		setcookie(session_name(), session_id(), time() + $lifetime, '/');
+		
 		$this->handler = $handler;
 	}
 	
