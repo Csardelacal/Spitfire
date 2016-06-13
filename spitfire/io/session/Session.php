@@ -1,5 +1,6 @@
 <?php namespace spitfire\io\session;
 
+use App;
 use spitfire\core\Environment;
 
 /**
@@ -32,21 +33,12 @@ class Session
 	 * You need to question the fact that the data actually belongs to the same
 	 * user, since this may not be guaranteed all the time.
 	 * 
-	 * @param \spitfire\io\session\SessionHandler $handler
+	 * @param SessionHandler $handler
 	 */
 	protected function __construct(SessionHandler$handler = null) {
 		$lifetime = 2592000;
 		
 		if (!$handler) { $handler = new FileSessionHandler(realpath(session_save_path()), $lifetime); }
-		
-		/*
-		 * This is a fallback mechanism that allows dynamic extension of sessions,
-		 * otherwise a twenty minute session would end after 20 minutes even 
-		 * if the user was actively using it.
-		 * 
-		 * Read on: http://php.net/manual/en/function.session-set-cookie-params.php
-		 */
-		setcookie(session_name(), session_id(), time() + $lifetime, '/');
 		
 		$this->handler = $handler;
 	}
@@ -120,6 +112,20 @@ class Session
 	public function destroy() {
 		$this->start();
 		return session_destroy();
+	}
+	
+	public function __destruct() {
+		if (!session_id()) { return; }
+		
+		/*
+		 * This is a fallback mechanism that allows dynamic extension of sessions,
+		 * otherwise a twenty minute session would end after 20 minutes even 
+		 * if the user was actively using it.
+		 * 
+		 * Read on: http://php.net/manual/en/function.session-set-cookie-params.php
+		 */
+		$lifetime = 2592000;
+		setcookie(session_name(), session_id(), time() + $lifetime, '/');
 	}
 	
 	/**
