@@ -1,8 +1,8 @@
 <?php namespace spitfire;
 
 use spitfire\autoload\RegisteredClassLocator;
-use spitfire\autoload\UserClassLocator;
 use spitfire\exceptions\ExceptionHandler;
+use spitfire\autoload\NamespacedClassLocator;
 
 class AutoLoad
 {
@@ -20,15 +20,17 @@ class AutoLoad
 	}
 	
 	public function makeLocators($basedir) {
-		$this->locators[] = new autoload\SystemClassLocator($basedir);
+		$this->locators[] = new NamespacedClassLocator('spitfire', $basedir . '/spitfire');
 		$this->locators[] = new RegisteredClassLocator($basedir);
 		$this->locators[] = new autoload\AppClassLocator($basedir);
-		$this->locators[] = new UserClassLocator('Controller', ClassInfo::TYPE_CONTROLLER, $basedir);
-		$this->locators[] = new UserClassLocator('Model',      ClassInfo::TYPE_MODEL, $basedir);
-		$this->locators[] = new UserClassLocator('Locale',     ClassInfo::TYPE_LOCALE, $basedir);
-		$this->locators[] = new UserClassLocator('View',       ClassInfo::TYPE_VIEW, $basedir);
-		$this->locators[] = new UserClassLocator('Bean',       ClassInfo::TYPE_BEAN, $basedir);
-		$this->locators[] = new UserClassLocator('',           ClassInfo::TYPE_STDCLASS, $basedir);
+		
+		#Register the loaders for the classes within user space
+		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/controllers', 'Controller');
+		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/models',      'Model');
+		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/locales',     'Locale');
+		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/views',       'View');
+		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/beans',       'Bean');
+		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/classes');
 	}
 
 	public function register($className, $location) {

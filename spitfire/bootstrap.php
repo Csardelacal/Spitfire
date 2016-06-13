@@ -30,7 +30,7 @@ require_once 'spitfire/core/functions.php';
 require_once 'spitfire/ClassInfo.php';  //TODO: Remove - Deprecated
 require_once 'spitfire/autoload.php';
 require_once 'spitfire/autoload/classlocator.php';
-require_once 'spitfire/autoload/systemclasslocator.php';
+require_once 'spitfire/autoload/namespacedclasslocator.php';
 
 #Create the exceptionhandler that will capture errors and try to present useful
 #information to the user.

@@ -5,7 +5,7 @@
  * for right operation. This should be deleted whe using Spitfire.
  */
 
-class homeController extends Controller
+class HomeController extends Controller
 {
 	public function index() {
 		$this->view->set('message', 'Hi! I\'m spitfire');

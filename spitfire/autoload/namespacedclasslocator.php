@@ -56,7 +56,7 @@ class NamespacedClassLocator extends ClassLocator
 	 * @param string $suffix
 	 */
 	public function __construct($namespace, $dir, $suffix = '') {
-		$this->namespace = trim($namespace,self::NAMESPACE_SEPARATOR) . self::NAMESPACE_SEPARATOR;
+		$this->namespace = ltrim(trim($namespace, self::NAMESPACE_SEPARATOR) . self::NAMESPACE_SEPARATOR, self::NAMESPACE_SEPARATOR);
 		$this->suffix    = $suffix;
 		
 		parent::__construct($dir);
@@ -71,6 +71,7 @@ class NamespacedClassLocator extends ClassLocator
 	 */
 	public function getFilenameFor($classname) {
 		$class = trim($classname, '\\');
+		
 		#If the namespace and the suffix match we test if the file is found.
 		if (Strings::startsWith($class, $this->namespace) && Strings::endsWith($class, $this->suffix)) {
 			
@@ -85,7 +86,7 @@ class NamespacedClassLocator extends ClassLocator
 			$file = array_pop($path);
 			
 			#Check for the file
-			return $this->findFile(implode(DIRECTORY_SEPARATOR, $path), $file . $this->suffix);
+			return $this->findFile(implode(DIRECTORY_SEPARATOR, $path), $file . $this->suffix)? : $this->findFile(implode(DIRECTORY_SEPARATOR, $path), $file);
 		}
 		
 		return false;
