@@ -53,22 +53,21 @@ abstract class ClassLocator
 	 * @param string $name
 	 * @return string|boolean
 	 */
-	public function findFile($dir, $name, $suffix = null) {
-		
+	public function findFile($dir, $name, /*DEPRECATED*/$suffix = null) {
 		#Check if just the name of the file is being found
-		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . $name .'.php';
+		$file = rtrim($this->basedir . '/' . $dir, '/') . '/' . $name .'.php';
 		if (file_exists($file)) { return $file; }
 		
 		#Check if it exists in lowercase
-		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . strtolower($name) .'.php';
+		$file = rtrim($this->basedir . '/' . $dir, '/') . '/' . strtolower($name) .'.php';
 		if (file_exists($file)) { return $file; }
 		
 		#Check if it exists with the suffix
-		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . $name . '-' . $suffix .'.php';
+		$file = rtrim($this->basedir . '/' . $dir, '/') . '/' . $name . '-' . $suffix .'.php';
 		if ($suffix && file_exists($file)) { return $file; }
 		
 		#Check for the lower case file and the lower case suffix.
-		$file = $this->basedir . '/' . rtrim($dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
+		$file = rtrim($this->basedir . '/' . $dir, '/') . '/' . strtolower($name) . '-' . strtolower($suffix) .'.php';
 		if ($suffix && file_exists($file)) { return $file; }
 		
 		return false;

@@ -53,6 +53,7 @@ class Strings
 	}
 	
 	public static function startsWith($haystack, $needle) {
+		if (empty($needle)) { return true; }
 		return strpos($haystack, $needle) === 0;
 	}
 	
