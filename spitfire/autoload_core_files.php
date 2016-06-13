@@ -6,11 +6,7 @@ use spitfire\AutoLoad;
 $cur_dir = dirname(__FILE__);
 
 #Define default classes and their locations
-AutoLoad::registerClass('fileNotFoundException', $cur_dir.'/exceptions.php');
-AutoLoad::registerClass('publicException',       $cur_dir.'/exceptions.php');
-AutoLoad::registerClass('privateException',      $cur_dir.'/exceptions.php');
 AutoLoad::registerClass('spitfire\exceptions\ExceptionHandler',  $cur_dir.'/exceptionHandler.php');
-//AutoLoad::registerClass('spitfire\Path',         $cur_dir.'/core/path.php');
 
 AutoLoad::registerClass('spitfire\router\RouteMismatchException',               $cur_dir.'/core/router/mismatchexception.php');
 AutoLoad::registerClass('spitfire\environment',  $cur_dir.'/environment.php');
@@ -21,9 +17,6 @@ AutoLoad::registerClass('spitfire\View',                                        
 AutoLoad::registerClass('_SF_ViewElement',       $cur_dir.'/mvc/view_element.php');
 
 AutoLoad::registerClass('Time',                                                 $cur_dir.'/time.php');
-AutoLoad::registerClass('spitfire\MemcachedAdapter',                            $cur_dir.'/cache/memcached.php');
-AutoLoad::registerClass('FileCache',                                            $cur_dir.'/cache/filecache.php');
-AutoLoad::registerClass('SimpleFileCache',                                      $cur_dir.'/cache/filecachesimple.php');
 AutoLoad::registerClass('Image',                 $cur_dir.'/image.php');
 AutoLoad::registerClass('browser',               $cur_dir.'/security.php');
 
