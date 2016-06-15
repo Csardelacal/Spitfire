@@ -2,8 +2,12 @@
 
 namespace spitfire\io\beans;
 
+use CoffeeBean;
+use Model;
+use spitfire\exceptions\PrivateException;
 use spitfire\io\renderers\RenderableFieldGroup;
-use \CoffeeBean;
+use spitfire\validation\ValidationRule;
+use Strings;
 
 /**
  * This class allows a bean to receive data that belongs to this but is handled
@@ -47,7 +51,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 		
 		#Check if the request is done via POST. Otherwise return an empty array.
 		if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-			throw new \privateException("Invalid request method. Requires POST");
+			throw new PrivateException("Invalid request method. Requires POST");
 		}
 		
 		#Post will contain an array of subforms for this element.
@@ -56,7 +60,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 		
 		#Test if the postdaa contains anything at all
 		if (!is_array($data) || !count(array_filter($data))) {
-			throw new \privateException("Post was empty");
+			throw new PrivateException("Post was empty");
 		}
 		
 		#Loop through the passed array and create the subforms to handle the data
@@ -103,7 +107,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 	 * 
 	 * This method returns $this to allow method chaining.
 	 * 
-	 * @return spitfire\io\beans\ChildBean
+	 * @return ChildBean
 	 */
 	public function setMinimumEntries($amt) {
 		$this->min_entries = $amt;
@@ -113,7 +117,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 	/**
 	 * Returns the array of records that this field contains.
 	 * 
-	 * @return \Model[]
+	 * @return Model[]
 	 */
 	public function getDefaultValue() {
 		if ( ($record = $this->getBean()->getRecord()) !== null)
@@ -163,7 +167,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 		$table = $this->getField()->getTarget()->getTable();
 		$child = $table->getBean();
 		
-		if (\Strings::startsWith($name, '_new_')) {
+		if (Strings::startsWith($name, '_new_')) {
 			$r = $table->newRecord();
 		} else {
 			$r = $table->getById($name);
@@ -183,7 +187,7 @@ class ChildBean extends Field implements RenderableFieldGroup
 		return null;
 	}
 
-	public function addRule(\spitfire\validation\ValidationRule $rule) {
+	public function addRule(ValidationRule $rule) {
 		//TODO
 	}
 

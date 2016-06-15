@@ -3,7 +3,7 @@
 namespace spitfire\io\beans;
 
 use CoffeeBean;
-use privateException;
+use spitfire\exceptions\PrivateException;
 use spitfire\io\PostTarget;
 use spitfire\validation\ValidatorInterface;
 
@@ -129,7 +129,7 @@ abstract class Field extends PostTarget implements ValidatorInterface
 		try {
 			return $this->getRequestValue();
 		}
-		catch (privateException $e) {
+		catch (PrivateException $e) {
 			return $this->getDefaultValue();
 		}
 	}
@@ -141,7 +141,7 @@ abstract class Field extends PostTarget implements ValidatorInterface
 			return $postdata;
 		}
 		else {
-			throw new privateException(spitfire()->log ('Field ' . $this->getName() . ' was not sent with request'));
+			throw new PrivateException(spitfire()->log ('Field ' . $this->getName() . ' was not sent with request'));
 		}
 	}
 	

@@ -231,7 +231,7 @@ class Schema
 	 * method.
 	 * 
 	 * @param string $name
-	 * @throws privateException
+	 * @throws PrivateException
 	 * @return Field
 	 */
 	public function __get($name) {

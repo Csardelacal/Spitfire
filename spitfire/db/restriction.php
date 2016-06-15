@@ -36,7 +36,7 @@ abstract class Restriction
 	}
 	
 	public function setTable() {
-		throw new privateException('Deprecated');
+		throw new PrivateException('Deprecated');
 	}
 	
 	public function getField() {

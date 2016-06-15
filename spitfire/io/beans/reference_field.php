@@ -1,6 +1,6 @@
 <?php namespace spitfire\io\beans;
 
-use \privateException;
+use spitfire\exceptions\PrivateException;
 use spitfire\io\renderers\RenderableFieldSelect;
 
 class ReferenceField extends BasicField implements RenderableFieldSelect
@@ -15,7 +15,7 @@ class ReferenceField extends BasicField implements RenderableFieldSelect
 		try {
 			$v = parent::getRequestValue();
 		}
-		catch (privateException$e) {
+		catch (PrivateException$e) {
 		
 			if ($this->getBean()->getParent()) {
 

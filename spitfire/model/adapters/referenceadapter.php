@@ -63,7 +63,7 @@ class ReferenceAdapter extends BaseAdapter
 	public function usrSetData($data) {
 		//Check if the incoming data is an int
 		if ( !$data instanceof Model && !is_null($data)) {
-			throw new privateException('This adapter only accepts models');
+			throw new PrivateException('This adapter only accepts models');
 		}
 		//Make sure the finally stored data is an integer.
 		$this->query = $data;

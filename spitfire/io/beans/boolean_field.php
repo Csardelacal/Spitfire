@@ -2,7 +2,7 @@
 
 namespace spitfire\io\beans;
 
-use \privateException;
+use spitfire\exceptions\PrivateException;
 use spitfire\io\renderers\RenderableFieldBoolean;
 
 class BooleanField extends BasicField implements RenderableFieldBoolean
@@ -10,11 +10,11 @@ class BooleanField extends BasicField implements RenderableFieldBoolean
 	
 	public function getRequestValue() {
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST'
-				  || !$this->hasPostData()) {throw new privateException(spitfire()->Log("Not POSTed"));}
+				  || !$this->hasPostData()) {throw new PrivateException(spitfire()->Log("Not POSTed"));}
 		
 		try {
 			return !!parent::getRequestValue();
-		} catch(privateException $e) {
+		} catch(PrivateException $e) {
 			return false;
 		}
 	}

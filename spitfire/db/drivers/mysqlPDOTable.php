@@ -2,11 +2,12 @@
 
 namespace spitfire\storage\database\drivers;
 
-use spitfire\storage\database\Table;
-use spitfire\storage\database\DBField;
-use spitfire\model\Field;
-use spitfire\Model;
 use Exception;
+use spitfire\exceptions\PrivateException;
+use spitfire\Model;
+use spitfire\model\Field;
+use spitfire\storage\database\DBField;
+use spitfire\storage\database\Table;
 
 /**
  * Represents table specific properties and methods for the MySQLPDO Driver.
@@ -27,9 +28,9 @@ class MysqlPDOTable extends stdSQLTable
 	/**
 	 * Creates a new MySQL PDO Field object.
 	 * 
-	 * @param \spitfire\storage\database\Table $t
-	 * @param \spitfire\model\Field $data
-	 * @return \spitfire\storage\database\drivers\mysqlPDOField
+	 * @param Table $t
+	 * @param Field $data
+	 * @return mysqlPDOField
 	 */
 	public function getFieldInstance(Field$field, $name, DBField$references = null) {
 		return new mysqlPDOField($field, $name, $references);
@@ -90,7 +91,7 @@ class MysqlPDOTable extends stdSQLTable
 	 * This function is especially useful for counters i.e. pageviews, clicks,
 	 * plays or any kind of transactions.
 	 * 
-	 * @throws privateException If the database couldn't handle the request.
+	 * @throws PrivateException If the database couldn't handle the request.
 	 * @param Model $record Database record to be modified.
 	 * @param string $key
 	 * @param int|float|double $diff
@@ -174,7 +175,7 @@ class MysqlPDOTable extends stdSQLTable
 	}
 
 	public function queryInstance($table) {
-		if (!$table instanceof Table) throw new \privateException('Need a table object');
+		if (!$table instanceof Table) throw new PrivateException('Need a table object');
 		
 		return new MysqlPDOQuery($table);
 	}

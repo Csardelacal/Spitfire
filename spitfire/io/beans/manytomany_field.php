@@ -39,14 +39,14 @@ class ManyToManyField extends Field implements RenderableFieldSelect, Renderable
 	public function getRequestValue() {
 		
 		#Check if the request is done via POST. Otherwise return an empty array.
-		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \privateException("Nothing posted");
+		if ($_SERVER['REQUEST_METHOD'] != 'POST') throw new \spitfire\exceptions\PrivateException("Nothing posted");
 		
 		#Post will contain an array of subforms for this element.
 		$postdata= $this->getPostData();
 		$_return = Array();
 		$table   = $this->getField()->getTarget()->getTable();
 		
-		if (empty($postdata)) {throw new \privateException("nothing sent");}
+		if (empty($postdata)) {throw new \spitfire\exceptions\PrivateException("nothing sent");}
 		
 		#Loop through the passed array and create the subforms to handle the data
 		foreach ($postdata as $pk) {
