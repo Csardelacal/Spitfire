@@ -26,11 +26,17 @@ class MysqlPDOTable extends stdSQLTable
 	}
 
 	/**
-	 * Creates a new MySQL PDO Field object.
+	 * Creates a new MySQL PDO Field object. This receives the fields 'prototype',
+	 * name and reference (in case it references an externa field).
 	 * 
-	 * @param Table $t
-	 * @param Field $data
-	 * @return mysqlPDOField
+	 * This represents an actual field in the DBMS as opposed to the ones in the 
+	 * model. That's why here we talk of "physical" fields
+	 * 
+	 * @todo  This should be moved over to a DBMS specific object factory.
+	 * @param Field   $field
+	 * @param string  $name
+	 * @param DBField $references
+	 * @return \spitfire\storage\database\drivers\mysqlPDOField
 	 */
 	public function getFieldInstance(Field$field, $name, DBField$references = null) {
 		return new mysqlPDOField($field, $name, $references);

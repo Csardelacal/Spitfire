@@ -6,9 +6,6 @@ use spitfire\AutoLoad;
 $cur_dir = dirname(__FILE__);
 
 #Define default classes and their locations
-AutoLoad::registerClass('spitfire\exceptions\ExceptionHandler',  $cur_dir.'/exceptionHandler.php');
-
-AutoLoad::registerClass('spitfire\router\RouteMismatchException',               $cur_dir.'/core/router/mismatchexception.php');
 AutoLoad::registerClass('spitfire\environment',  $cur_dir.'/environment.php');
 
 AutoLoad::registerClass('spitfire\MVC',                                         $cur_dir.'/mvc/mvc.php');
