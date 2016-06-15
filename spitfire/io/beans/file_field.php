@@ -1,6 +1,6 @@
 <?php namespace spitfire\io\beans;
 
-use privateException;
+use spitfire\exceptions\PrivateException;
 use spitfire\io\renderers\RenderableFieldFile;
 
 class FileField extends BasicField implements RenderableFieldFile
@@ -10,7 +10,7 @@ class FileField extends BasicField implements RenderableFieldFile
 		$file = parent::getRequestValue();
 		
 		if ($file instanceof \spitfire\io\Upload) return $file->store();
-		else throw new privateException('Not an upload');
+		else throw new PrivateException('Not an upload');
 	}
 	
 	public function __toString() {

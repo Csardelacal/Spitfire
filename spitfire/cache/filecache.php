@@ -1,6 +1,7 @@
 <?php
 
 use spitfire\environment;
+use spitfire\exceptions\PrivateException;
 
 /**
  * The filecache class allows a user to create inheriting classes that contain
@@ -149,7 +150,7 @@ abstract class FileCache
 	 * Writes the cached data to disk. This generates an envelope with the expiry
 	 * timestamp and the mixed data the file holds and serializes it to disk.
 	 * 
-	 * @throws privateException If the lock for the file could not be acquired.
+	 * @throws PrivateException If the lock for the file could not be acquired.
 	 */
 	public function writeToDisk() {
 		$envelope = Array($this->expires, $this->cached);
@@ -161,7 +162,7 @@ abstract class FileCache
 				flock($fh, LOCK_UN);
 			}
 			else {
-				throw new privateException("Lock could not be acquired for " . $this->path);
+				throw new PrivateException("Lock could not be acquired for " . $this->path);
 			}
 		}
 	}

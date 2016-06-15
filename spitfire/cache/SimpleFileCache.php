@@ -40,7 +40,7 @@ class SimpleFileCache extends FileCache
 	 * data when needed.
 	 * 
 	 * @return mixed
-	 * @throws privateException
+	 * @throws PrivateException
 	 */
 	public function onMiss() {
 		$callback = $this->callback;

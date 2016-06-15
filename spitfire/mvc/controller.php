@@ -42,7 +42,7 @@ abstract class Controller extends MVC
 			return current_context($context)->run();
 		}
 		else {
-			throw new publicException("Page not found", 404, new privateException('Action not found', 0));
+			throw new publicException("Page not found", 404, new \spitfire\exceptions\PrivateException('Action not found', 0));
 		}
 	}
 	

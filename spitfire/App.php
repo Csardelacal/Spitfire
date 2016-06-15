@@ -155,16 +155,16 @@ abstract class App
 	
 	public function getLocale($locale) {
 		
-		if (empty($locale)) throw new privateException('Empty locale');
+		if (empty($locale)) throw new PrivateException('Empty locale');
 		
 		$c = $this->getNameSpace() . $locale . 'Locale';
 		
 		if (!class_exists($c)) {
-			throw new privateException('Not a valid locale for this app');
+			throw new PrivateException('Not a valid locale for this app');
 		}
 		
 		$reflection = new ReflectionClass($c);
-		if ($reflection->isAbstract()) throw new publicException("Page not found", 404, new privateException("Abstract Locale", 0) );
+		if ($reflection->isAbstract()) throw new publicException("Page not found", 404, new PrivateException("Abstract Locale", 0) );
 		return new $c();
 	}
 	

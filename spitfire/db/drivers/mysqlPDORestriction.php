@@ -6,7 +6,7 @@ use \spitfire\storage\database\Restriction;
 use \spitfire\storage\database\Query;
 use \Exception;
 use \Model;
-use \privateException;
+use spitfire\exceptions\PrivateException;
 
 class MysqlPDORestriction extends Restriction
 {
@@ -15,7 +15,7 @@ class MysqlPDORestriction extends Restriction
 		try {
 			
 			if (!$this->getField() instanceof \spitfire\storage\database\QueryField)
-				throw new \privateException();
+				throw new PrivateException();
 			
 			$value = $this->getValue();
 			$field = $this->getField()->getField();
@@ -35,7 +35,7 @@ class MysqlPDORestriction extends Restriction
 				}
 				
 				else {
-					throw new privateException("Invalid data");
+					throw new PrivateException("Invalid data");
 				}
 				
 			}

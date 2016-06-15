@@ -184,7 +184,7 @@ class Validator implements ValidatorInterface
 	 * @param \spitfire\validation\ValidationRule $rule
 	 * @param mixed $value
 	 * @return \spitfire\validation\ValidationError
-	 * @throws \privateException If the rule returns unexpected data.
+	 * @throws PrivateException If the rule returns unexpected data.
 	 */
 	protected function testRule(ValidationRule$rule, $value) {
 		$result = $rule->test($value);

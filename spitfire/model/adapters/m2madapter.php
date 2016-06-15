@@ -235,7 +235,7 @@ class ManyToManyAdapter implements ArrayAccess, Iterator, AdapterInterface
 	 * will do nothing.
 	 * 
 	 * @param \spitfire\model\adapters\ManyToManyAdapter|Model[] $data
-	 * @throws \privateException
+	 * @throws \spitfire\exceptions\PrivateException
 	 */
 	public function usrSetData($data) {
 		if ($data === $this) {
@@ -247,7 +247,7 @@ class ManyToManyAdapter implements ArrayAccess, Iterator, AdapterInterface
 		} elseif (is_array($data)) {
 			$this->children = $data;
 		} else {
-			throw new \privateException('Invalid data. Requires adapter or array');
+			throw new \spitfire\exceptions\PrivateException('Invalid data. Requires adapter or array');
 		}
 	}
 

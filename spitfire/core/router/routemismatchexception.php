@@ -1,6 +1,6 @@
 <?php namespace spitfire\core\router;
 
-use privateException;
+use spitfire\exceptions\PrivateException;
 
 /**
  * This special exception type is only thrown when two routes being compared do
@@ -9,4 +9,4 @@ use privateException;
  * @author César de la Cal <cesar@magic3w.com>
  * @last-revision 2013-10-18
  */
-class RouteMismatchException extends privateException {}
+class RouteMismatchException extends PrivateException {}

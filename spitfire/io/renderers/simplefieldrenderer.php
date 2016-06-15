@@ -31,7 +31,7 @@ class SimpleFieldRenderer {
 		$method = 'renderForm' . $type . ($array?'Array':'');
 		
 		if (!method_exists($this, $method) || !$type) {
-			throw new \privateException('Renderer has no method: ' . $method);
+			throw new \spitfire\exceptions\PrivateException('Renderer has no method: ' . $method);
 		}
 		
 		return $this->$method($field);
