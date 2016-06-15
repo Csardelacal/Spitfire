@@ -1,6 +1,6 @@
 <?php namespace spitfire\io\session;
 
-use App;
+use spitfire\App;
 use spitfire\core\Environment;
 
 /**

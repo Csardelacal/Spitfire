@@ -1,6 +1,6 @@
 <?php namespace spitfire;
 
-use App;
+use spitfire\App;
 use spitfire\core\Context;
 use spitfire\core\Response;
 use spitfire\core\Request;

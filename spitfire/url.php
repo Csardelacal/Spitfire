@@ -78,7 +78,7 @@ class URL implements ArrayAccess
 			if (is_array($param) || $param instanceof Get) { $this->params = $param; }
 			
 			#If it's an App object, it means that it's got a special place in the Path
-			elseif ($param instanceof App) { $this->app = $param; }
+			elseif ($param instanceof \spitfire\App) { $this->app = $param; }
 			
 			#If we get a whole block of text with the raw url, parse it
 			#To improve performance, we only do this IF the user has provided only that parameter

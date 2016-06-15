@@ -12,7 +12,7 @@ use spitfire\core\Context;
  * the context is made available to inheriting classes.
  * 
  * @property-read \spitfire\View $view The current view
- * @property-read \App $app The context within this is located
+ * @property-read \spitfire\App $app The context within this is located
  * @property-read Context $context The context within this is located
  * @property-read \spitfire\core\Request $request The request the context is answering to
  * @property-read \spitfire\core\Response $response Contains the response body and headers
