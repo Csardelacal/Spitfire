@@ -107,7 +107,7 @@
 	 public function setApp($app) {
 		 #If the App is actually an App and the user didn't read the doc, we will
 		 #forgive him.
-		 if ($app instanceof \App) {
+		 if ($app instanceof \spitfire\App) {
 			 $app = $app->getNameSpace();
 		 }
 		 $this->app = $app;

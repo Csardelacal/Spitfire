@@ -1,7 +1,6 @@
 <?php namespace spitfire;
 
 use spitfire\autoload\RegisteredClassLocator;
-use spitfire\exceptions\ExceptionHandler;
 use spitfire\autoload\NamespacedClassLocator;
 
 class AutoLoad
@@ -42,7 +41,6 @@ class AutoLoad
 			if (false !== $file = $locator->getFilenameFor($className)) {
 				include $file;
 				$this->imported_classes[$className] = $file;
-				ExceptionHandler::getInstance()->log("Imported class $className...");
 				return true;
 			}
 		}
