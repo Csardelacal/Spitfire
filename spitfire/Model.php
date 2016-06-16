@@ -116,7 +116,7 @@ abstract class Model implements Serializable
 	 * fields
 	 * 
 	 * @todo Find better function name
-	 * @return Array
+	 * @return array
 	 */
 	public function getPrimaryData() {
 		$primaryFields = $this->getUniqueFields();

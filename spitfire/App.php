@@ -1,8 +1,15 @@
 <?php namespace spitfire;
 
+use Controller;
+use publicException;
+use ReflectionClass;
 use spitfire\ClassInfo;
 use spitfire\core\Context;
+use spitfire\core\Path;
+use spitfire\core\router\Parameters;
+use spitfire\core\router\Router;
 use spitfire\exceptions\PrivateException;
+use URL;
 
 /**
  * Spitfire Application Class. This class is the base of every other 'app', an 
@@ -46,8 +53,8 @@ abstract class App
 	 * Generates a URL. This method will generate a string / URL depending on the 
 	 * string being inputted.
 	 * 
-	 * @param Generates a URL for the current app $url
-	 * @return \URL|string
+	 * @param string $url Generates a URL for the current app
+	 * @return URL|string
 	 */
 	public function url($url) {
 		
@@ -172,9 +179,9 @@ abstract class App
 		$ns       = $this->URISpace? '/' . $this->URISpace : '';
 		$uriSpace = $this->URISpace;
 		
-		\spitfire\core\router\Router::getInstance()->request($ns, function (spitfire\core\router\Parameters$params) use ($uriSpace) {
+		Router::getInstance()->request($ns, function (Parameters$params) use ($uriSpace) {
 			$args = $params->getUnparsed();
-			return new \spitfire\core\Path($uriSpace, array_shift($args), array_shift($args), $args, $params->getExtension());
+			return new Path($uriSpace, array_shift($args), array_shift($args), $args, $params->getExtension());
 		});
 	}
 	

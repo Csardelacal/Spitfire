@@ -1,6 +1,8 @@
 <?php
 
 use spitfire\core\Context;
+use spitfire\exceptions\PrivateException;
+use spitfire\exceptions\PublicException;
 use spitfire\mvc\MVC;
 
 abstract class Controller extends MVC
@@ -42,7 +44,7 @@ abstract class Controller extends MVC
 			return current_context($context)->run();
 		}
 		else {
-			throw new publicException("Page not found", 404, new \spitfire\exceptions\PrivateException('Action not found', 0));
+			throw new PublicException("Page not found", 404, new PrivateException('Action not found', 0));
 		}
 	}
 	
