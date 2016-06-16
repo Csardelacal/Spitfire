@@ -114,20 +114,6 @@ class Session
 		return session_destroy();
 	}
 	
-	public function __destruct() {
-		if (!session_id()) { return; }
-		
-		/*
-		 * This is a fallback mechanism that allows dynamic extension of sessions,
-		 * otherwise a twenty minute session would end after 20 minutes even 
-		 * if the user was actively using it.
-		 * 
-		 * Read on: http://php.net/manual/en/function.session-set-cookie-params.php
-		 */
-		$lifetime = 2592000;
-		setcookie(session_name(), session_id(), time() + $lifetime, '/');
-	}
-	
 	/**
 	 * This class requires to be managed in "singleton" mode, since there can only
 	 * be one session handler for the system.
