@@ -1,5 +1,8 @@
 <?php
 
+use spitfire\autoload\NamespacedClassLocator;
+use spitfire\autoload\RegisteredClassLocator;
+
 /*
  * This is the bootstrap file of spitfire. It imports all the basic files that 
  * are required for Spitfire to run.
@@ -31,7 +34,22 @@ require_once 'spitfire/autoload/namespacedclasslocator.php';
 
 #Create the autoload. Once started it will allow you to register classes and 
 #locators to retrieve new classes that are missing to your class-space
-new spitfire\AutoLoad(dirname(dirname(__FILE__)));
+$autoload = new spitfire\AutoLoad();
+$basedir  = dirname(dirname(__FILE__));
+
+#These are basic locators that allow spitfire to find it's own classes. Which it's 
+#gonna need to then make the user space classes work
+$autoload->registerLocator(new NamespacedClassLocator('spitfire', $basedir . '/spitfire'));
+$autoload->registerLocator(new RegisteredClassLocator($basedir));
+$autoload->registerLocator(new spitfire\autoload\AppClassLocator($basedir));
+
+#Register the loaders for the classes within user space
+$autoload->registerLocator(new NamespacedClassLocator('', $basedir . '/bin/controllers', 'Controller'));
+$autoload->registerLocator(new NamespacedClassLocator('', $basedir . '/bin/models',      'Model'));
+$autoload->registerLocator(new NamespacedClassLocator('', $basedir . '/bin/locales',     'Locale'));
+$autoload->registerLocator(new NamespacedClassLocator('', $basedir . '/bin/views',       'View'));
+$autoload->registerLocator(new NamespacedClassLocator('', $basedir . '/bin/beans',       'Bean'));
+$autoload->registerLocator(new NamespacedClassLocator('', $basedir . '/bin/classes'));
 
 #Import the locations of the most critical components to Spitfire so it has no
 #need to look for them.

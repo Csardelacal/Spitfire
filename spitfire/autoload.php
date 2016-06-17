@@ -1,7 +1,6 @@
 <?php namespace spitfire;
 
 use spitfire\autoload\RegisteredClassLocator;
-use spitfire\autoload\NamespacedClassLocator;
 
 class AutoLoad
 {
@@ -11,25 +10,9 @@ class AutoLoad
 	private $imported_classes   = Array();
 	private $locators           = Array();
 
-	public function __construct($basedir) {
+	public function __construct() {
 		self::$instance = $this;
 		spl_autoload_register(Array($this, 'retrieveClass'));
-		
-		$this->makeLocators($basedir);
-	}
-	
-	public function makeLocators($basedir) {
-		$this->locators[] = new NamespacedClassLocator('spitfire', $basedir . '/spitfire');
-		$this->locators[] = new RegisteredClassLocator($basedir);
-		$this->locators[] = new autoload\AppClassLocator($basedir);
-		
-		#Register the loaders for the classes within user space
-		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/controllers', 'Controller');
-		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/models',      'Model');
-		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/locales',     'Locale');
-		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/views',       'View');
-		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/beans',       'Bean');
-		$this->locators[] = new NamespacedClassLocator('', $basedir . '/bin/classes');
 	}
 
 	public function register($className, $location) {
@@ -44,6 +27,7 @@ class AutoLoad
 				return true;
 			}
 		}
+		echo 'No class ' . $className;
 		return false;
 	}
 	
