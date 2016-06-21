@@ -28,9 +28,19 @@ class Parameters
 	 */
 	private $unparsed   = Array();
 	
+	/**
+	 * The extension that was parsed from a URL. This is considered a parameter in
+	 * the context of the URL - since the route can provide it as additional information.
+	 *
+	 * @var string
+	 */
 	private $extension  = 'php';
 	
-	
+	/**
+	 * Returns the extension that the URL originally had in the system.
+	 * 
+	 * @return string
+	 */
 	public function getExtension() {
 		return $this->extension;
 	}
