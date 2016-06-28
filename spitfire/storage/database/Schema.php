@@ -20,6 +20,7 @@ use IntegerField;
  * @property IntegerField $_id This default primary key integer helps the system 
  * locating the records easily.
  * 
+ * @todo Add index support, so models can create indexes that are somewhat more complex
  * @author César de la Cal <cesar@magic3w.com>
  */
 class Schema

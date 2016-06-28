@@ -27,7 +27,7 @@ class AutoLoad
 				return true;
 			}
 		}
-		echo 'No class ' . $className;
+		
 		return false;
 	}
 	
