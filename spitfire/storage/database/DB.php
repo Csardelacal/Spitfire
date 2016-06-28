@@ -142,7 +142,7 @@ abstract class DB
 		catch (PrivateException$e) { /*Silently fail. The singular of this table may not exist either*/}
 		
 		#Get the OTF model
-		try {	return $this->tableCache->set($tablename, $this->getTableInstance($this, $this->getOTFModel($tablename))); }
+		try {	return $this->tableCache->set($tablename, $this->getTableInstance($this, $this->getObjectFactory()->getOTFModel($tablename))); }
 		catch (PrivateException$e) { /*Silent failure again*/}
 		
 		#If all our ressources have come to an end... Halt it.
@@ -205,6 +205,19 @@ abstract class DB
 	 * the driver used by the system.
 	 */
 	abstract public function getConnection();
+	
+	/**
+	 * In modern spitfire drivers, all the object creation for a database is handled
+	 * by the object factories. This factories allow the system to create any object
+	 * they need: Queries, Tables, Fields...
+	 * 
+	 * This removes the need to have some driver specific objects just for the 
+	 * sake of providing a certain type. This way all SQL drivers can share some
+	 * standard components while replacing the ones they specifically need.
+	 * 
+	 * @return DatabaseObjectFactory
+	 */
+	abstract public function getObjectFactory();
 	
 	/**
 	 * Returns an instance of the class the child tables of this class have
