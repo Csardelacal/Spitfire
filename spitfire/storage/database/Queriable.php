@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\storage\database;
+<?php namespace spitfire\storage\database;
 
 /**
  * Convenience class meant to separate tables and the table related actions from
@@ -13,17 +11,6 @@ namespace spitfire\storage\database;
  */
 abstract class Queriable {
 	
-	
-	/**
-	 * Creates a new query for this DB Table. 
-	 * 
-	 * @return _SF_DBQuery
-	 */
-	public function startQuery() {
-		
-		$query = $this->getQueryInstance();
-		return $query;
-	}
 	
 	/**
 	 * Creates a simple query with a simple restriction applied to it. This
@@ -45,7 +32,7 @@ abstract class Queriable {
 	 * Creates an empty query that would return all data. This is a syntax
 	 * friendliness oriented method as it does exactly the same as startQuery
 	 * 
-	 * @see Queriable::startQuery
+	 * @see Queriable::getQueryInstance()
 	 * @return Query
 	 */
 	public function getAll() {
@@ -60,7 +47,7 @@ abstract class Queriable {
 	 * @param String $value Value we're looking for
 	 * @param Boolean $fuzzy Defines whether the clause should automatically
 	 *                       add %'s and replace spaces with %
-	 * @return _SF_DBQuery
+	 * @return Query
 	 */
 	public function like($field, $value, $fuzzy = false) {
 		
@@ -72,32 +59,6 @@ abstract class Queriable {
 		
 		$query = $this->getQueryInstance();
 		$query->addRestriction($field, $value, Restriction::LIKE_OPERATOR);
-		return $query;
-	}
-
-	/**
-	 * Creates a query searching for data that IS null.
-	 * 
-	 * @param String $field Name of the database column to be searched for.
-	 * @return _SF_DBQuery
-	 */
-	public function isNull($field) {
-		//@todo: Fix, is broken
-		$query = $this->getQueryInstance();
-		$query->addRestriction(new _SF_Restriction($field, NULL, ' is '));
-		return $query;
-	}
-
-	/**
-	 * Creates a query searching for data that IS NOT null.
-	 * 
-	 * @param String $field Name of the database column to be searched for.
-	 * @return _SF_DBQuery
-	 */
-	public function isNotNull($field) {
-		
-		$query = $this->getQueryInstance();
-		$query->addRestriction(new _SF_Restriction($field, NULL, ' IS NOT '));
 		return $query;
 	}
 	
