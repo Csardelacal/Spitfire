@@ -11,7 +11,7 @@
  * need to extend in order to provide factories we're merging those behaviors
  * in this single factory.
  */
-abstract class DatabaseObjectFactory
+interface ObjectFactoryInterface
 {
 	
 	/**
@@ -21,7 +21,7 @@ abstract class DatabaseObjectFactory
 	 * @abstract
 	 * @return Table Instance of the table class the driver wants the system to use
 	 */
-	abstract public function getTableInstance(DB$db, $tablename);
+	function getTableInstance(DB$db, $tablename);
 	
 	/**
 	 * Creates a new On The Fly Model. These allow the system to interact with a 
@@ -31,5 +31,5 @@ abstract class DatabaseObjectFactory
 	 * @abstract
 	 * @return Table Instance of the table class the driver wants the system to use
 	 */
-	abstract public function getOTFModel($tablename);
+	function getOTFModel($tablename);
 }
