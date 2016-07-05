@@ -1,6 +1,4 @@
-<?php
-
-namespace spitfire\storage\database\drivers;
+<?php namespace spitfire\storage\database\drivers;
 
 use Schema;
 use spitfire\storage\database\DB;
@@ -242,6 +240,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	/**
 	 * Creates a new Table and returns it.
 	 * 
+	 * @deprecated since version 0.1-dev 201607020148
 	 * @param spitfire.storage.database.DB $db
 	 * @param string $tablename
 	 * @param Schema $model
@@ -266,7 +265,13 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		$str = $this->getEncoder()->encode($text);
 		return $this->getConnection()->quote( $str );
 	}
-
+	
+	/**
+	 * 
+	 * @deprecated since version 0.1-dev 201607020148
+	 * @param type $tablename
+	 * @return \OTFModel
+	 */
 	public function getOTFModel($tablename) {
 		$model = new \OTFModel();
 		
@@ -278,5 +283,9 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 		
 		$model->setName($tablename);
 		return $model;
+	}
+	
+	public function getObjectFactory() {
+		return new \storage\database\drivers\mysqlpdo\ObjectFactory();
 	}
 }
