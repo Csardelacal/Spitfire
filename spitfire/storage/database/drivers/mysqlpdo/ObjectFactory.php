@@ -1,8 +1,11 @@
 <?php namespace storage\database\drivers\mysqlpdo;
 
+use spitfire\environment;
 use spitfire\storage\database\DB;
 use spitfire\storage\database\drivers\MysqlPDOTable;
 use spitfire\storage\database\ObjectFactoryInterface;
+use spitfire\storage\database\Schema;
+use TextField;
 
 /*
  * The MIT License
@@ -41,21 +44,42 @@ use spitfire\storage\database\ObjectFactoryInterface;
  */
 class ObjectFactory implements ObjectFactoryInterface
 {
+	
+	/**
+	 * Creates a new on the fly model. This means that the model is created during
+	 * runtime, and by reverse engineering the tables that the database already
+	 * has.
+	 * 
+	 * Please note, that this model would not perfectly replicate a model you could
+	 * build with a proper definition yourself.
+	 * 
+	 * @todo  At the time of writing this, the method does not use adequate types.
+	 * @param type $tablename
+	 * @return Schema
+	 */
 	public function getOTFModel($tablename) {
-		$model = new \OTFModel();
+		#Create a Schema we can feed the data into.
+		$schema  = new Schema($tablename);
 		
-		$fields = $this->execute("DESCRIBE `" . environment::get('db_table_prefix') . $tablename . "`", false);
+		#Make the SQL required to read in the data
+		$sql    = sprintf('DESCRIBE `%s%s`', environment::get('db_table_prefix'), $tablename);
+		$fields = $this->execute($sql, false);
 		
-		while ($row = $fields->fetch()) {
-			$model->{$row['Field']} = new \TextField();
+		while ($row = $fields->fetch()) { 
+			$schema->{$row['Field']} = new TextField(); 
 		}
 		
-		$model->setName($tablename);
-		return $model;
-		//TODO: As of writing this, the method does not use adequate types.
+		return $schema;
 	}
 	
-	
+	/**
+	 * Creates a new driver specific table. The table is in charge of providing 
+	 * the necessary tools for records to be updated, inserted, deleted, etc.
+	 * 
+	 * @param DB $db
+	 * @param string $tablename
+	 * @return MysqlPDOTable
+	 */
 	public function getTableInstance(DB $db, $tablename) {
 		return new MysqlPDOTable($db, $tablename);
 	}
