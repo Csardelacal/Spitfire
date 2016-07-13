@@ -1,5 +1,7 @@
 <?php namespace spitfire\core\annotations;
 
+use BadMethodCallException;
+use Reflector;
 use Strings;
 
 /**
@@ -32,19 +34,17 @@ class AnnotationParser
 	 * characters. You're though encouraged to use simple alphanumeric characters,
 	 * since we're not testing for the operation with Unicode.
 	 * 
-	 * @param \Reflector|string $doc
+	 * @param Reflector|string $doc
 	 * @return string[]
 	 */
 	protected function filter($doc) {
 		
 		#Raw contains the complete docblock comment, which will contain extra data
 		#that may be uninteresting, we will filter it and return.
-		$raw = $doc instanceof \ReflectionClass    ||
-				 $doc instanceof \ReflectionMethod   ||
-				 $doc instanceof \ReflectionFunction ||
-				 $doc instanceof \ReflectionObject   ||
-				 $doc instanceof \ReflectionProperty ||
-				 $doc instanceof \ReflectionFunctionAbstract ? $doc->getDocComment() : $doc;
+		$raw = $doc instanceof Reflector && method_exists($doc, 'getDocComment') ? $doc->getDocComment() : $doc;
+		
+		#Check if raw is a string or if whatever we got passed was bogus
+		if (!is_string($raw)) { throw new BadMethodCallException('Invalid argument', 201607131552); }
 
 		#Individual lines make it easier to parse the data
 		$pieces   = explode(PHP_EOL, $raw);
@@ -76,7 +76,7 @@ class AnnotationParser
 	 * @todo The return of this parser is weird enough to justify a wiki page or 
 	 *       a special return type
 	 * 
-	 * @param \Reflector|string $doc
+	 * @param Reflector|string $doc
 	 * @return string[][][]
 	 */
 	public function parse($doc) {
