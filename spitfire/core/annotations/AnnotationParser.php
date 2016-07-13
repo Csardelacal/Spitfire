@@ -39,7 +39,12 @@ class AnnotationParser
 		
 		#Raw contains the complete docblock comment, which will contain extra data
 		#that may be uninteresting, we will filter it and return.
-		$raw = $doc instanceof \Reflector? $doc->getDocComment() : $doc;
+		$raw = $doc instanceof \ReflectionClass    ||
+				 $doc instanceof \ReflectionMethod   ||
+				 $doc instanceof \ReflectionFunction ||
+				 $doc instanceof \ReflectionObject   ||
+				 $doc instanceof \ReflectionProperty ||
+				 $doc instanceof \ReflectionFunctionAbstract ? $doc->getDocComment() : $doc;
 
 		#Individual lines make it easier to parse the data
 		$pieces   = explode(PHP_EOL, $raw);
