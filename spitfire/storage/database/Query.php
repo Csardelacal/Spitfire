@@ -6,7 +6,7 @@ use \spitfire\model\Field;
 
 abstract class Query extends RestrictionGroup
 {
-	/** @var spitfire\storage\database\drivers\ResultSetInterface */
+	/** @var spitfire\storage\database\ResultSetInterface */
 	protected $result;
 	/** @var \spitfire\storage\database\QueryTable  */
 	protected $table;

@@ -10,7 +10,7 @@ use PDO;
  * 
  * @author César de la Cal <cesar@magic3w.com>
  */
-class mysqlPDOResultSet implements resultSetInterface
+class mysqlPDOResultSet implements \spitfire\storage\database\ResultSetInterface
 {
 	/**
 	 * Contains the raw pointer that PDO has created when executing the query.
