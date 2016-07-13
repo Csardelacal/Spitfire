@@ -1,7 +1,6 @@
 <?php namespace spitfire\core\annotations;
 
 use ReflectionClass;
-use Strings;
 use Exception;
 
 /**
@@ -54,11 +53,12 @@ class ActionReflector
 	 */
 	public function execute() {
 		#Collect the annotations
-		$anotations = $this->parseAnotations();
+		$parser     = new AnnotationParser();
+		$anotations = $parser->parse($this->getDocBlock());
 		
 		#Loop through the annotations and apply them
-		foreach ($anotations as $anotation) {
-			$this->applyAnotation(array_filter(explode(' ', $anotation)));
+		foreach ($anotations as $annotation => $entries) {
+			$this->applyAnotation($annotation, $entries[0]);
 		}
 	}
 	
@@ -69,18 +69,19 @@ class ActionReflector
 	 * This allows versatile and fast annotation parsing that does not slow down
 	 * the application.
 	 * 
+	 * @todo Convert this whole ordeal into something more flexible and usable
 	 * @param string[] $annotation
 	 */
-	public function applyAnotation($annotation) {
-		$method = array_shift($annotation);
+	public function applyAnotation($method, $annotation) {
+		
 		switch($method) {
-			case '@request-method':
+			case 'request-method':
 				return call_user_func_array(Array($this, 'method'), $annotation);
-			case '@cache':
+			case 'cache':
 				return call_user_func_array(Array($this, 'cache' ), $annotation);
-			case '@template':
+			case 'template':
 				return call_user_func_array(Array($this, 'template' ), $annotation);
-			case '@layout':
+			case 'layout':
 				return call_user_func_array(Array($this, 'layout' ), $annotation);
 			/*
 			 * Stuff that still is in the works
@@ -107,26 +108,6 @@ class ActionReflector
 		}
 		
 		return $method->getDocComment();
-	}
-	
-	/**
-	 * Fetches the annotations for the action so they can be used to establish
-	 * the way the app behaves.
-	 * 
-	 * @return string[]
-	 */
-	public function parseAnotations() {
-		$docblock = $this->getDocBlock();
-		$data  = explode("\n", $docblock);
-		$count = count($data);
-		$info  = array();
-		
-		for ($j = 0; $j < $count; $j++) {
-			$line = ltrim(rtrim($data[$j]), "* \t");
-			if (Strings::startsWith($line, '@')) {$info[] = $line;}
-		}
-		
-		return $info;
 	}
 	
 	/**
