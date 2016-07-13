@@ -6,7 +6,9 @@ use \spitfire\model\Field;
 
 abstract class Query extends RestrictionGroup
 {
-	/** @var spitfire\storage\database\ResultSetInterface */
+	/** 
+	 * @var spitfire\storage\database\ResultSetInterface|null
+	 */
 	protected $result;
 	/** @var \spitfire\storage\database\QueryTable  */
 	protected $table;
@@ -40,7 +42,7 @@ abstract class Query extends RestrictionGroup
 	 * @return Query
 	 */
 	public function addRestriction($fieldname, $value, $operator = '=') {
-		$this->result = false;
+		$this->result = null;
 		return parent::addRestriction($fieldname, $value, $operator);
 	}
 	
