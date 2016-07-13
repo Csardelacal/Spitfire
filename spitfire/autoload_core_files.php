@@ -31,7 +31,6 @@ AutoLoad::registerClass('spitfire\storage\database\Ancestor',                   
 AutoLoad::registerClass('spitfire\storage\database\QueryJoin',                  $cur_dir.'/db/join.php');
 AutoLoad::registerClass('Pagination',            $cur_dir.'/db/pagination.php');
 
-AutoLoad::registerClass('spitfire\storage\database\drivers\resultSetInterface', $cur_dir.'/db/resultset.php');
 AutoLoad::registerClass('Model',                                                $cur_dir.'/db/databaseRecord.php');
 
 AutoLoad::registerClass('Validatable',                                          $cur_dir.'/validatable.php');
