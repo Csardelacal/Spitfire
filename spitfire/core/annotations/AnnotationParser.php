@@ -41,7 +41,10 @@ class AnnotationParser
 		
 		#Raw contains the complete docblock comment, which will contain extra data
 		#that may be uninteresting, we will filter it and return.
-		$raw = $doc instanceof Reflector && method_exists($doc, 'getDocComment') ? $doc->getDocComment() : $doc;
+		
+		#This is an interesting case of a _pain in the ass_, you would expect to be
+		#able to somehow decently test if the thing is a reflection. But you can't...
+		$raw = is_object($doc) && method_exists($doc, 'getDocComment') ? $doc->getDocComment() : $doc;
 		
 		#Check if raw is a string or if whatever we got passed was bogus
 		if (!is_string($raw)) { throw new BadMethodCallException('Invalid argument', 201607131552); }
