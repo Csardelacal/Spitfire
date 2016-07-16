@@ -54,6 +54,11 @@ class ActionReflector
 	public function execute() {
 		#Collect the annotations
 		$parser     = new AnnotationParser();
+		$docComment = $this->getDocBlock();
+		
+		#The docComment was empty or unavailable, so no need to do anything
+		if ($docComment === false) { return; }
+		
 		$anotations = $parser->parse($this->getDocBlock());
 		
 		#Loop through the annotations and apply them
