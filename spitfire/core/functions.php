@@ -1,10 +1,16 @@
 <?php
 
-use spitfire\SpitFire;
-use spitfire\environment;
+use spitfire\App;
 use spitfire\core\Context;
-use spitfire\locale\langInfo;
+use spitfire\environment;
+use spitfire\locale\Domain;
+use spitfire\locale\DomainGroup;
+use spitfire\locale\Locale;
+use spitfire\SpitFire;
+use spitfire\storage\database\DB;
+use spitfire\validation\ValidationException;
 use spitfire\validation\Validator;
+use spitfire\validation\ValidatorInterface;
 
 /**
  * This is a quick hand method to use Spitfire's main App class as a singleton.
@@ -48,7 +54,7 @@ function app($name, $namespace) {
  * Shorthand function to create / retrieve the model the application is using
  * to store data. We could consider this a little DB handler factory.
  * 
- * @return \spitfire\storage\database\DB
+ * @return DB
  */
 function db($options = null) {
 	static $model = null;
@@ -91,78 +97,50 @@ function __($str, $maxlength = false) {
 	return $str;
 }
 
-function _c($amt) {
-	$lang = lang();
-	return __($lang->convertCurrency($amt)) . $lang->getCurrency();
-}
-
 /**
- * This function retrieves the best locale based on the system confirguration or 
+ * Translation helper.
  * 
- * @return Locale
- */
-function find_locale() {
-	$context = current_context();
-	try {
-		if(environment::get('system_language') && $context)
-			return $context->app->getLocale(environment::get('system_language'));
-	}
-	catch (Exception $e) {/*Ignore*/}
-
-	$langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-
-	foreach($langs as $l) {
-		$l = new langInfo($l);
-		if (null != $c = $l->getLocaleClass($context))	return $c;
-	}
-	return new \spitfire\locale\sys\En;
-}
-
-/**
- * Returns the current system language.
+ * Depending on the arguments this function receives, it will have one of several
+ * behaviors.
  * 
- * @staticvar Locale $lang
- * @deprecated since version 0.1-dev 201604200118
- * @param string|Context $set Used to change the system language. Otherwise it will be
- *               default-ed to Accept-Language header
- * @return Locale The locale being used in the application. This allows to localize
- *               your applications with quite ease.
- */
-function lang($set = null) {
-	/*@var $lang Locale*/
-	static $lang = null;
-	
-	/*@var $context Context*/
-	static $context = null;
-	
-	# If we have chosen one retrieve it 
-	if ($set instanceof \spitfire\core\Context) {
-		$context = $set;
-		return;
-	}
-	
-	# If we have chosen one retrieve it 
-	if ($set !== null) {
-		$lang = $context->app->getLocale($set);
-	}
-	
-	#Else try to set one
-	if ($lang == null) {
-		$lang = find_locale();
-	}
-	
-	return $lang;
-}
-
-/**
- * Translates a string to the current locale. Use lang() to choose a locale, 
- * otherwise the system will try to guess the best locale by using the 
- * ACCEPT_LANG header sent by the browser.
+ * If the first argument is a spitfire\locale\Locale and the function receives a
+ * optional second parameter, then it will assign the locale to either the global
+ * domain / the domain provided in the second parameter.
  * 
- * @return string The translated string.
+ * Otherwise, if the first parameter is a string, it will call the default locale's
+ * say method. Which will translate the string using the standard locale.
+ * 
+ * If no parameters are provided, this function returns a DomainGroup object,
+ * which provides access to the currency and date functions as well as the other
+ * domains that the system has for translations.
+ * 
+ * @return string|DomainGroup 
  */
 function _t() {
-	return call_user_func_array(Array(lang(), 'say'), func_get_args());
+	static $domains = null;
+	
+	#If there are no domains we need to set them up first
+	if ($domains === null) { $domains = new DomainGroup(); }
+	
+	#Get the functions arguments afterwards
+	$args = func_get_args();
+	
+	#If the first parameter is a Locale, then we proceed to registering it so it'll
+	#provide translations for the programs
+	if ($args[0] instanceof Locale) {
+		$locale = array_shift($args);
+		$domain = array_shift($args);
+		
+		return $domains->putDomain($domain, new Domain($domain, $locale));
+	}
+	
+	#If the args is empty, then we give return the domains that allow for printing
+	#and localizing of the data.
+	if (empty($args)) {
+		return $domains;
+	}
+	
+	return call_user_func_array(Array($domains->getDefault(), 'say'), $args);
 }
 
 function current_context(Context$set = null) {
@@ -172,7 +150,7 @@ function current_context(Context$set = null) {
 }
 
 function validate($target = null) {
-	if ($target !== null && $target instanceof \spitfire\validation\ValidatorInterface) {
+	if ($target !== null && $target instanceof ValidatorInterface) {
 		$targets  = func_get_args();
 		$messages = Array();
 		
@@ -181,7 +159,7 @@ function validate($target = null) {
 			$messages = array_merge($messages, $target->getMessages());
 		}
 		
-		if (!empty($messages)) { throw new \spitfire\validation\ValidationException('Validation failed', 201604200115, $messages); }
+		if (!empty($messages)) { throw new ValidationException('Validation failed', 201604200115, $messages); }
 		
 	} else {
 		$validator = new Validator();
