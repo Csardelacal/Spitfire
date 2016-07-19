@@ -3,6 +3,13 @@
 class Time
 {
 	
+	/**
+	 * 
+	 * @fixme lang() died and is no longer usable.
+	 * @param type $time
+	 * @param type $to
+	 * @return type
+	 */
 	public static function relative($time, $to = null) {
 		$to = ($to === null)? time() : $to;
 		$lang = lang();
