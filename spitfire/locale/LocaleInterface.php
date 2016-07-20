@@ -59,7 +59,7 @@ interface LocaleInterface
 	 * Returns a currency object, which will contain information about the currency
 	 * and the way it's formatted when printed.
 	 * 
-	 * @return Currency The currency object
+	 * @return CurrencyLocalizer The currency object
 	 */
 	function getCurrency();
 	
