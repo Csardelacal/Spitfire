@@ -41,7 +41,7 @@ class CharsetEncoder
 	public function encode($str) {
 		if ($str === null)    { return null; }
 		if (is_numeric($str)) { return $str; }
-		return mb_convert_encoding($str, $this->outer, $this->inner);
+		return mb_convert_encoding($str, $this->inner, $this->outer);
 	}
 	
 	
@@ -54,7 +54,7 @@ class CharsetEncoder
 	public function decode($str) {
 		if ($str === null)    { return null; }
 		if (is_numeric($str)) { return $str; }
-		return mb_convert_encoding($str, $this->inner, $this->outer);
+		return mb_convert_encoding($str, $this->outer, $this->inner);
 	}
 	
 	/**
