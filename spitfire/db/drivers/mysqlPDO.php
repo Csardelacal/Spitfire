@@ -135,7 +135,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 			
 			#If the error is not repairable or the system is blocking repairs throw an exception
 			if (!in_array($err[1], $this->reparable_errors) || !$attemptrepair) 
-				{ throw new PrivateException("Error {$code} [{$msg}] captured. Not repairable", 201511081930, $e); }
+				{ throw new PrivateException("Error {$code} [{$msg}] captured. Not repairable", 1511081930, $e); }
 			
 			#Try to solve the error by checking integrity and repeat
 			$this->repair();
