@@ -57,8 +57,16 @@ class ExceptionHandler {
 		set_error_handler    ( Array($this, 'errorHandle'), error_reporting() );
 		register_shutdown_function( Array($this, 'shutdownHook'));
 	}
-
-	public function exceptionHandle (Exception $e) {
+	
+	/**
+	 * 
+	 * @param \Throwable $e
+	 */
+	public function exceptionHandle ($e) {
+		if (!$e instanceof \Exception && !$e instanceof \Throwable) {
+			throw new \BadMethodCallException('Requires throwable type to work.', 201608011002);
+		}
+		
 		try {
 			while(ob_get_clean()); //The content generated till now is not valid. DESTROY. DESTROY!
 
