@@ -99,6 +99,13 @@ class View extends MVC
 		if (file_exists($fileName)) { $this->file = $fileName; }
 		else { throw new FileNotFoundException('File ' . $fileName . 'not found. View can\'t use it'); }
 	}
+	
+	public function setLayoutFile($filename) {
+		$filename = $this->app->getTemplateDirectory() . $filename;
+		
+		if (file_exists($filename)) { $this->layout = $filename; }
+		else { throw new FileNotFoundException('File ' . $filename . ' not found. View can\'t use it as layout'); }
+	}
 
 
 	public function element($file) {

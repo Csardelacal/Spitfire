@@ -1,7 +1,7 @@
 <?php namespace spitfire;
 
 use Controller;
-use publicException;
+use spitfire\exceptions\PublicException;
 use ReflectionClass;
 use spitfire\ClassInfo;
 use spitfire\core\Context;
@@ -129,14 +129,14 @@ abstract class App
 	 * @param string $controller
 	 * @param Context $intent
 	 * @return Controller
-	 * @throws publicException
+	 * @throws PublicException
 	 */
 	public function getController($controller, Context$intent) {
 		#Get the controllers class name. If it doesn't exist it'll be false
 		$c = $this->hasController($controller);
 		
 		#If no controller was found, we can throw an exception letting the user know
-		if ($c === false) { throw new publicException("Page not found", 404, new PrivateException("Controller {$controller[0]} not found", 0) ); }
+		if ($c === false) { throw new PublicException("Page not found", 404, new PrivateException("Controller {$controller[0]} not found", 0) ); }
 		
 		#Otherwise we will instantiate the class and return it
 		return new $c($intent);
@@ -171,7 +171,7 @@ abstract class App
 		}
 		
 		$reflection = new ReflectionClass($c);
-		if ($reflection->isAbstract()) throw new publicException("Page not found", 404, new PrivateException("Abstract Locale", 0) );
+		if ($reflection->isAbstract()) throw new PublicException("Page not found", 404, new PrivateException("Abstract Locale", 0) );
 		return new $c();
 	}
 	
