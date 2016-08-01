@@ -82,7 +82,7 @@ class MysqlPDOTable extends stdSQLTable
 		$key   = $record->getPrimaryData();
 		
 		$restrictions = Array();
-		foreach ($key as $k => $v) {$restrictions[] = "$k = $v";}
+		foreach ($key as $k => $v) {$restrictions[] = sprintf('%s = %s', $k, $db->quote($v));}
 		
 		$stt = sprintf('DELETE FROM %s WHERE %s',
 			$table,
