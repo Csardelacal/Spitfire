@@ -51,7 +51,7 @@ class FileSessionHandler extends SessionHandler
 	}
 	
 	public function write($id, $data) {
-		return !!file_put_contents(sprintf('%s/sess_%s', rtrim($this->directory, '\/'), $id), $data);
+		return file_put_contents(sprintf('%s/sess_%s', rtrim($this->directory, '\/'), $id), $data) !== false;
 	}
 
 }
