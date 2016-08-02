@@ -89,7 +89,7 @@ class DomainGroup
 		
 		#If the domain is not available, we terminate the search. No fallbacks
 		if (!isset($this->domains[$name])) { 
-			throw new PrivateException('Tried localizing without an appropriate locale', 201607191627); 
+			throw new PrivateException('Tried localizing without an appropriate locale', 1607191627);
 		}
 		
 		return $this->domains[$name];

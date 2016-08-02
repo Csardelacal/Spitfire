@@ -4,7 +4,7 @@ use spitfire\exceptions\PrivateException;
 
 /**
  * 
- * @deprecated since version 0.1-dev 201602242351
+ * @deprecated since version 0.1-dev 1602242351
  */
 class Image
 {

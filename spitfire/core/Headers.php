@@ -74,8 +74,8 @@ class Headers
 	
 	public function status($code= 200) {
 		#Check if the call was valid
-		if (!is_numeric($code)) { throw new \BadMethodCallException('Invalid argument. Requires a number', 201509031352); }
-		if (!isset($this->states[$code])) { throw new \BadMethodCallException('Invalid status code', 201509031353); }
+		if (!is_numeric($code)) { throw new \BadMethodCallException('Invalid argument. Requires a number', 1509031352); }
+		if (!isset($this->states[$code])) { throw new \BadMethodCallException('Invalid status code', 1509031353); }
 		
 		$this->set('Status', $this->states[$code]);
 	}
