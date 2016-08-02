@@ -23,20 +23,21 @@ use spitfire\autoload\RegisteredClassLocator;
  * and answer accordingly.
  */
 
+/*
+ * If the locations of the spitfire and base directory are not defined we define
+ * them here. This should ensure that the aplication continues to work properly
+ * during testing and under windows environments that do not have proper linking
+ */
+if (!defined('SPITFIRE_BASEDIR')) { define('SPITFIRE_BASEDIR', rtrim(dirname(__FILE__)), '\/'); }
+if (!defined('BASEDIR')         ) { define('BASEDIR', rtrim(dirname(dirname(__FILE__))), '\/'); }
+
 #Start loading the core files.
-if (empty($_SERVER['SCRIPT_FILENAME']))
-	$_SERVER['SCRIPT_FILENAME'] = rtrim(exec("pwd"),'\/');
-if (!defined('BASEDIR'))
-	define ('BASEDIR', rtrim(dirname($_SERVER['SCRIPT_FILENAME']),'\/'), true);
-if (!defined('SPITFIRE_BASEDIR'))
-	define ('SPITFIRE_BASEDIR', BASEDIR);
-set_include_path(get_include_path() . PATH_SEPARATOR . BASEDIR);
-require_once 'spitfire/Strings.php';
-require_once 'spitfire/core/functions.php';
-require_once 'spitfire/ClassInfo.php';  //TODO: Remove - Deprecated
-require_once 'spitfire/autoload.php';
-require_once 'spitfire/autoload/classlocator.php';
-require_once 'spitfire/autoload/namespacedclasslocator.php';
+require_once SPITFIRE_BASEDIR . '/Strings.php';
+require_once SPITFIRE_BASEDIR . '/core/functions.php';
+require_once SPITFIRE_BASEDIR . '/ClassInfo.php';  //TODO: Remove - Deprecated
+require_once SPITFIRE_BASEDIR . '/autoload.php';
+require_once SPITFIRE_BASEDIR . '/autoload/classlocator.php';
+require_once SPITFIRE_BASEDIR . '/autoload/namespacedclasslocator.php';
 
 #Create the autoload. Once started it will allow you to register classes and 
 #locators to retrieve new classes that are missing to your class-space
@@ -58,7 +59,7 @@ $autoload->registerLocator(new NamespacedClassLocator('', BASEDIR . '/bin/classe
 
 #Import the locations of the most critical components to Spitfire so it has no
 #need to look for them.
-require_once 'spitfire/autoload_core_files.php';
+require_once SPITFIRE_BASEDIR . '/autoload_core_files.php';
 
 #Create the exceptionhandler that will capture errors and try to present useful
 #information to the user.
