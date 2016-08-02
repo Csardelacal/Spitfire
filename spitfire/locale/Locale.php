@@ -49,7 +49,7 @@ abstract class Locale implements LocaleInterface
 	/**
 	 *
 	 * @var type 
-	 * @deprecated since version 0.1-dev 201607191244
+	 * @deprecated since version 0.1-dev 1607191244
 	 */
 	private $_current_output;
 	

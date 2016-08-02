@@ -240,7 +240,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	/**
 	 * Creates a new Table and returns it.
 	 * 
-	 * @deprecated since version 0.1-dev 201607020148
+	 * @deprecated since version 0.1-dev 1607020148
 	 * @param spitfire.storage.database.DB $db
 	 * @param string $tablename
 	 * @param Schema $model
@@ -268,7 +268,7 @@ class mysqlPDODriver extends stdSQLDriver implements Driver
 	
 	/**
 	 * 
-	 * @deprecated since version 0.1-dev 201607020148
+	 * @deprecated since version 0.1-dev 1607020148
 	 * @param type $tablename
 	 * @return \OTFModel
 	 */

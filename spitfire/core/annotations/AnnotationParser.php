@@ -47,7 +47,7 @@ class AnnotationParser
 		$raw = is_object($doc) && method_exists($doc, 'getDocComment') ? $doc->getDocComment() : $doc;
 		
 		#Check if raw is a string or if whatever we got passed was bogus
-		if (!is_string($raw)) { throw new BadMethodCallException('Invalid argument', 201607131552); }
+		if (!is_string($raw)) { throw new BadMethodCallException('Invalid argument', 1607131552); }
 
 		#Individual lines make it easier to parse the data
 		$pieces   = explode(PHP_EOL, $raw);

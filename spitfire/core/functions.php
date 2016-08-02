@@ -159,7 +159,7 @@ function validate($target = null) {
 			$messages = array_merge($messages, $target->getMessages());
 		}
 		
-		if (!empty($messages)) { throw new ValidationException('Validation failed', 201604200115, $messages); }
+		if (!empty($messages)) { throw new ValidationException('Validation failed', 1604200115, $messages); }
 		
 	} else {
 		$validator = new Validator();

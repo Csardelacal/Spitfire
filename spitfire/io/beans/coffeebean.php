@@ -78,7 +78,7 @@ abstract class CoffeeBean extends PostTarget implements RenderableForm, Renderab
 			$xss = $_POST['_XSS_'] !== $this->xss->getValue();
 			if ($xss) { throw new publicException('XSS Attack', 403); }
 			
-			if (!$this->isOk()) { throw new \spitfire\validation\ValidationException('Validation failed', 201604172344, $this->getMessages()); }
+			if (!$this->isOk()) { throw new \spitfire\validation\ValidationException('Validation failed', 1604172344, $this->getMessages()); }
 		}
 		else { throw new UnSubmittedException(); }
 	}

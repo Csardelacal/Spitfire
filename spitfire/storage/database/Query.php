@@ -91,7 +91,7 @@ abstract class Query extends RestrictionGroup
 	 * @throws \spitfire\exceptions\PrivateException
 	 */
 	public function endGroup() {
-		throw new \spitfire\exceptions\PrivateException('Called endGroup on a query', 201604031547);
+		throw new \spitfire\exceptions\PrivateException('Called endGroup on a query', 1604031547);
 	}
 	
 	public function getQuery() {

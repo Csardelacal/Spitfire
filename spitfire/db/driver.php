@@ -10,7 +10,7 @@ use Model;
  * This class' behavior was moved to the tables, even though these could have been
  * global behaviors, they feel cleaner inside a proper scope.
  * 
- * @deprecated since version 0.1-dev 201607011052
+ * @deprecated since version 0.1-dev 1607011052
  */
 interface Driver
 {

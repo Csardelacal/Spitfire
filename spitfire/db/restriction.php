@@ -64,7 +64,7 @@ abstract class Restriction
 	/**
 	 * 
 	 * @param type $query
-	 * @deprecated since version 0.1-dev 201604162323
+	 * @deprecated since version 0.1-dev 1604162323
 	 */
 	public function setQuery($query) {
 		$this->query = $query;

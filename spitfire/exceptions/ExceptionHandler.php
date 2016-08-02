@@ -64,7 +64,7 @@ class ExceptionHandler {
 	 */
 	public function exceptionHandle ($e) {
 		if (!$e instanceof \Exception && !$e instanceof \Throwable) {
-			throw new \BadMethodCallException('Requires throwable type to work.', 201608011002);
+			throw new \BadMethodCallException('Requires throwable type to work.', 1608011002);
 		}
 		
 		try {

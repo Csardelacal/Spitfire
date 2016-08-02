@@ -66,7 +66,7 @@ abstract class RestrictionGroup
 			{ $field = $fieldname; }
 			
 			#If the fieldname was not null, but the field is null - it means that the system could not find the field and is kicking back
-			if ($field === null && $fieldname!== null) { throw new \spitfire\exceptions\PrivateException('No field ' . $fieldname, 201602231949); }
+			if ($field === null && $fieldname!== null) { throw new \spitfire\exceptions\PrivateException('No field ' . $fieldname, 1602231949); }
 			
 			$restriction = $this->getQuery()->compositeRestrictionInstance($field, $value, $operator);
 		}
