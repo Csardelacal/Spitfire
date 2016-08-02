@@ -84,7 +84,7 @@ class LanguageAcceptParser
 	 * Your application can then check if, and how, it wishes to localize itself
 	 * to provide a proper experience for the user.
 	 * 
-	 * @return type
+	 * @return LanguageAccept[]
 	 */
 	public function parse() {
 		
