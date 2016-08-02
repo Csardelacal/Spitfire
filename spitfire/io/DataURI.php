@@ -33,7 +33,7 @@ class DataURI
 	 * should not be using any external resources from the same server).
 	 * 
 	 * @param string $file
-	 * @return \io\DataURI
+	 * @return DataURI
 	 * @throws FileNotFoundException
 	 */
 	public static function fromFile($file) {

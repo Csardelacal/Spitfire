@@ -13,14 +13,17 @@ class Image
 	}
 	
 	public function readFile($file) {
-		
-		$this->meta = $meta = getimagesize($file);
-		
+		if (!file_exists($file)) {
+			throw new PrivateException("Image file doesn't exist");
+		}
+
+		$this->meta = getimagesize($file);
+
 		if (!function_exists('imagecreatefrompng')) {
 			throw new PrivateException("GD is not installed.");
 		}
 		
-		switch($meta[2]) {
+		switch($this->meta[2]) {
 			case IMAGETYPE_PNG: 
 				$img = imagecreatefrompng($file);
 				imagealphablending($img, false);
@@ -40,7 +43,7 @@ class Image
 				}
 				throw new PrivateException('Spitfire requires Imagemagick to handle PSD files');
 			default:
-				throw new PrivateException('Not supported image type: ' . $meta[2]);
+				throw new PrivateException('Unsupported image type: ' . $this->meta[2]);
 		}
 		
 	}
