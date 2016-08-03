@@ -33,8 +33,8 @@ class Headers
 		foreach ($this->headers as $header => $value) {
 			
 			#Special condition for status headers
-			if ($header == 'Status') {
-				header("HTTP/1.1 $value");
+			if (strtolower($header) == 'status') {
+				http_response_code((int)$value);
 				continue;
 			}
 			
@@ -77,14 +77,14 @@ class Headers
 		if (!is_numeric($code)) { throw new \BadMethodCallException('Invalid argument. Requires a number', 1509031352); }
 		if (!isset($this->states[$code])) { throw new \BadMethodCallException('Invalid status code', 1509031353); }
 		
-		$this->set('Status', $this->states[$code]);
+		$this->set('Status', $code);
 	}
 	
 	public function redirect($location, $status = 302) {
 		$this->set('Location', $location);
 		$this->set('Expires', date("r", time()));
 		$this->set('Cache-Control', 'no-cache, must-revalidate');
-		$this->set('Status', $this->states[$status]);
+		$this->set('Status', $status);
 	}
 	
 }
