@@ -29,9 +29,9 @@ class Strings
 		return $high? ucfirst($_ret) : $_ret;
 	}
 	
-	public static function ellipsis ($str, $targetlength, $char = '...') {
+	public static function ellipsis ($str, $targetlength, $char = '…') {
 		$newlen = $targetlength - strlen($char);
-		return (strlen($str) > $newlen)? substr($str, 0, $newlen) . '...' : $str;
+		return (strlen($str) > $newlen)? substr($str, 0, $newlen) . '…' : $str;
 	}
 	
 	public static function slug($string) {
