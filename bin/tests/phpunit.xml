@@ -21,7 +21,7 @@
 	timeoutForSmallTests="1"
 	timeoutForMediumTests="10"
 	timeoutForLargeTests="60"
-	bootstrap="bootstrap.php"
+	bootstrap="../../spitfire/bootstrap.php"
 	verbose="false">
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="false">
