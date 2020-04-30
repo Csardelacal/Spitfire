@@ -7,4 +7,5 @@ use spitfire\core\Environment;
  * the behavior of an application.
  */
 $e = new Environment('test');
-$e->set('db_table_prefix', 'test_');
+$e->set('db', 'mysqlpdo://root:root@localhost/database?encoding=utf8&prefix=');
+$e->set('SSO', 'https://AppID:AppSecret@IP/phpas/');

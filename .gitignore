@@ -2,5 +2,5 @@ Documentation/*
 *.*~
 *.DS_STORE
 *.sublime-project
-
 *.sublime-workspace
+bin/settings/environments.php
