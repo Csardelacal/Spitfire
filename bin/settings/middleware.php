@@ -2,6 +2,7 @@
 
 use spitfire\mvc\middleware\standard\CacheDurationMiddleware;
 use spitfire\mvc\middleware\standard\LayoutMiddleware;
+use spitfire\mvc\middleware\standard\MaintenanceMiddleware;
 use spitfire\mvc\middleware\standard\ModelMiddleware;
 use spitfire\mvc\middleware\standard\RequestMethodMiddleware;
 use spitfire\mvc\middleware\standard\TemplateMiddleware;
@@ -34,6 +35,7 @@ use spitfire\mvc\middleware\standard\ValidationMiddleware;
 current_context()->middleware->register(new CacheDurationMiddleware());
 current_context()->middleware->register(new LayoutMiddleware());
 current_context()->middleware->register(new TemplateMiddleware());
+current_context()->middleware->register(new MaintenanceMiddleware());
 current_context()->middleware->register(new RequestMethodMiddleware());
 current_context()->middleware->register(new ModelMiddleware(db()));
 current_context()->middleware->register(new ValidationMiddleware());

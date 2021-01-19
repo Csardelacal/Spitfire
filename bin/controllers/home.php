@@ -1,4 +1,6 @@
-<?php
+<?php namespace controllers;
+
+use Controller;
 
 /**
  * Prebuilt test controller. Use this to test all the components built into

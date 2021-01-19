@@ -4,3 +4,5 @@ Documentation/*
 *.sublime-project
 *.sublime-workspace
 bin/settings/environments.php
+
+/vendor/
