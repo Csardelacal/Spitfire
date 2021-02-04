@@ -1,0 +1,13 @@
+
+What is the /bin folder?
+
+Historically, applications would place compiled versions of their applications in
+a bin folder, which stands for binary. Obviously, PHP does not generate binaries.
+
+Instead, Spitfire uses the bin folder to place components of your application that
+are built in a development environment and even, in some cases, committed to the 
+repository.
+
+The bin folder is private, it contains no resources, and it is not advisable to
+scan it for usable classes or similar. It contains a single bootstrap script that
+includes a series of files that are necessary for the application to work.
