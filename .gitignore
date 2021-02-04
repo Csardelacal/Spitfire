@@ -1,8 +1,10 @@
-Documentation/*
+
+/node_modules/
+/vendor/
+.phpunit.result.cache
+/nbproject/private/
 *.*~
 *.DS_STORE
-*.sublime-project
-*.sublime-workspace
 bin/settings/environments.php
 
 /vendor/

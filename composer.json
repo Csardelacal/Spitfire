@@ -1,21 +1,35 @@
 {
-    "name": "spitfire/project",
-    "description": "Template for an empty spitfire project",
-    "type": "project",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "César de la Cal Bretschneider",
-            "email": "cesar@magic3w.com"
-        }
-    ],
-    "require": {
+	"name": "spitfire/project",
+	"description": "Spitfire project. Fork this repository for your new project",
+	"type": "project",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "cesar",
+			"email": "cesar@magic3w.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"autoload": {
+		"psr-4": {
+			"app\\" : "./app/"
+		}
+	},
+	"require": {
         "PHP" : "^7.3",
-        "spitfire/engine": "dev-master"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9.4"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+		"spitfire/engine": "dev-master"
+	},
+	"extra" : {
+		"spitfire" : {
+			"app" : {
+				"/" : {
+					"kernel" : "app\\App",
+					"events" : ["magic3w/extension"]
+				}
+			}
+		}
+	},
+	"scripts": {
+		"post-autoload-dump" : "php ./console spitfire.discover.apps"
+	}
 }

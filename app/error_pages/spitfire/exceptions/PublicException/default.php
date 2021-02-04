@@ -1,17 +1,8 @@
-<?php
-
-use spitfire\mvc\middleware\standard\CacheDurationMiddleware;
-use spitfire\mvc\middleware\standard\LayoutMiddleware;
-use spitfire\mvc\middleware\standard\MaintenanceMiddleware;
-use spitfire\mvc\middleware\standard\ModelMiddleware;
-use spitfire\mvc\middleware\standard\RequestMethodMiddleware;
-use spitfire\mvc\middleware\standard\TemplateMiddleware;
-use spitfire\mvc\middleware\standard\ValidationMiddleware;
 
 /* 
  * The MIT License
  *
- * Copyright 2018 César de la Cal Bretschneider <cesar@magic3w.com>.
+ * Copyright 2020 César de la Cal Bretschneider <cesar@magic3w.com>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,10 +23,4 @@ use spitfire\mvc\middleware\standard\ValidationMiddleware;
  * THE SOFTWARE.
  */
 
-current_context()->middleware->register(new CacheDurationMiddleware());
-current_context()->middleware->register(new LayoutMiddleware());
-current_context()->middleware->register(new TemplateMiddleware());
-current_context()->middleware->register(new MaintenanceMiddleware());
-current_context()->middleware->register(new RequestMethodMiddleware());
-current_context()->middleware->register(new ModelMiddleware(db()));
-current_context()->middleware->register(new ValidationMiddleware());
+Public exception incoming

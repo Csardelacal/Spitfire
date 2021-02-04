@@ -1,0 +1,18 @@
+{
+  "name": "spitfire",
+  "version": "0.2.0-alpha",
+  "description": "Spitfire project template. Fork this repo.",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@phabricator.magic3w.com/source/SF-Template.git"
+  },
+  "keywords": [
+    "php"
+  ],
+  "author": "Cesar de la Cal Bretschneider",
+  "license": "MIT"
+}
