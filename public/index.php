@@ -14,8 +14,8 @@
 /* 
  * Include Spitfire core.
  */
-include __DIR__ . '/../app/bootstrap.php';
 include BASEDIR . '/vendor/autoload.php';
+include __DIR__ . '/../app/bootstrap.php';
 
 /*
  * Spitfire will retrieve the request from the web server, select the appropriate
