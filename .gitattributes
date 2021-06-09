@@ -1,6 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Spitfire compiles assets into public/assets. While these are text,
+# they usually include minified javascript and css, are extremely 
+# cumbersome to read and rarely provide any useful diff data. This is
+# why, for the purpose of a diff, we consider them as binary files.
+public/assets/* -diff
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union
