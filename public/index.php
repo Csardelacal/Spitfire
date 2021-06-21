@@ -21,4 +21,4 @@ include __DIR__ . '/../app/bootstrap.php';
  * Spitfire will retrieve the request from the web server, select the appropriate
  * controller and invoke the middleware.
  */
-spitfire()->fire();
+boot(\spitfire\core\kernel\Webkernel::class)->handle(spitfire()->request())->send();
