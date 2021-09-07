@@ -19,7 +19,8 @@
 	"require": {
         "PHP" : "^7.3||^8.0",
 		"spitfire/engine": "dev-master",
-		"spitfire/cli": "dev-master"
+		"spitfire/cli": "dev-master",
+		"monolog/monolog": "^2.2"
 	},
 	"extra" : {
 		"spitfire" : {
