@@ -36,7 +36,7 @@ class CommandProvider extends Provider
 	{
 		#This provider actually just loads routes and does not register any services
 	}
-
+	
 	public function init()
 	{
 		
@@ -79,5 +79,4 @@ class CommandProvider extends Provider
 			(include_once $app->directory() . 'config/commands.php')(trim('.', str_replace('/', '.', $scope)) . '.');
 		}
 	}
-	
 }

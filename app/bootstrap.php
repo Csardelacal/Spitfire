@@ -13,10 +13,3 @@
  * behavior in the application. These should be performed elsewhere.
  */
 spitfire\core\Environment::import(parse_ini_file(dirname(__DIR__) . '/.environment'));
-
-/*
- * The base directory defines the location in which the framework should look for
- * files that are not PHP classes. This includes the webroot folder, the assets,
- * resources, translations, templates, etc.
- */
-define ('BASEDIR', rtrim(spitfire\core\Environment::get('application.basedir')?: dirname(__DIR__),'\/'));

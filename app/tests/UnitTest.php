@@ -6,8 +6,8 @@ class UnitTest extends TestCase
 {
 	
 	
-	public function testObvious() {
+	public function testObvious()
+	{
 		$this->assertEquals(true, true);
 	}
-	
 }

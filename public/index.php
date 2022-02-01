@@ -15,6 +15,7 @@
  * Include Spitfire core.
  */
 include BASEDIR . '/vendor/autoload.php';
+include __DIR__ . '/../app/constants.php';
 include __DIR__ . '/../app/bootstrap.php';
 
 /*

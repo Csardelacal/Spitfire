@@ -360,24 +360,24 @@ form.data input.formSecondary:focus {
 
 /*Tags*/
 .tag {
-    display: inline-block;
-    border-radius: 3px;
-    border-style: solid;
-    color:  #FFF;
-    border-width: 1px;
-    padding: 2px 7px;
-    font-weight: 500;
-    text-shadow: -.0px -.7px .7px #282828;
-    margin-right: 4px;
-    font-family: sans-serif;
+	display: inline-block;
+	border-radius: 3px;
+	border-style: solid;
+	color:  #FFF;
+	border-width: 1px;
+	padding: 2px 7px;
+	font-weight: 500;
+	text-shadow: -.0px -.7px .7px #282828;
+	margin-right: 4px;
+	font-family: sans-serif;
 }
 .tag.green {
-    border-color: #2F8A24;
-    background: #2F7224;
+	border-color: #2F8A24;
+	background: #2F7224;
 }
 .tag.red {
-    border-color: #C66;
-    background: #933;
+	border-color: #C66;
+	background: #933;
 }
 
 /*Buttons*/

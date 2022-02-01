@@ -88,9 +88,8 @@ class LoggingServiceProvider extends Provider
 		 */
 		spitfire()->provider()->set(LoggerInterface::class, $monolog);
 	}
-
+	
 	public function init()
 	{
 	}
-	
 }
