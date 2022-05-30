@@ -19,7 +19,6 @@
 	"require": {
         "PHP" : "^7.3||^8.0",
 		"spitfire/engine": "dev-master",
-		"spitfire/cli": "dev-master",
 		"monolog/monolog": "^2.2"
 	},
 	"extra" : {
@@ -35,7 +34,7 @@
 	"scripts": {
 		"test" : [
 			"./vendor/bin/phpcs . -s",
-			"XDEBUG_MODE=coverage ./vendor/bin/phpunit tests --coverage-clover /tmp/coverage.xml"
+			"XDEBUG_MODE=coverage ./vendor/bin/phpunit app/tests --coverage-clover app/tests/coverage.xml"
 		]
 	},
 	"require-dev": {

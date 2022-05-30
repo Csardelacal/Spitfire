@@ -25,4 +25,4 @@
  * files that are not PHP classes. This includes the webroot folder, the assets,
  * resources, translations, templates, etc.
  */
-define('BASEDIR', rtrim(spitfire\core\Environment::get('application.basedir')?: dirname(__DIR__), '\/'));
+define('BASEDIR', dirname(__DIR__), '\/');
