@@ -13,7 +13,8 @@ use m3w\IOException;
 
 class HomeController extends Controller
 {
-	public function index() {
+	public function index()
+	{
 		$this->view->set('message', 'Hi! I\'m spitfire');
 		throw new PrivateException('Not found', 403);
 		throw new IOException('Not found', 403);

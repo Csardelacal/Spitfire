@@ -1,6 +1,28 @@
 language: php
 php:
-  - 7.3
+  - 7.4
+  - 8.0
+  - 8.1
+before_script:
+  - LC_ALL=C.UTF-8 sudo add-apt-repository -y ppa:ondrej/php
+
+  # To make sure everything works properly, we need to load ffmpeg, a modern version
+  # of GD (that includes imagewebp functions) and ffmpeg
+  - sudo apt-get update
+  - sudo apt-get install -y ffmpeg
+  - sudo apt-get install -y php$(phpenv version-name)-cli php$(phpenv version-name)-gd php$(phpenv version-name)-xml php$(phpenv version-name)-curl php$(phpenv version-name)-imagick
+  - sudo apt-get install -y php$(phpenv version-name)-zip php$(phpenv version-name)-mbstring php$(phpenv version-name)-mysql  php$(phpenv version-name)-memcached
+  - sudo apt-get install -y php$(phpenv version-name)-memcache php$(phpenv version-name)-xdebug
+
+  # There's a need for a patch in order to make imagewebp work.
+  # The script we pulled this from includes a lot of debugging output
+  # https://travis-ci.community/t/how-to-enable-webp-image-format-support-in-php-7/3209/19
+  - rm -f /home/travis/.phpenv/shims/php
+  - ln -s /usr/bin/php /home/travis/.phpenv/shims/php
+
+  # Initialize the composer stuff.
+  - composer install
+  - composer dump-autoload
 script: composer test
 
 after_script:

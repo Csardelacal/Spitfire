@@ -8,3 +8,4 @@
 bin/settings/environments.php
 
 /vendor/
+app/tests/coverage.xml

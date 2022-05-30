@@ -71,26 +71,14 @@
 			</div>
 		</div>
 
-		<?php if(\spitfire\core\Environment::get('debugging_mode')): ?>
+		<?php if (config('debug', false)) : ?>
 		<div class="errordescription wrapper">
 			<h2>Further error information <small>To hide this set debug_mode to false.</small></h2>
-			<p>The stacktrace displays the function calls made that led to the error. They are displayed in an inverted order to how they were called.</p>
+			<p>
+				The stacktrace displays the function calls made that led to the error. 
+				They are displayed in an inverted order to how they were called.
+			</p>
 			<pre><?=$moreInfo?></pre>
-			
-			<?php
-				$messages = spitfire()->getMessages();
-				if ($messages){
-					echo '<h2>Debugging messages <small>To hide this set debug_mode to false.</small></h2>';
-					echo '<p>List of messages the app generated during it\'s execution</p>';
-					echo '<div class="debugmessages">';
-					echo '<ul>';
-					foreach ($messages as $msg) {
-						echo "<li>$msg</li>";
-					}
-					echo '</ul>';
-					echo '</div>';
-				}
-			?>
 		</div>
 		<?php endif; ?>
 	</body>

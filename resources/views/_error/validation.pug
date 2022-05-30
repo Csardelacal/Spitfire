@@ -1,0 +1,25 @@
+//-
+	This is the most barebones implementation that we can provide of this feature,
+	it supports no nested data, and it messes ever so slightly with navigation, which
+	isn't great.
+	
+	But the alternative would have been writing to the session, which is not a thing
+	we want to be doing unless very necessary so the application remains as stateless
+	as possible.
+	
+	For an improved user experience, forms should be handled by javascript by default,
+	but for backwards compatibility and providing a fallback, this is a good measure.
+
+form(action="$location", method="post", id="redirect") 
+	input(type="hidden", name="_method", value="POST")
+	
+	each $error, $idx in $errors
+		input(type="hidden", name=`old[errors][${idx}]`, value=$error)
+	
+	each $content, $idx in $submitted
+		input(type="hidden", name=`old[submitted][${idx}]`, value=$content)
+		
+	input(type="submit", value="Continue")
+		
+:script 
+	document.getElementById('redirect').submit();

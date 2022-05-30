@@ -1,4 +1,4 @@
-
+<?php
 /* 
  * The MIT License
  *
@@ -23,4 +23,4 @@
  * THE SOFTWARE.
  */
 
-Public exception incoming
+?>Public exception incoming

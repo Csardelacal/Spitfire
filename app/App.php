@@ -12,20 +12,20 @@ use spitfire\App as Prototype;
  * creating an intent object that can be used to issue a response.
  * 
  */
- class App extends Prototype
- {
-	 
+class App extends Prototype
+{
+	
 	public $middleware = [
 		
 	];
 	
-	public function namespace() {
+	public function namespace()
+	{
 		return __NAMESPACE__;
 	}
 	
-	public function directory() {
+	public function directory()
+	{
 		return __DIR__;
 	}
-
 }
- 

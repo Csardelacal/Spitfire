@@ -15,10 +15,11 @@
  * Include Spitfire core.
  */
 include BASEDIR . '/vendor/autoload.php';
+include __DIR__ . '/../app/constants.php';
 include __DIR__ . '/../app/bootstrap.php';
 
 /*
  * Spitfire will retrieve the request from the web server, select the appropriate
  * controller and invoke the middleware.
  */
-boot(\spitfire\core\kernel\Webkernel::class)->handle(spitfire()->request())->send();
+emit(boot(\spitfire\core\kernel\Webkernel::class)->handle(spitfire()->request()));

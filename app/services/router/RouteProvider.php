@@ -34,7 +34,7 @@ class RouteProvider extends Provider
 	{
 		#This provider actually just loads routes and does not register any services
 	}
-
+	
 	public function init()
 	{
 		/*
@@ -60,5 +60,4 @@ class RouteProvider extends Provider
 		(include_once $approot . 'resources/routes.api.php')($router);
 		(include_once $approot . 'resources/routes.web.php')($router);
 	}
-	
 }

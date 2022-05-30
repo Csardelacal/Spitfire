@@ -1,0 +1,4 @@
+linters:
+  phpcs:
+      standard: './.phpcs.xml'
+      extensions: 'php'
