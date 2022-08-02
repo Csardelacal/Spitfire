@@ -25,4 +25,4 @@
  * files that are not PHP classes. This includes the webroot folder, the assets,
  * resources, translations, templates, etc.
  */
-define('BASEDIR', dirname(__DIR__), '\/');
+define('BASEDIR', rtrim(dirname(__DIR__), '\/') . DIRECTORY_SEPARATOR);

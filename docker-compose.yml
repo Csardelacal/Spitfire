@@ -1,0 +1,23 @@
+version: "3.3"
+services:
+  web:
+    build: .
+    ports:
+      - "8088:80"
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/bin/usr
+    links:
+      - memcached
+      - mysql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  memcached:
+    image: memcached:latest
+  mysql:
+    image: mariadb:latest
+    environment:
+      MYSQL_DATABASE: testdb
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: www
+      MYSQL_PASSWORD: test

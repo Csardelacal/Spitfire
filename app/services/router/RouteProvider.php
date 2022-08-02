@@ -1,6 +1,6 @@
 <?php namespace app\services\router;
 
-use spitfire\service\Provider;
+use spitfire\core\service\Provider;
 
 /* 
  * The MIT License
