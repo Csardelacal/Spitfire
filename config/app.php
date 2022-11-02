@@ -1,6 +1,7 @@
 <?php
 
 return [
+	'url' => 'http://localhost/',
 	'providers' => [
 		spitfire\core\router\providers\RouterServiceProvider::class,
 		\app\services\router\RouteProvider::class,

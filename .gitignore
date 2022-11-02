@@ -9,3 +9,8 @@ bin/settings/environments.php
 
 /vendor/
 app/tests/coverage.xml
+
+#Storage locations
+/storage/public
+/storage/private
+/public/storage

@@ -1,5 +1,7 @@
 <?php namespace app\services\router;
 
+use Psr\Container\ContainerInterface;
+use spitfire\core\router\Router;
 use spitfire\core\service\Provider;
 
 /* 
@@ -30,25 +32,24 @@ class RouteProvider extends Provider
 {
 	
 	
-	public function register()
+	public function register(ContainerInterface $container)
 	{
 		#This provider actually just loads routes and does not register any services
 	}
 	
-	public function init()
+	public function init(ContainerInterface $container)
 	{
 		/*
 		 * Locate the current application's root directory. This is a quirky way
 		 * of finding the file, but it's a requirement, since composer won't let us
 		 * know where we are, and what the package root is.
 		 */
-		$approot = realpath('../../../');
+		$approot = realpath(__DIR__ . '/../../../');
 		
 		/*
 		 * We also need access to the router
 		 */
-		$app    = spitfire()->cluster()->findAppForClass(__CLASS__);
-		$router = $app->router();
+		$router = $container->get(Router::class);
 		
 		/*
 		 * Within this, we want to load our two routes files, routes.web and routes.api
@@ -57,7 +58,7 @@ class RouteProvider extends Provider
 		 * the router as parameter and then can pass our scoped router to these closures
 		 * so they append the routes to the appropriate url spaces.
 		 */
-		(include_once $approot . 'resources/routes.api.php')($router);
-		(include_once $approot . 'resources/routes.web.php')($router);
+		(include_once $approot . '/resources/routes.api.php')($router);
+		(include_once $approot . '/resources/routes.web.php')($router);
 	}
 }

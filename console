@@ -13,6 +13,11 @@
  * @copyright 2018 Magic3W - All rights reserved
  */
 
+use spitfire\contracts\core\kernel\ConsoleKernelInterface;
+use spitfire\core\kernel\ConsoleKernel;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+
 /* Include Spitfire core.
  */
 define('BASEDIR', __DIR__);
@@ -32,4 +37,11 @@ $args = $argv;
 array_shift($args);
 $comm = array_shift($args);
 
-exit( boot(\spitfire\core\kernel\Consolekernel::class)->exec($comm, $argv) );
+/**
+ * @var ConsoleKernel
+ */
+$kernel = spitfire()->provider()->get(ConsoleKernel::class);
+spitfire()->provider()->set(ConsoleKernelInterface::class, $kernel);
+spitfire()->provider()->set(ConsoleKernel::class, $kernel);
+
+exit( $kernel->handle(new ArgvInput(), new ConsoleOutput()) );

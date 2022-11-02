@@ -1,5 +1,0 @@
-<?php
-
-return [
-	'server' => 'localhost'
-];
