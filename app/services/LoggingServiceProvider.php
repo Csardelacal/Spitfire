@@ -41,7 +41,7 @@ class LoggingServiceProvider extends Provider
 	 * * Logging is ubiquitous, which means that we'd be best prepared for when all the other
 	 *   providers wish to start initializing their stuff and start issuing debug statements.
 	 */
-	public function register(ContainerInterface $container)
+	public function register(ContainerInterface $container) : void
 	{
 		/**
 		 * Our application needs to be aware whether it is in debugging mode or not,
@@ -90,7 +90,7 @@ class LoggingServiceProvider extends Provider
 		spitfire()->provider()->set(LoggerInterface::class, $monolog);
 	}
 	
-	public function init(ContainerInterface $container)
+	public function init(ContainerInterface $container) : void
 	{
 	}
 }

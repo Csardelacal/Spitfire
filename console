@@ -13,8 +13,15 @@
  * @copyright 2018 Magic3W - All rights reserved
  */
 
+use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
 use spitfire\contracts\core\kernel\ConsoleKernelInterface;
+use spitfire\contracts\core\kernel\KernelInterface;
+use spitfire\contracts\core\LocationsInterface;
 use spitfire\core\kernel\ConsoleKernel;
+use spitfire\core\kernel\WebKernel;
+use spitfire\core\Locations;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
@@ -22,26 +29,19 @@ use Symfony\Component\Console\Output\ConsoleOutput;
  */
 define('BASEDIR', __DIR__);
 
-include __DIR__ . '/vendor/autoload.php';
+include defined('VENDOR_DIR')? VENDOR_DIR . '/autoload.php' : __DIR__ . '/vendor/autoload.php';
 include __DIR__ . '/bin/bootstrap.php';
 
-/**
- * We need the arguments from argv. ArgV will contain the arguments as 
- * follows:
- * 
- *  - The first argument is the name of the executable (in this case our console file)
- *  - The second argument will be the name of the command to be executed
- *  - The remaining are arguments for our system to parse
- */
-$args = $argv;
-array_shift($args);
-$comm = array_shift($args);
+spitfire()->provider()->set(Locations::class, new Locations(__DIR__));
+spitfire()->provider()->set(LocationsInterface::class, new Locations(__DIR__));
+spitfire()->provider()->set(ConsoleKernel::class, $kernel = new ConsoleKernel(new Application()));
+spitfire()->provider()->set(ConsoleKernelInterface::class, $kernel);
+spitfire()->provider()->set(KernelInterface::class, $kernel);
+spitfire()->provider()->set(WebKernel::class, spitfire()->provider()->get(WebKernel::class));
+spitfire()->provider()->set(LoggerInterface::class, new Monolog\Logger('log', [new StreamHandler(STDOUT)]));
 
 /**
  * @var ConsoleKernel
  */
 $kernel = spitfire()->provider()->get(ConsoleKernel::class);
-spitfire()->provider()->set(ConsoleKernelInterface::class, $kernel);
-spitfire()->provider()->set(ConsoleKernel::class, $kernel);
-
-exit( $kernel->handle(new ArgvInput(), new ConsoleOutput()) );
+exit(boot($kernel)->handle(new ArgvInput, new ConsoleOutput));

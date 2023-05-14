@@ -2,15 +2,13 @@
 	"name": "spitfire/project",
 	"description": "Spitfire project. Fork this repository for your new project",
 	"type": "project",
-	"license": "MIT",
+	"license": "LGPL-3.0+",
 	"authors": [
 		{
 			"name": "cesar",
 			"email": "cesar@magic3w.com"
 		}
 	],
-	"minimum-stability": "dev",
-	"prefer-stable": true,
 	"autoload": {
 		"psr-4": {
 			"app\\" : "./app/"
@@ -18,7 +16,7 @@
 	},
 	"require": {
         "PHP" : "^7.3||^8.0",
-		"spitfire/engine": "dev-master",
+		"spitfire/engine": "^0.1",
 		"monolog/monolog": "^2.2"
 	},
 	"extra" : {

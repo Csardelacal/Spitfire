@@ -1,8 +1,10 @@
 <?php namespace app\services\console;
 
+use Psr\Container\ContainerInterface;
 use spitfire\App;
-use spitfire\service\Provider;
-use spitfire\console\ConsoleKernel;
+use spitfire\contracts\core\kernel\KernelInterface;
+use spitfire\core\kernel\ConsoleKernel;
+use spitfire\core\service\Provider;
 
 /* 
  * The MIT License
@@ -32,27 +34,21 @@ class CommandProvider extends Provider
 {
 	
 	
-	public function register()
+	public function register(ContainerInterface $container) : void
 	{
 		#This provider actually just loads routes and does not register any services
 	}
 	
-	public function init()
+	public function init(ContainerInterface $container) : void
 	{
 		
 		/**
 		 * If the kernel is not a console kernel, we are executing from a webserver and 
 		 * therefore there is no need to initialize the routes.
 		 */
-		if (!(spitfire()->kernel() instanceof ConsoleKernel)) {
+		if (!($container->get(KernelInterface::class) instanceof ConsoleKernel)) {
 			return;
 		}
-		
-		/**
-		 * Get the cluster to see which applications are loaded and which we can import commands
-		 * from.
-		 */
-		$cluster = spitfire()->cluster();
 		
 		/**
 		 * Load the commands for each application that we do have loaded in the cluster.
@@ -65,18 +61,16 @@ class CommandProvider extends Provider
 		 * Note: This code does not include a 'if file_exists' so the code will fail if the file
 		 * does not exist or is not properly 
 		 */
-		foreach ($cluster->all() as $app) {
-			assert($app instanceof App);
+		$app = $container->get(App::class);
 			
-			/**
-			 * When working with apps, they have a scoped router, which allows the application to
-			 * respond to URLs that are within it's scope.
-			 * 
-			 * Similarly, the command provider will scope commands to the url prefix, preventing 
-			 * collissions when sharing command names accross apps.
-			 */
-			$scope = $app->url()->getScope();
-			(include_once $app->directory() . 'config/commands.php')(trim('.', str_replace('/', '.', $scope)) . '.');
-		}
+		/**
+		 * When working with apps, they have a scoped router, which allows the application to
+		 * respond to URLs that are within it's scope.
+		 * 
+		 * Similarly, the command provider will scope commands to the url prefix, preventing 
+		 * collissions when sharing command names accross apps.
+		 */
+		$scope = $app->url()->getScope();
+		(include_once $app->directory() . 'config/commands.php')(trim('.', str_replace('/', '.', $scope)) . '.');
 	}
 }

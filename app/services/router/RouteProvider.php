@@ -32,12 +32,12 @@ class RouteProvider extends Provider
 {
 	
 	
-	public function register(ContainerInterface $container)
+	public function register(ContainerInterface $container) : void
 	{
 		#This provider actually just loads routes and does not register any services
 	}
 	
-	public function init(ContainerInterface $container)
+	public function init(ContainerInterface $container) : void
 	{
 		/*
 		 * Locate the current application's root directory. This is a quirky way
