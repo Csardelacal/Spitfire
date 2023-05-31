@@ -1,3 +1,5 @@
+<?php assert(isset($message)) ?>
+<?php assert(isset($moreInfo)) ?>
 <!DOCTYPE html>
 <html>
 

@@ -1,10 +1,6 @@
-<?php
-
-use Monolog\Logger;
-use Psr\Log\LoggerInterface;
-use spitfire\core\Environment;
-
-?><!DOCTYPE html>
+<?php assert(isset($message)) ?>
+<?php assert(isset($moreInfo)) ?>
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Spitfire - Server Error</title>
