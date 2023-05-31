@@ -20,6 +20,8 @@ use spitfire\contracts\core\kernel\KernelInterface;
 use spitfire\contracts\core\LocationsInterface;
 use spitfire\core\kernel\ConsoleKernel;
 use spitfire\core\kernel\WebKernel;
+use app\kernel\WebKernel as AppWebKernel;
+use app\kernel\ConsoleKernel as AppConsoleKernel;
 use spitfire\core\Locations;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -34,10 +36,10 @@ include __DIR__ . '/bin/bootstrap.php';
 
 spitfire()->provider()->set(Locations::class, new Locations(__DIR__));
 spitfire()->provider()->set(LocationsInterface::class, new Locations(__DIR__));
-spitfire()->provider()->set(ConsoleKernel::class, $kernel = new ConsoleKernel(new Application()));
+spitfire()->provider()->set(ConsoleKernel::class, $kernel = new AppConsoleKernel(new Application()));
 spitfire()->provider()->set(ConsoleKernelInterface::class, $kernel);
 spitfire()->provider()->set(KernelInterface::class, $kernel);
-spitfire()->provider()->set(WebKernel::class, spitfire()->provider()->get(WebKernel::class));
+spitfire()->provider()->set(WebKernel::class, spitfire()->provider()->get(AppWebKernel::class));
 spitfire()->provider()->set(LoggerInterface::class, new Monolog\Logger('log', [new StreamHandler(STDOUT)]));
 
 /**
