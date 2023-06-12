@@ -6,12 +6,11 @@ ENV PHP_CPPFLAGS="$PHP_CPPFLAGS -std=c++11"
 
 RUN apt-get update -y \
     && apt-get upgrade -y  \
-    && apt-get install memcached libicu-dev git zip unzip libgd3 zlib1g-dev libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev libfreetype6-dev -y 
+    && apt-get install memcached libicu-dev git zip unzip zlib1g-dev -y 
 	
 RUN pecl install -o -f redis \
     && rm -rf /tmp/pear \
-    && docker-php-ext-configure gd --with-webp --with-jpeg --with-xpm --with-freetype \
-    && docker-php-ext-install mysqli pdo pdo_mysql gd \
+    && docker-php-ext-install mysqli pdo pdo_mysql \
     && docker-php-ext-install opcache \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl 
