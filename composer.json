@@ -15,7 +15,7 @@
 		}
 	},
 	"require": {
-        "PHP" : "^7.3||^8.0",
+        "PHP" : "^8.0",
 		"spitfire/engine": "^0.1",
 		"monolog/monolog": "^2.2"
 	},
