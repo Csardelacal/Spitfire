@@ -5,7 +5,7 @@ return [
 	'providers' => [
 		spitfire\core\router\providers\RouterServiceProvider::class,
 		\app\services\router\RouteProvider::class,
-		spitfire\core\http\URLServiceProvider::class,
+		spitfire\http\URLServiceProvider::class,
 		\app\services\LoggingServiceProvider::class,
 		\spitfire\io\session\SessionProvider::class,
 		\spitfire\mvc\providers\DirectorProvider::class,
