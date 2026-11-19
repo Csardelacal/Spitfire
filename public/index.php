@@ -11,7 +11,7 @@
  * @copyright 2021 Magic3W - All rights reserved
  */
 
-use spitfire\core\Request;
+use spitfire\http\Request;
 
 /* 
  * Include Spitfire core.
@@ -25,4 +25,4 @@ include __DIR__ . '/../app/bootstrap.php';
  * controller and invoke the middleware.
  */
 $kernel = spitfire()->provider()->get(\spitfire\core\kernel\WebKernel::class);
-emit(boot($kernel)->handle(Request::fromGlobals()));
+emit(boot($kernel)->handle(Request::fromGlobals(spitfire()->provider())));
